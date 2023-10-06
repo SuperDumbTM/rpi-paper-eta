@@ -8,4 +8,4 @@ bp = Blueprint('schedule',
 
 @bp.route('/')
 def index():
-    return render_template("schedule/index.html")
+    return render_template("schedule/index.jinja")

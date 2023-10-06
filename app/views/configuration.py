@@ -1,6 +1,7 @@
-from flask import Blueprint, current_app, flash, redirect, render_template
+from flask import (Blueprint, current_app, flash, redirect, render_template,
+                   request)
 
-from app import utils
+from app import forms, utils
 
 bp = Blueprint('configuration',
                __name__,
@@ -10,21 +11,19 @@ bp = Blueprint('configuration',
 
 @bp.route('/')
 def index():
-    return render_template("configuration/index.html")
+    return render_template("configuration/index.jinja")
 
 
-@bp.route('/api-server')
+@bp.route('/api-server', methods=['GET', 'POST'])
 def api_server():
-    return render_template("configuration/api-server.html",
+    form = forms.ApiServerForm()
+
+    if form.is_submitted():
+        form.validate()
+    return render_template("configuration/api-server.jinja",
                            api_url=current_app.config.get("API_URL"),
                            api_username=current_app.config.get(
                                "API_USERNAME"),
-                           api_password=current_app.config.get("API_PASSWORD")
+                           api_password=current_app.config.get("API_PASSWORD"),
+                           form=form
                            )
-
-
-@bp.route('/api-server', methods=['POST'])
-def api_server_submit():
-    flash('flash 1')
-    flash('flash 2')
-    return redirect(utils.redirect_url())

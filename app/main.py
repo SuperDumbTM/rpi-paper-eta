@@ -18,4 +18,4 @@ app.register_blueprint(schedule.bp)
 def index():
     if not app.config.get("API_URL"):
         return redirect(url_for("configuration.api_server"))
-    return render_template("index.html")
+    return render_template("index.jinja")
