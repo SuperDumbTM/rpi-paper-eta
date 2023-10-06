@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ENVNAME="epd-eta-ctrl"
+ENVNAME=$(cat ../ENVNAME)
 
 # Check wheather anaconda is installed.
 if ! [ -x "$(command -v conda)" ]; then

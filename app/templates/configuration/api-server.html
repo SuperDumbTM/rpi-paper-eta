@@ -1,0 +1,48 @@
+{% extends "layout.jinja" %}
+
+{% include "includes/navbar.jinja" %}
+
+{% block style %}
+<style>
+    .form-group {
+        margin: 15px 0px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div>
+    <div class="row align-items-center" style="height: 100vh;">
+        <div class="mx-auto col-10 col-md-8 col-lg-6">
+            <form class="form-example" action="" method="post">
+                <h1>HKETA API Server Setting</h1>
+                <p class="description">
+                    Update the API server details here.
+                </p>
+
+                {% include "includes/flash_danger_ul.jinja" %}
+
+                <div class="form-group">
+                    <label for="username">Server URL</label>
+                    <input type="text" class="form-control username" id="username" placeholder="https://..."
+                        name="server_url" value="{{ api_url }}" />
+                </div>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control username" id="username" name="username"
+                        value="{{ api_username }}" />
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control password" id="password" name="password"
+                        value="{{ api_password }}" />
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-customized mt-4">
+                    Save
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

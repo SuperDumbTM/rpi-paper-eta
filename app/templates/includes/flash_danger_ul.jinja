@@ -1,0 +1,9 @@
+{% if get_flashed_messages() %}
+    <div class="alert alert-danger">
+        <ul style="margin: 0px;">
+            {% for message in get_flashed_messages() %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}

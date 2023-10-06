@@ -1,4 +1,4 @@
-FLASK_APP=src.app
+FLASK_APP=app.main
 FLASK_ENV=development
 FLASK_DEBUG=True
 # FLASK_RUN_EXTRA_FILES=

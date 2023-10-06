@@ -1,5 +1,5 @@
 import os
-from dotenv import load_dotenv
+from pathlib import Path
 
-load_dotenv(os.path.join("..", ".env"))
 
+ENV_FILE_PATH = Path(__file__).parent.parent.joinpath(".env")

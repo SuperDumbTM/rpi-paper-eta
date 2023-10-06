@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block title %}主頁{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    
+    <style type="text/css">
+        
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="vh-100 d-flex justify-content-center align-items-center">
+    <div class="row text-center">
+        <div class="col-12 p-1">
+            <a href="{{ url_for('schedule.index') }}">Schedule</a>
+        </div>
+        <div class="col-12 p-1">
+            <a href="{{ url_for('configuration.index') }}">Configuration</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
