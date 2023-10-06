@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 
 from dotenv import dotenv_values
@@ -18,5 +17,5 @@ app.register_blueprint(schedule.bp)
 @app.route("/")
 def index():
     if not app.config.get("API_URL"):
-        return redirect(url_for("configuration.index"))
+        return redirect(url_for("configuration.api_server"))
     return render_template("index.html")
