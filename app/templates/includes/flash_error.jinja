@@ -1,10 +1,10 @@
-{% with messages = get_flashed_messages(category_filter=["success"]) %}
+{% with messages = get_flashed_messages(category_filter=["error"]) %}
 {% if messages | count == 1 %}
-<div class="alert alert-success">
+<div class="alert alert-danger">
     {{ messages[0] }}
 </div>
 {% elif messages | count > 1 %}
-<div class="alert alert-success">
+<div class="alert alert-danger">
     <ul style="margin: 0px;">
         {% for message in messages %}
         <li>{{ message }}</li>

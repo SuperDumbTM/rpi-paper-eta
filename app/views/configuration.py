@@ -1,7 +1,8 @@
 from flask import (Blueprint, current_app, flash, redirect, render_template,
                    request)
 
-from app import forms, utils
+from app import forms, enums
+from app.config import site_data
 
 bp = Blueprint('configuration',
                __name__,
@@ -16,14 +17,23 @@ def index():
 
 @bp.route('/api-server', methods=['GET', 'POST'])
 def api_server():
+    setting = site_data.ApiServerSetting()
     form = forms.ApiServerForm()
 
-    if form.is_submitted():
-        form.validate()
-    return render_template("configuration/api-server.jinja",
-                           api_url=current_app.config.get("API_URL"),
-                           api_username=current_app.config.get(
-                               "API_USERNAME"),
-                           api_password=current_app.config.get("API_PASSWORD"),
+    if form.validate_on_submit():
+        try:
+            setting.clear().update(url=form.url.data,
+                                   username=form.username.data,
+                                   password=form.password.data
+                                   ).persist()
+        except Exception:
+            flash("Update failed due to internal errors.",
+                  enums.FlashCategory.error)
+        else:
+            flash("Updated.", enums.FlashCategory.success)
+    return render_template("configuration/api_server.jinja",
+                           api_url=setting.url,
+                           api_username=setting.username,
+                           api_password=setting.password,
                            form=form
                            )

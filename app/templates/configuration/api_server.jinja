@@ -1,0 +1,39 @@
+{% from "macros/render_field.jinja" import render_field %}
+
+{% extends "layout.jinja" %}
+
+{% include "includes/navbar.jinja" %}
+
+{% block style %}
+<style>
+    .form-group {
+        margin: 15px 0px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div>
+    <div class="row align-items-center" style="height: 100vh;">
+        <div class="mx-auto col-10 col-md-8 col-lg-6">
+            <form class="form-example" action="" method="post">
+                {{ form.hidden_tag() }}
+
+                <h1>HKETA API Server Setting</h1>
+                <p class="description">
+                    Update the API server details here.
+                </p>
+                
+                {% include "includes/flash_success.jinja" %}
+                {% include "includes/flash_error.jinja" %}
+
+                {{ render_field(form.url, placeholder="https://...", value=api_url) }}
+                {{ render_field(form.username, value=api_username) }}
+                {{ render_field(form.password, value=api_password) }}
+
+                {{ form.submit(class="btn btn-primary btn-customized mt-4") }}
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
