@@ -1,14 +1,14 @@
-{% macro render_field(field, placeholder = None, value = None) %}
+{% macro render_field(field, class_ = None, placeholder = None, value = None, extras = {}) %}
 <div class="form-group">
     {{ field.label }}
 
     {% if field.errors %}
-    {{ field(class="form-control is-invalid", placeholder=placeholder or "", value=value or "") }}
+    {{ field(class="form-control is-invalid " ~ class_, placeholder=placeholder or "", value=value or "", **extras) }}
     <div id="validationServerUsernameFeedback" class="invalid-feedback">
         {{ field.errors[0] }}
     </div>
     {% else %}
-    {{ field(class="form-control", placeholder=placeholder or "", value=value or "") }}
+    {{ field(class=("form-control " ~ class_), placeholder=placeholder or "", value=value or "", **extras) }}
     {% endif %}
 </div>
 {% endmacro %}

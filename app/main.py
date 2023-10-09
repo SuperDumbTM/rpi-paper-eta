@@ -1,10 +1,10 @@
 from pathlib import Path
 
 from dotenv import dotenv_values
-from flask import Flask, redirect, render_template, url_for
+from flask import Flask, flash, redirect, render_template, url_for
 
 from app.config import site_data
-from app import views
+from app import views, enums
 
 app = Flask(__name__, template_folder="template", static_folder="static")
 
@@ -18,5 +18,6 @@ app.register_blueprint(views.schedule.bp)
 @app.route("/")
 def index():
     if not site_data.ApiServerSetting().url:
+        flash("Please set the API server URL")
         return redirect(url_for("configuration.api_server"))
     return render_template("index.jinja")

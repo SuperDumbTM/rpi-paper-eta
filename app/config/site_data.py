@@ -67,9 +67,3 @@ class ApiServerSetting:
                 f,
                 indent=4
             )
-
-
-@utils.singleton
-class ApiServerSetting:
-
-    ...
