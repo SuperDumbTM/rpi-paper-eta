@@ -4,15 +4,15 @@ from dotenv import dotenv_values
 from flask import Flask, flash, redirect, render_template, url_for
 
 from app.config import site_data
-from app import views, enums
+from app import controllers, enums
 
 app = Flask(__name__, template_folder="template", static_folder="static")
 
 app.config.from_pyfile(Path(__file__).parent / "config" / "flask_config.py")
 app.config.from_mapping(dotenv_values(app.config.get("ENV_FILE_PATH")))
 
-app.register_blueprint(views.configuration.bp)
-app.register_blueprint(views.schedule.bp)
+app.register_blueprint(controllers.configuration.bp)
+app.register_blueprint(controllers.schedule.bp)
 
 
 @app.route("/")

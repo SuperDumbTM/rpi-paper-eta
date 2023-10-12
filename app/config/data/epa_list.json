@@ -1,0 +1,42 @@
+[
+    {
+        "company": "kmb",
+        "name": "265M",
+        "direction": "inbound",
+        "service_type": "1",
+        "stop": "1",
+        "lang": "tc"
+    },
+    {
+        "company": "kmb",
+        "name": "276A",
+        "direction": "inbound",
+        "service_type": "1",
+        "stop": "5",
+        "lang": "tc"
+    },
+    {
+        "company": "kmb",
+        "name": "1",
+        "direction": "outbound",
+        "service_type": "1",
+        "stop": "13",
+        "lang": "en"
+    },
+    {
+        "company": "kmb",
+        "name": "1",
+        "direction": "outbound",
+        "service_type": "1",
+        "stop": "13",
+        "lang": "en"
+    },
+    {
+        "company": "mtr_bus",
+        "name": "K52",
+        "direction": "inbound",
+        "service_type": "default",
+        "stop": "18",
+        "lang": "tc"
+    }
+]

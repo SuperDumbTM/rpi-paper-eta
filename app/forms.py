@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, SelectField, SearchField
-from wtforms.validators import DataRequired, Regexp, EqualTo
+from wtforms.validators import DataRequired, NoneOf, AnyOf
 
 from app import enums
 
@@ -17,16 +17,28 @@ class ApiServerForm(FlaskForm):
 
 class EtaForm(FlaskForm):
     company = SelectField("Company",
-                          choices=[v.value for v in enums.EtaCompany],
-                          validators=[DataRequired()])
-    name = StringField("Route Name")
+                          choices=([("", "-----")] +
+                                   [(v.value, v.name) for v in enums.EtaCompany]),
+                          validators=[DataRequired(), AnyOf([v for v in enums.EtaCompany])])
+    name = StringField("Route Name",
+                       validators=[DataRequired()])
     direction = SelectField("Direction",
-                            choices=[v.value for v in enums.RouteDirection],
+                            coerce=str,
+                            choices=[("", "-----")],
+                            validate_choice=False,
                             validators=[DataRequired()])
-    service_type = SelectField("Service Type")
-    stop = StringField("Stop",
-                       validators=[DataRequired()])
+    service_type = SelectField("Service Type",
+                               coerce=str,
+                               choices=[("", "-----")],
+                               validate_choice=False,
+                               validators=[NoneOf(["", "None"])])
+    stop = SelectField("Stop",
+                       coerce=str,
+                       choices=[(None, "-----")],
+                       validate_choice=False,
+                       validators=[DataRequired(), NoneOf(["", "None"])])
     lang = SelectField("Language",
-                       choices=[v.value for v in enums.Locale],
-                       validators=[DataRequired()])
+                       coerce=str,
+                       choices=[(v.value, v.name) for v in enums.Locale],
+                       validators=[DataRequired(), AnyOf([v for v in enums.Locale])])
     submit = SubmitField()

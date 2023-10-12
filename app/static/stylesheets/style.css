@@ -1,7 +1,37 @@
+.eta-kmb {
+    color: red;
+}
+
+.eta-mtr_bus {
+    color: blue;
+}
+
+.eta-mtr_lrt {
+    color: yellow;
+}
+
+.eta-mtr_train {
+    color: rgb(255, 72, 0);
+}
+
+.eta-ctb {
+    color: yellow;
+}
+
 #content {
     min-height: 100vh;
 }
 
 .form-group {
     margin: 10px 0px;
+}
+
+.overlay {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    filter: alpha(opacity=50);
+    z-index: 100;
 }

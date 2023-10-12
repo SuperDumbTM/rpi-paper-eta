@@ -1,9 +1,11 @@
+from collections import abc
 import json
 from pathlib import Path
 from typing import Optional
-from app import utils
+from app import models, utils
 
 from app.config import flask_config
+from app import models
 
 
 @utils.singleton
@@ -67,3 +69,44 @@ class ApiServerSetting:
                 f,
                 indent=4
             )
+
+
+@utils.singleton
+class EtaList(abc.MutableSequence):
+
+    _data: list[models.EtaConfig]
+    _filepath = Path(flask_config.CONFIG_DIR).joinpath("epa_list.json")
+
+    def __init__(self) -> None:
+        self._data = []
+
+        if not self._filepath.exists():
+            self.persist()
+        else:
+            self.load()
+
+    def __getitem__(self, index: int) -> None:
+        return self._data[index]
+
+    def __delitem__(self, index: int) -> None:
+        del self._data[index]
+
+    def __setitem__(self, index: int, value: models.EtaConfig) -> None:
+        self._data[index] = value
+
+    def insert(self, index: int, value: models.EtaConfig):
+        self._data.insert(index, value)
+
+    def __len__(self) -> int:
+        return len(self._data)
+
+    def __repr__(self) -> str:
+        return self._data.__repr__()
+
+    def load(self):
+        with open(self._filepath, "r", encoding="utf-8") as f:
+            self._data = [models.EtaConfig(**c) for c in json.load(f)]
+
+    def persist(self) -> None:
+        with open(self._filepath, "w", encoding="utf-8") as f:
+            json.dump(self._data, f, indent=4, cls=utils.DataclassJSONEncoder)

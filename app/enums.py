@@ -16,7 +16,6 @@ class EtaCompany(str, Enum):
     MTRLRT = "mtr_lrt"
     MTRTRAIN = "mtr_train"
     CTB = "ctb"
-    NWFB = "nwfb"
 
 
 class RouteDirection(str, Enum):

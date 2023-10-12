@@ -1,0 +1,144 @@
+{% from "macros/render_field.jinja" import render_field %}
+
+{% extends "layout.jinja" %}
+{% include "includes/navbar.jinja" %}
+
+{% block link %}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+{% endblock link %}
+
+{% block style %}
+<style>
+</style>
+{% endblock style %}
+
+{% block content %}
+<div class="row align-items-center" style="height: 100vh;">
+    <div class="mx-auto col-10 col-md-8 col-lg-6">
+        <form class="form" action="" method="post" autocomplete="off">
+            {{ form.hidden_tag() }}
+
+            <h1>ETA</h1>
+            <p class="description">
+            </p>
+
+            {% include "includes/flash_success.jinja" %}
+            {% include "includes/flash_error.jinja" %}
+
+            {{ render_field(form.company) }}
+            {{ render_field(form.name, class_="autocomplete") }}
+            {{ render_field(form.direction) }}
+            {{ render_field(form.service_type) }}
+            {{ render_field(form.stop) }}
+            {{ render_field(form.lang) }}
+
+            {{ form.submit(class="btn btn-primary btn-customized mt-4") }}
+        </form>
+    </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+<script src="http://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<script src="{{ url_for('static', filename='scripts/jquery.ui.autocomplete.scroll.js') }}"></script>
+<script>
+
+    function clearSelect(dom) {
+        dom.find('option').remove().end()
+        dom.append(new Option("-----", ""))
+    }
+
+    $(document).ready(function () {
+        $("form")[0].reset()
+        clearSelect($("select#direction"))
+        clearSelect($("select#service_type"))
+    })
+
+    // autocomplete for route name 
+    $('select#company').on('change', function (event) {
+        // https://stackoverflow.com/questions/7617373/limit-results-in-jquery-ui-autocomplete
+        query = {
+            company: $('option:selected', this).val(),
+            type: "route",
+        }
+
+        $.ajax({
+            type: "GET",
+            url: `{{ url_for("configuration.eta_search") }}?${$.param(query)}`,
+            beforeSend: () => showLoading(),
+            complete: () => hideLoading(),
+            success: function(res) {
+                $("input#name").autocomplete({
+                    maxShowItems: 6,
+                    autoFocus: true,
+                    source: res.data.routes,
+                });
+            },
+        })
+    });
+
+    // direction option updates
+    $("input#name").on("autocompleteselect", function (event, ui) {
+        query = {
+            company: $('select#company option:selected').val(),
+            route: ui.item.value,
+            type: "direction",
+        }
+
+        $.get(`{{ url_for("configuration.eta_search") }}?${$.param(query)}`)
+            .then(function (res) {
+                clearSelect(select = $("select#direction"))
+                clearSelect($("select#service_type"))
+                clearSelect($("select#stop"))
+
+                res.data.direction.forEach(
+                    (el) => select.append(new Option(el.name, el.value)))
+
+            })
+    });
+
+    // autocomplete for service type
+    $('select#direction').on('change', function (event) {
+        query = {
+            company: $('select#company option:selected').val(),
+            route: $('input#name').val(),
+            direction: $('option:selected', this).val(),
+            type: "service_type",
+        }
+
+        $.get(`{{ url_for("configuration.eta_search") }}?${$.param(query)}`)
+            .then(function (res) {
+                clearSelect(select = $("select#service_type"))
+                clearSelect($("select#stop"))
+
+                res.data.direction.forEach(
+                    (el) => select.append(new Option(el.name, el.value)))
+            })
+    });
+
+    // stop option updates
+    $("select#service_type").on("change", function (event) {
+        query = {
+            company: $('select#company option:selected').val(),
+            route: $('input#name').val(),
+            direction: $('select#direction option:selected').val(),
+            service_type: $('option:selected', this).val(),
+            type: "stop",
+        }
+
+        $.ajax({
+            type: "GET",
+            url: `{{ url_for("configuration.eta_search") }}?${$.param(query)}`,
+            beforeSend: () => showLoading(),
+            complete: () => hideLoading(),
+            success: function(res) {
+                select = $("select#stop")
+                clearSelect(select)
+                res.data.stops.forEach(
+                    (el) => select.append(new Option(el.name, el.value)))
+            },
+        })
+    });
+
+</script>
+{% endblock script %}

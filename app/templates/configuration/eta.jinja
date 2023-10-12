@@ -4,7 +4,7 @@
 {% include "includes/navbar.jinja" %}
 
 {% block link %}
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+<link rel="stylesheet" href="//cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 {% endblock link %}
 
 {% block style %}
@@ -13,51 +13,43 @@
 {% endblock style %}
 
 {% block content %}
-<div class="row align-items-center" style="height: 100vh;">
-    <div class="mx-auto col-10 col-md-8 col-lg-6">
-        <form class="form" action="" method="post">
-            {{ form.hidden_tag() }}
-
-            <h1>ETA</h1>
-            <p class="description">
-            </p>
-
-            {% include "includes/flash_success.jinja" %}
-            {% include "includes/flash_error.jinja" %}
-
-            {{ render_field(form.company) }}
-            {{ render_field(form.name, class_="autocomplete") }}
-            {{ render_field(form.direction) }}
-            {{ render_field(form.service_type) }}
-            {{ render_field(form.stop) }}
-            {{ render_field(form.lang) }}
-
-            {{ form.submit(class="btn btn-primary btn-customized mt-4") }}
-        </form>
+<div class="container-xxl">
+    <div class="row m-5">
+        <div class="col">
+            <table id="eta-list" class="table table-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>Company</th>
+                        <th>Route</th>
+                        <th>Direction</th>
+                        <th>Service Type</th>
+                        <th>Stop</th>
+                        <th>Language</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for eta in etas %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td class="{{'eta-'~eta.company}}">{{ eta.company }}</td>
+                        <td>{{ eta.name }}</td>
+                        <td>{{ eta.direction }}</td>
+                        <td>{{ eta.service_type }}</td>
+                        <td>{{ eta.stop }}</td>
+                        <td>{{ eta.lang }}</td>
+                    </tr>
+                    {% endfor %}
+            </table>
+        </div>
     </div>
 </div>
 {% endblock content %}
 
 {% block script %}
-<script src="http://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-<script src="{{ url_for('static', filename='scripts/jquery.ui.autocomplete.scroll.js') }}"></script>
+<script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 <script>
-
-    {# $("input#name").autocomplete({
-        source: ["c++", "java", "php", "coldfusion", "javascript", "asp", "ruby"]
-    }); #}
-
-    // https://stackoverflow.com/questions/7617373/limit-results-in-jquery-ui-autocomplete
-    $('select#company').on('change', function () {
-        $.get(`{{ url_for("configuration.eta_search") }}?company=${$('#company option:selected').val()}&type=route`)
-            .then(function (res) {
-                $("input#name").autocomplete({
-                    maxShowItems: 6,
-                    source: res.data
-                });
-            })
-    });
-
-
+    new DataTable('#eta-list');
 </script>
 {% endblock script %}
