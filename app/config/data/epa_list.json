@@ -1,42 +1,38 @@
 [
     {
-        "company": "kmb",
-        "name": "265M",
+        "company": "mtr_train",
+        "name": "TML",
         "direction": "inbound",
         "service_type": "1",
-        "stop": "1",
-        "lang": "tc"
+        "stop": "18",
+        "lang": "tc",
+        "id": "9VSHF2"
     },
     {
-        "company": "kmb",
-        "name": "276A",
-        "direction": "inbound",
-        "service_type": "1",
-        "stop": "5",
-        "lang": "tc"
-    },
-    {
-        "company": "kmb",
-        "name": "1",
+        "company": "mtr_lrt",
+        "name": "705",
         "direction": "outbound",
-        "service_type": "1",
-        "stop": "13",
-        "lang": "en"
-    },
-    {
-        "company": "kmb",
-        "name": "1",
-        "direction": "outbound",
-        "service_type": "1",
-        "stop": "13",
-        "lang": "en"
+        "service_type": "default",
+        "stop": "24",
+        "lang": "tc",
+        "id": "9VSHE9"
     },
     {
         "company": "mtr_bus",
-        "name": "K52",
-        "direction": "inbound",
+        "name": "K51A",
+        "direction": "outbound",
         "service_type": "default",
-        "stop": "18",
-        "lang": "tc"
+        "stop": "24",
+        "lang": "en",
+        "id": "QEW41Y"
+    },
+    {
+        "company": "kmb",
+        "name": "234C",
+        "direction": "outbound",
+        "service_type": "default",
+        "stop": "24",
+        "lang": "tc",
+        "id": "D1YWAP"
     }
 ]

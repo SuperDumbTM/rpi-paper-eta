@@ -1,4 +1,5 @@
 import dataclasses
+from enum import Enum
 import json
 from flask import request, url_for
 
@@ -15,6 +16,15 @@ def singleton(class_):
 
 def redirect_url(default='index'):
     return request.args.get('next') or request.referrer or url_for(default)
+
+
+def asdict_factory(data):
+    """Reference: https://stackoverflow.com/a/64693838"""
+    def convert_value(obj):
+        if isinstance(obj, Enum):
+            return obj.value
+        return obj
+    return dict((k, convert_value(v)) for k, v in data)
 
 
 class DataclassJSONEncoder(json.JSONEncoder):

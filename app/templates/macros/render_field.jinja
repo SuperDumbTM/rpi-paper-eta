@@ -3,12 +3,12 @@
     {{ field.label }}
 
     {% if field.errors %}
-    {{ field(class="form-control is-invalid " ~ class_, placeholder=placeholder or "", value=value or "", **extras) }}
+    {{ field(class="form-control is-invalid " ~ class_, placeholder=placeholder or "", value=value or field.data or "", **extras) }}
     <div id="validationServerUsernameFeedback" class="invalid-feedback">
         {{ field.errors[0] }}
     </div>
     {% else %}
-    {{ field(class=("form-control " ~ class_), placeholder=placeholder or "", value=value or "", **extras) }}
+    {{ field(class=("form-control " ~ class_), placeholder=placeholder or "", value=value or field.data or "", **extras) }}
     {% endif %}
 </div>
 {% endmacro %}

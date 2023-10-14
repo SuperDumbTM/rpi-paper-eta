@@ -5,30 +5,43 @@
 
 {% block link %}
 <link rel="stylesheet" href="//cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+{#
+<link rel="stylesheet" href="//cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css"> #}
 {% endblock link %}
 
 {% block style %}
 <style>
+    .dt-buttons {
+        clear: both;
+    }
+
+    .dt-action a {
+        color: inherit;
+        text-decoration: none;
+    }
 </style>
 {% endblock style %}
 
 {% block content %}
 <div class="container-xxl">
-    <div class="row m-5">
+    {% include "includes/flash_success.jinja" %}
+    {% include "includes/flash_error.jinja" %}
+    <div class="row p-2">
         <div class="col">
             <table id="eta-list" class="table table-striped" style="width:100%">
                 <thead>
                     <tr>
-                        <th>Order</th>
+                        <th>No.</th>
                         <th>Company</th>
                         <th>Route</th>
                         <th>Direction</th>
                         <th>Service Type</th>
                         <th>Stop</th>
                         <th>Language</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
-                <tbody>
+                {# <tbody>
                     {% for eta in etas %}
                     <tr>
                         <td>{{ loop.index }}</td>
@@ -38,8 +51,14 @@
                         <td>{{ eta.service_type }}</td>
                         <td>{{ eta.stop }}</td>
                         <td>{{ eta.lang }}</td>
+                        <td>
+                            <button type="button" class="dt-action btn btn-danger" data-href-method="DELETE"
+                                data-href="{{ url_for('api.delete_eta', id=loop.index - 1) }}">
+                                {{ _("Delete") }}
+                            </button>
+                        </td>
                     </tr>
-                    {% endfor %}
+                    {% endfor %} #}
             </table>
         </div>
     </div>
@@ -49,7 +68,74 @@
 {% block script %}
 <script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="//cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script src="//cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
 <script>
-    new DataTable('#eta-list');
+    let datatable = $('#eta-list').DataTable({
+        ajax: {
+            url: "{{ url_for('api.get_etas') }}",
+            dataSrc: "data.etas"
+        },
+        columns: [
+            {
+                render: function (data, type, row, meta) {
+                    return meta.row + 1;
+                }
+            },
+            { data: 'company' },
+            { data: 'name' },
+            { data: 'direction' },
+            { data: 'service_type' },
+            { data: 'stop' },
+            { data: 'lang' },
+            {
+                render: function (data, type, row, meta) {
+                    return `
+                        <button type="button" class="dt-action btn btn-danger"
+                            data-href-method="DELETE"
+                            data-href=${"{{ url_for('api.delete_eta', id='p1') }}".replace("p1", row.id)}>
+                            {{ _("Delete") }}
+                        </button>
+                        <button type="button" class="dt-action btn btn-success"
+                            data-href-method=""
+                            data-href=${"{{ url_for('configuration.eta_edit', id='p1') }}".replace("p1", row.id)}>
+                            {{ _("Edit") }}
+                        </button>
+                    `;
+                }
+            }
+        ],
+        dom: `<'row'<'col-sm-12 col-md-6'B><'col-sm-12 col-md-6'f>>
+                <'row'<'col-sm-12'tr>>
+                <'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>`,
+        buttons: [
+            {
+                text: '新增',
+                className: "btn btn-success",
+                action: function (e, dt, node, config) {
+                    window.location.href = "{{ url_for('configuration.eta_create') }}";
+                }
+            }
+        ]
+    });
+
+    $(document).on("click", "button.dt-action", function (event) {
+        if ($(this).data('href')) {
+            if ($(this).data('href-method') === "") {
+                window.location.href = $(this).data('href')
+            }
+
+            $.ajax({
+                method: $(this).data('href-method'),
+                url: $(this).data('href'),
+                success: function (res) {
+                    alertify.success(res.message)
+                    datatable.ajax.reload()
+                },
+                error: function (xhr, status, error) {
+                    alertify.error("Failed to delete.")
+                }
+            })
+        }
+    })
 </script>
 {% endblock script %}

@@ -6,3 +6,6 @@ ENV_FILE_PATH = Path(__file__).parent.parent.parent.joinpath(".env")
 
 CONFIG_DIR = Path(__file__).parent.parent.joinpath("config", "data")
 """Path to the directory for configuration files"""
+
+BABEL_TRANSLATION_DIRECTORIES = str(Path(
+    __file__).parent.parent.parent.joinpath("translations"))

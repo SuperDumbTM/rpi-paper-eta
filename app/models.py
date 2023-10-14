@@ -1,14 +1,19 @@
+from typing import Optional
+
 from pydantic.dataclasses import dataclass
+
+from app import enums
 
 
 @dataclass(slots=True)
 class EtaConfig:
-    company: str
+    company: enums.EtaCompany
     name: str
-    direction: str
+    direction: enums.RouteDirection
     service_type: str
     stop: str
     lang: str
+    id: Optional[str] = None
 
 
 @dataclass(slots=True)

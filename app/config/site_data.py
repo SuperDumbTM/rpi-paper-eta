@@ -1,11 +1,12 @@
-from collections import abc
 import json
+from collections import abc
 from pathlib import Path
-from typing import Optional
-from app import models, utils
+import random
+import string
+from typing import Any, Optional, Self
 
+from app import models, utils
 from app.config import flask_config
-from app import models
 
 
 @utils.singleton
@@ -58,6 +59,13 @@ class ApiServerSetting:
         self.password = password or self.password
         return self
 
+    def to_dict(self) -> dict:
+        return {
+            'url': self.url,
+            'username': self.username,
+            'password': self.password
+        }
+
     def persist(self) -> None:
         with open(self._filepath, "w", encoding="utf-8") as f:
             json.dump(
@@ -72,7 +80,7 @@ class ApiServerSetting:
 
 
 @utils.singleton
-class EtaList(abc.MutableSequence):
+class EtaList(abc.Sequence):
 
     _data: list[models.EtaConfig]
     _filepath = Path(flask_config.CONFIG_DIR).joinpath("epa_list.json")
@@ -88,25 +96,64 @@ class EtaList(abc.MutableSequence):
     def __getitem__(self, index: int) -> None:
         return self._data[index]
 
-    def __delitem__(self, index: int) -> None:
-        del self._data[index]
-
-    def __setitem__(self, index: int, value: models.EtaConfig) -> None:
-        self._data[index] = value
-
-    def insert(self, index: int, value: models.EtaConfig):
-        self._data.insert(index, value)
-
     def __len__(self) -> int:
         return len(self._data)
 
     def __repr__(self) -> str:
         return self._data.__repr__()
 
-    def load(self):
+    def create(self, value: models.EtaConfig) -> Self:
+        value.id = self._gen_id()
+        self._data.append(value)
+        return self
+
+    def insert(self, index: int, value: models.EtaConfig) -> Self:
+        value.id = self._gen_id()
+        self._data.insert(index, value)
+        return self
+
+    def pop(self, index: int) -> models.EtaConfig:
+        return self._data.pop(index)
+
+    def remove(self, id: str) -> Self:
+        del self._data[self.index(id)]
+        return self
+
+    def swap(self, target: int, destination: int) -> Self:
+        self[target], self[destination] = self[destination], self[target]
+        return self
+
+    def get(self, id: str, default: Any = None) -> models.EtaConfig:
+        try:
+            return self._data[self.index(id)]
+        except ValueError:
+            return default
+
+    def index(self, id: str) -> int:
+        for idx, entry in enumerate(self._data):
+            if entry.id == id:
+                return idx
+        raise ValueError(f"ETA entry with id '{id}' is not in list.")
+
+    def update(self, id: str, value: models.EtaConfig) -> Self:
+        self._data[self.index(id)] = value
+        return self
+
+    def load(self) -> None:
         with open(self._filepath, "r", encoding="utf-8") as f:
             self._data = [models.EtaConfig(**c) for c in json.load(f)]
 
     def persist(self) -> None:
+        keys = set([k.id for k in self._data])
+        if None in keys:
+            raise Exception("Empty ID.")
+        if len(keys) != len(self._data):
+            raise Exception("Duplicated ID.")
+
         with open(self._filepath, "w", encoding="utf-8") as f:
+            print(self._data)
             json.dump(self._data, f, indent=4, cls=utils.DataclassJSONEncoder)
+
+    def _gen_id(self) -> str:
+        return ''.join(random.choice(string.ascii_uppercase + string.digits)
+                       for _ in range(6))

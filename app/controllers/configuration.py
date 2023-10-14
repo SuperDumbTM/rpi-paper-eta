@@ -1,8 +1,9 @@
+from dataclasses import asdict
 import requests
 from flask import (Blueprint, current_app, flash, jsonify, redirect,
-                   render_template, request)
+                   render_template, request, url_for)
 
-from app import enums, forms, models
+from app import enums, forms, models, utils
 from app.config import site_data
 
 bp = Blueprint('configuration',
@@ -16,20 +17,19 @@ def index():
     return render_template("configuration/index.jinja")
 
 
-@bp.route('/eta')
+@bp.route('/etas')
 def eta():
     return render_template("configuration/eta.jinja", etas=site_data.EtaList())
 
 
-@bp.route('/eta/new', methods=["GET", "POST"])
+@bp.route('/eta/create', methods=["GET", "POST"])
 def eta_create():
     form = forms.EtaForm()
 
     if form.validate_on_submit():
         try:
             etas = site_data.EtaList()
-            etas.append(models.EtaConfig(**form.data))
-            etas.persist()
+            etas.create(models.EtaConfig(**form.data)).persist()
         except Exception as e:
             current_app.logger.error(e)
             flash("Update failed due to internal errors.",
@@ -37,93 +37,48 @@ def eta_create():
         else:
             flash("Updated.", enums.FlashCategory.success)
 
-    return render_template("configuration/create_eta.jinja", form=form)
+    return render_template("configuration/eta_form.jinja",
+                           form=form,
+                           form_action=url_for("configuration.eta_create"),
+                           editing=False)
 
 
-@bp.route('/eta/search')
-def eta_search():
-    if ("type" not in request.args or "company" not in request.args):
-        pass  # TODO: handle missing param
+@bp.route('/eta/edit/<id>', methods=["GET", "POST"])
+def eta_edit(id: str):
+    etas = site_data.EtaList()
+    entry = etas.get(id)
 
-    if request.args['type'] == "route":
-        routes: dict[str, dict] = (
-            requests.get(
-                f"{site_data.ApiServerSetting().url}/{request.args['company']}/routes")
-            .json()['data']['routes']
-        )
+    form = forms.EtaForm(data=asdict(entry, dict_factory=utils.asdict_factory))
 
-        return jsonify({
-            'success': True,
-            'message': "Success.",
-            'data': {
-                'routes': [route['name'] for route in routes.values()]
-            }
-        })
-    elif request.args['type'] == "direction":
-        if "route" not in request.args:
-            pass  # TODO: handle missing param
+    form.direction.choices += forms.EtaForm.direction_choices(
+        entry.company.value, entry.name)
+    form.direction.data = entry.direction.value
 
-        details: dict[str, dict] = (
-            requests.get(
-                f"{site_data.ApiServerSetting().url}/{request.args['company'].lower()}/{request.args['route'].upper()}")
-            .json()['data']
-        )
+    form.service_type.choices += forms.EtaForm.type_choices(
+        entry.company.value, entry.name, entry.direction.value)
+    form.service_type.data = entry.service_type
 
-        directions = []
-        if details['inbound']:
-            directions.append({'name': "回程", 'value': "inbound"})
-        if details['outbound']:
-            directions.append({'name': "去程", 'value': "outbound"})
+    form.stop.choices += forms.EtaForm.stop_choices(
+        entry.company.value, entry.name, entry.direction.value, entry.service_type)
+    form.stop.data = entry.stop
 
-        return jsonify({
-            'success': True,
-            'message': "Success.",
-            'data': {
-                'direction': directions
-            }
-        })
-    elif request.args['type'] == "service_type":
-        if ("route", "direction") not in request.args:
-            pass  # TODO: handle missing param
+    if form.validate_on_submit():
+        try:
+            etas.update(id, models.EtaConfig(**form.data, id=id)).persist()
+        except ValueError:
+            flash("Invalid ETA entry ID.", enums.FlashCategory.error)
+        except Exception as e:
+            current_app.logger.error(e)
+            flash("Update failed due to internal errors.",
+                  enums.FlashCategory.error)
+        else:
+            flash("Updated.", enums.FlashCategory.success)
 
-        details: dict[str, dict] = (
-            requests.get(
-                f"{site_data.ApiServerSetting().url}/{request.args['company'].lower()}/{request.args['route'].upper()}")
-            .json()['data']
-        )
-
-        return jsonify({
-            'success': True,
-            'message': "Success.",
-            'data': {
-                'direction': [{
-                    'name': f"{t['service_type']} ({t['orig']['name']['tc']} -> {t['dest']['name']['tc']})",
-                    'value': t['service_type']
-                } for t in details[request.args['direction'].lower()]]
-            }
-        })
-    elif request.args['type'] == "stop":
-        if ("route", "direction", "service_type") not in request.args:
-            pass  # TODO: handle missing param
-
-        stops: dict[str, dict] = (
-            requests.get(
-                f"{site_data.ApiServerSetting().url}/{request.args['company'].lower()}/{request.args['route'].upper()}/{request.args['direction']}/{request.args['service_type']}/stops")
-            .json()['data']
-        )
-
-        return jsonify({
-            'success': True,
-            'message': "Success.",
-            'data': {
-                'stops': [{
-                    'name': f"{stop['seq']:02}. {stop['name']['tc']}",
-                    'value': stop['seq']
-                } for stop in stops['stops']]
-            }
-        })
-    else:
-        pass
+    return render_template("configuration/eta_form.jinja",
+                           form=form,
+                           form_action=url_for(
+                               "configuration.eta_edit", id=id),
+                           editing=True)
 
 
 @bp.route('/epd')

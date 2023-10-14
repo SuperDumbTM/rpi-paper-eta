@@ -1,8 +1,13 @@
+from typing import Optional
+import requests
+from flask_babel import lazy_gettext
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, SelectField, SearchField
-from wtforms.validators import DataRequired, NoneOf, AnyOf
+from wtforms import (HiddenField, PasswordField, SelectField, StringField,
+                     SubmitField)
+from wtforms.validators import AnyOf, DataRequired, NoneOf
 
 from app import enums
+from app.config import site_data
 
 
 class ApiServerForm(FlaskForm):
@@ -42,3 +47,55 @@ class EtaForm(FlaskForm):
                        choices=[(v.value, v.name) for v in enums.Locale],
                        validators=[DataRequired(), AnyOf([v for v in enums.Locale])])
     submit = SubmitField()
+
+    @staticmethod
+    def route_choices(company: str) -> list[tuple[str]]:
+        routes: dict[str, dict] = (
+            requests.get(
+                f"{site_data.ApiServerSetting().url}/{company}/routes")
+            .json()['data']['routes']
+        )
+        return [(route['name'], route['name']) for route in routes.values()]
+
+    @staticmethod
+    def direction_choices(company: str,
+                          route: str) -> list[tuple[str]]:
+        details: dict[str, dict] = (
+            requests.get(
+                f"{site_data.ApiServerSetting().url}/{company}/{route.upper()}")
+            .json()['data']
+        )
+
+        directions = []
+        if details['inbound']:
+            directions.append((lazy_gettext("inbound"), "inbound"))
+        if details['outbound']:
+            directions.append((lazy_gettext("outbound"), "outbound"))
+        return directions
+
+    @staticmethod
+    def type_choices(company: str,
+                     route: str,
+                     direction: str) -> list[tuple[str]]:
+        details: dict[str, dict] = (
+            requests.get(
+                f"{site_data.ApiServerSetting().url}/{company}/{route}")
+            .json()['data']
+        )
+
+        return [(t['service_type'], f"{t['service_type']} ({t['orig']['name']['tc']} -> {t['dest']['name']['tc']})")
+                for t in details[direction]]
+
+    @staticmethod
+    def stop_choices(company: str,
+                     route: str,
+                     direction: str,
+                     service_type: str) -> list[tuple[str]]:
+        stops: dict[str, dict] = (
+            requests.get(
+                f"{site_data.ApiServerSetting().url}/{company}/{route.upper()}/{direction}/{service_type}/stops")
+            .json()['data']
+        )
+
+        return [(stop['seq'], f"{stop['seq']:02}. {stop['name']['tc']}")
+                for stop in stops['stops']]
