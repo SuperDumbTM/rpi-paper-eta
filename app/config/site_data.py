@@ -119,8 +119,9 @@ class EtaList(abc.Sequence):
         del self._data[self.index(id)]
         return self
 
-    def swap(self, target: int, destination: int) -> Self:
-        self[target], self[destination] = self[destination], self[target]
+    def swap(self, src: str, dest: str) -> Self:
+        src, dest = self.index(src), self.index(dest)
+        self._data[src], self._data[dest] = self._data[dest], self._data[src]
         return self
 
     def get(self, id: str, default: Any = None) -> models.EtaConfig:

@@ -50,17 +50,20 @@ def eta_edit(id: str):
 
     form = forms.EtaForm(data=asdict(entry, dict_factory=utils.asdict_factory))
 
-    form.direction.choices += forms.EtaForm.direction_choices(
-        entry.company.value, entry.name)
-    form.direction.data = entry.direction.value
+    try:
+        form.direction.choices += forms.EtaForm.direction_choices(
+            entry.company.value, entry.name)
+        form.direction.data = entry.direction.value
 
-    form.service_type.choices += forms.EtaForm.type_choices(
-        entry.company.value, entry.name, entry.direction.value)
-    form.service_type.data = entry.service_type
+        form.service_type.choices += forms.EtaForm.type_choices(
+            entry.company.value, entry.name, entry.direction.value)
+        form.service_type.data = entry.service_type
 
-    form.stop.choices += forms.EtaForm.stop_choices(
-        entry.company.value, entry.name, entry.direction.value, entry.service_type)
-    form.stop.data = entry.stop
+        form.stop.choices += forms.EtaForm.stop_choices(
+            entry.company.value, entry.name, entry.direction.value, entry.service_type)
+        form.stop.data = entry.stop
+    except requests.exceptions.ConnectionError:
+        flash("API server error.", enums.FlashCategory.error)
 
     if form.validate_on_submit():
         try:

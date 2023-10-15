@@ -146,13 +146,14 @@ def eta_search(stype: Literal["route", "direction", "service_type", "stop"]):
                 'message': "Endpoint not found.",
                 'data': None
             }), 404
-    except requests.exceptions.ConnectionError as e:
+    except requests.exceptions.ConnectionError:
         return jsonify({
             'success': False,
             'message': "Connection timeout/error.",
             'data': None
         }), 400
-    except requests.exceptions.HTTPError as e:
+    except requests.exceptions.HTTPError:
+        current_app.logger.exception("HTTPError occurs at 'eta_search'")
         return jsonify({
             'success': False,
             'message': "Remote server error.",
@@ -165,3 +166,28 @@ def eta_search(stype: Literal["route", "direction", "service_type", "stop"]):
             'message': "Unexpected internet error.",
             'data': None
         }), 500
+
+
+@bp.route("/eta/order", methods=["PUT"])
+def eta_swap():
+    schema = mschema.EtaOrderChange()
+
+    try:
+        payload = schema.load(request.json)
+
+        etas = site_data.EtaList()
+        etas.swap(payload['source'], payload['destination']).persist()
+    except marshmallow.ValidationError as e:
+        return jsonify({
+            'success': False,
+            'message': "Missing/incorrect fields.",
+            'data': {
+                'errors': [{'field': f, 'error': m[0]} for f, m in e.messages_dict.items()]
+            }
+        })
+    else:
+        return jsonify({
+            'success': True,
+            'message': "Updated.",
+            'data': None
+        })

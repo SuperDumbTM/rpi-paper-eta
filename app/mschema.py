@@ -7,5 +7,6 @@ class ApiServer(Schema):
     password = fields.String()
 
 
-class EtaBookmark(Schema):
-    pass
+class EtaOrderChange(Schema):
+    source = fields.String(required=True)
+    destination = fields.String(required=True)

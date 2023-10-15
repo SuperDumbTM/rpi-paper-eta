@@ -7,22 +7,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-10-14 00:28+0800\n"
+"POT-Creation-Date: 2023-10-15 23:01+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hant_HK\n"
 "Language-Team: zh_Hant_HK <LL@li.org>\n"
-"Plural-Forms: nplurals=1; plural=0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.9.1\n"
+"Generated-By: Babel 2.13.0\n"
 
 #: app/templates/layout.jinja:42
 msgid "Loading"
 msgstr "載入中"
 
-#: app/templates/configuration/eta.jinja:57
+#: app/templates/configuration/eta.jinja:96
 msgid "Delete"
 msgstr "刪除"
+
+#: app/templates/configuration/eta.jinja:101
+msgid "Edit"
+msgstr "編輯"
 
