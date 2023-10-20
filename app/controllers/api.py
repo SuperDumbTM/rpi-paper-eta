@@ -51,11 +51,25 @@ def update_server_setting():
 
 @bp.route("/setting/etas")
 def get_etas():
+    bookmarks = []
+    for entry in site_data.EtaList():
+        entry: models.EtaConfig
+
+        try:
+            stop_name = requests.get(
+                f"{site_data.ApiServerSetting().url}"
+                f"/{entry.company.value}/{entry.route}/{entry.direction.value}/{entry.service_type}/stop",
+                {'stop_code': entry.stop_code}
+            ).json()['data']['stop']['name'][entry.lang]
+        except Exception:
+            stop_name = "Error"
+        bookmarks.append(asdict(entry) | {'stop_name': stop_name.title()})
+
     return jsonify({
         'success': True,
         'message': "Success.",
         'data': {
-            "etas": list(site_data.EtaList())
+            "etas": bookmarks
         }
     })
 

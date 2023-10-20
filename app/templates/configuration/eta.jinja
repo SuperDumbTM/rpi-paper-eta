@@ -41,24 +41,6 @@
                         <th>Action</th>
                     </tr>
                 </thead>
-                {# <tbody>
-                    {% for eta in etas %}
-                    <tr>
-                        <td>{{ loop.index }}</td>
-                        <td class="{{'eta-'~eta.company}}">{{ eta.company }}</td>
-                        <td>{{ eta.name }}</td>
-                        <td>{{ eta.direction }}</td>
-                        <td>{{ eta.service_type }}</td>
-                        <td>{{ eta.stop }}</td>
-                        <td>{{ eta.lang }}</td>
-                        <td>
-                            <button type="button" class="dt-action btn btn-danger" data-href-method="DELETE"
-                                data-href="{{ url_for('api.delete_eta', id=loop.index - 1) }}">
-                                {{ _("Delete") }}
-                            </button>
-                        </td>
-                    </tr>
-                    {% endfor %} #}
             </table>
         </div>
     </div>
@@ -82,10 +64,10 @@
                 }
             },
             { data: 'company' },
-            { data: 'name' },
+            { data: 'route' },
             { data: 'direction' },
             { data: 'service_type' },
-            { data: 'stop' },
+            { data: 'stop_name' },
             { data: 'lang' },
             {
                 render: function (data, type, row, meta) {

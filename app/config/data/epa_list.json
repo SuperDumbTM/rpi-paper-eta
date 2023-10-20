@@ -1,38 +1,29 @@
 [
     {
-        "company": "mtr_train",
-        "name": "TML",
-        "direction": "inbound",
-        "service_type": "1",
-        "stop": "18",
-        "lang": "tc",
-        "id": "9VSHF2"
-    },
-    {
         "company": "mtr_lrt",
-        "name": "705",
-        "direction": "outbound",
+        "route": "614P",
+        "direction": "inbound",
         "service_type": "default",
-        "stop": "24",
+        "stop_code": "240",
         "lang": "tc",
-        "id": "9VSHE9"
-    },
-    {
-        "company": "mtr_bus",
-        "name": "K51A",
-        "direction": "outbound",
-        "service_type": "default",
-        "stop": "24",
-        "lang": "en",
-        "id": "QEW41Y"
+        "id": "PCIYQH"
     },
     {
         "company": "kmb",
-        "name": "234C",
-        "direction": "outbound",
-        "service_type": "default",
-        "stop": "24",
+        "route": "2B",
+        "direction": "inbound",
+        "service_type": "1",
+        "stop_code": "B1293E41AE9CB55F",
+        "lang": "en",
+        "id": "12V8SR"
+    },
+    {
+        "company": "kmb",
+        "route": "2B",
+        "direction": "inbound",
+        "service_type": "1",
+        "stop_code": "094457650286AA67",
         "lang": "tc",
-        "id": "D1YWAP"
+        "id": "J53TB9"
     }
 ]

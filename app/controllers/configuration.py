@@ -52,16 +52,16 @@ def eta_edit(id: str):
 
     try:
         form.direction.choices += forms.EtaForm.direction_choices(
-            entry.company.value, entry.name)
+            entry.company.value, entry.route)
         form.direction.data = entry.direction.value
 
         form.service_type.choices += forms.EtaForm.type_choices(
-            entry.company.value, entry.name, entry.direction.value)
+            entry.company.value, entry.route, entry.direction.value)
         form.service_type.data = entry.service_type
 
-        form.stop.choices += forms.EtaForm.stop_choices(
-            entry.company.value, entry.name, entry.direction.value, entry.service_type)
-        form.stop.data = entry.stop
+        form.stop_code.choices += forms.EtaForm.stop_choices(
+            entry.company.value, entry.route, entry.direction.value, entry.service_type)
+        form.stop_code.data = entry.stop_code
     except requests.exceptions.ConnectionError:
         flash("API server error.", enums.FlashCategory.error)
 

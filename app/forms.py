@@ -25,8 +25,8 @@ class EtaForm(FlaskForm):
                           choices=([("", "-----")] +
                                    [(v.value, v.name) for v in enums.EtaCompany]),
                           validators=[DataRequired(), AnyOf([v for v in enums.EtaCompany])])
-    name = StringField("Route Name",
-                       validators=[DataRequired()])
+    route = StringField("Route Name",
+                        validators=[DataRequired()])
     direction = SelectField("Direction",
                             coerce=str,
                             choices=[("", "-----")],
@@ -37,11 +37,11 @@ class EtaForm(FlaskForm):
                                choices=[("", "-----")],
                                validate_choice=False,
                                validators=[NoneOf(["", "None"])])
-    stop = SelectField("Stop",
-                       coerce=str,
-                       choices=[(None, "-----")],
-                       validate_choice=False,
-                       validators=[DataRequired(), NoneOf(["", "None"])])
+    stop_code = SelectField("Stop",
+                            coerce=str,
+                            choices=[(None, "-----")],
+                            validate_choice=False,
+                            validators=[DataRequired(), NoneOf(["", "None"])])
     lang = SelectField("Language",
                        coerce=str,
                        choices=[(v.value, v.name) for v in enums.Locale],
@@ -97,5 +97,5 @@ class EtaForm(FlaskForm):
             .json()['data']
         )
 
-        return [(stop['seq'], f"{stop['seq']:02}. {stop['name']['tc']}")
+        return [(stop['stop_code'], f"{stop['seq']:02}. {stop['name']['tc']}")
                 for stop in stops['stops']]

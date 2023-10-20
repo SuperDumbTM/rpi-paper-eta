@@ -26,10 +26,10 @@
             {% include "includes/flash_error.jinja" %}
 
             {{ render_field(form.company) }}
-            {{ render_field(form.name, class_="autocomplete") }}
+            {{ render_field(form.route, class_="autocomplete") }}
             {{ render_field(form.direction) }}
             {{ render_field(form.service_type) }}
-            {{ render_field(form.stop) }}
+            {{ render_field(form.stop_code) }}
             {{ render_field(form.lang) }}
 
             {{ form.submit(class="btn btn-primary btn-customized mt-4") }}
@@ -82,7 +82,7 @@
             beforeSend: () => showLoading(),
             complete: () => hideLoading(),
             success: function (res) {
-                $("input#name").autocomplete({
+                $("input#route").autocomplete({
                     maxShowItems: 6,
                     autoFocus: true,
                     source: res.data.routes.map((el) => el[0]),
@@ -92,7 +92,7 @@
     });
 
     // direction option updates
-    $("input#name").on("autocompleteselect", function (event, ui) {
+    $("input#route").on("autocompleteselect", function (event, ui) {
         query = {
             company: $('select#company option:selected').val(),
             route: ui.item.value,
@@ -114,7 +114,7 @@
     $('select#direction').on('change', function (event) {
         query = {
             company: $('select#company option:selected').val(),
-            route: $('input#name').val(),
+            route: $('input#route').val(),
             direction: $('option:selected', this).val(),
             type: "service_type",
         }
@@ -133,7 +133,7 @@
     $("select#service_type").on("change", function (event) {
         query = {
             company: $('select#company option:selected').val(),
-            route: $('input#name').val(),
+            route: $('input#route').val(),
             direction: $('select#direction option:selected').val(),
             service_type: $('option:selected', this).val(),
             type: "stop",
@@ -145,7 +145,7 @@
             beforeSend: () => showLoading(),
             complete: () => hideLoading(),
             success: function (res) {
-                select = $("select#stop")
+                select = $("select#stop_code")
                 clearSelect(select)
                 res.data.stops.forEach(
                     (el) => select.append(new Option(el[1], el[0])))
