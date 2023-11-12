@@ -78,7 +78,7 @@
 
         $.ajax({
             type: "GET",
-            url: `{{ url_for("api.eta_search", stype="route") }}?${$.param(query)}`,
+            url: `{{ url_for("api_config.eta_search", stype="route") }}?${$.param(query)}`,
             beforeSend: () => showLoading(),
             complete: () => hideLoading(),
             success: function (res) {
@@ -99,7 +99,7 @@
             type: "direction",
         }
 
-        $.get(`{{ url_for("api.eta_search", stype="direction") }}?${$.param(query)}`)
+        $.get(`{{ url_for("api_config.eta_search", stype="direction") }}?${$.param(query)}`)
             .then(function (res) {
                 clearSelect(select = $("select#direction"))
                 clearSelect($("select#service_type"))
@@ -119,7 +119,7 @@
             type: "service_type",
         }
 
-        $.get(`{{ url_for("api.eta_search", stype="service_type") }}?${$.param(query)}`)
+        $.get(`{{ url_for("api_config.eta_search", stype="service_type") }}?${$.param(query)}`)
             .then(function (res) {
                 clearSelect(select = $("select#service_type"))
                 clearSelect($("select#stop"))
@@ -141,7 +141,7 @@
 
         $.ajax({
             type: "GET",
-            url: `{{ url_for("api.eta_search", stype="stop") }}?${$.param(query)}`,
+            url: `{{ url_for("api_config.eta_search", stype="stop") }}?${$.param(query)}`,
             beforeSend: () => showLoading(),
             complete: () => hideLoading(),
             success: function (res) {

@@ -19,7 +19,7 @@ def index():
 
 @bp.route('/etas')
 def eta():
-    return render_template("configuration/eta.jinja", etas=site_data.EtaList())
+    return render_template("configuration/eta.jinja", etas=site_data.BookmarkList())
 
 
 @bp.route('/eta/create', methods=["GET", "POST"])
@@ -28,7 +28,7 @@ def eta_create():
 
     if form.validate_on_submit():
         try:
-            etas = site_data.EtaList()
+            etas = site_data.BookmarkList()
             etas.create(models.EtaConfig(**form.data)).persist()
         except Exception as e:
             current_app.logger.error(e)
@@ -45,7 +45,7 @@ def eta_create():
 
 @bp.route('/eta/edit/<id>', methods=["GET", "POST"])
 def eta_edit(id: str):
-    etas = site_data.EtaList()
+    etas = site_data.BookmarkList()
     entry = etas.get(id)
 
     form = forms.EtaForm(data=asdict(entry, dict_factory=utils.asdict_factory))

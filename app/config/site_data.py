@@ -80,7 +80,7 @@ class ApiServerSetting:
 
 
 @utils.singleton
-class EtaList(abc.Sequence):
+class BookmarkList(abc.Sequence):
 
     _data: list[models.EtaConfig]
     _filepath = Path(flask_config.CONFIG_DIR).joinpath("epa_list.json")

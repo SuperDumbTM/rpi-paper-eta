@@ -2,6 +2,7 @@ import dataclasses
 from enum import Enum
 import json
 from flask import request, url_for
+import pydantic
 
 
 def singleton(class_):
@@ -25,6 +26,10 @@ def asdict_factory(data):
             return obj.value
         return obj
     return dict((k, convert_value(v)) for k, v in data)
+
+
+def pydantic_error_dump(e: pydantic.ValidationError) -> list[dict[str, str]]:
+    return [{err['loc'][0]: err['msg']} for err in e.errors()]
 
 
 class DataclassJSONEncoder(json.JSONEncoder):

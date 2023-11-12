@@ -54,7 +54,7 @@
 <script>
     let datatable = $('#eta-list').DataTable({
         ajax: {
-            url: "{{ url_for('api.get_etas') }}",
+            url: "{{ url_for('api_config.get_etas') }}",
             dataSrc: "data.etas"
         },
         columns: [
@@ -75,8 +75,8 @@
                         `
                             <button type="button" class="dt-action btn btn-outline-dark btn-sm h-100"
                                 data-href-method="PUT"
-                                data-href={{ url_for('api.eta_swap') }}
-                                data-href-payload='{"source":"${meta.settings.json.data.etas[meta.row - 1].id}","destination": "${row.id}"}'
+                                data-href={{ url_for('api_config.eta_swap') }}
+                                data-href-payload=${JSON.stringify({source: meta.settings.json.data.etas[meta.row - 1].id, destination: row.id})}
                                 style="height: 100%;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up" viewBox="0 0 16 16">
                                     <path d="M3.204 11h9.592L8 5.519 3.204 11zm-.753-.659 4.796-5.48a1 1 0 0 1 1.506 0l4.796 5.48c.566.647.106 1.659-.753 1.659H3.204a1 1 0 0 1-.753-1.659z"/>
@@ -86,8 +86,8 @@
                     const down = meta.settings.json.data.etas.length != meta.row + 1 ? `
                         <button type="button" class="dt-action btn btn-outline-dark btn-sm"
                             data-href-method="PIT"
-                            data-href={{ url_for('api.eta_swap') }}
-                            data-href-payload='{"source":"${row.id}","destination":"${meta.settings.json.data.etas[meta.row + 1].id}"}'
+                            data-href={{ url_for('api_config.eta_swap') }}
+                            data-href-payload=${JSON.stringify({source: row.id, destination: meta.settings.json.data.etas[meta.row + 1].id})}
                             style="height: 100%;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
                                 <path d="M3.204 5h9.592L8 10.481 3.204 5zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659z"/>
@@ -98,7 +98,7 @@
                     return `
                         <button type="button" class="dt-action btn btn-danger btn-sm"
                             data-href-method="DELETE"
-                            data-href=${"{{ url_for('api.delete_eta', id='p1') }}".replace("p1", row.id)}>
+                            data-href=${"{{ url_for('api_config.delete_eta', id='p1') }}".replace("p1", row.id)}>
                             {{ _("Delete") }}
                         </button>
                         <button type="button" class="dt-action btn btn-success btn-sm"
@@ -133,7 +133,9 @@
             $.ajax({
                 method: $(this).data('href-method'),
                 url: $(this).data('href'),
-                data: $.parseJSON($(this).data('href-payload')),
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify($(this).data('href-payload')),
+                dataType: "json",
                 success: function (res) {
                     alertify.success(res.message)
                     datatable.ajax.reload()

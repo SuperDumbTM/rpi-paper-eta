@@ -1,8 +1,20 @@
 from typing import Optional
 
+from pydantic import BaseModel
 from pydantic.dataclasses import dataclass
 
 from app import enums
+
+
+class ApiServerSetting(BaseModel):
+    url: str
+    username: Optional[str] = None
+    password: Optional[str] = None
+
+
+class EtaOrderingUpdate(BaseModel):
+    source: str
+    destination: str
 
 
 @dataclass(slots=True)
@@ -22,3 +34,7 @@ class EpdConfig:
     model: str
     layout: str
     style: str
+
+
+class Eta(BaseModel):
+    pass

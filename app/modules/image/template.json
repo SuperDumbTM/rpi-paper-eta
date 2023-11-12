@@ -1,0 +1,142 @@
+{
+    "mixed": {
+        "layouts": [
+            {
+                "name": "first-layout",
+                "description": {
+                    "tc": "",
+                    "en": ""
+                },
+                "layout": {
+                    "row": 0,
+                    "col": 0,
+                    "eta": 0
+                },
+                "fonts": {
+                    "route": {
+                        "size": 1,
+                        "font": "ArialNarrow.ttf"
+                    },
+                    "stop": {
+                        "size": 1,
+                        "font": ""
+                    },
+                    "dest": {
+                        "size": 1,
+                        "font": ""
+                    },
+                    "minute": {
+                        "size": 1,
+                        "font": ""
+                    },
+                    "time": {
+                        "size": 1,
+                        "font": ""
+                    },
+                    "min_txt": {
+                        "size": 1,
+                        "font": ""
+                    },
+                    "rmk_txt": {
+                        "size": 1,
+                        "font": ""
+                    },
+                    "err_txt": {
+                        "size": 1,
+                        "font": ""
+                    }
+                },
+                "coords": {
+                    "border": {
+                        "width": 0,
+                        "height": 0,
+                        "start": [0, 0]
+                    },
+                    "route": {
+                        "position": {
+                            "width": 0,
+                            "height": 0,
+                            "start": [0, 0]
+                        },
+                        "border": {
+                            "width": 0,
+                            "height": 0,
+                            "start": [0, 0]
+                        },
+                        "logo": {
+                            "width": 0,
+                            "height": 0,
+                            "start": [0, 0]
+                        },
+                        "name": {
+                            "width": 0,
+                            "height": 0,
+                            "start": [0, 0]
+                        },
+                        "dest": {
+                            "width": 0,
+                            "height": 0,
+                            "start": [0, 0]
+                        },
+                        "stop": {
+                            "width": 0,
+                            "height": 0,
+                            "start": [0, 0]
+                        }
+                    },
+                    "eta": {
+                        "position": {
+                            "width": 0,
+                            "height": 0,
+                            "start": [0, 0]
+                        },
+                        "border": {
+                            "width": 0,
+                            "height": 0,
+                            "start": [0, 0]
+                        },
+                        "min": {
+                            "width": 0,
+                            "height": 0,
+                            "start": [0, 0]
+                        },
+                        "min_txt": {
+                            "width": 0,
+                            "height": 0,
+                            "start": [0, 0]
+                        },
+                        "time": {
+                            "width": 0,
+                            "height": 0,
+                            "start": [0, 0]
+                        }
+                    },
+                    "error": {
+                        "position": {
+                            "width": 0,
+                            "height": 0,
+                            "start": [0, 0]
+                        },
+                        "border": {
+                            "width": 0,
+                            "height": 0,
+                            "start": [0, 0]
+                        }
+                    }
+                },
+                "texts": {
+                    "minute": {
+                        "tc": "分鐘",
+                        "en": "Min"
+                    },
+                    "minutes": {
+                        "tc": "分鐘",
+                        "en": "Mins"
+                    }
+                }
+            }
+        ]
+    },
+    "time": {},
+    "minute": {}
+}

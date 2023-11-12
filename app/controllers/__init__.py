@@ -1,7 +1,8 @@
-from . import configuration, schedule, api
+from . import apis
+from . import configuration, schedule
 
 __all__ = [
+    apis,
     configuration,
     schedule,
-    api
 ]

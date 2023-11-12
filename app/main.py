@@ -16,7 +16,9 @@ app.config.from_mapping(dotenv_values(app.config.get("ENV_FILE_PATH")))
 
 app.register_blueprint(controllers.configuration.bp)
 app.register_blueprint(controllers.schedule.bp)
-app.register_blueprint(controllers.api.bp)
+
+app.register_blueprint(controllers.apis.config.bp)
+app.register_blueprint(controllers.apis.display.bp)
 
 # babel initialisation
 
