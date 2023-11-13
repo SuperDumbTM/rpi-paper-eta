@@ -14,16 +14,10 @@ except ImportError:
     from .. import utils, models
 
 
-WIDTH = 280
-HEIGHT = 480
-BLACK = 0x00
-WHITE = 0xff
-
-
 class Epd3in7EtaImage(EtaImageGenerator):
 
-    _black = BLACK
-    _white = WHITE
+    _bk = 0x00
+    _wh = 0xff
 
     @property
     def colors(self) -> tuple[str]:
@@ -31,11 +25,11 @@ class Epd3in7EtaImage(EtaImageGenerator):
 
     @property
     def width(self):
-        return WIDTH
+        return 280
 
     @property
     def height(self):
-        return HEIGHT
+        return 480
 
     @staticmethod
     def name() -> str:
@@ -54,7 +48,7 @@ class Epd3in7EtaImage(EtaImageGenerator):
         coords = self._config['coords']
 
         # row frame
-        for row in range(row_cnt):
+        for row in range(100):
             b.line((self._config['coords']['row']['offset'][0],
                     row_height * row, self.height, row_height * row))
 
@@ -72,53 +66,57 @@ class Epd3in7EtaImage(EtaImageGenerator):
                    utils.discard(eta.route,
                                  coords['route']['name']['width'],
                                  self.fonts['route']),
-                   fill=self._black, font=self.fonts['route'])
+                   fill=self._bk, font=self.fonts['route'])
             b.text((coords['route']['dest']['offset'][0],
                     coords['route']['dest']['offset'][1] + (row_height*row)),
-                   utils.discard("eta['dest']",  # TODO
+                   utils.discard(eta.destination,
                                  coords['route']
                                  ['dest']['width'], self.fonts['stop']),
-                   fill=self._black, font=self.fonts['stop'])
+                   fill=self._bk, font=self.fonts['stop'])
             b.text((coords['route']['stop']['offset'][0],
                     coords['route']['stop']['offset'][1] + (row_height*row)),
                    utils.discard(f"@{eta.stop_name}",
                                  coords['route']['stop']['width'],
                                  self.fonts['stop']),
-                   fill=self._black, font=self.fonts['stop'])
-
-            # seperator
-            b.line(((170, 0, 170, self.height)), self._black, width=1)
-            b.line(((35, 0, 35, self.height)), self._black, width=1)
-            b.line(((0, row*40, self.width, row*40)), self._black, width=1)
+                   fill=self._bk, font=self.fonts['stop'])
 
             # time
             for idx, time in enumerate(eta.etas):
-                if (idx >= self.lyo['counts']['eta']):
+                if (idx >= self._config['layout']['eta']):
                     break
                 idx_offset = row_height*row + \
-                    coords['eta']['row']['height']*idx
-                if time['minute'] is None:
-                    offset_x, offset_y = utils.position(
-                        time['remark'], coords['eta']['row']['width'],
-                        coords['eta']['row']['height'], self.fonts['err_txt'], align='c')
+                    coords['eta']['position']['height']*idx
 
-                    b.text((coords['eta']['row']['offset'][0] + offset_x,
-                            coords['eta']['row']['offset'][1] + offset_y + idx_offset),
+                # error
+                if isinstance(time, models.ErrorEta):
+                    continue
+                # eta
+                if time.is_arriving:
+                    offset_x, offset_y = utils.position(
+                        time.remark,
+                        coords['eta']['position']['width'],
+                        coords['eta']['position']['height'],
+                        self.fonts['err_txt'],
+                        align='c')
+
+                    b.text((coords['eta']['position']['offset'][0] + offset_x,
+                            coords['eta']['position']['offset'][1] + offset_y + idx_offset),
                            utils.discard(
-                        time['remark'], coords['eta']['row']['width'], self.fonts['rmk_txt']),
-                        fill=self._black, font=self.fonts['rmk_txt'])
+                        time.remark, coords['eta']['position']['width'], self.fonts['rmk_txt']),
+                        fill=self._bk,
+                        font=self.fonts['rmk_txt'])
                 else:
                     b.text((coords['eta']['min']['offset'][0],
                             coords['eta']['min']['offset'][1] + idx_offset),
-                           text=str(time['minute']), fill=self._black, font=self.fonts['minute'])
+                           text=str(time.eta_minute), fill=self._bk, font=self.fonts['minute'])
                     b.text((coords['eta']['min_txt']['offset'][0],
                             coords['eta']['min_txt']['offset'][1] + idx_offset),
                            text="分",
-                           fill=self._black, font=self.fonts['min_txt'])
+                           fill=self._bk, font=self.fonts['min_txt'])
                     b.text((coords['eta']['time']['offset'][0],
                             coords['eta']['time']['offset'][1] + idx_offset),
-                           text=time['time'], fill=self._black, font=self.fonts['time'])
-            return {'black': image.rotate(degree)}
+                           text=time.eta.strftime("%H:%M"), fill=self._bk, font=self.fonts['time'])
+        return {'black': image.rotate(degree)}
 
     # def __init__(self, layout_name: str, etaconf: list[RouteEntry], eta_factory: EtaFactory):
     #     super().__init__(layout_name, etaconf, eta_factory)
@@ -155,59 +153,59 @@ class Epd3in7EtaImage(EtaImageGenerator):
     #             rtdet = eta.details
     #             rtdet.route_exists(True)  # check routes existence
 
-            # # titles
-            # drawer.bitmap((layout['route']['logo']['offset'][0],
-            #                layout['route']['logo']['offset'][1] + (rh*row)),
-            #               Image.open(rtdet.logo()).convert(
-            #                   "1").resize((30, 30)),
-            #               self._black)
-            # drawer.text((layout['route']['name']['offset'][0],
-            #              layout['route']['name']['offset'][1] + (rh*row)),
-            #             utils.discard(rtdet.route_name(),
-            #                        layout['route']['name']['width'], f_rt),
-            #             fill=self._black, font=f_rt)
-            # drawer.text((layout['route']['dest']['offset'][0],
-            #              layout['route']['dest']['offset'][1] + (rh*row)),
-            #             utils.discard(rtdet.destination(),
-            #                        layout['route']['dest']['width'], f_stop),
-            #             fill=self._black, font=f_stop)
-            # drawer.text((layout['route']['stop']['offset'][0],
-            #              layout['route']['stop']['offset'][1] + (rh*row)),
-            #             utils.discard(
-            #                 f"@{rtdet.stop_name()}", layout['route']['stop']['width'], f_stop),
-            #             fill=self._black, font=f_stop)
+        # # titles
+        # drawer.bitmap((layout['route']['logo']['offset'][0],
+        #                layout['route']['logo']['offset'][1] + (rh*row)),
+        #               Image.open(rtdet.logo()).convert(
+        #                   "1").resize((30, 30)),
+        #               self._black)
+        # drawer.text((layout['route']['name']['offset'][0],
+        #              layout['route']['name']['offset'][1] + (rh*row)),
+        #             utils.discard(rtdet.route_name(),
+        #                        layout['route']['name']['width'], f_rt),
+        #             fill=self._black, font=f_rt)
+        # drawer.text((layout['route']['dest']['offset'][0],
+        #              layout['route']['dest']['offset'][1] + (rh*row)),
+        #             utils.discard(rtdet.destination(),
+        #                        layout['route']['dest']['width'], f_stop),
+        #             fill=self._black, font=f_stop)
+        # drawer.text((layout['route']['stop']['offset'][0],
+        #              layout['route']['stop']['offset'][1] + (rh*row)),
+        #             utils.discard(
+        #                 f"@{rtdet.stop_name()}", layout['route']['stop']['width'], f_stop),
+        #             fill=self._black, font=f_stop)
 
-            # layout outline
-            # drawer.line(((170, 0, 170, self.height)), self._black, width=1)
-            # drawer.line(((35, 0, 35, self.height)), self._black, width=1)
-            # drawer.line(((0, row*40, self.width, row*40)), self._black, width=1)
+        # layout outline
+        # drawer.line(((170, 0, 170, self.height)), self._black, width=1)
+        # drawer.line(((35, 0, 35, self.height)), self._black, width=1)
+        # drawer.line(((0, row*40, self.width, row*40)), self._black, width=1)
 
-            # # time
-            # for idx, time in enumerate(eta.etas()):
-            #     if (idx >= self.lyo['counts']['eta']):
-            #         break
-            #     idx_offset = rh*row + layout['eta']['row']['height']*idx
-            #     if time['minute'] is None:
-            #         offset_x, offset_y = utils.position(
-            #             time['remark'], layout['eta']['row']['width'],
-            #             layout['eta']['row']['height'], f_err, align='c')
+        # # time
+        # for idx, time in enumerate(eta.etas()):
+        #     if (idx >= self.lyo['counts']['eta']):
+        #         break
+        #     idx_offset = rh*row + layout['eta']['row']['height']*idx
+        #     if time['minute'] is None:
+        #         offset_x, offset_y = utils.position(
+        #             time['remark'], layout['eta']['row']['width'],
+        #             layout['eta']['row']['height'], f_err, align='c')
 
-            #         drawer.text((layout['eta']['row']['offset'][0] + offset_x,
-            #                      layout['eta']['row']['offset'][1] + offset_y + idx_offset),
-            #                     utils.discard(
-            #                         time['remark'], layout['eta']['row']['width'], f_rmk),
-            #                     fill=self._black, font=f_rmk)
-            #     else:
-            #         drawer.text((layout['eta']['min']['offset'][0],
-            #                      layout['eta']['min']['offset'][1] + idx_offset),
-            #                     text=str(time['minute']), fill=self._black, font=f_min)
-            #         drawer.text((layout['eta']['min_txt']['offset'][0],
-            #                      layout['eta']['min_txt']['offset'][1] + idx_offset),
-            #                     text=self.lyo['text']['minute'][entry.lang],
-            #                     fill=self._black, font=f_mintxt)
-            #         drawer.text((layout['eta']['time']['offset'][0],
-            #                      layout['eta']['time']['offset'][1] + idx_offset),
-            #                     text=time['time'], fill=self._black, font=f_time)
+        #         drawer.text((layout['eta']['row']['offset'][0] + offset_x,
+        #                      layout['eta']['row']['offset'][1] + offset_y + idx_offset),
+        #                     utils.discard(
+        #                         time['remark'], layout['eta']['row']['width'], f_rmk),
+        #                     fill=self._black, font=f_rmk)
+        #     else:
+        #         drawer.text((layout['eta']['min']['offset'][0],
+        #                      layout['eta']['min']['offset'][1] + idx_offset),
+        #                     text=str(time['minute']), fill=self._black, font=f_min)
+        #         drawer.text((layout['eta']['min_txt']['offset'][0],
+        #                      layout['eta']['min_txt']['offset'][1] + idx_offset),
+        #                     text=self.lyo['text']['minute'][entry.lang],
+        #                     fill=self._black, font=f_mintxt)
+        #         drawer.text((layout['eta']['time']['offset'][0],
+        #                      layout['eta']['time']['offset'][1] + idx_offset),
+        #                     text=time['time'], fill=self._black, font=f_time)
     #         except HketaException as e:
     #             errmsg = utils.wrap(
     #                 e.get_msg(entry.lang), layout['eta']['block']['width'],
@@ -230,20 +228,9 @@ class Epd3in7EtaImage(EtaImageGenerator):
 
 class Epd3in7TimeOnlyEtaImage(Epd3in7EtaImage):
 
-    _black = BLACK
-    _white = WHITE
-
     @property
     def colors(self) -> tuple[str]:
         return ("black",)
-
-    @property
-    def width(self):
-        return WIDTH
-
-    @property
-    def height(self):
-        return HEIGHT
 
     @staticmethod
     def name() -> str:

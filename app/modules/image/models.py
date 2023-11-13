@@ -6,6 +6,7 @@ from pydantic import BaseModel
 class Etas(BaseModel):
     route: str
     origin: str
+    destination: str
     stop_name: str
     logo: str
     timestamp: datetime.datetime

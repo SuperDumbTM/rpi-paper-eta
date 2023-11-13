@@ -5,7 +5,7 @@ from typing import Callable
 
 from PIL import ImageFont
 
-    
+
 def discard(text: str, length: int, font: ImageFont.FreeTypeFont) -> str:
     """discard a string with given maximum length and font
 
@@ -13,7 +13,7 @@ def discard(text: str, length: int, font: ImageFont.FreeTypeFont) -> str:
         text (str): input text
         length (int): maximum display length in pixel
         font (ImageFont.FreeTypeFont): font used to display the text
-        
+
     Usage:
     ```
         discard("abcdefg", 5, afont) # returns: "ab..."
@@ -27,8 +27,9 @@ def discard(text: str, length: int, font: ImageFont.FreeTypeFont) -> str:
     for cnt_char in range(len(text), 0, -1):
         if font.getlength(f"{text[:cnt_char]}...") < length:
             return f"{text[:cnt_char]}..."
-        
+
     return text
+
 
 def wrap(text: str, length: float, height: float, font: ImageFont.FreeTypeFont) -> str:
     """wrap a text to multiple lines with given area,  discard if the area is not
@@ -39,7 +40,7 @@ def wrap(text: str, length: float, height: float, font: ImageFont.FreeTypeFont) 
         length (float): maximum display length in pixel
         height (float): maximum display height in pixel
         font (ImageFont.FreeTypeFont): font used to display the text
-        
+
     Usage:
     ```
         discard("abcdefghijk", 5, 5, afont)
@@ -48,10 +49,10 @@ def wrap(text: str, length: float, height: float, font: ImageFont.FreeTypeFont) 
     """
     len_text = int(font.getlength(text))
     len_char = len_text / len(text)
-    
+
     if (length <= len_text):
         char_pre_ln = int(length // len_char)
-        
+
         for cnt_nl in range(math.ceil(len(text) / char_pre_ln) - 1):
             # starting position of current "line" to the modified string
             offset = char_pre_ln * (cnt_nl + 1)
@@ -66,15 +67,16 @@ def wrap(text: str, length: float, height: float, font: ImageFont.FreeTypeFont) 
                     text, font.getlength(text) - font.getlength("..."), font)
     return text
 
+
 def position(
-        text: str,
-        length: float,
-        height: float,
-        font: ImageFont.FreeTypeFont,
-        offset_x: int = 0,
-        offset_y: int = 0,
-        align: str = "c"
-    ) -> tuple[int, int]:
+    text: str,
+    length: float,
+    height: float,
+    font: ImageFont.FreeTypeFont,
+    offset_x: int = 0,
+    offset_y: int = 0,
+    align: str = "c"
+) -> tuple[int, int]:
     """calulate the x, y offset with given alignment
 
     Args:
@@ -94,15 +96,15 @@ def position(
             relative to the given area
     """
     total_width, total_height = font.getsize_multiline(text)
-    
-    remain_width = max(0, length - total_width) # font.getsize('\n')[0]
+
+    remain_width = max(0, length - total_width)  # font.getsize('\n')[0]
     remain_height = max(0, height - total_height)
     if (remain_width <= 0 and remain_height <= 0):
         return (0, 0)
 
     center_x = int(remain_width / 2)
     center_y = int(remain_height / 2)
-    
+
     match align:
         case "nw" | "NW":
             positions = (0, 0)
@@ -127,10 +129,11 @@ def position(
 
     return (positions[0] + offset_x, positions[1] + offset_y)
 
+
 def blockguard(func: Callable, timeout: int,
                daemon: bool = True, _raise: bool = False):
     """a decorator that helps to prevent infinite blocking from executing `func`
-    
+
     NOTE: implemented using `threading` module, be aware of all possible side 
         effects of threaded execution of your function
 
@@ -139,14 +142,14 @@ def blockguard(func: Callable, timeout: int,
         timeout (int): time limit for the execution
         daemon (bool): continuity of execution after time-out
         _raise (bool): raise `RuntimeError` when time-out
-        
+
     Raise:
         RuntimeError: funtion execution time-out
-        
+
     """
     def wrap(*args, **kwargs):
         t = threading.Thread(target=func, args=args, kwargs=kwargs)
-        t.daemon = daemon # set to True to kill in-progress async tasks
+        t.daemon = daemon  # set to True to kill in-progress async tasks
         t.start()
         t.join(timeout)
         if t.is_alive():
@@ -157,5 +160,3 @@ def blockguard(func: Callable, timeout: int,
                 raise RuntimeError(f"execution time-out {timeout}")
         return None
     return wrap
-    
-    

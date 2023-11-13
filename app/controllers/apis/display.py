@@ -1,4 +1,5 @@
 from dataclasses import asdict
+import os
 import requests
 from flask import (Blueprint, current_app, flash, jsonify, redirect,
                    render_template, request, url_for)
@@ -32,8 +33,10 @@ def refresh():
             image.models.Etas.Eta(**eta) for eta in etas_
         ]))
 
-    image.waveshare.epd3in7.Epd3in7EtaImage(
-        image.enums.EtaMode.MIXED, "6-row-3-eta").draw(etas)
+    img = image.waveshare.epd3in7.Epd3in7EtaImage(
+        image.enums.EtaMode.MIXED, "6-row-3-eta")
+    img.write_images(os.path.dirname(__file__), img.draw(etas))
+
     return jsonify({
         'success': True,
         'message': "Success.",

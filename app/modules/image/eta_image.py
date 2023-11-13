@@ -78,7 +78,7 @@ class EtaImageGenerator(ABC):
         for layout in self.layout_data()[eta_mode.value]['layouts']:
             if layout['name'] == layout_name:
                 self._config = layout
-                fonts = FontLoader(layout['fonts'])
+                self.fonts = FontLoader(layout['fonts'])
                 break
         else:
             raise KeyError(layout_name)
@@ -155,12 +155,14 @@ class FontLoader(collections.abc.Mapping):
             self._cache[config['font']].setdefault(
                 config['size'],
                 ImageFont.truetype(
-                    str(Path(__file__).parent.joinpath("fonts", config['font'])))
+                    str(Path(__file__).parent.joinpath(
+                        "fonts", config['font'])),
+                    config['size'])
             )
             self._data[key] = self._cache[config['font']][config['size']]
 
     def __getitem__(self, key: str) -> ImageFont.FreeTypeFont:
-        self._data[key]
+        return self._data[key]
 
     def __iter__(self) -> ImageFont.FreeTypeFont:
         for item in self._data.items():

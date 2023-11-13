@@ -22,20 +22,20 @@
                         "font": "NotoSansTC-black.otf"
                     },
                     "dest": {
-                        "size": 24,
+                        "size": 16,
                         "font": "NotoSansTC-black.otf"
                     },
                     "minute": {
-                        "size": 25,
+                        "size": 24,
                         "font": "GenJyuuGothicMonospace.ttf"
                     },
                     "time": {
-                        "size": 20,
+                        "size": 25,
                         "font": "Agency-bold.tff"
                     },
                     "min_txt": {
                         "size": 20,
-                        "font": "Agency-bold.tff"
+                        "font": "MicrosoftJhengHei.ttc"
                     },
                     "rmk_txt": {
                         "size": 14,
@@ -81,11 +81,6 @@
                     },
                     "eta": {
                         "position": {
-                            "width": 30,
-                            "height": 26.6,
-                            "offset": [170, 0]
-                        },
-                        "entry_position": {
                             "width": 110,
                             "height": 26.6,
                             "offset": [170, 0]
