@@ -97,6 +97,10 @@ class EtaImageGenerator(ABC):
             dict[str, Image.Image]: *key representing the color of the image
         """
 
+    @abstractmethod
+    def draw_error(self, message: str, degree: float = 0) -> dict[str, Image.Image]:
+        pass
+
     def write_images(self, directory: os.PathLike, images: dict[str, Image.Image]):
         logging.info(f"saving display output to file(s)")
 

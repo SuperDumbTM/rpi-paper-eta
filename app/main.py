@@ -24,10 +24,10 @@ app.register_blueprint(controllers.apis.display.bp)
 
 
 def get_locale():
-    crrt_locale = request.cookies.get('locale')
+    crrt_locale = request.cookies.get(
+        'locale') or request.headers.get("X-Locle")
     translations = [str(translation)
                     for translation in babel.list_translations()]
-
     if crrt_locale in translations:
         return crrt_locale
     return request.accept_languages.best_match(translations)

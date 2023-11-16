@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-10-15 23:01+0800\n"
+"POT-Creation-Date: 2023-11-16 22:49+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -18,15 +18,53 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.13.0\n"
 
+#: app/forms.py:71
+msgid "inbound"
+msgstr ""
+
+#: app/forms.py:73
+msgid "outbound"
+msgstr ""
+
+#: app/translation.py:4
+msgid "eta-end-of-service"
+msgstr "End-of-Service"
+
+#: app/translation.py:5
+msgid "eta-error-response"
+msgstr "API Error"
+
+#: app/translation.py:6
+msgid "eta-api-error"
+msgstr ""
+
+#: app/translation.py:7
+msgid "eta-no-entry"
+msgstr "No Data"
+
+#: app/translation.py:8
+msgid "eta-stop-closure"
+msgstr "Station Closure"
+
+#: app/translation.py:9
+msgid "eta-abnormal-service"
+msgstr "SSA"
+
 #: app/templates/layout.jinja:42
 msgid "Loading"
 msgstr "Loading"
 
-#: app/templates/configuration/eta.jinja:96
+#: app/templates/configuration/eta.jinja:102
 msgid "Delete"
 msgstr "Delete"
 
-#: app/templates/configuration/eta.jinja:101
+#: app/templates/configuration/eta.jinja:107
 msgid "Edit"
 msgstr "Edit"
+
+#~ msgid "route-not-exist"
+#~ msgstr ""
+
+#~ msgid "datacode"
+#~ msgstr ""
 

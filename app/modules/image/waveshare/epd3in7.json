@@ -100,6 +100,13 @@
                             "height": 26.6,
                             "offset": [225, 0]
                         }
+                    },
+                    "error": {
+                        "position": {
+                            "width": 110,
+                            "height": 80,
+                            "offset": [170, 0]
+                        }
                     }
                 },
                 "texts": {

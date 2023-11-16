@@ -10,7 +10,7 @@ class Etas(BaseModel):
     stop_name: str
     logo: str
     timestamp: datetime.datetime
-    etas: list["Eta"]
+    etas: Optional[list["Eta"]] = None
 
     class Eta(BaseModel):
         company: str
@@ -23,4 +23,12 @@ class Etas(BaseModel):
 
 
 class ErrorEta(BaseModel):
-    pass
+    code: str
+    message: str
+
+    route: str
+    origin: str
+    destination: str
+    stop_name: str
+    logo: str
+    timestamp: datetime.datetime

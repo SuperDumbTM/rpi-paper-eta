@@ -5,7 +5,7 @@ import pydantic
 import requests
 from flask import Blueprint, current_app,  jsonify, redirect, request
 
-from app import enums, forms, models, mschema, utils
+from app import enums, forms, models, utils
 from app.config import site_data
 
 bp = Blueprint('api_config', __name__, url_prefix="/api/config")
