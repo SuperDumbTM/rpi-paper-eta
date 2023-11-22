@@ -85,7 +85,7 @@ def eta_search(stype: Literal["route", "direction", "service_type", "stop"]):
                 'success': True,
                 'message': "Success.",
                 'data': {
-                    'routes': forms.EtaForm.route_choices(request.args['company'])
+                    'routes': forms.BookmarkForm.route_choices(request.args['company'])
                 }
             })
         elif stype == "direction":
@@ -100,8 +100,8 @@ def eta_search(stype: Literal["route", "direction", "service_type", "stop"]):
                 'success': True,
                 'message': "Success.",
                 'data': {
-                    'directions': forms.EtaForm.direction_choices(request.args['company'],
-                                                                  request.args['route'])
+                    'directions': forms.BookmarkForm.direction_choices(request.args['company'],
+                                                                       request.args['route'])
                 }
             })
         elif stype == "service_type":
@@ -112,9 +112,9 @@ def eta_search(stype: Literal["route", "direction", "service_type", "stop"]):
                 'success': True,
                 'message': "Success.",
                 'data': {
-                    'service_types': forms.EtaForm.type_choices(request.args['company'],
-                                                                request.args['route'],
-                                                                request.args['direction'])
+                    'service_types': forms.BookmarkForm.type_choices(request.args['company'],
+                                                                     request.args['route'],
+                                                                     request.args['direction'])
                 }
             })
         elif stype == "stop":
@@ -125,10 +125,10 @@ def eta_search(stype: Literal["route", "direction", "service_type", "stop"]):
                 'success': True,
                 'message': "Success.",
                 'data': {
-                    'stops': forms.EtaForm.stop_choices(request.args['company'],
-                                                        request.args['route'],
-                                                        request.args['direction'],
-                                                        request.args['service_type'])
+                    'stops': forms.BookmarkForm.stop_choices(request.args['company'],
+                                                             request.args['route'],
+                                                             request.args['direction'],
+                                                             request.args['service_type'])
                 }
             })
         else:

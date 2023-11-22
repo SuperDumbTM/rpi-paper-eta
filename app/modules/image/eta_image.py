@@ -25,38 +25,17 @@ class EtaImageGenerator(ABC):
     @property
     @abstractmethod
     def colors(self) -> Iterable[str]:
-        """Color name that the `EtaImage` will use in generating the image"""
+        """Color name that the generator will using in generating the image"""
         pass
-
-    @property
-    @abstractmethod
-    def width(self) -> int:
-        pass
-
-    @property
-    @abstractmethod
-    def height(self) -> int:
-        pass
-
-    # @staticmethod
-    # @abstractmethod
-    # def name() -> str:
-    #     """Name of the style"""
-    #     pass
-
-    # @classmethod
-    # def description(cls) -> str:
-    #     """style description"""
-    #     return cls.layout_data()[cls.name()]['description']
 
     @classmethod
     def layouts(cls, eta_mode: enums.EtaMode) -> dict[str, str]:
-        return {layout['name']: layout['description']
+        return {layout['details']['name']: layout['details']['description']
                 for layout in cls.layout_data()[eta_mode.value]['layouts']}
 
     @classmethod
     def layout_data(cls) -> dict[str, dict]:
-        """get the all layout configurations of the class"""
+        """Get the layout configurations of the generator"""
         with open(
             Path(sys.modules[cls.__module__].__file__).with_suffix(".json"),
             "r",
@@ -64,19 +43,12 @@ class EtaImageGenerator(ABC):
         ) as f:
             return json.load(f)
 
-    @classmethod
-    def layouting(cls, eta_mode: enums.EtaMode, layout: str) -> int:
-        for layout in cls.layout_data()[eta_mode.value]:
-            if layout['name'] == layout:
-                return (layout['layout']['row'], layout['layout']['col'])
-        raise KeyError(layout)
-
     def __init__(self, eta_mode: enums.EtaMode, layout_name: str) -> None:
         self.eta_mode = eta_mode
         self.layout_name = layout_name
 
         for layout in self.layout_data()[eta_mode.value]['layouts']:
-            if layout['name'] == layout_name:
+            if layout['details']['name'] == layout_name:
                 self._config = layout
                 self.fonts = FontLoader(layout['fonts'])
                 break
@@ -121,32 +93,6 @@ class EtaImageGenerator(ABC):
         return images
 
 
-# class EtaImageFactory(object):
-
-#     @classmethod
-#     def brands(cls) -> tuple[str]:
-#         return ("waveshare",)
-
-#     @classmethod
-#     def styles(cls, brand: str) -> list[type[EtaImage]]:
-#         try:
-#             from waveshare import image
-#         except ImportError:
-#             from .waveshare import image
-
-#         match brand:
-#             case "waveshare":
-#                 return image.image_cls
-#         raise KeyError(f"unrecognized epaper brand: {brand}")
-
-#     @classmethod
-#     def image(cls, brand: str, style: str) -> type[EtaImage]:
-#         models = cls.styles(brand)
-#         for eta_image in models:
-#             if style == eta_image.__name__:
-#                 return eta_image
-#         raise KeyError(f"unrecognized eta image: {brand}-{style}")
-
 class FontLoader(collections.abc.Mapping):
 
     _cache: dict[str, dict[int, ImageFont.FreeTypeFont]]
@@ -174,3 +120,29 @@ class FontLoader(collections.abc.Mapping):
 
     def __len__(self) -> int:
         return len(self._data)
+
+
+class EtaImageGeneratorFactory:
+
+    @classmethod
+    def brands(cls) -> Iterable[str]:
+        return ("waveshare",)
+
+    @classmethod
+    def styles(cls, brand: str) -> Iterable[type[EtaImageGenerator]]:
+        try:
+            import waveshare
+        except ImportError:
+            from . import waveshare
+
+        match brand.lower():
+            case "waveshare":
+                return waveshare.image_cls
+        raise KeyError(brand)
+
+    @classmethod
+    def get_generator(cls, brand: str, layout: str) -> type[EtaImageGenerator]:
+        for generator in cls.layouts(brand):
+            if layout == generator.__name__:
+                return generator
+        raise KeyError(layout)

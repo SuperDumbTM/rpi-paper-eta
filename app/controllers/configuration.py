@@ -24,7 +24,7 @@ def eta():
 
 @bp.route('/eta/create', methods=["GET", "POST"])
 def eta_create():
-    form = forms.EtaForm()
+    form = forms.BookmarkForm()
 
     if form.validate_on_submit():
         try:
@@ -48,18 +48,19 @@ def eta_edit(id: str):
     etas = site_data.BookmarkList()
     entry = etas.get(id)
 
-    form = forms.EtaForm(data=asdict(entry, dict_factory=utils.asdict_factory))
+    form = forms.BookmarkForm(data=asdict(
+        entry, dict_factory=utils.asdict_factory))
 
     try:
-        form.direction.choices += forms.EtaForm.direction_choices(
+        form.direction.choices += forms.BookmarkForm.direction_choices(
             entry.company.value, entry.route)
         form.direction.data = entry.direction.value
 
-        form.service_type.choices += forms.EtaForm.type_choices(
+        form.service_type.choices += forms.BookmarkForm.type_choices(
             entry.company.value, entry.route, entry.direction.value)
         form.service_type.data = entry.service_type
 
-        form.stop_code.choices += forms.EtaForm.stop_choices(
+        form.stop_code.choices += forms.BookmarkForm.stop_choices(
             entry.company.value, entry.route, entry.direction.value, entry.service_type)
         form.stop_code.data = entry.stop_code
     except requests.exceptions.ConnectionError:
@@ -86,7 +87,7 @@ def eta_edit(id: str):
 
 @bp.route('/epd')
 def epd():
-    return render_template("configuration/epd.jinja")
+    return render_template("configuration/epd.jinja", form=forms.EpaperForm())
 
 
 @bp.route('/api-server', methods=['GET', 'POST'])

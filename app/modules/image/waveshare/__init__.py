@@ -1,6 +1,5 @@
-from .epd3in7 import Epd3in7EtaImage, Epd3in7TimeOnlyEtaImage
+from .epd3in7 import Epd3in7
 
 image_cls = [
-    Epd3in7EtaImage,
-    Epd3in7TimeOnlyEtaImage
+    Epd3in7,
 ]

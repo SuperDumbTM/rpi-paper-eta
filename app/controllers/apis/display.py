@@ -5,6 +5,7 @@ from flask_babel import force_locale
 from app import models, translation
 from app.config import site_data
 from app.modules import image
+from app.modules.image.eta_image import EtaImageGeneratorFactory
 
 bp = Blueprint('api_display',
                __name__,
@@ -12,11 +13,22 @@ bp = Blueprint('api_display',
                url_prefix="/api/display")
 
 
+@bp.route("/models")
+def get_models():
+    return jsonify({
+        'success': True,
+        'message': "Success.",
+        'data': {
+            "models": [b.__name__ for b in EtaImageGeneratorFactory.styles(request.args['brand'])]
+        }
+    })
+
+
 @bp.route("/refresh")
 def refresh():
     import os
 
-    img = image.waveshare.epd3in7.Epd3in7EtaImage(
+    img = image.waveshare.epd3in7.Epd3in7(
         image.enums.EtaMode.MIXED, "6-row-3-eta")
     api_server = site_data.ApiServerSetting()
     bookmarks = site_data.BookmarkList()

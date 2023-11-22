@@ -3,14 +3,18 @@ import requests
 from flask_babel import lazy_gettext
 from flask_wtf import FlaskForm
 from wtforms import (HiddenField, PasswordField, SelectField, StringField,
-                     SubmitField)
+                     SubmitField, RadioField)
 from wtforms.validators import AnyOf, DataRequired, NoneOf
 
 from app import enums
 from app.config import site_data
+from app.modules.image.enums import EtaMode
+from app.modules.image.eta_image import EtaImageGeneratorFactory
 
 
 class ApiServerForm(FlaskForm):
+    """HTML Form for editing the details of the API server.
+    """
     url = StringField(
         "Server URL",
         validators=[DataRequired()])
@@ -20,7 +24,9 @@ class ApiServerForm(FlaskForm):
     submit = SubmitField()
 
 
-class EtaForm(FlaskForm):
+class BookmarkForm(FlaskForm):
+    """HTML Form for creating/editing an ETA bookmark.
+    """
     company = SelectField("Company",
                           choices=([("", "-----")] +
                                    [(v.value, v.name) for v in enums.EtaCompany]),
@@ -99,3 +105,20 @@ class EtaForm(FlaskForm):
 
         return [(stop['stop_code'], f"{stop['seq']:02}. {stop['name']['tc']}")
                 for stop in stops['stops']]
+
+
+class EpaperForm(FlaskForm):
+    brand = SelectField(f"{lazy_gettext('E-Paper')} {lazy_gettext('brand').title()}",
+                        choices=([("", "-----")] +
+                                 [(b, b.title()) for b in EtaImageGeneratorFactory.brands()]),
+                        validators=[DataRequired(),
+                                    AnyOf([v for v in EtaImageGeneratorFactory.brands()])])
+    format = SelectField(lazy_gettext("ETA Display Format"),
+                         choices=([("", "-----")] +
+                                  [(m.value, m.name.title().replace('_', ' ')) for m in EtaMode]),
+                         validators=[DataRequired(),
+                                     AnyOf([v for v in EtaImageGeneratorFactory.brands()])])
+    model = HiddenField(lazy_gettext("Model"),
+                        validators=[NoneOf(["", "None"])])
+    layout = HiddenField(validators=[NoneOf(["", "None"])])
+    submit = SubmitField()

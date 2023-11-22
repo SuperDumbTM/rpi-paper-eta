@@ -1,18 +1,109 @@
+{% from "macros/render_field.jinja" import render_field %}
+
 {% extends "layout.jinja" %}
 {% include "includes/navbar.jinja" %}
 
-{% block link %}
-<link href="https://cdn.datatables.net/v/bs5/dt-1.13.6/b-2.4.2/r-2.5.0/sl-1.7.0/datatables.min.css" rel="stylesheet">
-{% endblock link %}
+{% block style %}
+<style>
+    .select-box {
+        border-radius: 5px;
+        border: 2px solid #73AD21;
+        padding: 20px;
+        height: 200px;
+    }
+</style>
+{% endblock style %}
 
 {% block content %}
+<div class="row align-items-center" style="height: 100vh;">
+    <div class="mx-auto col-10 col-md-8 col-lg-6">
+        <form class="form" action="{{ form_action }}" method="post" autocomplete="off">
+            {{ form.hidden_tag() }}
+
+            <h1>Display Setting</h1>
+            <p class="description">
+            </p>
+
+            {% include "includes/flash_success.jinja" %}
+            {% include "includes/flash_error.jinja" %}
+
+            {{ render_field(form.brand) }}
+            {{ render_field(form.format) }}
+
+            <div class="form-group">
+                {{ form.model.label }}
+                <div id="model-input">
+                    <div class="form-check">
+                        沒有選項
+                    </div>
+                </div>
+            </div>
+
+
+            {{ form.model() }}
+
+            {{ form.layout.label }}
+            <div class="overflow-auto select-box" id="layout-input">
+            </div>
+            {{ form.layout() }}
+
+            {{ form.submit(class="btn btn-primary btn-customized mt-4") }}
+        </form>
+    </div>
+</div>
+
+<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" data-bs-backdrop="static"
+    data-bs-keyboard="false">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Understood</button>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 {% endblock content %}
 
 {% block script %}
-<script src="https://cdn.datatables.net/v/bs5/dt-1.13.6/b-2.4.2/r-2.5.0/sl-1.7.0/datatables.min.js"></script>
-
 <script>
-    
+    $("select[name=brand], select[name=format]").change(function(e) {
+        const BRAND = $("select[name=brand]").children("option:selected").val()
+        const DP = $("select[name=format]").children("option:selected").val()
+        $("#model-input, #layout-input").html("")
+
+        if (!BRAND || !DP) return
+
+        $.get(`{{ url_for("api_display.get_models") }}?${$.param({ brand: BRAND })}`, function (res) {
+            if (res.success) {
+                res.data.models.forEach(function (e) {
+                    $("#model-input").append(`
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="model" id="${e}" value="${e}">
+                            <label class="form-check-label" for="${e}">
+                                ${e}
+                            </label>
+                        </div>
+                    `)
+                })
+            } else {
+                $("#model-input").append("沒有選項")
+            }
+        })
+    })
+
+    $('input[name=model]').change(function(e) {
+        
+    })
 </script>
 {% endblock script %}
