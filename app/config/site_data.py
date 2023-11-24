@@ -5,6 +5,8 @@ import random
 import string
 from typing import Any, Optional, Self
 
+from pydantic import BaseModel
+
 from app import models, utils
 from app.config import flask_config
 
@@ -158,3 +160,53 @@ class BookmarkList(abc.Sequence):
     def _gen_id(self) -> str:
         return ''.join(random.choice(string.ascii_uppercase + string.digits)
                        for _ in range(6))
+
+
+@utils.singleton
+class EpaperSetting(BaseModel):
+
+    brand: Optional[str]
+    model: Optional[str]
+    layout: Optional[str]
+
+    _filepath = Path(flask_config.CONFIG_DIR).joinpath("e-paper.json")
+
+    def __init__(self) -> None:
+        self.brand = self.model = self.layout = None
+
+        if not self._filepath.exists():
+            self._filepath.parent.mkdir(mode=711, parents=True, exist_ok=True)
+            self.persist()
+        else:
+            with open(self._filepath, "r", encoding="utf-8") as f:
+                data = json.load(f)
+
+                self.brand = data.get('brand')
+                self.model = data.get('model')
+                self.layout = data.get('layout')
+
+    def clear(self) -> "EpaperSetting":
+        self.brand = self.model = self.layout = None
+        return self
+
+    def update(self,
+               *,
+               brand: str = None,
+               model: str = None,
+               layout: str = None) -> "EpaperSetting":
+        self.brand = brand or self.brand
+        self.model = model or self.model
+        self.layout = layout or self.layout
+        return self
+
+    def persist(self) -> None:
+        with open(self._filepath, "w", encoding="utf-8") as f:
+            json.dump(
+                {
+                    'brand': self.brand,
+                    'model': self.model,
+                    'layout': self.layout
+                },
+                f,
+                indent=4
+            )

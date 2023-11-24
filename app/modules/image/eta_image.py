@@ -29,9 +29,14 @@ class EtaImageGenerator(ABC):
         pass
 
     @classmethod
-    def layouts(cls, eta_mode: enums.EtaMode) -> dict[str, str]:
-        return {layout['details']['name']: layout['details']['description']
-                for layout in cls.layout_data()[eta_mode.value]['layouts']}
+    def layouts(cls) -> dict[enums.EtaMode, list[dict[str, str]]]:
+        layouts = {}
+        for mode in enums.EtaMode:
+            layouts[mode] = [{
+                'name': layout['details']['name'],
+                'description': layout['details']['description']
+            } for layout in cls.layout_data()[mode.value].get('layouts', [])]
+        return layouts
 
     @classmethod
     def layout_data(cls) -> dict[str, dict]:
@@ -129,7 +134,7 @@ class EtaImageGeneratorFactory:
         return ("waveshare",)
 
     @classmethod
-    def styles(cls, brand: str) -> Iterable[type[EtaImageGenerator]]:
+    def models(cls, brand: str) -> Iterable[type[EtaImageGenerator]]:
         try:
             import waveshare
         except ImportError:
@@ -141,8 +146,8 @@ class EtaImageGeneratorFactory:
         raise KeyError(brand)
 
     @classmethod
-    def get_generator(cls, brand: str, layout: str) -> type[EtaImageGenerator]:
-        for generator in cls.layouts(brand):
-            if layout == generator.__name__:
+    def get_generator(cls, brand: str, model: str) -> type[EtaImageGenerator]:
+        for generator in cls.models(brand):
+            if model == generator.__name__:
                 return generator
-        raise KeyError(layout)
+        raise KeyError(model)

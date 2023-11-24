@@ -5,7 +5,7 @@ from flask import Flask, flash, redirect, render_template, request, url_for
 from flask_babel import Babel
 
 from app.config import site_data
-from app import controllers, enums
+from app import controllers
 
 
 # flask app initialisation
@@ -20,16 +20,18 @@ app.register_blueprint(controllers.schedule.bp)
 app.register_blueprint(controllers.apis.config.bp)
 app.register_blueprint(controllers.apis.display.bp)
 
-# babel initialisation
 
+# babel initialisation
 
 def get_locale():
     crrt_locale = request.cookies.get(
         'locale') or request.headers.get("X-Locle")
+
     translations = [str(translation)
                     for translation in babel.list_translations()]
     if crrt_locale in translations:
         return crrt_locale
+
     return request.accept_languages.best_match(translations)
 
 

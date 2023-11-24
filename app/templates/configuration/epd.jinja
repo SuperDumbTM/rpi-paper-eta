@@ -7,9 +7,9 @@
 <style>
     .select-box {
         border-radius: 5px;
-        border: 2px solid #73AD21;
+        border: var(--bs-border-width) solid var(--bs-border-color);
         padding: 20px;
-        height: 200px;
+        height: 400px;
     }
 </style>
 {% endblock style %}
@@ -28,22 +28,12 @@
             {% include "includes/flash_error.jinja" %}
 
             {{ render_field(form.brand) }}
-            {{ render_field(form.format) }}
+            {{ render_field(form.model) }}
 
             <div class="form-group">
-                {{ form.model.label }}
-                <div id="model-input">
-                    <div class="form-check">
-                        沒有選項
-                    </div>
+                {{ form.layout.label }}
+                <div class="overflow-auto select-box" id="layout-input">
                 </div>
-            </div>
-
-
-            {{ form.model() }}
-
-            {{ form.layout.label }}
-            <div class="overflow-auto select-box" id="layout-input">
             </div>
             {{ form.layout() }}
 
@@ -52,58 +42,65 @@
     </div>
 </div>
 
-<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" data-bs-backdrop="static"
-    data-bs-keyboard="false">
-
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Understood</button>
-            </div>
-        </div>
-
-    </div>
-</div>
-
 {% endblock content %}
 
 {% block script %}
 <script>
-    $("select[name=brand], select[name=format]").change(function(e) {
+    $("select[name=brand]").change(function (e) {
         const BRAND = $("select[name=brand]").children("option:selected").val()
-        const DP = $("select[name=format]").children("option:selected").val()
-        $("#model-input, #layout-input").html("")
+        $("select[name=model]").find('option').not(':first').remove()
 
-        if (!BRAND || !DP) return
-
+        if (!BRAND) return
         $.get(`{{ url_for("api_display.get_models") }}?${$.param({ brand: BRAND })}`, function (res) {
             if (res.success) {
                 res.data.models.forEach(function (e) {
-                    $("#model-input").append(`
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="model" id="${e}" value="${e}">
-                            <label class="form-check-label" for="${e}">
-                                ${e}
-                            </label>
-                        </div>
-                    `)
+                    $("select[name=model]").append(new Option(e, e))
                 })
             } else {
-                $("#model-input").append("沒有選項")
+
             }
         })
     })
 
-    $('input[name=model]').change(function(e) {
-        
+    $("select[name=model]").change(function (e) {
+        const BRAND = $("select[name=brand]").children("option:selected").val()
+        const MODEL = $("select[name=model]").children("option:selected").val()
+        $("#layout-input").html("")
+
+        if (!BRAND || !MODEL) return
+
+        $.get(`{{ url_for("api_display.get_layouts") }}?${$.param({ brand: BRAND, model: MODEL })}`,
+            function (res) {
+                if (res.success) {
+                    for (const [key, value] of Object.entries(res.data.layouts)) {
+                        value.forEach(function (e) {
+                            $("#layout-input").append(`
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <input name="style" type="radio">
+                                            <label>${e.name}</label>
+                                        </h5>
+                                        <p class="card-text">
+                                            <strong style="display: inline-block; width: 50px;">Type:</strong>
+                                            <span class="card-text-descr">${key}</span>
+                                        </p>
+                                        <hr>
+                                        <p class="card-text">
+                                            ${e.description.en}
+                                        </p>
+                                        <p class="card-text">
+                                            ${e.description.zh_Hant_HK}
+                                        </p>
+                                    </div>
+                                </div>
+                            `)
+                        })
+                    }
+                } else {
+
+                }
+            })
     })
 </script>
 {% endblock script %}

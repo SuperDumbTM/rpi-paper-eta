@@ -2,10 +2,12 @@
     "mixed": {
         "layouts": [
             {
-                "name": "first-layout",
-                "description": {
-                    "tc": "",
-                    "en": "An overview of the layout"
+                "details": {
+                    "name": "first-layout",
+                    "description": {
+                        "en": "An overview of the layout",
+                        "zh_Hant_HK": ""
+                    }
                 },
                 "layout": {
                     "row": 0,

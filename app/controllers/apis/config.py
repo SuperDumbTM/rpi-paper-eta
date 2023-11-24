@@ -199,3 +199,12 @@ def eta_swap():
             'message': "Updated.",
             'data': None
         })
+
+
+@bp.route("/epaper", methods=["POST", "PUT"])
+def update_epaper_setting():
+    return jsonify({
+        'success': True,
+        'message': "Updated.",
+        'data': None
+    })

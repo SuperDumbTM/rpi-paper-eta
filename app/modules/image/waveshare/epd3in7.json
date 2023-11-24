@@ -5,8 +5,8 @@
                 "details": {
                     "name": "6-row-3-eta",
                     "description": {
-                        "tc": "",
-                        "en": "Display at most 6 routes and up to 3 ETAs"
+                        "en": "Display at most 6 routes and up to 3 ETAs",
+                        "zh_Hant_HK": "顯示最多六條路線及最近三班班次的到站時間"
                     }
                 },
                 "layout": {

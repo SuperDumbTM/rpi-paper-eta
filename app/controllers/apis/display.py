@@ -19,7 +19,19 @@ def get_models():
         'success': True,
         'message': "Success.",
         'data': {
-            "models": [b.__name__ for b in EtaImageGeneratorFactory.styles(request.args['brand'])]
+            "models": [b.__name__ for b in EtaImageGeneratorFactory.models(request.args['brand'])]
+        }
+    })
+
+
+@bp.route("/layouts")
+def get_layouts():
+    return jsonify({
+        'success': True,
+        'message': "Success.",
+        'data': {
+            "layouts": EtaImageGeneratorFactory.get_generator(
+                request.args['brand'], request.args['model']).layouts()
         }
     })
 

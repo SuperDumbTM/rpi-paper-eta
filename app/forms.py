@@ -113,12 +113,8 @@ class EpaperForm(FlaskForm):
                                  [(b, b.title()) for b in EtaImageGeneratorFactory.brands()]),
                         validators=[DataRequired(),
                                     AnyOf([v for v in EtaImageGeneratorFactory.brands()])])
-    format = SelectField(lazy_gettext("ETA Display Format"),
-                         choices=([("", "-----")] +
-                                  [(m.value, m.name.title().replace('_', ' ')) for m in EtaMode]),
-                         validators=[DataRequired(),
-                                     AnyOf([v for v in EtaImageGeneratorFactory.brands()])])
-    model = HiddenField(lazy_gettext("Model"),
+    model = SelectField(lazy_gettext("Model"),
+                        choices=[("", "-----")],
                         validators=[NoneOf(["", "None"])])
     layout = HiddenField(validators=[NoneOf(["", "None"])])
     submit = SubmitField()
