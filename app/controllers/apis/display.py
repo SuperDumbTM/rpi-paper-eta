@@ -9,7 +9,7 @@ from app.modules.image.eta_image import EtaImageGeneratorFactory
 
 bp = Blueprint('api_display',
                __name__,
-               template_folder="../templates",
+               template_folder="../../templates",
                url_prefix="/api/display")
 
 

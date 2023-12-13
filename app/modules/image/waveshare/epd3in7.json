@@ -124,6 +124,130 @@
             }
         ]
     },
-    "time": {},
+    "time": {
+        "layouts": [
+            {
+                "details": {
+                    "name": "6-row-3-eta",
+                    "description": {
+                        "en": "Display at most 6 routes and up to 3 ETAs",
+                        "zh_Hant_HK": "顯示最多六條路線及最近三班班次的到站時間"
+                    }
+                },
+                "layout": {
+                    "row": 6,
+                    "col": 1,
+                    "eta": 3
+                },
+                "fonts": {
+                    "route": {
+                        "size": 32,
+                        "font": "NotoSansTC-black.otf"
+                    },
+                    "stop": {
+                        "size": 16,
+                        "font": "NotoSansTC-black.otf"
+                    },
+                    "dest": {
+                        "size": 16,
+                        "font": "NotoSansTC-black.otf"
+                    },
+                    "minute": {
+                        "size": 24,
+                        "font": "GenJyuuGothicMonospace.ttf"
+                    },
+                    "time": {
+                        "size": 25,
+                        "font": "Agency-bold.tff"
+                    },
+                    "min_txt": {
+                        "size": 20,
+                        "font": "MicrosoftJhengHei.ttc"
+                    },
+                    "rmk_txt": {
+                        "size": 14,
+                        "font": "MicrosoftJhengHei.ttc"
+                    },
+                    "err_txt": {
+                        "size": 18,
+                        "font": "MicrosoftJhengHei.ttc"
+                    }
+                },
+                "coords": {
+                    "row": {
+                        "width": 280,
+                        "height": 80,
+                        "offset": [0, 0]
+                    },
+                    "route": {
+                        "position": {
+                            "width": 170,
+                            "height": 80,
+                            "offset": [0, 0]
+                        },
+                        "logo": {
+                            "width": 35,
+                            "height": 40,
+                            "offset": [2, 6]
+                        },
+                        "name": {
+                            "width": 135,
+                            "height": 40,
+                            "offset": [35, -5]
+                        },
+                        "dest": {
+                            "width": 170,
+                            "height": 20,
+                            "offset": [0, 35]
+                        },
+                        "stop": {
+                            "width": 170,
+                            "height": 20,
+                            "offset": [0, 55]
+                        }
+                    },
+                    "eta": {
+                        "position": {
+                            "width": 110,
+                            "height": 26.6,
+                            "offset": [170, 0]
+                        },
+                        "min": {
+                            "width": 30,
+                            "height": 26.6,
+                            "offset": [170, 0]
+                        },
+                        "min_txt": {
+                            "width": 25,
+                            "height": 26.6,
+                            "offset": [200, 4]
+                        },
+                        "time": {
+                            "width": 55,
+                            "height": 26.6,
+                            "offset": [225, 0]
+                        }
+                    },
+                    "error": {
+                        "position": {
+                            "width": 110,
+                            "height": 80,
+                            "offset": [170, 0]
+                        }
+                    }
+                },
+                "texts": {
+                    "minute": {
+                        "tc": "分鐘",
+                        "en": "Min"
+                    },
+                    "minutes": {
+                        "tc": "分鐘",
+                        "en": "Mins"
+                    }
+                }
+            }
+        ]
+    },
     "minute": {}
 }

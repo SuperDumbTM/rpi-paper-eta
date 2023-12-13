@@ -28,10 +28,6 @@ def asdict_factory(data):
     return dict((k, convert_value(v)) for k, v in data)
 
 
-def pydantic_error_dump(e: pydantic.ValidationError) -> list[dict[str, str]]:
-    return [{err['loc'][0]: err['msg']} for err in e.errors()]
-
-
 class DataclassJSONEncoder(json.JSONEncoder):
     def default(s, o):
         if dataclasses.is_dataclass(o):

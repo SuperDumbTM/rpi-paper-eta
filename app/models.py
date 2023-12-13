@@ -6,17 +6,6 @@ from pydantic.dataclasses import dataclass
 from app import enums
 
 
-class ApiServerSetting(BaseModel):
-    url: str
-    username: Optional[str] = None
-    password: Optional[str] = None
-
-
-class EtaOrderingUpdate(BaseModel):
-    source: str
-    destination: str
-
-
 @dataclass(slots=True)
 class EtaConfig:
     company: enums.EtaCompany

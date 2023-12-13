@@ -5,7 +5,7 @@ from flask import Flask, flash, redirect, render_template, request, url_for
 from flask_babel import Babel
 
 from app.config import site_data
-from app import controllers
+from app import controllers, handles
 
 
 # flask app initialisation
@@ -14,14 +14,17 @@ app = Flask(__name__, template_folder="template", static_folder="static")
 app.config.from_pyfile(Path(__file__).parent / "config" / "flask_config.py")
 app.config.from_mapping(dotenv_values(app.config.get("ENV_FILE_PATH")))
 
-app.register_blueprint(controllers.configuration.bp)
-app.register_blueprint(controllers.schedule.bp)
+app.register_blueprint(controllers.html.configuration.bp)
+app.register_blueprint(controllers.html.schedule.bp)
 
 app.register_blueprint(controllers.apis.config.bp)
 app.register_blueprint(controllers.apis.display.bp)
 
+app.register_blueprint(handles.bp)
+
 
 # babel initialisation
+
 
 def get_locale():
     crrt_locale = request.cookies.get(

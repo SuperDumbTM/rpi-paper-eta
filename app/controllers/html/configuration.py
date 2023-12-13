@@ -8,7 +8,7 @@ from app.config import site_data
 
 bp = Blueprint('configuration',
                __name__,
-               template_folder="../templates",
+               template_folder="../../templates",
                url_prefix="/configuration")
 
 

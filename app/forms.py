@@ -116,5 +116,4 @@ class EpaperForm(FlaskForm):
     model = SelectField(lazy_gettext("Model"),
                         choices=[("", "-----")],
                         validators=[NoneOf(["", "None"])])
-    layout = HiddenField(validators=[NoneOf(["", "None"])])
     submit = SubmitField()

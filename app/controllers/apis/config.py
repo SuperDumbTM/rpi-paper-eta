@@ -1,9 +1,10 @@
 from dataclasses import asdict
 from typing import Literal
-import pydantic
 
 import requests
 from flask import Blueprint, current_app,  jsonify, redirect, request
+from webargs import fields
+from webargs.flaskparser import use_args
 
 from app import enums, forms, models, utils
 from app.config import site_data
@@ -13,36 +14,28 @@ bp = Blueprint('api_config', __name__, url_prefix="/api/config")
 
 @bp.route("/server")
 def get_server_setting():
-    print(site_data.ApiServerSetting().__dict__)
     return jsonify({
         'success': True,
         'message': "Success.",
         'data': {
-            "setting": models.ApiServerSetting(
-                **site_data.ApiServerSetting().__dict__).model_dump()
+            'setting': site_data.ApiServerSetting().__dict__
         }
     })
 
 
 @bp.route("/server", methods=["POST", "PUT"])
-def update_server_setting():
-    try:
-        site_data.ApiServerSetting().update(
-            **models.ApiServerSetting(**request.json).model_dump()).persist()
-    except pydantic.ValidationError as e:
-        return jsonify({
-            'success': False,
-            'message': "Missing/incorrect fields.",
-            'data': {
-                'errors': utils.pydantic_error_dump(e)
-            }
-        })
-    else:
-        return jsonify({
-            'success': True,
-            'message': "Updated.",
-            'data': None
-        })
+@use_args({
+    'url': fields.URL(required=True),
+    'username': fields.Str(required=False),
+    'password': fields.Str(required=False)
+})
+def update_server_setting(args):
+    site_data.ApiServerSetting().update(**args).persist()
+    return jsonify({
+        'success': True,
+        'message': "Updated.",
+        'data': None
+    })
 
 
 @bp.route("/bookmarks")
@@ -71,14 +64,11 @@ def get_etas():
 
 
 @bp.route('/bookmark/<stype>')
-def eta_search(stype: Literal["route", "direction", "service_type", "stop"]):
-    if ("company" not in request.args):
-        return jsonify({
-            'success': False,
-            'message': "Missing required query parameter(s)",
-            'data': {'missing': [{'company': ["This field is required"]}]}
-        }), 422
-
+@use_args({
+    'company': fields.String(required=True),
+}, location="query")
+def eta_search(args, stype: Literal["route", "direction", "service_type", "stop"]):
+    print(args)
     try:
         if stype == "route":
             return jsonify({
@@ -179,26 +169,19 @@ def delete_eta(id: str):
 
 
 @bp.route("/bookmark/order", methods=["PUT"])
-def eta_swap():
-    try:
-        payload = models.EtaOrderingUpdate(**request.json)
+@use_args({
+    'source': fields.Str(required=True),
+    'destination': fields.Str(required=True),
+})
+def eta_swap(args):
+    etas = site_data.BookmarkList()
+    etas.swap(args['source'], args['destination']).persist()
 
-        etas = site_data.BookmarkList()
-        etas.swap(payload.source, payload.destination).persist()
-    except pydantic.ValidationError as e:
-        return jsonify({
-            'success': False,
-            'message': "Missing/incorrect fields.",
-            'data': {
-                'errors': utils.pydantic_error_dump(e)
-            }
-        })
-    else:
-        return jsonify({
-            'success': True,
-            'message': "Updated.",
-            'data': None
-        })
+    return jsonify({
+        'success': True,
+        'message': "Updated.",
+        'data': None
+    })
 
 
 @bp.route("/epaper", methods=["POST", "PUT"])

@@ -30,13 +30,6 @@
             {{ render_field(form.brand) }}
             {{ render_field(form.model) }}
 
-            <div class="form-group">
-                {{ form.layout.label }}
-                <div class="overflow-auto select-box" id="layout-input">
-                </div>
-            </div>
-            {{ form.layout() }}
-
             {{ form.submit(class="btn btn-primary btn-customized mt-4") }}
         </form>
     </div>
