@@ -12,18 +12,13 @@ bp = Blueprint('configuration',
                url_prefix="/configuration")
 
 
-@bp.route('/')
-def index():
-    return render_template("configuration/index.jinja")
+@bp.route('/bookmarks')
+def bookmark_list():
+    return render_template("configuration/bookmark_list.jinja", etas=site_data.BookmarkList())
 
 
-@bp.route('/etas')
-def eta():
-    return render_template("configuration/eta.jinja", etas=site_data.BookmarkList())
-
-
-@bp.route('/eta/create', methods=["GET", "POST"])
-def eta_create():
+@bp.route('/bookmark/create', methods=["GET", "POST"])
+def bookmark_create():
     form = forms.BookmarkForm()
 
     if form.validate_on_submit():
@@ -37,14 +32,15 @@ def eta_create():
         else:
             flash("Updated.", enums.FlashCategory.success)
 
-    return render_template("configuration/eta_form.jinja",
+    return render_template("configuration/bookmark_form.jinja",
                            form=form,
-                           form_action=url_for("configuration.eta_create"),
+                           form_action=url_for(
+                               "configuration.bookmark_create"),
                            editing=False)
 
 
-@bp.route('/eta/edit/<id>', methods=["GET", "POST"])
-def eta_edit(id: str):
+@bp.route('/bookmarks/edit/<id>', methods=["GET", "POST"])
+def bookmark_edit(id: str):
     etas = site_data.BookmarkList()
     entry = etas.get(id)
 
@@ -78,20 +74,20 @@ def eta_edit(id: str):
         else:
             flash("Updated.", enums.FlashCategory.success)
 
-    return render_template("configuration/eta_form.jinja",
+    return render_template("configuration/bookmark_form.jinja",
                            form=form,
                            form_action=url_for(
-                               "configuration.eta_edit", id=id),
+                               "configuration.bookmark_edit", id=id),
                            editing=True)
 
 
 @bp.route('/epd')
-def epd():
-    return render_template("configuration/epd.jinja", form=forms.EpaperForm())
+def epaper_setting():
+    return render_template("configuration/epd_form.jinja", form=forms.EpaperForm())
 
 
 @bp.route('/api-server', methods=['GET', 'POST'])
-def api_server():
+def api_server_setting():
     setting = site_data.ApiServerSetting()
     form = forms.ApiServerForm()
 
@@ -106,7 +102,7 @@ def api_server():
                   enums.FlashCategory.error)
         else:
             flash("Updated.", enums.FlashCategory.success)
-    return render_template("configuration/api_server.jinja",
+    return render_template("configuration/api_server_form.jinja",
                            api_url=setting.url,
                            api_username=setting.username,
                            api_password=setting.password,

@@ -1,14 +1,5 @@
 [
     {
-        "company": "mtr_lrt",
-        "route": "614P",
-        "direction": "inbound",
-        "service_type": "default",
-        "stop_code": "240",
-        "lang": "tc",
-        "id": "PCIYQH"
-    },
-    {
         "company": "kmb",
         "route": "2B",
         "direction": "inbound",
@@ -16,6 +7,15 @@
         "stop_code": "094457650286AA67",
         "lang": "tc",
         "id": "J53TB9"
+    },
+    {
+        "company": "mtr_lrt",
+        "route": "614P",
+        "direction": "inbound",
+        "service_type": "default",
+        "stop_code": "240",
+        "lang": "tc",
+        "id": "PCIYQH"
     },
     {
         "company": "kmb",

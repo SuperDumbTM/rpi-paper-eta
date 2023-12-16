@@ -5,7 +5,9 @@ import random
 import string
 from typing import Any, Optional, Self
 
+import flask_apscheduler
 from pydantic import BaseModel
+
 
 from app import models, utils
 from app.config import flask_config
@@ -85,7 +87,7 @@ class ApiServerSetting:
 class BookmarkList(abc.Sequence):
 
     _data: list[models.EtaConfig]
-    _filepath = Path(flask_config.CONFIG_DIR).joinpath("epa_list.json")
+    _filepath = Path(flask_config.CONFIG_DIR).joinpath("bookmarks.json")
 
     def __init__(self) -> None:
         self._data = []
@@ -105,12 +107,12 @@ class BookmarkList(abc.Sequence):
         return self._data.__repr__()
 
     def create(self, value: models.EtaConfig) -> Self:
-        value.id = self._gen_id()
+        value.id = utils.random_id_gen(6)
         self._data.append(value)
         return self
 
     def insert(self, index: int, value: models.EtaConfig) -> Self:
-        value.id = self._gen_id()
+        value.id = utils.random_id_gen(6)
         self._data.insert(index, value)
         return self
 
@@ -154,12 +156,7 @@ class BookmarkList(abc.Sequence):
             raise Exception("Duplicated ID.")
 
         with open(self._filepath, "w", encoding="utf-8") as f:
-            print(self._data)
             json.dump(self._data, f, indent=4, cls=utils.DataclassJSONEncoder)
-
-    def _gen_id(self) -> str:
-        return ''.join(random.choice(string.ascii_uppercase + string.digits)
-                       for _ in range(6))
 
 
 @utils.singleton
@@ -210,3 +207,45 @@ class EpaperSetting(BaseModel):
                 f,
                 indent=4
             )
+
+
+@utils.singleton
+class RefreshSchedule:
+
+    _data: list
+    _filepath = Path(flask_config.CONFIG_DIR).joinpath("schedules.json")
+
+    def __init__(self, app) -> None:
+        self._data = []
+
+        if not self._filepath.exists():
+            self._filepath.parent.mkdir(mode=711, parents=True, exist_ok=True)
+            self.persist()
+        else:
+            with open(self._filepath, "r", encoding="utf-8") as f:
+                data = json.load(f)
+
+        self._scheduler = flask_apscheduler.APScheduler()
+        self._scheduler.init_app(app)
+        self._scheduler.start()
+
+        # from datetime import datetime
+        # self._scheduler.add_job(utils.random_id_gen(
+        #     8), lambda: print(datetime.now().strftime("%H:%M:%S")), trigger='cron', second='*/5')
+
+    def add_job(self):
+        self._scheduler.add_job(utils.random_id_gen(8), 'function', 'cron')
+
+    def load(self) -> None:
+        with open(self._filepath, "r", encoding="utf-8") as f:
+            self._data = [models.EtaConfig(**c) for c in json.load(f)]
+
+    def persist(self) -> None:
+        # keys = set([k.id for k in self._data])
+        # if None in keys:
+        #     raise Exception("Empty ID.")
+        # if len(keys) != len(self._data):
+        #     raise Exception("Duplicated ID.")
+
+        with open(self._filepath, "w", encoding="utf-8") as f:
+            json.dump(self._data, f, indent=4, cls=utils.DataclassJSONEncoder)

@@ -18,24 +18,24 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item" href="{{ url_for('configuration.eta') }}">
+                            <a class="dropdown-item" href="{{ url_for('configuration.bookmark_list') }}">
                                 ETA
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="{{ url_for('configuration.epd') }}">
+                            <a class="dropdown-item" href="{{ url_for('configuration.epaper_setting') }}">
                                 E-Paper
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="{{ url_for('configuration.api_server') }}">
+                            <a class="dropdown-item" href="{{ url_for('configuration.api_server_setting') }}">
                                 API Server
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/test">Tester</a>
+                    <a class="nav-link" href="{{ url_for('schedule.schedules') }}">Schedule</a>
                 </li>
             </ul>
         </div>

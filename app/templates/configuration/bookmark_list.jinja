@@ -5,8 +5,6 @@
 
 {% block link %}
 <link rel="stylesheet" href="//cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-{#
-<link rel="stylesheet" href="//cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css"> #}
 {% endblock link %}
 
 {% block style %}
@@ -51,6 +49,8 @@
 <script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="//cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 <script src="//cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+
+<script src="{{ url_for('static', filename='scripts/datatable.js') }}"></script>
 <script>
     let datatable = $('#eta-list').DataTable({
         ajax: {
@@ -100,7 +100,7 @@
                         </button>
                         <button type="button" class="dt-action btn btn-success btn-sm"
                             data-href-method=""
-                            data-href=${"{{ url_for('configuration.eta_edit', id='p1') }}".replace("p1", row.id)}
+                            data-href=${"{{ url_for('configuration.bookmark_edit', id='p1') }}".replace("p1", row.id)}
                             title={{ _("Edit") }}>
                             <i class="bi bi-pencil-square"></i>
                         </button>
@@ -116,33 +116,10 @@
                 text: '新增',
                 className: "btn btn-success",
                 action: function (e, dt, node, config) {
-                    window.location.href = "{{ url_for('configuration.eta_create') }}";
+                    window.location.href = "{{ url_for('configuration.bookmark_create') }}";
                 }
             }
         ]
     });
-
-    $(document).on("click", "button.dt-action", function (event) {
-        if ($(this).data('href')) {
-            if ($(this).data('href-method') === "") {
-                window.location.href = $(this).data('href')
-            }
-
-            $.ajax({
-                method: $(this).data('href-method'),
-                url: $(this).data('href'),
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify($(this).data('href-payload')),
-                dataType: "json",
-                success: function (res) {
-                    alertify.success(res.message)
-                    datatable.ajax.reload()
-                },
-                error: function (xhr, status, error) {
-                    alertify.error("Failed to delete.")
-                }
-            })
-        }
-    })
 </script>
 {% endblock script %}

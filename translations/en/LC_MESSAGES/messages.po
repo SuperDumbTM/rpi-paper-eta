@@ -62,11 +62,11 @@ msgstr "SSA"
 msgid "Loading"
 msgstr "Loading"
 
-#: app/templates/configuration/eta.jinja:98
+#: app/templates/configuration/bookmark_list.jinja:98
 msgid "Delete"
 msgstr "Delete"
 
-#: app/templates/configuration/eta.jinja:104
+#: app/templates/configuration/bookmark_list.jinja:104
 msgid "Edit"
 msgstr "Edit"
 

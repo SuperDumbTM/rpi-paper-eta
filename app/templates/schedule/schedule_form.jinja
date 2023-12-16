@@ -1,0 +1,192 @@
+{% from "macros/render_field.jinja" import render_field %}
+
+{% extends "layout.jinja" %}
+{% include "includes/navbar.jinja" %}
+
+{% block link %}
+
+{% endblock link %}
+
+{% block style %}
+
+<link rel="stylesheet" href="https://unpkg.com/cron-expression-input@1.2.7/lib/cron-expression-input.min.css">
+<script src="https://unpkg.com/cron-expression-input@1.2.7/lib/cron-expression-input.min.js"></script>
+
+<style>
+</style>
+{% endblock style %}
+
+{% block content %}
+<div class="row align-items-center" style="height: 100vh;">
+    <div class="mx-auto col-10 col-md-8 col-lg-6">
+        <form class="form" action="{{ form_action }}" method="post" autocomplete="off">
+
+            <h1>New Schedule</h1>
+            <p class="description">
+            </p>
+
+            {% include "includes/flash_success.jinja" %}
+            {% include "includes/flash_error.jinja" %}
+
+            <cron-expression-input color="d58512"></cron-expression-input>
+
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cron-selector">
+                Launch demo modal
+            </button>
+
+        </form>
+    </div>
+</div>
+{% endblock content %}
+
+{% block body %}
+<!-- Modal -->
+<div class="modal fade" id="cron-selector" tabindex="-1">
+    {# modal-dialog-centered #}
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">執行時間</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#minute" data-bs-toggle="tab">
+                            分鐘
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#hour" data-bs-toggle="tab">
+                            小時
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#month-day" data-bs-toggle="tab">
+                            日期
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#month" data-bs-toggle="tab">
+                            月份
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#week-day" data-bs-toggle="tab">
+                            星期
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="tab-content" style="margin-top: 10px;">
+                    <div class="tab-pane active" id="minute">
+                        <div class="form-group row">
+                            <label class="col-2 col-form-label">模式</label>
+                            <div class="col-10">
+                                <select class="form-control">
+                                    <option value="steo" selected>Step</option>
+                                    <option value="range">Range</option>
+                                    <option value="choice">Choice</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="cron-step-selector">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group row">
+                                        <label class="col-2 col-form-label">自</label>
+                                        <div class="col-10">
+                                            <select class="form-control cron-from">
+                                                <option selected>*</option>
+                                                {% for i in range(60) %}
+                                                <option value="{{ i }}">{{ i }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-2 col-form-label">至</label>
+                                        <div class="col-10">
+                                            <select class="form-control cron-to" disabled>
+                                                <option selected>*</option>
+                                                {% for i in range(60) %}
+                                                <option value="{{ i }}">{{ i }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="form-group row">
+                                    <label class="col-2 col-form-label">每</label>
+                                    <div class="col-10">
+                                        <select class="form-control">
+                                            <option selected>*</option>
+                                            {% for i in range(60) %}
+                                            <option value="{{ i }}">{{ i }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cron-choice-selector" style="display: none;">
+                            {% for i in range(60) %}
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" value="{{ i }}">
+                                <label class="form-check-label" onclick="$(this).siblings('input').click()">
+                                    {{ '{:0>2d}'.format(i) }}
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="hour">
+                        tab2
+                    </div>
+                    <div class="tab-pane" id="month-day">
+                        tab2
+                    </div>
+                    <div class="tab-pane" id="month">
+                        tab2
+                    </div>
+                    <div class="tab-pane" id="hour">
+                        tab2
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock body %}
+
+{% block script %}
+<script src="https://unpkg.com/cronstrue@latest/dist/cronstrue.min.js" async></script>
+
+<script>
+
+    $('select.cron-from').change(function (e) {
+        let val = $('option:selected', this).val()
+        let target = $('select.cron-from')
+            .closest('.form-group')
+            .siblings('.form-group')
+            .find('select.cron-to')
+
+        target.prop('disabled', !$.isNumeric(val))
+    })
+
+</script>
+{% endblock script %}

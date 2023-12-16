@@ -7,5 +7,11 @@ bp = Blueprint('schedule',
 
 
 @bp.route('/')
-def index():
-    return render_template("schedule/index.jinja")
+def schedules():
+    return render_template("schedule/schedule_list.jinja")
+
+
+@bp.route('/create')
+def create():
+
+    return render_template("schedule/schedule_form.jinja")

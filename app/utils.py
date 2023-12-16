@@ -1,8 +1,10 @@
 import dataclasses
 from enum import Enum
 import json
-from flask import request, url_for
-import pydantic
+import random
+import string
+
+import flask
 
 
 def singleton(class_):
@@ -16,16 +18,26 @@ def singleton(class_):
 
 
 def redirect_url(default='index'):
-    return request.args.get('next') or request.referrer or url_for(default)
+    return flask.request.args.get('next') or flask.request.referrer or flask.url_for(default)
 
 
 def asdict_factory(data):
-    """Reference: https://stackoverflow.com/a/64693838"""
+    """
+    `dataclass.asdict` factory that supports `Enum` convertion
+
+    Reference: https://stackoverflow.com/a/64693838"""
     def convert_value(obj):
         if isinstance(obj, Enum):
             return obj.value
         return obj
     return dict((k, convert_value(v)) for k, v in data)
+
+
+def random_id_gen(length: int) -> str:
+    """Generate strings composed with uppercase and digits.
+    """
+    return ''.join(random.choice(string.ascii_uppercase + string.digits)
+                   for _ in range(length))
 
 
 class DataclassJSONEncoder(json.JSONEncoder):

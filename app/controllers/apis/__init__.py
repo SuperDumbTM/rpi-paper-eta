@@ -1,10 +1,11 @@
 from webargs.flaskparser import parser
-from . import config, display
+from . import config, display, schedule
 from app import exceptions
 
 __all__ = [
     config,
     display,
+    schedule,
 ]
 
 

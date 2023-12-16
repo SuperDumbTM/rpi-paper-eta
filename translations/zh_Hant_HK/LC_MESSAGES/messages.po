@@ -62,11 +62,11 @@ msgstr "特別車務安排生效中"
 msgid "Loading"
 msgstr "載入中"
 
-#: app/templates/configuration/eta.jinja:98
+#: app/templates/configuration/bookmark_list.jinja:98
 msgid "Delete"
 msgstr "刪除"
 
-#: app/templates/configuration/eta.jinja:104
+#: app/templates/configuration/bookmark_list.jinja:104
 msgid "Edit"
 msgstr "編輯"
 
