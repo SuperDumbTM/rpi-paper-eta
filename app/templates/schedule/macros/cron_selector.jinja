@@ -1,0 +1,79 @@
+{% macro cron_selector(name, options, is_activate = False) %}
+
+<div class="tab-pane {{ 'active' if is_activate else '' }}" id="{{ name }}">
+    <div class="form-group row">
+        <label class="col-2 col-form-label">模式</label>
+        <div class="col-10">
+            <select class="form-control cron-mode">
+                <option value="step" selected>固定值／範圍</option>
+                <option value="choice">特定值</option>
+            </select>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="cron-selector cron-step-selector">
+        <div class="row">
+            <div class="col">
+                <div class="form-group row">
+                    <label class="col-2 col-form-label">自</label>
+                    <div class="col-10">
+                        <select class="form-control cron-step-from">
+                            <option selected>*</option>
+                            {% for val, text in options %}
+                            <option value="{{ val }}">{{ text }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-2 col-form-label">至</label>
+                    <div class="col-10">
+                        <select class="form-control cron-step-to" disabled>
+                            <option selected>*</option>
+                            {% for val, text in options %}
+                            <option value="{{ val }}">{{ text }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="col">
+            <div class="form-group row">
+                <label class="col-2 col-form-label">每</label>
+                <div class="col-10">
+                    <select class="form-control">
+                        <option selected>不重覆</option>
+                        {% for val, text in options %}
+                        <option value="{{ val }}">{{ text }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cron-selector cron-choice-selector" style="display: none;">
+        {% for val, text in options %}
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" value="{{ val }}">
+            <label class="form-check-label" onclick="$(this).siblings('input').click()">
+                {% if text == 0 or text|int != 0 %}
+                    {# 0 will be eval. as False in the second condition #}
+                    {{ '{:0>2d}'.format(text) }}
+                {% else %}
+                    {{ text }}
+                {% endif %}
+                
+            </label>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endmacro %}

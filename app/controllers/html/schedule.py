@@ -13,5 +13,6 @@ def schedules():
 
 @bp.route('/create')
 def create():
-
-    return render_template("schedule/schedule_form.jinja")
+    # passing Python functions to template
+    # https://stackoverflow.com/questions/62029141/cant-use-zip-from-jinja2
+    return render_template("schedule/schedule_form.jinja", zip=zip, list=list)

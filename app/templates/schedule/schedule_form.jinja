@@ -1,4 +1,4 @@
-{% from "macros/render_field.jinja" import render_field %}
+{% from "schedule/macros/cron_selector.jinja" import cron_selector %}
 
 {% extends "layout.jinja" %}
 {% include "includes/navbar.jinja" %}
@@ -80,87 +80,13 @@
                 </ul>
 
                 <div class="tab-content" style="margin-top: 10px;">
-                    <div class="tab-pane active" id="minute">
-                        <div class="form-group row">
-                            <label class="col-2 col-form-label">模式</label>
-                            <div class="col-10">
-                                <select class="form-control">
-                                    <option value="steo" selected>Step</option>
-                                    <option value="range">Range</option>
-                                    <option value="choice">Choice</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <hr>
-
-                        <div class="cron-step-selector">
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group row">
-                                        <label class="col-2 col-form-label">自</label>
-                                        <div class="col-10">
-                                            <select class="form-control cron-from">
-                                                <option selected>*</option>
-                                                {% for i in range(60) %}
-                                                <option value="{{ i }}">{{ i }}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label class="col-2 col-form-label">至</label>
-                                        <div class="col-10">
-                                            <select class="form-control cron-to" disabled>
-                                                <option selected>*</option>
-                                                {% for i in range(60) %}
-                                                <option value="{{ i }}">{{ i }}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col">
-                                <div class="form-group row">
-                                    <label class="col-2 col-form-label">每</label>
-                                    <div class="col-10">
-                                        <select class="form-control">
-                                            <option selected>*</option>
-                                            {% for i in range(60) %}
-                                            <option value="{{ i }}">{{ i }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="cron-choice-selector" style="display: none;">
-                            {% for i in range(60) %}
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" value="{{ i }}">
-                                <label class="form-check-label" onclick="$(this).siblings('input').click()">
-                                    {{ '{:0>2d}'.format(i) }}
-                                </label>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <div class="tab-pane" id="hour">
-                        tab2
-                    </div>
-                    <div class="tab-pane" id="month-day">
-                        tab2
-                    </div>
-                    <div class="tab-pane" id="month">
-                        tab2
-                    </div>
-                    <div class="tab-pane" id="hour">
-                        tab2
-                    </div>
+                    {{ cron_selector('minute', list(zip(range(60), range(60))), True) }}
+                    {{ cron_selector('hour', list(zip(range(24), range(24)))) }}
+                    {{ cron_selector('month-day', list(zip(range(1, 32, 1), range(1, 32, 1)))) }}
+                    {{ cron_selector('month', list(zip(range(1, 13, 1), range(1, 13, 1)))) }}
+                    {{ cron_selector('week-day', list(zip(range(0, 7, 1),
+                    ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])))
+                    }}
                 </div>
             </div>
 
@@ -178,12 +104,29 @@
 
 <script>
 
+    $('select.cron-mode').change(function (e) {
+        let mode = $('option:selected', this).val()
+        let tabPane = $(this).closest('.tab-pane.active')
+
+        // hide all cron-selector
+        tabPane.children('.cron-selector').slideUp()
+
+        switch (mode) {
+            case 'step':
+                tabPane.children('.cron-step-selector').slideDown()
+                break
+            case 'choice':
+                tabPane.children('.cron-choice-selector').slideDown()
+                break
+        }
+    })
+
     $('select.cron-from').change(function (e) {
         let val = $('option:selected', this).val()
-        let target = $('select.cron-from')
+        let target = $('select.cron-step-from')
             .closest('.form-group')
             .siblings('.form-group')
-            .find('select.cron-to')
+            .find('select.cron-step-to')
 
         target.prop('disabled', !$.isNumeric(val))
     })
