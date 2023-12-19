@@ -20,7 +20,7 @@
                     <label class="col-2 col-form-label">自</label>
                     <div class="col-10">
                         <select class="form-control cron-step-from">
-                            <option selected>*</option>
+                            <option value="*" selected>*</option>
                             {% for val, text in options %}
                             <option value="{{ val }}">{{ text }}</option>
                             {% endfor %}
@@ -32,7 +32,7 @@
                     <label class="col-2 col-form-label">至</label>
                     <div class="col-10">
                         <select class="form-control cron-step-to" disabled>
-                            <option selected>*</option>
+                            <option value="*" selected>*</option>
                             {% for val, text in options %}
                             <option value="{{ val }}">{{ text }}</option>
                             {% endfor %}
@@ -48,8 +48,8 @@
             <div class="form-group row">
                 <label class="col-2 col-form-label">每</label>
                 <div class="col-10">
-                    <select class="form-control">
-                        <option selected>不重覆</option>
+                    <select class="form-control cron-step-repeat">
+                        <option value="" selected>不重覆</option>
                         {% for val, text in options %}
                         <option value="{{ val }}">{{ text }}</option>
                         {% endfor %}

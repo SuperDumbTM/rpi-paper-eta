@@ -1,22 +1,19 @@
-.eta-kmb {
-    color: red;
+:root {
+    --theme-color: #3F704D;
+    --secondary-color: #F0E68C;
 }
 
-.eta-mtr_bus {
-    color: blue;
+/* nav.navbar {
+    background-color: var(--theme-color);
 }
 
-.eta-mtr_lrt {
-    color: yellow;
+nav.navbar * {
+    color: white;
 }
 
-.eta-mtr_train {
-    color: rgb(255, 72, 0);
-}
-
-.eta-ctb {
-    color: yellow;
-}
+.navbar-nav .nav-link.active, .navbar-nav .nav-link.show {
+    color: var(--secondary-color);
+} */
 
 #content {
     min-height: 100vh;

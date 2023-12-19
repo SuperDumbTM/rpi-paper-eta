@@ -160,16 +160,15 @@ class BookmarkList(abc.Sequence):
 
 
 @utils.singleton
-class EpaperSetting(BaseModel):
+class EpaperSetting:
 
     brand: Optional[str]
     model: Optional[str]
-    layout: Optional[str]
 
     _filepath = Path(flask_config.CONFIG_DIR).joinpath("e-paper.json")
 
     def __init__(self) -> None:
-        self.brand = self.model = self.layout = None
+        self.brand = self.model = None
 
         if not self._filepath.exists():
             self._filepath.parent.mkdir(mode=711, parents=True, exist_ok=True)
@@ -180,7 +179,6 @@ class EpaperSetting(BaseModel):
 
                 self.brand = data.get('brand')
                 self.model = data.get('model')
-                self.layout = data.get('layout')
 
     def clear(self) -> "EpaperSetting":
         self.brand = self.model = self.layout = None
@@ -189,11 +187,9 @@ class EpaperSetting(BaseModel):
     def update(self,
                *,
                brand: str = None,
-               model: str = None,
-               layout: str = None) -> "EpaperSetting":
+               model: str = None) -> "EpaperSetting":
         self.brand = brand or self.brand
         self.model = model or self.model
-        self.layout = layout or self.layout
         return self
 
     def persist(self) -> None:
@@ -202,7 +198,6 @@ class EpaperSetting(BaseModel):
                 {
                     'brand': self.brand,
                     'model': self.model,
-                    'layout': self.layout
                 },
                 f,
                 indent=4
