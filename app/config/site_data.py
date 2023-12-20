@@ -181,7 +181,7 @@ class EpaperSetting:
                 self.model = data.get('model')
 
     def clear(self) -> "EpaperSetting":
-        self.brand = self.model = self.layout = None
+        self.brand = self.model
         return self
 
     def update(self,
@@ -207,11 +207,12 @@ class EpaperSetting:
 @utils.singleton
 class RefreshSchedule:
 
-    _data: list
+    _schedules: dict[str, dict]
+    _tasks: list
     _filepath = Path(flask_config.CONFIG_DIR).joinpath("schedules.json")
 
     def __init__(self, app) -> None:
-        self._data = []
+        self._schedules = {}
 
         if not self._filepath.exists():
             self._filepath.parent.mkdir(mode=711, parents=True, exist_ok=True)
@@ -224,23 +225,20 @@ class RefreshSchedule:
         self._scheduler.init_app(app)
         self._scheduler.start()
 
-        # from datetime import datetime
-        # self._scheduler.add_job(utils.random_id_gen(
-        #     8), lambda: print(datetime.now().strftime("%H:%M:%S")), trigger='cron', second='*/5')
+    def add_job(self, cron: str, layout: str) -> str:
+        self._scheduler.add_job(id := utils.random_id_gen(8),
+                                'function',
+                                cron)
 
-    def add_job(self):
-        self._scheduler.add_job(utils.random_id_gen(8), 'function', 'cron')
+        self._schedules[id] = {'cron': cron, 'layout': layout}
+        self.persist()
+        return id
 
     def load(self) -> None:
         with open(self._filepath, "r", encoding="utf-8") as f:
-            self._data = [models.EtaConfig(**c) for c in json.load(f)]
+            self._schedules = [models.EtaConfig(**c) for c in json.load(f)]
 
     def persist(self) -> None:
-        # keys = set([k.id for k in self._data])
-        # if None in keys:
-        #     raise Exception("Empty ID.")
-        # if len(keys) != len(self._data):
-        #     raise Exception("Duplicated ID.")
-
         with open(self._filepath, "w", encoding="utf-8") as f:
-            json.dump(self._data, f, indent=4, cls=utils.DataclassJSONEncoder)
+            json.dump(self._schedules, f, indent=4,
+                      cls=utils.DataclassJSONEncoder)

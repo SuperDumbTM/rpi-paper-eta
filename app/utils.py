@@ -8,6 +8,7 @@ import flask
 
 
 def singleton(class_):
+    """A singleton decorator"""
     instances = {}
 
     def getinstance(*args, **kwargs):

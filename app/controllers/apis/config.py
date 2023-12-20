@@ -68,7 +68,6 @@ def get_etas():
     'company': fields.String(required=True),
 }, location="query")
 def eta_search(args, stype: Literal["route", "direction", "service_type", "stop"]):
-    print(args)
     try:
         if stype == "route":
             return jsonify({

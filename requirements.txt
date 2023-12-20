@@ -7,6 +7,7 @@ certifi==2023.7.22
 charset-normalizer==3.3.0
 click==8.1.7
 colorama==0.4.6
+cron-validator==1.0.8
 Flask==2.3.3
 Flask-APScheduler==1.13.1
 flask-babel==4.0.0

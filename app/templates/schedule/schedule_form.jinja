@@ -22,10 +22,11 @@
 {% block content %}
 <div class="row align-items-center" style="height: 100vh;">
     <div class="mx-auto col-10 col-md-8 col-lg-6">
-        <form class="form" action="{{ form_action }}" method="post" autocomplete="off">
+        <form class="form" action="{{ url_for('api_schedule.create_schedule') }}" method="post" autocomplete="off">
 
             <h1>New Schedule</h1>
             <p class="description">
+
             </p>
 
             {% include "includes/flash_success.jinja" %}
@@ -33,13 +34,14 @@
 
             <div class="form-group">
                 <label for="schedule" class="form-label">Schedule</label>
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control" name="schedule" placeholder="Cron Expression">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="schedule" placeholder="Cron Expression" required>
                     <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
                         data-bs-target="#cron-configurator">
                         <i class="bi bi-pencil-square"></i>
                     </button>
                 </div>
+                <div class="form-text text-danger" id="cron-description">未能識別</div>
             </div>
 
             <div class="form-group">
@@ -49,13 +51,16 @@
                     {% for sublayout in sublayouts %}
                     <div class="card mb-4">
                         <div class="card-body">
-                            <h5 class="card-title">
-                                <input name="layout" type="radio">
-                                <label>{{ sublayout.name }}</label>
+                            <h5 class="card-title" style="line-height: unset;">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="layout"
+                                        value="{{ sublayout.name }}" required>
+                                    <label class="form-check-label">{{ sublayout.name }}</label>
+                                </div>
                             </h5>
                             <p class="card-text">
                                 <strong style="display: inline-block; width: 50px;">Type:</strong>
-                                <span class="card-text-descr">{{ type.value }}</span>
+                                <span class="card-text-descr">{{ type.value.title() }}</span>
                             </p>
                             <hr>
                             <p class="card-text">
@@ -71,6 +76,18 @@
                 </div>
             </div>
 
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" name="partial_refresh">
+                <label class="form-check-label">局部更新</label>
+                <div class="form-text">
+                    局部更新電子紙屏幕，提升屏幕影像更新速度。
+                </div>
+                <div class="form-text text-warning">
+                    需定期執行一次全屏更新以避免影像變得不清晰。
+                </div>
+            </div>
+
+            <input class="btn btn-primary btn-customized mt-4" id="submit" name="submit" type="submit" value="Submit">
 
         </form>
     </div>
@@ -139,9 +156,9 @@
 
 {% block script %}
 <script src="https://unpkg.com/cronstrue@latest/dist/cronstrue.min.js" async></script>
+<script src="https://unpkg.com/cronstrue@latest/locales/zh_TW.min.js" async></script>
 
 <script>
-
     $(document).ready(function () {
         $('.cron-mode').each(function (idx, el) {
             // need to acticvate the tab to trigger the mode layout update
@@ -150,6 +167,8 @@
             $(el).trigger('change')
         })
         bootstrap.Tab.getOrCreateInstance($($('#cron-configurator a.nav-link')[0])).show()
+
+        var cronstrue = window.cronstrue
     })
 
     $('select.cron-mode').change(function (e) {
@@ -216,8 +235,35 @@
             }
         })
 
-        $('input[name=schedule]').val(schedule.join(' '))
+        $('input[name=schedule]').val(schedule.join(' ')).trigger('input')
         $(this).closest('.modal').modal('hide')
+    })
+
+    $('input[name=schedule]').on('input change keyup', function (e) {
+        // display the description of the schedule input
+        let callout = $('#cron-description')
+        try {
+            callout.text(cronstrue.toString($(this).val(), { locale: "zh_TW" }))
+            callout.removeClass('text-danger').addClass('text-success')
+        } catch (error) {
+            callout.text('未能識別')
+            callout.removeClass('text-success').addClass('text-danger')
+        }
+    })
+
+    $('form').submit(function (e) {
+        e.preventDefault()
+
+        $.ajax({
+            url: $(this).attr('action'),
+            type: "POST",
+            data: JSON.stringify(formToJson($(this))),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (res) {
+                console.log(res)
+            }
+        })
     })
 
 </script>
