@@ -1,6 +1,7 @@
 import dataclasses
 import json
 import logging
+from pathlib import Path
 import random
 import string
 from enum import Enum
@@ -120,6 +121,8 @@ def generate_image(eta_type: eimage.enums.EtaType, layout: str) -> dict[str, Ima
     Returns:
         dict[str, Image.Image]: generated image(s)
     """
+    import logging
+    logging.debug('generate image invoked')
     api_setting = config.site_data.ApiServerSetting()
     bm_setting = config.site_data.BookmarkList()
     epd_setting = config.site_data.EpaperSetting()
@@ -169,7 +172,8 @@ def generate_image(eta_type: eimage.enums.EtaType, layout: str) -> dict[str, Ima
         logging.exception('Image generation failed with error: %s', str(e))
         images = generator.draw_error('Unexpected Error')
 
-    generator.write_images(config.flask_config.CACHE_DIR, images)
+    generator.write_images(
+        Path(config.flask_config.CACHE_DIR).joinpath('epaper'), images)
     return images
 
 
