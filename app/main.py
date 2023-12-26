@@ -1,3 +1,4 @@
+import base64
 from pathlib import Path
 
 import dotenv
@@ -48,4 +49,12 @@ def index():
     if not config.site_data.ApiServerSetting().url:
         flash("Please set the API server URL")
         return redirect(url_for("configuration.api_server_setting"))
-    return render_template("index.jinja")
+
+    images = []
+    for path in Path(config.flask_config.CACHE_DIR).joinpath('epaper').glob('**/*'):
+        with open(path, 'rb') as f:
+            if path.suffix != '.bmp':
+                continue
+            images.append(base64.b64encode(f.read()).decode("utf-8"))
+
+    return render_template("index.jinja", images=images)
