@@ -15,8 +15,7 @@
 {% block content %}
 <div class="row align-items-center" style="height: 100vh;">
     <div class="mx-auto col-10 col-md-8 col-lg-6">
-        <form class="form" action="{{ form_action }}" method="post" autocomplete="off">
-            {{ form.hidden_tag() }}
+        <form class="form" action="{{ form_action }}" method="put" autocomplete="off">
 
             <h1>ETA Entry</h1>
             <p class="description">
@@ -25,14 +24,104 @@
             {% include "includes/flash_success.jinja" %}
             {% include "includes/flash_error.jinja" %}
 
-            {{ render_field(form.company) }}
-            {{ render_field(form.route, class_="autocomplete") }}
-            {{ render_field(form.direction) }}
-            {{ render_field(form.service_type) }}
-            {{ render_field(form.stop_code) }}
-            {{ render_field(form.lang) }}
+            <div class="form-group">
+                <label for="company" class="form-label">Company</label>
+                <select class="form-select" name="company">
+                    <option value="" selected>-----</option>
+                    {% for company in companys %}
+                    {% if form.company == company[0] %}
+                    <option value="{{ company[0] }}" selected>
+                        {{ company[1] }}
+                    </option>
+                    {% else %}
+                    <option value="{{ company[0] }}">
+                        {{ company[1] }}
+                    </option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
 
-            {{ form.submit(class="btn btn-primary btn-customized mt-4") }}
+            <div class="form-group autocomplete">
+                <label for="route" class="form-label">Route</label>
+                <input type="text" class="form-control" name="route" value="{{ form.route }}" required>
+
+            </div>
+
+            <div class="form-group">
+                <label for="direction" class="form-label">Direction</label>
+                <select class="form-select" name="direction">
+                    <option value="" selected>-----</option>
+                    {% for direction in directions %}
+                    {% if form.direction == direction[0] %}
+                    <option value="{{ direction[0] }}" selected>
+                        {{ direction[1] }}
+                    </option>
+                    {% else %}
+                    <option value="{{ direction[0] }}">
+                        {{ direction[1] }}
+                    </option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="service_type" class="form-label">Service Type</label>
+                <select class="form-select" name="service_type">
+                    <option value="" selected>-----</option>
+                    {% for service_type in service_types %}
+                    {% if form.service_type == service_type[0] %}
+                    <option value="{{ service_type[0] }}" selected>
+                        {{ service_type[1] }}
+                    </option>
+                    {% else %}
+                    <option value="{{ service_type[0] }}">
+                        {{ service_type[1] }}
+                    </option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="stop_code" class="form-label">Stop</label>
+                <select class="form-select" name="stop_code">
+                    <option value="" selected>-----</option>
+                    {% for stop in stops %}
+                    {% if form.stop == stop[0] %}
+                    <option value="{{ stop[0] }}" selected>
+                        {{ stop[1] }}
+                    </option>
+                    {% else %}
+                    <option value="{{ stop[0] }}">
+                        {{ stop[1] }}
+                    </option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="lang" class="form-label">Language</label>
+                <select class="form-select" name="lang">
+                    <option value="" selected>-----</option>
+                    {% for lang in langs %}
+                    {% if form.lang == lang[0] %}
+                    <option value="{{ lang[0] }}" selected>
+                        {{ lang[1] }}
+                    </option>
+                    {% else %}
+                    <option value="{{ lang[0] }}">
+                        {{ lang[1] }}
+                    </option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+            <input class="btn btn-primary btn-customized mt-4" id="submit" name="submit" type="submit" value="Submit">
+
         </form>
     </div>
 </div>
@@ -49,10 +138,10 @@
     }
 
     $(document).ready(function () {
-        {% if not editing  %}
-            $("form")[0].reset()
-            clearSelect($("select#direction"))
-            clearSelect($("select#service_type"))
+        {% if not editing %}
+        $("form")[0].reset()
+        clearSelect($("select[name=direction]"))
+        clearSelect($("select[name=service_type]"))
         {% endif %}
 
         $.ajaxSetup({
@@ -64,12 +153,12 @@
 
         // Browsers may cache the result of "company select"
         // Trigger "change" to initialisation the autocomplete
-        if ($('select#company option:selected').val())
-            $('select#company').trigger('change')
+        if ($('select[name=company] option:selected').val())
+            $('select[name=company]').trigger('change')
     })
 
     // autocomplete for route name
-    $('select#company').on('change', function (event) {
+    $('select[name=company]').on('change', function (event) {
         // https://stackoverflow.com/questions/7617373/limit-results-in-jquery-ui-autocomplete
         query = {
             company: $('option:selected', this).val(),
@@ -78,11 +167,11 @@
 
         $.ajax({
             type: "GET",
-            url: `{{ url_for("api_config.eta_search", stype="route") }}?${$.param(query)}`,
+            url: `{{ url_for("api_config.bookmark_search", stype="route") }}?${$.param(query)}`,
             beforeSend: () => showLoading(),
             complete: () => hideLoading(),
             success: function (res) {
-                $("input#route").autocomplete({
+                $("input[name=route]").autocomplete({
                     maxShowItems: 6,
                     autoFocus: true,
                     source: res.data.routes.map((el) => el[0]),
@@ -92,18 +181,18 @@
     });
 
     // direction option updates
-    $("input#route").on("autocompleteselect", function (event, ui) {
+    $("input[name=route]").on("autocompleteselect", function (event, ui) {
         query = {
-            company: $('select#company option:selected').val(),
+            company: $('select[name=company] option:selected').val(),
             route: ui.item.value,
             type: "direction",
         }
 
-        $.get(`{{ url_for("api_config.eta_search", stype="direction") }}?${$.param(query)}`)
+        $.get(`{{ url_for("api_config.bookmark_search", stype="direction") }}?${$.param(query)}`)
             .then(function (res) {
-                clearSelect(select = $("select#direction"))
-                clearSelect($("select#service_type"))
-                clearSelect($("select#stop"))
+                clearSelect(select = $("select[name=direction]"))
+                clearSelect($("select[name=service_type]"))
+                clearSelect($("select[name=stop]"))
 
                 res.data.directions.forEach(
                     (el) => select.append(new Option(el[1], el[0])))
@@ -111,18 +200,18 @@
     });
 
     // autocomplete for service type
-    $('select#direction').on('change', function (event) {
+    $('select[name=direction]').on('change', function (event) {
         query = {
-            company: $('select#company option:selected').val(),
-            route: $('input#route').val(),
+            company: $('select[name=company] option:selected').val(),
+            route: $('input[name=route]').val(),
             direction: $('option:selected', this).val(),
             type: "service_type",
         }
 
-        $.get(`{{ url_for("api_config.eta_search", stype="service_type") }}?${$.param(query)}`)
+        $.get(`{{ url_for("api_config.bookmark_search", stype="service_type") }}?${$.param(query)}`)
             .then(function (res) {
-                clearSelect(select = $("select#service_type"))
-                clearSelect($("select#stop"))
+                clearSelect(select = $("select[name=service_type]"))
+                clearSelect($("select[name=stop]"))
 
                 res.data.service_types.forEach(
                     (el) => select.append(new Option(el[1], el[0])))
@@ -130,22 +219,22 @@
     });
 
     // stop option updates
-    $("select#service_type").on("change", function (event) {
+    $("select[name=service_type]").on("change", function (event) {
         query = {
-            company: $('select#company option:selected').val(),
-            route: $('input#route').val(),
-            direction: $('select#direction option:selected').val(),
+            company: $('select[name=company] option:selected').val(),
+            route: $('input[name=route]').val(),
+            direction: $('select[name=direction] option:selected').val(),
             service_type: $('option:selected', this).val(),
             type: "stop",
         }
 
         $.ajax({
             type: "GET",
-            url: `{{ url_for("api_config.eta_search", stype="stop") }}?${$.param(query)}`,
+            url: `{{ url_for("api_config.bookmark_search", stype="stop") }}?${$.param(query)}`,
             beforeSend: () => showLoading(),
             complete: () => hideLoading(),
             success: function (res) {
-                select = $("select#stop_code")
+                select = $("select[name=stop_code]")
                 clearSelect(select)
                 res.data.stops.forEach(
                     (el) => select.append(new Option(el[1], el[0])))
@@ -155,6 +244,28 @@
             }
         })
     });
+
+    $('form').submit(function (e) {
+        e.preventDefault()
+
+        $.ajax({
+            url: $(this).attr('action'),
+            type: "put",
+            data: JSON.stringify(formToJson($(this))),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            error: function (xhr, status, error) {
+                alertify.error($.parseJSON(xhr.responseText).message)
+            },
+            success: function (res) {
+                if (res.success) {
+                    window.location.href = "{{ url_for('configuration.bookmark_list') }}"
+                } else {
+                    alertify.error(res.message)
+                }
+            }
+        })
+    })
 
 </script>
 {% endblock script %}

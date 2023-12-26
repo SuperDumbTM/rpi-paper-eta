@@ -1,11 +1,6 @@
-import requests
-from flask import (Blueprint, current_app, flash, jsonify, redirect,
-                   render_template, request, url_for)
-from flask_babel import force_locale
-from app import models, translation
-from app.config import site_data
-from app.modules import image
-from app.modules.image.eta_image import EtaImageGeneratorFactory
+from flask import Blueprint, jsonify, request
+
+from app.modules import image as eimage
 
 bp = Blueprint('api_display',
                __name__,
@@ -19,7 +14,7 @@ def get_models():
         'success': True,
         'message': "Success.",
         'data': {
-            "models": [b.__name__ for b in EtaImageGeneratorFactory.models(request.args['brand'])]
+            "models": [b.__name__ for b in eimage.eta_image.EtaImageGeneratorFactory.models(request.args['brand'])]
         }
     })
 
@@ -30,50 +25,7 @@ def get_layouts():
         'success': True,
         'message': "Success.",
         'data': {
-            "layouts": EtaImageGeneratorFactory.get_generator(
+            "layouts": eimage.eta_image.EtaImageGeneratorFactory.get_generator(
                 request.args['brand'], request.args['model']).layouts()
         }
-    })
-
-
-@bp.route("/refresh")
-def refresh():
-    import os
-
-    img = image.waveshare.epd3in7.Epd3in7(
-        image.enums.EtaMode.MIXED, "6-row-3-eta")
-    api_server = site_data.ApiServerSetting()
-    bookmarks = site_data.BookmarkList()
-
-    try:
-        etas = []
-        for bm in bookmarks:
-            bm: models.EtaConfig
-            response = requests.get(
-                f"{api_server.url}/{bm.company.value}/{bm.route}/{bm.direction.value}/etas",
-                {'service_type': bm.service_type, 'stop': bm.stop_code, 'lang': bm.lang}).json()
-
-            with force_locale('zh_Hant_HK' if bm.lang == 'tc' else bm.lang):
-                if response['success']:
-                    etas_ = response['data'].pop('etas')
-                    etas.append(
-                        image.models.Etas(**response['data'],
-                                          etas=[image.models.Etas.Eta(**eta) for eta in etas_])
-                    )
-                else:
-                    response.pop('message')
-                    etas.append(
-                        image.models.ErrorEta(**response['data'],
-                                              code=response['code'],
-                                              message=str(translation.RP_CODE_TRANSL.get(response['code'], "Error")))
-                    )
-    except Exception as e:
-        pass
-
-    img.write_images(os.path.dirname(__file__), img.draw(etas))
-
-    return jsonify({
-        'success': True,
-        'message': "Success.",
-        'data': {}
     })

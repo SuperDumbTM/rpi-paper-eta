@@ -18,7 +18,7 @@ except ImportError:
 
 class EtaImageGenerator(ABC):
 
-    eta_mode: enums.EtaMode
+    eta_type: enums.EtaType
     # _data: dict[str, dict]
     fonts: "FontLoader"
 
@@ -29,9 +29,9 @@ class EtaImageGenerator(ABC):
         pass
 
     @classmethod
-    def layouts(cls) -> dict[enums.EtaMode, list[dict[str, str]]]:
+    def layouts(cls) -> dict[enums.EtaType, list[dict[str, str]]]:
         layouts = {}
-        for mode in enums.EtaMode:
+        for mode in enums.EtaType:
             layouts[mode] = [{
                 'name': layout['details']['name'],
                 'description': layout['details']['description']
@@ -48,11 +48,11 @@ class EtaImageGenerator(ABC):
         ) as f:
             return json.load(f)
 
-    def __init__(self, eta_mode: enums.EtaMode, layout_name: str) -> None:
-        self.eta_mode = eta_mode
+    def __init__(self, eta_type: enums.EtaType, layout_name: str) -> None:
+        self.eta_type = eta_type
         self.layout_name = layout_name
 
-        for layout in self.layout_data()[eta_mode.value]['layouts']:
+        for layout in self.layout_data()[eta_type.value]['layouts']:
             if layout['details']['name'] == layout_name:
                 self._config = layout
                 self.fonts = FontLoader(layout['fonts'])
@@ -62,16 +62,9 @@ class EtaImageGenerator(ABC):
 
     @abstractmethod
     def draw(self,
-             etas: list[models.Etas | models.ErrorEta],
+             etas: Iterable[models.Etas | models.ErrorEta],
              degree: float = 0) -> dict[str, Image.Image]:
         """Create image(s) with the ETA(s) data
-
-        Args:
-            degree (float, optional): \
-                Degree of rotation to the output image. Defaults to 0.
-
-        Returns:
-            dict[str, Image.Image]: *key representing the color of the image
         """
 
     @abstractmethod
@@ -86,7 +79,7 @@ class EtaImageGenerator(ABC):
             os.makedirs(directory)
 
         for color, image in images.items():
-            image.save(os.path.join(directory, f"{color}.bmp"))
+            eimage.save(os.path.join(directory, f"{color}.bmp"))
             logging.debug(f"{color}.bmp created")
 
     def read_images(self, directory: os.PathLike) -> dict[str, Image.Image]:

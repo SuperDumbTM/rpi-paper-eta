@@ -4,8 +4,7 @@ import dotenv
 from flask import Flask, flash, redirect, render_template, request, url_for
 from flask_babel import Babel
 
-from app.config import site_data
-from app import controllers, handles
+from app import config, controllers, handles
 
 
 # flask app initialisation
@@ -41,12 +40,12 @@ babel = Babel(app, locale_selector=get_locale)
 
 
 # scheduler initialisation
-site_data.RefreshSchedule(app)
+config.site_data.RefreshSchedule(app)
 
 
 @app.route("/")
 def index():
-    if not site_data.ApiServerSetting().url:
+    if not config.site_data.ApiServerSetting().url:
         flash("Please set the API server URL")
         return redirect(url_for("configuration.api_server_setting"))
     return render_template("index.jinja")

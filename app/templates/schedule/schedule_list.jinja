@@ -5,8 +5,6 @@
 
 {% block link %}
 <link rel="stylesheet" href="//cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-{#
-<link rel="stylesheet" href="//cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css"> #}
 {% endblock link %}
 
 {% block style %}
@@ -28,12 +26,15 @@
     {% include "includes/flash_error.jinja" %}
     <div class="row p-2">
         <div class="col">
-            <table id="eta-list" class="table table-striped" style="width:100%">
+            <table id="schedule-list" class="table table-striped" style="width:100%">
                 <thead>
                     <tr>
                         <th>No.</th>
-                        <th>Style</th>
+                        <th>ETA Type</th>
+                        <th>Layout</th>
                         <th>Schedule</th>
+                        <th>Next Execution</th>
+                        <th>Is Partial</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -47,32 +48,57 @@
 <script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="//cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 <script src="//cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+<script src="{{ url_for('static', filename='scripts/datatable.js') }}"></script>
+
 <script>
-    let datatable = $('#eta-list').DataTable({
+    let datatable = $('#schedule-list').DataTable({
         ajax: {
             url: "{{ url_for('api_schedule.get_schedules') }}",
             dataSrc: "data.schedules"
         },
+        'columnDefs': [
+            {
+                "targets": 5,
+                "className": "text-center",
+                {# "width": "4%" #}
+            }
+        ],
         columns: [
             {
                 render: function (data, type, row, meta) {
                     return meta.row + 1;
                 }
             },
-            { data: 'style' },
+            { data: 'eta_type' },
+            { data: 'layout' },
             { data: 'schedule' },
+            {
+                data: 'future_executions',
+                render: function (data, type, row, meta) {
+                    if (data.length <= 0) {
+                        return 'No data'
+                    }
+                    return data[0].replace('T', ' ')
+                }
+            },
+            {
+                data: 'is_partial',
+                render: function (data, type, row, meta) {
+                    return data ? '<i class="bi bi-check2"></i>' : '<i class="bi bi-x"></i>'
+                }
+            },
             {
                 render: function (data, type, row, meta) {
                     return `
                         <button type="button" class="dt-action btn btn-danger btn-sm"
                             data-href-method="DELETE"
-                            data-href=${"{{ 'url_for' }}".replace("p1", row.id)}
+                            data-href=${"{{ url_for('api_schedule.delete_schedule', id='p1') }}".replace("p1", row.id)}
                             title={{ _("Delete") }}>
                             <i class="bi bi-trash"></i>
                         </button>
                         <button type="button" class="dt-action btn btn-success btn-sm"
                             data-href-method=""
-                            data-href=${"{{ 'url_for' }}".replace("p1", row.id)}
+                            data-href=${"{{ url_for('schedule.edit', id='p1') }}".replace("p1", row.id)}
                             title={{ _("Edit") }}>
                             <i class="bi bi-pencil-square"></i>
                         </button>

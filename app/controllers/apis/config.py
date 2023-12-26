@@ -2,12 +2,11 @@ from dataclasses import asdict
 from typing import Literal
 
 import requests
-from flask import Blueprint, current_app,  jsonify, redirect, request
-from webargs import fields
-from webargs.flaskparser import use_args
+from flask import Blueprint, current_app,  jsonify, request
+import webargs
 
-from app import enums, forms, models, utils
-from app.config import site_data
+from app import config, enums, models, utils
+from app.modules import image as eimage
 
 bp = Blueprint('api_config', __name__, url_prefix="/api/config")
 
@@ -18,19 +17,19 @@ def get_server_setting():
         'success': True,
         'message': "Success.",
         'data': {
-            'setting': site_data.ApiServerSetting().__dict__
+            'setting': config.site_data.ApiServerSetting().__dict__
         }
     })
 
 
 @bp.route("/server", methods=["POST", "PUT"])
-@use_args({
-    'url': fields.URL(required=True),
-    'username': fields.Str(required=False),
-    'password': fields.Str(required=False)
+@webargs.flaskparser.use_args({
+    'url': webargs.fields.Url(required=True),
+    'username': webargs.fields.String(required=False),
+    'password': webargs.fields.String(required=False)
 })
 def update_server_setting(args):
-    site_data.ApiServerSetting().update(**args).persist()
+    config.site_data.ApiServerSetting().update(**args).persist()
     return jsonify({
         'success': True,
         'message': "Updated.",
@@ -39,20 +38,20 @@ def update_server_setting(args):
 
 
 @bp.route("/bookmarks")
-def get_etas():
+def get_bookmarks():
     bookmarks = []
-    for entry in site_data.BookmarkList():
+    for entry in config.site_data.BookmarkList():
         entry: models.EtaConfig
 
         try:
             stop_name = requests.get(
-                f"{site_data.ApiServerSetting().url}"
+                f"{config.site_data.ApiServerSetting().url}"
                 f"/{entry.company.value}/{entry.route}/{entry.direction.value}/{entry.service_type}/stop",
                 {'stop_code': entry.stop_code}
             ).json()['data']['stop']['name'][entry.lang]
         except Exception:
             stop_name = "Error"
-        bookmarks.append(asdict(entry) | {'stop_name': stop_name.title()})
+        bookmarks.append(entry.model_dump() | {'stop_name': stop_name.title()})
 
     return jsonify({
         'success': True,
@@ -64,17 +63,18 @@ def get_etas():
 
 
 @bp.route('/bookmark/<stype>')
-@use_args({
-    'company': fields.String(required=True),
+@webargs.flaskparser.use_args({
+    'company': webargs.fields.String(
+        required=True, validate=webargs.validate.OneOf([c for c in enums.EtaCompany])),
 }, location="query")
-def eta_search(args, stype: Literal["route", "direction", "service_type", "stop"]):
+def bookmark_search(args, stype: Literal["route", "direction", "service_type", "stop"]):
     try:
         if stype == "route":
             return jsonify({
                 'success': True,
                 'message': "Success.",
                 'data': {
-                    'routes': forms.BookmarkForm.route_choices(request.args['company'])
+                    'routes': utils.route_choices(request.args['company'])
                 }
             })
         elif stype == "direction":
@@ -89,8 +89,8 @@ def eta_search(args, stype: Literal["route", "direction", "service_type", "stop"
                 'success': True,
                 'message': "Success.",
                 'data': {
-                    'directions': forms.BookmarkForm.direction_choices(request.args['company'],
-                                                                       request.args['route'])
+                    'directions': utils.direction_choices(request.args['company'],
+                                                          request.args['route'])
                 }
             })
         elif stype == "service_type":
@@ -101,9 +101,9 @@ def eta_search(args, stype: Literal["route", "direction", "service_type", "stop"
                 'success': True,
                 'message': "Success.",
                 'data': {
-                    'service_types': forms.BookmarkForm.type_choices(request.args['company'],
-                                                                     request.args['route'],
-                                                                     request.args['direction'])
+                    'service_types': utils.type_choices(request.args['company'],
+                                                        request.args['route'],
+                                                        request.args['direction'])
                 }
             })
         elif stype == "stop":
@@ -114,10 +114,10 @@ def eta_search(args, stype: Literal["route", "direction", "service_type", "stop"
                 'success': True,
                 'message': "Success.",
                 'data': {
-                    'stops': forms.BookmarkForm.stop_choices(request.args['company'],
-                                                             request.args['route'],
-                                                             request.args['direction'],
-                                                             request.args['service_type'])
+                    'stops': utils.stop_choices(request.args['company'],
+                                                request.args['route'],
+                                                request.args['direction'],
+                                                request.args['service_type'])
                 }
             })
         else:
@@ -133,7 +133,7 @@ def eta_search(args, stype: Literal["route", "direction", "service_type", "stop"
             'data': None
         }), 400
     except requests.exceptions.HTTPError:
-        current_app.logger.exception("HTTPError occurs at 'eta_search'")
+        current_app.logger.exception("HTTPError occurs at 'bookmark_search'")
         return jsonify({
             'success': False,
             'message': "Remote server error.",
@@ -148,9 +148,38 @@ def eta_search(args, stype: Literal["route", "direction", "service_type", "stop"
         }), 500
 
 
+@bp.route("/bookmark/<id>", methods=["PUT"])
+@webargs.flaskparser.use_args({
+    'company': webargs.fields.String(
+        required=True, validate=webargs.validate.OneOf([c for c in enums.EtaCompany])),
+    'route': webargs.fields.String(required=True),
+    'direction': webargs.fields.String(required=True),
+    'service_type': webargs.fields.String(required=True),
+    'stop_code': webargs.fields.String(required=True),
+    'lang': webargs.fields.String(required=True)
+
+})
+def bookmark_update(args, id: str):
+    bkms = config.site_data.BookmarkList()
+    try:
+        bkms.update(id, models.EtaConfig(id=id, **args,))
+    except KeyError:
+        return jsonify({
+            'success': False,
+            'message': "Invalid ID.",
+            'data': None
+        }), 400
+    else:
+        return jsonify({
+            'success': True,
+            'message': "Updated.",
+            'data': None
+        })
+
+
 @bp.route("/bookmark/<id>", methods=["DELETE"])
-def delete_eta(id: str):
-    etas = site_data.BookmarkList()
+def bookmark_delete(id: str):
+    etas = config.site_data.BookmarkList()
     try:
         deleted = etas.pop(etas.index(id))
         etas.persist()
@@ -168,12 +197,12 @@ def delete_eta(id: str):
 
 
 @bp.route("/bookmark/order", methods=["PUT"])
-@use_args({
-    'source': fields.Str(required=True),
-    'destination': fields.Str(required=True),
+@webargs.flaskparser.use_args({
+    'source': webargs.fields.String(required=True),
+    'destination': webargs.fields.String(required=True),
 })
-def eta_swap(args):
-    etas = site_data.BookmarkList()
+def bookmark_swap(args):
+    etas = config.site_data.BookmarkList()
     etas.swap(args['source'], args['destination']).persist()
 
     return jsonify({
@@ -184,7 +213,23 @@ def eta_swap(args):
 
 
 @bp.route("/epaper", methods=["POST", "PUT"])
-def update_epaper_setting():
+@webargs.flaskparser.use_args({
+    'brand': webargs.fields.String(
+        required=True, validate=lambda v: v in eimage.eta_image.EtaImageGeneratorFactory.brands()),
+    'model': webargs.fields.String(required=True)
+})
+def update_epaper_setting(args):
+    epd = config.site_data.EpaperSetting()
+    # TODO: validation
+
+    if epd.brand != args['brand'] or epd.model != args['model']:
+        # changing brand or model will invalidate the schedule
+        scheduler = config.site_data.RefreshSchedule()
+        for schedule in scheduler.get_all():
+            scheduler.update(schedule.model_dump(exclude=['enabled']),
+                             enabled=False)
+
+    epd.update(**args)
     return jsonify({
         'success': True,
         'message': "Updated.",

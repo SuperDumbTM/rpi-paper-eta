@@ -1,16 +1,12 @@
 import json
 from collections import abc
 from pathlib import Path
-import random
-import string
 from typing import Any, Optional, Self
 
+import croniter
 import flask_apscheduler
-from pydantic import BaseModel
 
-
-from app import models, utils
-from app.config import flask_config
+from app import config, models, utils
 
 
 @utils.singleton
@@ -20,7 +16,8 @@ class ApiServerSetting:
     username: Optional[str]
     password: Optional[str]
 
-    _filepath = Path(flask_config.CONFIG_DIR).joinpath("api_server.json")
+    _filepath = Path(config.flask_config.CONFIG_DIR).joinpath(
+        "api_server.json")
 
     def __init__(self) -> None:
         self.url = self.username = self.password = None
@@ -87,7 +84,7 @@ class ApiServerSetting:
 class BookmarkList(abc.Sequence):
 
     _data: list[models.EtaConfig]
-    _filepath = Path(flask_config.CONFIG_DIR).joinpath("bookmarks.json")
+    _filepath = Path(config.flask_config.CONFIG_DIR).joinpath("bookmarks.json")
 
     def __init__(self) -> None:
         self._data = []
@@ -138,7 +135,7 @@ class BookmarkList(abc.Sequence):
         for idx, entry in enumerate(self._data):
             if entry.id == id:
                 return idx
-        raise ValueError(f"ETA entry with id '{id}' is not in list.")
+        raise KeyError(id)
 
     def update(self, id: str, value: models.EtaConfig) -> Self:
         self._data[self.index(id)] = value
@@ -165,7 +162,7 @@ class EpaperSetting:
     brand: Optional[str]
     model: Optional[str]
 
-    _filepath = Path(flask_config.CONFIG_DIR).joinpath("e-paper.json")
+    _filepath = Path(config.flask_config.CONFIG_DIR).joinpath("e-paper.json")
 
     def __init__(self) -> None:
         self.brand = self.model = None
@@ -180,17 +177,18 @@ class EpaperSetting:
                 self.brand = data.get('brand')
                 self.model = data.get('model')
 
-    def clear(self) -> "EpaperSetting":
+    def clear(self) -> None:
         self.brand = self.model
-        return self
+        self.persist()
 
     def update(self,
                *,
                brand: str = None,
-               model: str = None) -> "EpaperSetting":
+               model: str = None) -> None:
+        # TODO: update should be automatically presist
         self.brand = brand or self.brand
         self.model = model or self.model
-        return self
+        self.persist
 
     def persist(self) -> None:
         with open(self._filepath, "w", encoding="utf-8") as f:
@@ -207,38 +205,111 @@ class EpaperSetting:
 @utils.singleton
 class RefreshSchedule:
 
-    _schedules: dict[str, dict]
-    _tasks: list
-    _filepath = Path(flask_config.CONFIG_DIR).joinpath("schedules.json")
+    _schedules: list[models.Schedule]
+    _filepath = Path(config.flask_config.CONFIG_DIR).joinpath("schedules.json")
 
     def __init__(self, app) -> None:
-        self._schedules = {}
+        self._schedules = []
+        self._aps = flask_apscheduler.APScheduler()
+        self._aps.init_app(app)
+        self._aps.start()
 
         if not self._filepath.exists():
             self._filepath.parent.mkdir(mode=711, parents=True, exist_ok=True)
             self.persist()
         else:
-            with open(self._filepath, "r", encoding="utf-8") as f:
-                data = json.load(f)
+            self.load()
+            for schedule in self._schedules:
+                if not schedule.enabled:
+                    continue
+                self._add_job(schedule)
 
-        self._scheduler = flask_apscheduler.APScheduler()
-        self._scheduler.init_app(app)
-        self._scheduler.start()
+    def get(self, id: str) -> models.Schedule:
+        for schedule in self._schedules:
+            if schedule.id == id:
+                return schedule
+        raise KeyError(id)
 
-    def add_job(self, cron: str, layout: str) -> str:
-        self._scheduler.add_job(id := utils.random_id_gen(8),
-                                'function',
-                                cron)
+    def get_all(self) -> list[models.Schedule]:
+        return self._schedules
 
-        self._schedules[id] = {'cron': cron, 'layout': layout}
+    def create(self,
+               schedule: str,
+               eta_type: str,
+               layout: str,
+               is_partial: bool,
+               enabled: bool) -> str:
+        schedule = models.Schedule(
+            id=(id := utils.random_id_gen(8)), schedule=schedule, eta_type=eta_type,
+            layout=layout, is_partial=is_partial, enabled=enabled)
+
+        if enabled:
+            self._add_job(schedule)
+        self._schedules.append(schedule)
         self.persist()
         return id
 
+    def update(self,
+               id: str,
+               schedule: str,
+               eta_type: str,
+               layout: str,
+               is_partial: bool,
+               enabled: bool) -> None:
+        if not self._is_id_exist(id):
+            raise KeyError(id)
+
+        schedule = models.Schedule(
+            id=id, schedule=schedule, eta_type=eta_type,
+            layout=layout, is_partial=is_partial, enabled=enabled)
+        # TODO: optimisa the implementation
+        self.remove(id)
+        if enabled:
+            self._add_job(schedule)
+        self._schedules.append(schedule)
+        self.persist()
+
+    def remove(self, id: str) -> None:
+        for idx, schedule in enumerate(self._schedules):
+            if schedule.id == id:
+                if self._aps.get_job(id) is not None:
+                    self._aps.remove_job(id)
+                self._schedules.pop(idx)
+                self.persist()
+                return
+        raise KeyError(id)
+
+    def remove_all(self) -> None:
+        self._aps.remove_all_jobs()
+        self._schedules.clear()
+        self.persist()
+
     def load(self) -> None:
         with open(self._filepath, "r", encoding="utf-8") as f:
-            self._schedules = [models.EtaConfig(**c) for c in json.load(f)]
+            self._schedules = [models.Schedule(**c) for c in json.load(f)]
 
     def persist(self) -> None:
         with open(self._filepath, "w", encoding="utf-8") as f:
-            json.dump(self._schedules, f, indent=4,
-                      cls=utils.DataclassJSONEncoder)
+            json.dump([s.model_dump() for s in self._schedules], f, indent=4)
+
+    def _add_job(self, schedule: models.Schedule) -> None:
+        if (not croniter.croniter.is_valid(schedule.schedule)):
+            raise ValueError('The cron expression is invalid.')
+
+        cron = schedule.schedule.split(' ')
+        self._aps.add_job(schedule.id,
+                          utils.generate_image,
+                          args=[eimage.enums.EtaType(schedule.eta_type),
+                                schedule.layout],
+                          trigger='cron',
+                          minute=cron[0],
+                          hour=cron[1],
+                          day=cron[2],
+                          month=cron[3],
+                          day_of_week=cron[-1])
+
+    def _is_id_exist(self, id: str) -> bool:
+        for schedule in self._schedules:
+            if schedule.id == id:
+                return True
+        return False

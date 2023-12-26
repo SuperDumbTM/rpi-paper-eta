@@ -1,14 +1,18 @@
 import datetime
+from io import BytesIO
 from typing import Any, Optional
-from pydantic import BaseModel
+
+from pydantic import BaseModel, ConfigDict
 
 
 class Etas(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
     route: str
     origin: str
     destination: str
     stop_name: str
-    logo: str
+    logo: Optional[BytesIO] = None
     timestamp: datetime.datetime
     etas: Optional[list["Eta"]] = None
 
@@ -23,6 +27,8 @@ class Etas(BaseModel):
 
 
 class ErrorEta(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
     code: str
     message: str
 
@@ -30,5 +36,5 @@ class ErrorEta(BaseModel):
     origin: str
     destination: str
     stop_name: str
-    logo: str
+    logo: Optional[BytesIO] = None
     timestamp: datetime.datetime

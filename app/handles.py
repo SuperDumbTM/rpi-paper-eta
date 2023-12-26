@@ -1,7 +1,5 @@
-from flask import Blueprint, jsonify
-
 import marshmallow
-
+from flask import Blueprint, jsonify
 
 bp = Blueprint('error_handlers', __name__)
 
@@ -11,9 +9,9 @@ def handle_validation_error(err: marshmallow.ValidationError):
     location = list(err.messages_dict.keys())[0]
     return jsonify({
         'success': False,
-        'message': "",
+        'message': "Validation Failed.",
         'data': {
             'errors': err.messages_dict[location],
             'errors_at': location
         }
-    })
+    }), 400

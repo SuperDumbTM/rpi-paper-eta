@@ -44,10 +44,10 @@ class Epd3in7(EtaImageGenerator):
                 break
 
             # titles
-            # b.bitmap((coords['route']['logo']['offset'][0],
-            #           coords['route']['logo']['offset'][1] + (row_height*row)),
-            #          Image.open(rtdet.logo()).convert("1").resize((30, 30)),
-            #          self._black)
+            b.bitmap((coords['route']['logo']['offset'][0],
+                      coords['route']['logo']['offset'][1] + (row_height*row)),
+                     Image.open(route.logo).convert("1").resize((30, 30)),
+                     self._bk)
             b.text((coords['route']['name']['offset'][0],
                     coords['route']['name']['offset'][1] + (row_height*row)),
                    utils.discard(route.route,
@@ -117,7 +117,7 @@ class Epd3in7(EtaImageGenerator):
                     b.text((coords['eta']['time']['offset'][0],
                             coords['eta']['time']['offset'][1] + idx_offset),
                            text=eta.eta.strftime("%H:%M"), fill=self._bk, font=self.fonts['time'])
-        return {'black': image.rotate(degree)}
+        return {'black': eimage.rotate(degree)}
 
     def draw_error(self, message: str, degree: float = 0) -> dict[str, Image.Image]:
         image = Image.new('1', (self.width, self.height), 255)
@@ -125,10 +125,10 @@ class Epd3in7(EtaImageGenerator):
 
         # TODO
 
-        return {'black': image.rotate(degree)}
+        return {'black': eimage.rotate(degree)}
 
 
 if __name__ == "__main__":
     import enums
-    print(Epd3in7.layouts(enums.EtaMode.MIXED))
+    print(Epd3in7.layouts(enums.EtaType.MIXED))
     print(Epd3in7.width)

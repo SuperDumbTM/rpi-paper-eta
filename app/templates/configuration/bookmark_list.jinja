@@ -49,12 +49,12 @@
 <script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="//cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 <script src="//cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
-
 <script src="{{ url_for('static', filename='scripts/datatable.js') }}"></script>
+
 <script>
     let datatable = $('#eta-list').DataTable({
         ajax: {
-            url: "{{ url_for('api_config.get_etas') }}",
+            url: "{{ url_for('api_config.get_bookmarks') }}",
             dataSrc: "data.etas"
         },
         columns: [
@@ -75,7 +75,7 @@
                         `
                             <button type="button" class="dt-action btn btn-outline-dark btn-sm h-100"
                                 data-href-method="PUT"
-                                data-href={{ url_for('api_config.eta_swap') }}
+                                data-href={{ url_for('api_config.bookmark_swap') }}
                                 data-href-payload=${JSON.stringify({source: meta.settings.json.data.etas[meta.row - 1].id, destination: row.id})}
                                 style="height: 100%;">
                                 <i class="bi bi-chevron-up"></i>
@@ -84,7 +84,7 @@
                     const down = meta.settings.json.data.etas.length != meta.row + 1 ? `
                         <button type="button" class="dt-action btn btn-outline-dark btn-sm"
                             data-href-method="PIT"
-                            data-href={{ url_for('api_config.eta_swap') }}
+                            data-href={{ url_for('api_config.bookmark_swap') }}
                             data-href-payload=${JSON.stringify({source: row.id, destination: meta.settings.json.data.etas[meta.row + 1].id})}
                             style="height: 100%;">
                             <i class="bi bi-chevron-down"></i>
@@ -94,7 +94,7 @@
                     return `
                         <button type="button" class="dt-action btn btn-danger btn-sm"
                             data-href-method="DELETE"
-                            data-href=${"{{ url_for('api_config.delete_eta', id='p1') }}".replace("p1", row.id)}
+                            data-href=${"{{ url_for('api_config.bookmark_delete', id='p1') }}".replace("p1", row.id)}
                             title={{ _("Delete") }}>
                             <i class="bi bi-trash"></i>
                         </button>

@@ -5,6 +5,7 @@ from flask import (Blueprint, current_app, flash, jsonify, redirect,
 
 from app import enums, forms, models, utils
 from app.config import site_data
+from app.modules import image as eimage
 
 bp = Blueprint('configuration',
                __name__,
@@ -17,20 +18,30 @@ def bookmark_list():
     return render_template("configuration/bookmark_list.jinja", etas=site_data.BookmarkList())
 
 
-@bp.route('/bookmark/create', methods=["GET", "POST"])
+# @bp.route('/bookmark/create', methods=["GET", "POST"])
+# def bookmark_create():
+#     form = forms.BookmarkForm()
+
+#     if form.validate_on_submit():
+#         try:
+#             etas = site_data.BookmarkList()
+#             etas.create(models.EtaConfig(**form.data)).persist()
+#         except Exception as e:
+#             current_app.logger.error(e)
+#             flash("Update failed due to internal errors.",
+#                   enums.FlashCategory.error)
+#         else:
+#             flash("Updated.", enums.FlashCategory.success)
+
+#     return render_template("configuration/bookmark_form.jinja",
+#                            form=form,
+#                            form_action=url_for(
+#                                "configuration.bookmark_create"),
+#                            editing=False)
+
+@bp.route('/bookmark/create')
 def bookmark_create():
     form = forms.BookmarkForm()
-
-    if form.validate_on_submit():
-        try:
-            etas = site_data.BookmarkList()
-            etas.create(models.EtaConfig(**form.data)).persist()
-        except Exception as e:
-            current_app.logger.error(e)
-            flash("Update failed due to internal errors.",
-                  enums.FlashCategory.error)
-        else:
-            flash("Updated.", enums.FlashCategory.success)
 
     return render_template("configuration/bookmark_form.jinja",
                            form=form,
@@ -39,72 +50,51 @@ def bookmark_create():
                            editing=False)
 
 
-@bp.route('/bookmarks/edit/<id>', methods=["GET", "POST"])
+@bp.route('/bookmarks/edit/<id>')
 def bookmark_edit(id: str):
     etas = site_data.BookmarkList()
     entry = etas.get(id)
 
-    form = forms.BookmarkForm(data=asdict(
-        entry, dict_factory=utils.asdict_factory))
-
+    directions = service_types = stops = []
     try:
-        form.direction.choices += forms.BookmarkForm.direction_choices(
-            entry.company.value, entry.route)
-        form.direction.data = entry.direction.value
-
-        form.service_type.choices += forms.BookmarkForm.type_choices(
+        directions = utils.direction_choices(entry.company.value, entry.route)
+        service_types = utils.type_choices(
             entry.company.value, entry.route, entry.direction.value)
-        form.service_type.data = entry.service_type
-
-        form.stop_code.choices += forms.BookmarkForm.stop_choices(
+        stops = utils.stop_choices(
             entry.company.value, entry.route, entry.direction.value, entry.service_type)
-        form.stop_code.data = entry.stop_code
     except requests.exceptions.ConnectionError:
         flash("API server error.", enums.FlashCategory.error)
 
-    if form.validate_on_submit():
-        try:
-            etas.update(id, models.EtaConfig(**form.data, id=id)).persist()
-        except ValueError:
-            flash("Invalid ETA entry ID.", enums.FlashCategory.error)
-        except Exception as e:
-            current_app.logger.error(e)
-            flash("Update failed due to internal errors.",
-                  enums.FlashCategory.error)
-        else:
-            flash("Updated.", enums.FlashCategory.success)
-
     return render_template("configuration/bookmark_form.jinja",
-                           form=form,
+                           companys=[(c.value, c.name)
+                                     for c in enums.EtaCompany],
+                           directions=directions,
+                           service_types=service_types,
+                           stops=stops,
+                           langs=[(l.value, l.name)
+                                  for l in enums.Locale],
+                           form=forms.BookmarkForm(
+                               **entry.model_dump(exclude=['id'])),
                            form_action=url_for(
-                               "configuration.bookmark_edit", id=id),
-                           editing=True)
+                               "api_config.bookmark_update", id=id),
+                           editing=True,)
 
 
 @bp.route('/epd')
 def epaper_setting():
-    return render_template("configuration/epd_form.jinja", form=forms.EpaperForm())
+    setting = site_data.EpaperSetting()
+    return render_template("configuration/epd_form.jinja",
+                           brands=eimage.eta_image.EtaImageGeneratorFactory.brands(),
+                           form=forms.EpaperForm(brand=setting.brand,
+                                                 model=setting.model))
 
 
-@bp.route('/api-server', methods=['GET', 'POST'])
+@bp.route('/api-server')
 def api_server_setting():
     setting = site_data.ApiServerSetting()
-    form = forms.ApiServerForm()
 
-    if form.validate_on_submit():
-        try:
-            setting.clear().update(url=form.url.data,
-                                   username=form.username.data,
-                                   password=form.password.data
-                                   ).persist()
-        except Exception:
-            flash("Update failed due to internal errors.",
-                  enums.FlashCategory.error)
-        else:
-            flash("Updated.", enums.FlashCategory.success)
     return render_template("configuration/api_server_form.jinja",
-                           api_url=setting.url,
-                           api_username=setting.username,
-                           api_password=setting.password,
-                           form=form
+                           form=forms.ApiServerForm(url=setting.url,
+                                                    username=setting.username,
+                                                    password=setting.password)
                            )

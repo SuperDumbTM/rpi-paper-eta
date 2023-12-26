@@ -17,20 +17,35 @@
 {% block content %}
 <div class="row align-items-center" style="height: 100vh;">
     <div class="mx-auto col-10 col-md-8 col-lg-6">
-        <form class="form" action="{{ form_action }}" method="post" autocomplete="off">
-            {{ form.hidden_tag() }}
+        <form class="form" action="{{ url_for('api_config.update_epaper_setting') }}" method="post" autocomplete="off">
 
             <h1>Display Setting</h1>
             <p class="description">
             </p>
 
-            {% include "includes/flash_success.jinja" %}
-            {% include "includes/flash_error.jinja" %}
+            <div class="form-group">
+                <label for="layout" class="form-label">Brand</label>
+                <select class="form-select" name="brand" required>
+                    <option value="" selected>-----</option>
+                    {% for brand in brands %}
+                    {% if form.brand == brand %}
+                    <option value="{{ brand }}" selected>
+                    {% else %}
+                    <option value="{{ brand }}">
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
 
-            {{ render_field(form.brand) }}
-            {{ render_field(form.model) }}
+            <div class="form-group">
+                <label for="layout" class="form-label">model</label>
+                <select class="form-select" name="model">
+                    <option selected>-----</option>
+                </select>
+            </div>
 
-            {{ form.submit(class="btn btn-primary btn-customized mt-4") }}
+            <input class="btn btn-primary btn-customized mt-4" id="submit" name="submit" type="submit" value="Submit">
+
         </form>
     </div>
 </div>
@@ -43,6 +58,7 @@
         const BRAND = $("select[name=brand]").children("option:selected").val()
         $("select[name=model]").find('option').not(':first').remove()
 
+        console.log(BRAND)
         if (!BRAND) return
         $.get(`{{ url_for("api_display.get_models") }}?${$.param({ brand: BRAND })}`, function (res) {
             if (res.success) {
@@ -55,45 +71,27 @@
         })
     })
 
-    $("select[name=model]").change(function (e) {
-        const BRAND = $("select[name=brand]").children("option:selected").val()
-        const MODEL = $("select[name=model]").children("option:selected").val()
-        $("#layout-input").html("")
+    $('form').submit(function (e) {
+        e.preventDefault()
 
-        if (!BRAND || !MODEL) return
-
-        $.get(`{{ url_for("api_display.get_layouts") }}?${$.param({ brand: BRAND, model: MODEL })}`,
-            function (res) {
+        $.ajax({
+            url: $(this).attr('action'),
+            type: $(this).attr('method'),
+            data: JSON.stringify(formToJson($(this))),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            error: function (xhr, status, error) {
+                alertify.error("Something is wrong with the API server.")
+                alertify.error($.parseJSON(xhr.responseText).message)
+            },
+            success: function (res) {
                 if (res.success) {
-                    for (const [key, value] of Object.entries(res.data.layouts)) {
-                        value.forEach(function (e) {
-                            $("#layout-input").append(`
-                                <div class="card mb-4">
-                                    <div class="card-body">
-                                        <h5 class="card-title">
-                                            <input name="style" type="radio">
-                                            <label>${e.name}</label>
-                                        </h5>
-                                        <p class="card-text">
-                                            <strong style="display: inline-block; width: 50px;">Type:</strong>
-                                            <span class="card-text-descr">${key}</span>
-                                        </p>
-                                        <hr>
-                                        <p class="card-text">
-                                            ${e.description.en}
-                                        </p>
-                                        <p class="card-text">
-                                            ${e.description.zh_Hant_HK}
-                                        </p>
-                                    </div>
-                                </div>
-                            `)
-                        })
-                    }
+                    alertify.success('Updated.')
                 } else {
-
+                    alertify.error(res.message)
                 }
-            })
+            }
+        })
     })
 </script>
 {% endblock script %}

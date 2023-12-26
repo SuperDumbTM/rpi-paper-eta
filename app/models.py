@@ -1,13 +1,11 @@
 from typing import Optional
 
-from pydantic import BaseModel
-from pydantic.dataclasses import dataclass
+import pydantic
 
 from app import enums
 
 
-@dataclass(slots=True)
-class EtaConfig:
+class EtaConfig(pydantic.BaseModel):
     company: enums.EtaCompany
     route: str
     direction: enums.RouteDirection
@@ -17,13 +15,10 @@ class EtaConfig:
     id: Optional[str] = None
 
 
-@dataclass(slots=True)
-class EpdConfig:
-    brand: str
-    model: str
+class Schedule(pydantic.BaseModel):
+    id: str
+    schedule: str
+    eta_type: str
     layout: str
-    style: str
-
-
-class Eta(BaseModel):
-    pass
+    is_partial: bool
+    enabled: bool = True

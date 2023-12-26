@@ -1,4 +1,7 @@
 from enum import Enum
+import io
+from pathlib import Path
+from typing import Literal
 
 
 class FlashCategory(str, Enum):
@@ -20,18 +23,23 @@ class EtaCompany(str, Enum):
     def text(self, locale: "Locale"):
         if locale == Locale.EN:
             match self:
-                case EtaCompany.KMB: "KMB"
-                case EtaCompany.MTRBUS: "MTR (Bus)"
-                case EtaCompany.MTRLRT: "MTR (Light Rail)"
-                case EtaCompany.MTRTRAIN: "MTR"
-                case EtaCompany.CTB: "City Bus"
+                case EtaCompany.KMB: return "KMB"
+                case EtaCompany.MTRBUS: return "MTR (Bus)"
+                case EtaCompany.MTRLRT: return "MTR (Light Rail)"
+                case EtaCompany.MTRTRAIN: return "MTR"
+                case EtaCompany.CTB: return "City Bus"
         else:
             match self:
-                case EtaCompany.KMB: "九巴"
-                case EtaCompany.MTRBUS: "港鐵巴宜"
-                case EtaCompany.MTRLRT: "輕鐵"
-                case EtaCompany.MTRTRAIN: "港鐵"
-                case EtaCompany.CTB: "城巴"
+                case EtaCompany.KMB: return "九巴"
+                case EtaCompany.MTRBUS: return "港鐵巴宜"
+                case EtaCompany.MTRLRT: return "輕鐵"
+                case EtaCompany.MTRTRAIN: return "港鐵"
+                case EtaCompany.CTB: return "城巴"
+
+    def icon(self, color: Literal['bw', 'c', 'bw_neg']) -> io.BufferedReader:
+        base = Path(__file__).parent.joinpath(
+            'static', 'images', 'logos', color)
+        return open(base.joinpath(f'{self.value}.bmp'), "rb")
 
 
 class RouteDirection(str, Enum):
@@ -42,7 +50,7 @@ class RouteDirection(str, Enum):
 
 
 class Locale(str, Enum):
-    """Locale codes"""
+    """Locale for ETA texts"""
 
     TC = "tc"
     EN = "en"
