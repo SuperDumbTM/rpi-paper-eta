@@ -30,8 +30,12 @@
                     {% for brand in brands %}
                     {% if form.brand == brand %}
                     <option value="{{ brand }}" selected>
+                        {{ brand | title }}
+                    </option>
                     {% else %}
                     <option value="{{ brand }}">
+                        {{ brand | title }}
+                    </option>
                     {% endif %}
                     {% endfor %}
                 </select>
