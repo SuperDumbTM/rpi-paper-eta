@@ -1,10 +1,10 @@
 [
     {
-        "id": "25Y62FQL",
-        "schedule": "* * * * * 23",
+        "id": "N7TT2QYK",
+        "schedule": "* * * * *",
         "eta_type": "mixed",
         "layout": "6-row-3-eta",
         "is_partial": false,
-        "enabled": false
+        "enabled": true
     }
 ]
