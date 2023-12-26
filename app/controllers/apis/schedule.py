@@ -24,7 +24,7 @@ _schedule_validate_rules = {
 
 
 @bp.route('/schedules')
-def get_schedules():
+def get():
     schedules = []
     for s in config.site_data.RefreshSchedule().get_all():
         cron = croniter.croniter(s.schedule, start_time=datetime.now())
@@ -45,7 +45,7 @@ def get_schedules():
 
 @bp.route('/schedule', methods=['POST'])
 @webargs.flaskparser.use_args(_schedule_validate_rules, location="json")
-def create_schedule(args):
+def create(args):
     scheduler = config.site_data.RefreshSchedule()
     scheduler.create(**args)
     return jsonify({
@@ -57,7 +57,7 @@ def create_schedule(args):
 
 @bp.route('/schedule/<id>', methods=['PUT'])
 @webargs.flaskparser.use_args(_schedule_validate_rules, location="json")
-def update_schedule(args, id: str):
+def update(args, id: str):
     scheduler = config.site_data.RefreshSchedule()
     scheduler.update(**args, id=id)
     return jsonify({
@@ -68,7 +68,7 @@ def update_schedule(args, id: str):
 
 
 @bp.route('/schedule/<id>', methods=["DELETE"])
-def delete_schedule(id: str):
+def delete(id: str):
     try:
         config.site_data.RefreshSchedule().remove(id)
         return jsonify({
