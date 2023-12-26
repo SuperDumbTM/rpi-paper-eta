@@ -1,13 +1,15 @@
 import collections
-import os
-from pathlib import Path
-import sys
 import json
 import logging
+import os
+import sys
 from abc import ABC, abstractmethod
+from pathlib import Path
 from typing import Iterable
 
 from PIL import Image, ImageFont
+
+from app.modules import image as eimage
 
 try:
     import enums
