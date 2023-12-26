@@ -163,10 +163,10 @@ def generate_image(eta_type: eimage.enums.EtaType, layout: str) -> dict[str, Ima
                             )
         images = generator.draw(etas)
     except requests.RequestException as e:
-        logging.warning(f'Image generation failed with error: {str(e)}')
+        logging.warning('Image generation failed with error: %s', str(e))
         images = generator.draw_error('Network Error')
     except Exception as e:
-        logging.exception(f'Image generation failed with error: {str(e)}')
+        logging.exception('Image generation failed with error: %s', str(e))
         images = generator.draw_error('Unexpected Error')
 
     generator.write_images(config.flask_config.CACHE_DIR, images)
