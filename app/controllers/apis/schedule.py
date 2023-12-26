@@ -11,7 +11,7 @@ bp = Blueprint('api_schedule', __name__, url_prefix="/api/schedule")
 
 _schedule_validate_rules = {
     'schedule': webargs.fields.String(
-        required=True, validate=lambda v: croniter.croniter.is_valid(v),
+        required=True, validate=lambda v: croniter.croniter.is_valid(v) and len(v.split(' ')) == 5,
         error_messages={'validator_failed': 'Invalid cron expression.'}),
     'eta_type': webargs.fields.String(
         required=True, validate=webargs.validate.OneOf([v.value for v in eimage.enums.EtaType])),
