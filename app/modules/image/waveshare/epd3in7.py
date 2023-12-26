@@ -117,7 +117,7 @@ class Epd3in7(EtaImageGenerator):
                     b.text((coords['eta']['time']['offset'][0],
                             coords['eta']['time']['offset'][1] + idx_offset),
                            text=eta.eta.strftime("%H:%M"), fill=self._bk, font=self.fonts['time'])
-        return {'black': eimage.rotate(degree)}
+        return {'black': image.rotate(degree)}
 
     def draw_error(self, message: str, degree: float = 0) -> dict[str, Image.Image]:
         image = Image.new('1', (self.width, self.height), 255)
@@ -125,7 +125,7 @@ class Epd3in7(EtaImageGenerator):
 
         # TODO
 
-        return {'black': eimage.rotate(degree)}
+        return {'black': image.rotate(degree)}
 
 
 if __name__ == "__main__":
