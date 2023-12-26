@@ -1,6 +1,20 @@
 :root {
-    --theme-color: #3F704D;
-    --secondary-color: #F0E68C;
+    --theme-color: #50C878;
+    --theme-color-rgb: 80, 200, 120;
+    --theme-2-color: #F0E68C;
+    --theme-2-color-rgb: 240, 230, 140;
+}
+
+.bg-theme {
+    --bs-bg-opacity: 1;
+    background-color: rgba(var(--theme-color-rgb), var(--bs-bg-opacity)) !important;
+}
+
+/* override */
+.dropdown-item.active,
+.dropdown-item:active {
+    color: black;
+    background-color: var(--theme-2-color);
 }
 
 /* ----- navigation ----- */
