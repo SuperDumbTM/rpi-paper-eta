@@ -9,8 +9,6 @@ from typing import Iterable
 
 from PIL import Image, ImageFont
 
-from app.modules import image as eimage
-
 try:
     import enums
     import models
@@ -81,7 +79,7 @@ class EtaImageGenerator(ABC):
             os.makedirs(directory)
 
         for color, image in images.items():
-            eimage.save(os.path.join(directory, f"{color}.bmp"))
+            image.save(os.path.join(directory, f"{color}.bmp"))
             logging.debug(f"{color}.bmp created")
 
     def read_images(self, directory: os.PathLike) -> dict[str, Image.Image]:
