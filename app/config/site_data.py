@@ -7,6 +7,7 @@ import croniter
 import flask_apscheduler
 
 from app import config, models, utils
+from app.modules import image as eimage
 
 
 @utils.singleton
