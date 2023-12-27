@@ -1,35 +1,14 @@
 :root {
     --theme-color: #50C878;
     --theme-color-rgb: 80, 200, 120;
-    --theme-2-color: #F0E68C;
-    --theme-2-color-rgb: 240, 230, 140;
+    --theme-2-color: #FDDA0D;
+    --theme-2-color-rgb: 253, 218, 13;
 }
 
 .bg-theme {
     --bs-bg-opacity: 1;
     background-color: rgba(var(--theme-color-rgb), var(--bs-bg-opacity)) !important;
 }
-
-/* override */
-.dropdown-item.active,
-.dropdown-item:active {
-    color: black;
-    background-color: var(--theme-2-color);
-}
-
-/* ----- navigation ----- */
-
-/* nav.navbar {
-    background-color: var(--theme-color);
-}
-
-nav.navbar * {
-    color: white;
-}
-
-.navbar-nav .nav-link.active, .navbar-nav .nav-link.show {
-    color: var(--secondary-color);
-} */
 
 #content {
     min-height: 100vh;
@@ -47,6 +26,21 @@ nav.navbar * {
     transform: translate(-50%, -50%);
     filter: alpha(opacity=50);
     z-index: 100;
+}
+
+/* ----- navbar ----- */
+
+.dropdown-item.active,
+.dropdown-item:active {
+    /* override */
+    color: black;
+    background-color: var(--theme-2-color);
+}
+
+.navbar-nav .nav-link.active {
+    /* override */
+    color: var(--theme-2-color);
+    font-weight: bolder;
 }
 
 /* ----- callout ----- */
