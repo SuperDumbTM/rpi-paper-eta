@@ -15,7 +15,7 @@
 {% block content %}
 <div class="row align-items-center" style="height: 100vh;">
     <div class="mx-auto col-10 col-md-8 col-lg-6">
-        <form class="form" action="{{ form_action }}" method="put" autocomplete="off">
+        <form class="form" action="{{ form_action }}" method="{{ 'put' if editing else 'post' }}" autocomplete="off">
 
             <h1>ETA Entry</h1>
             <p class="description">
@@ -250,7 +250,7 @@
 
         $.ajax({
             url: $(this).attr('action'),
-            type: "put",
+            type: $(this).attr('method'),
             data: JSON.stringify(formToJson($(this))),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
