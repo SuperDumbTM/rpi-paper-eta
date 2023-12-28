@@ -2,11 +2,67 @@
 {% include "includes/navbar.jinja" %}
 
 {% block content %}
-<div class="container-xxl">
+<div class="container">
 
-{% for image in images  %}
-<img src="data:image/bmp;base64, {{ image }}">
-{% endfor %}
+    <div class="row my-3">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    E-Paper 設定
+                </div>
+                <div class="card-body">
+                    <p class="fw-bold mb-2">
+                        <i class="bi bi-building"></i> Brand
+                    </p>
+                    <hr class="m-1">
+                    {{ epd.brand | title }}
 
+                    <p class="fw-bold mb-2 mt-3">
+                        <i class="bi bi-building"></i> Model
+                    </p>
+                    <hr class="m-1">
+                    {{ epd.model | title }}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row my-3">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    Display Image(s)
+                </div>
+                <div class="card-body">
+                    <p class="card-text text-muted">
+                        Current displaying image(s) to the E-paper screen.
+                    </p>
+
+                    {% for name, image in images.items() %}
+                    <div class="col-md-3 col-12">
+                        <div class="card" style="width: 18rem;">
+                            <img class="m-2" src="data:image/bmp;base64, {{ image }}">
+
+                            <hr style="margin: unset;">
+
+                            <div class="card-body">
+                                <span class="card-text">
+                                    {{ name | title }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    {% if images | length == 0%}
+                    <p class="text-danger">
+                        Not Available
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock content %}
