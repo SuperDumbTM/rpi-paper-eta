@@ -1,18 +1,18 @@
 import dataclasses
 import json
 import logging
-from pathlib import Path
 import random
 import string
 from enum import Enum
 from io import BytesIO
+from pathlib import Path
 
 import requests
 from flask import current_app, request, url_for
 from flask_babel import lazy_gettext
 from PIL import Image
 
-from app import config
+from app import config, translation
 from app.modules import image as eimage
 
 
@@ -110,7 +110,6 @@ def stop_choices(company: str,
 #                           E-paper
 # ------------------------------------------------------------
 
-
 def generate_image(eta_type: eimage.enums.EtaType, layout: str) -> dict[str, Image.Image]:
     """Generate an ETA image
 
@@ -121,8 +120,6 @@ def generate_image(eta_type: eimage.enums.EtaType, layout: str) -> dict[str, Ima
     Returns:
         dict[str, Image.Image]: generated image(s)
     """
-    import logging
-    logging.debug('generate image invoked')
     api_setting = config.site_data.ApiServerSetting()
     bm_setting = config.site_data.BookmarkList()
     epd_setting = config.site_data.EpaperSetting()
@@ -161,7 +158,8 @@ def generate_image(eta_type: eimage.enums.EtaType, layout: str) -> dict[str, Ima
                 res['data'].pop('etas')
                 etas.append(eimage.models.ErrorEta(**res['data'],
                                                    code=res['code'],
-                                                   message=res['message'],
+                                                   message=str(translation.RP_CODE_TRANSL.get(
+                                                       res['code'], res['message'])),
                                                    logo=logo,)
                             )
         images = generator.draw(etas)

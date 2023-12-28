@@ -1,4 +1,4 @@
-from flask_babel import lazy_gettext, gettext
+from flask_babel import lazy_gettext
 
 RP_CODE_TRANSL = {
     "eta-end-of-service": lazy_gettext("eta-end-of-service"),

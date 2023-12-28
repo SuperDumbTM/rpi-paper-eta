@@ -5,6 +5,7 @@ from typing import Any, Optional, Self
 
 import croniter
 import flask_apscheduler
+import requests
 
 from app import config, models, utils
 from app.modules import image as eimage
@@ -12,6 +13,8 @@ from app.modules import image as eimage
 
 @utils.singleton
 class ApiServerSetting:
+    """A singleton class for managing the API server setting
+    """
 
     url: Optional[str]
     username: Optional[str]
@@ -154,11 +157,13 @@ class BookmarkList(abc.Sequence):
             raise Exception("Duplicated ID.")
 
         with open(self._filepath, "w", encoding="utf-8") as f:
-            json.dump(self._data, f, indent=4, cls=utils.DataclassJSONEncoder)
+            json.dump([d.model_dump() for d in self._data], f, indent=4)
 
 
 @utils.singleton
 class EpaperSetting:
+    """A Singleton class that mangage the E-Paper settings
+    """
 
     brand: Optional[str]
     model: Optional[str]
@@ -189,7 +194,7 @@ class EpaperSetting:
         # TODO: update should be automatically presist
         self.brand = brand or self.brand
         self.model = model or self.model
-        self.persist
+        self.persist()
 
     def persist(self) -> None:
         with open(self._filepath, "w", encoding="utf-8") as f:
@@ -205,6 +210,8 @@ class EpaperSetting:
 
 @utils.singleton
 class RefreshSchedule:
+    """A singleton class for managing the display refresh schedules
+    """
 
     _schedules: list[models.Schedule]
     _filepath = Path(config.flask_config.CONFIG_DIR).joinpath("schedules.json")
@@ -299,9 +306,14 @@ class RefreshSchedule:
 
         cron = schedule.schedule.split(' ')
         self._aps.add_job(schedule.id,
-                          utils.generate_image,
-                          args=[eimage.enums.EtaType(schedule.eta_type),
-                                schedule.layout],
+                          requests.get,
+                          kwargs={
+                              'url': 'http://localhost:8002/api/display/refresh',
+                              'params': {
+                                  'eta_type': eimage.enums.EtaType(schedule.eta_type),
+                                  'layout': schedule.layout
+                              },
+                          },
                           trigger='cron',
                           minute=cron[0],
                           hour=cron[1],

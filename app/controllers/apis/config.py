@@ -10,6 +10,22 @@ from app.modules import image as eimage
 
 bp = Blueprint('api_config', __name__, url_prefix="/api/config")
 
+_bookmark_validation_rules = {
+    'company': webargs.fields.String(
+        required=True, validate=webargs.validate.OneOf([c for c in enums.EtaCompany])),
+    'route': webargs.fields.String(required=True),
+    'direction': webargs.fields.String(required=True),
+    'service_type': webargs.fields.String(required=True),
+    'stop_code': webargs.fields.String(required=True),
+    'lang': webargs.fields.String(
+        required=True, validate=webargs.validate.OneOf([l for l in enums.Locale]))
+}
+
+
+# ------------------------------------------------------------
+#                          API Server
+# ------------------------------------------------------------
+
 
 @bp.route("/server")
 def get_server_setting():
@@ -35,6 +51,11 @@ def update_server_setting(args):
         'message': "Updated.",
         'data': None
     })
+
+
+# ------------------------------------------------------------
+#                          Bookmark
+# ------------------------------------------------------------
 
 
 @bp.route("/bookmarks")
@@ -148,17 +169,28 @@ def bookmark_search(args, stype: Literal["route", "direction", "service_type", "
         }), 500
 
 
-@bp.route("/bookmark/<id>", methods=["PUT"])
-@webargs.flaskparser.use_args({
-    'company': webargs.fields.String(
-        required=True, validate=webargs.validate.OneOf([c for c in enums.EtaCompany])),
-    'route': webargs.fields.String(required=True),
-    'direction': webargs.fields.String(required=True),
-    'service_type': webargs.fields.String(required=True),
-    'stop_code': webargs.fields.String(required=True),
-    'lang': webargs.fields.String(required=True)
+@bp.route("/bookmark", methods=["POST"])
+@webargs.flaskparser.use_args(_bookmark_validation_rules)
+def bookmark_create(args):
+    bkms = config.site_data.BookmarkList()
+    try:
+        bkms.create(models.EtaConfig(**args,)).persist()
+    except KeyError:
+        return jsonify({
+            'success': False,
+            'message': "Invalid ID.",
+            'data': None
+        }), 400
+    else:
+        return jsonify({
+            'success': True,
+            'message': "Updated.",
+            'data': None
+        })
 
-})
+
+@bp.route("/bookmark/<id>", methods=["PUT"])
+@webargs.flaskparser.use_args(_bookmark_validation_rules)
 def bookmark_update(args, id: str):
     bkms = config.site_data.BookmarkList()
     try:
@@ -210,6 +242,11 @@ def bookmark_swap(args):
         'message': "Updated.",
         'data': None
     })
+
+
+# ------------------------------------------------------------
+#                          E-Paper
+# ------------------------------------------------------------
 
 
 @bp.route("/epaper", methods=["POST", "PUT"])

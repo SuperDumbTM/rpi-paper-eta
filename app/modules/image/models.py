@@ -4,6 +4,8 @@ from typing import Any, Optional
 
 from pydantic import BaseModel, ConfigDict
 
+from app import enums
+
 
 class Etas(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
@@ -12,6 +14,7 @@ class Etas(BaseModel):
     origin: str
     destination: str
     stop_name: str
+    lang: enums.Locale
     logo: Optional[BytesIO] = None
     timestamp: datetime.datetime
     etas: Optional[list["Eta"]] = None
@@ -36,5 +39,6 @@ class ErrorEta(BaseModel):
     origin: str
     destination: str
     stop_name: str
+    lang: enums.Locale
     logo: Optional[BytesIO] = None
     timestamp: datetime.datetime

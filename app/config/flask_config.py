@@ -10,5 +10,7 @@ CONFIG_DIR = Path(__file__).parent.parent.joinpath("config", "data")
 CACHE_DIR = Path(__file__).parent.parent.joinpath("caches")
 """Path to the directory for cache files"""
 
+LOG_FILE_PATH = CACHE_DIR.joinpath('app.log')
+
 BABEL_TRANSLATION_DIRECTORIES = str(Path(
     __file__).parent.parent.parent.joinpath("translations"))

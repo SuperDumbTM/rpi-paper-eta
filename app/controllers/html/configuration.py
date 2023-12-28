@@ -44,9 +44,13 @@ def bookmark_create():
     form = forms.BookmarkForm()
 
     return render_template("configuration/bookmark_form.jinja",
+                           companys=[(c.value, c.name)
+                                     for c in enums.EtaCompany],
+                           langs=[(l.value, l.name)
+                                  for l in enums.Locale],
                            form=form,
                            form_action=url_for(
-                               "configuration.bookmark_create"),
+                               "api_config.bookmark_create"),
                            editing=False)
 
 
