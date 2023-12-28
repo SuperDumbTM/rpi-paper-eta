@@ -55,7 +55,7 @@ def refresh(args):
 
     try:
         etas = []
-        for bm in bm_setting:
+        for bm in bm_setting.get_all():
             res = requests.get(
                 f'{api_setting.url}/{bm.company.value}/{bm.route}/{bm.direction.value}/etas',
                 params={

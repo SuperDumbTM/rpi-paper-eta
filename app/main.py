@@ -81,6 +81,7 @@ def create_app():
     app.register_blueprint(controllers.html.configuration.bp)
     app.register_blueprint(controllers.html.schedule.bp)
     app.register_blueprint(controllers.html.root.bp)
+    app.register_blueprint(controllers.html.log.bp)
 
     app.register_blueprint(controllers.apis.config.bp)
     app.register_blueprint(controllers.apis.display.bp)
@@ -92,6 +93,12 @@ def create_app():
     init_logger(app)
     init_site_data(app)
     init_babel(app)
+
+    logging.debug('debug')
+    logging.info('info')
+    logging.warn('warn')
+    logging.error('error')
+    logging.critical('critial')
 
     return app
 

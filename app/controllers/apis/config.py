@@ -213,12 +213,10 @@ def bookmark_update(args, id: str):
 def bookmark_delete(id: str):
     etas = config.site_data.BookmarkList()
     try:
-        deleted = etas.pop(etas.index(id))
-        etas.persist()
         return jsonify({
             'success': True,
             'message': "Deleted.",
-            'data': asdict(deleted)
+            'data': etas.pop(etas.index(id)).model_dump()
         })
     except ValueError:
         return jsonify({

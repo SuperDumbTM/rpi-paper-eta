@@ -92,11 +92,10 @@ class BookmarkList(abc.Sequence):
 
     def __init__(self) -> None:
         self._data = []
-
         if not self._filepath.exists():
-            self.persist()
+            self._persist()
         else:
-            self.load()
+            self._load()
 
     def __getitem__(self, index: int) -> None:
         return self._data[index]
@@ -107,54 +106,75 @@ class BookmarkList(abc.Sequence):
     def __repr__(self) -> str:
         return self._data.__repr__()
 
-    def create(self, value: models.EtaConfig) -> Self:
-        value.id = utils.random_id_gen(6)
-        self._data.append(value)
-        return self
+    def get(self, id: str) -> models.EtaConfig:
+        """Return an `EtaConfig` which the id is equal to `id`.
+        """
+        return self._data[self.index(id)]
 
-    def insert(self, index: int, value: models.EtaConfig) -> Self:
-        value.id = utils.random_id_gen(6)
-        self._data.insert(index, value)
-        return self
-
-    def pop(self, index: int) -> models.EtaConfig:
-        return self._data.pop(index)
-
-    def remove(self, id: str) -> Self:
-        del self._data[self.index(id)]
-        return self
-
-    def swap(self, src: str, dest: str) -> Self:
-        src, dest = self.index(src), self.index(dest)
-        self._data[src], self._data[dest] = self._data[dest], self._data[src]
-        return self
-
-    def get(self, id: str, default: Any = None) -> models.EtaConfig:
-        try:
-            return self._data[self.index(id)]
-        except ValueError:
-            return default
+    def get_all(self) -> list[models.EtaConfig]:
+        """Return all the `EtaConfig`.
+        """
+        return self._data
 
     def index(self, id: str) -> int:
+        """Return zero-based index in the list of the first item whose id is equal to `id`.
+
+        Args:
+            id (str): _description_
+
+        Raises:
+            KeyError: No such item with the id equal to `id`.
+
+        Returns:
+            int: Index of the matching item.
+        """
         for idx, entry in enumerate(self._data):
             if entry.id == id:
                 return idx
         raise KeyError(id)
 
+    def create(self, value: models.EtaConfig) -> None:
+        self.insert(-1, value)
+
+    def insert(self, index: int, value: models.EtaConfig) -> None:
+        while value.id is None or self._is_id_exist(value.id):
+            value.id = utils.random_id_gen(6)
+        self._data.insert(index, value)
+        self._persist()
+
+    def swap(self, id1: str, id2: str) -> None:
+        id1, id2 = self.index(id1), self.index(id2)
+        self._data[id1], self._data[id2] = self._data[id2], self._data[id1]
+        self._persist()
+
     def update(self, id: str, value: models.EtaConfig) -> Self:
         self._data[self.index(id)] = value
-        return self
+        self._persist()
 
-    def load(self) -> None:
+    def pop(self, index: int) -> models.EtaConfig:
+        return self._data.pop(index)
+
+    def remove(self, id: str) -> None:
+        del self._data[self.index(id)]
+        self._persist()
+
+    def _is_id_exist(self, id: str) -> bool:
+        for bm in self._data:
+            if bm.id == id:
+                return True
+        return False
+
+    def _load(self) -> None:
         with open(self._filepath, "r", encoding="utf-8") as f:
             self._data = [models.EtaConfig(**c) for c in json.load(f)]
 
-    def persist(self) -> None:
-        keys = set([k.id for k in self._data])
-        if None in keys:
-            raise Exception("Empty ID.")
-        if len(keys) != len(self._data):
-            raise Exception("Duplicated ID.")
+    def _persist(self) -> None:
+        ids = [k.id for k in self._data]
+
+        if len(ids) != len(self._data):
+            raise Exception("There exists EtaConfig with no ID.")
+        if len(set(ids)) != len(self._data):
+            raise KeyError("There exists EtaConfig with duplicated ID.")
 
         with open(self._filepath, "w", encoding="utf-8") as f:
             json.dump([d.model_dump() for d in self._data], f, indent=4)
@@ -175,17 +195,13 @@ class EpaperSetting:
 
         if not self._filepath.exists():
             self._filepath.parent.mkdir(mode=711, parents=True, exist_ok=True)
-            self.persist()
+            self._persist()
         else:
-            with open(self._filepath, "r", encoding="utf-8") as f:
-                data = json.load(f)
-
-                self.brand = data.get('brand')
-                self.model = data.get('model')
+            self._load()
 
     def clear(self) -> None:
         self.brand = self.model
-        self.persist()
+        self._persist()
 
     def update(self,
                *,
@@ -194,9 +210,16 @@ class EpaperSetting:
         # TODO: update should be automatically presist
         self.brand = brand or self.brand
         self.model = model or self.model
-        self.persist()
+        self._persist()
 
-    def persist(self) -> None:
+    def _load(self) -> None:
+        with open(self._filepath, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+        self.brand = data.get('brand')
+        self.model = data.get('model')
+
+    def _persist(self) -> None:
         with open(self._filepath, "w", encoding="utf-8") as f:
             json.dump(
                 {
@@ -224,9 +247,9 @@ class RefreshSchedule:
 
         if not self._filepath.exists():
             self._filepath.parent.mkdir(mode=711, parents=True, exist_ok=True)
-            self.persist()
+            self._persist()
         else:
-            self.load()
+            self._load()
             for schedule in self._schedules:
                 if not schedule.enabled:
                     continue
@@ -254,7 +277,7 @@ class RefreshSchedule:
         if enabled:
             self._add_job(schedule)
         self._schedules.append(schedule)
-        self.persist()
+        self._persist()
         return id
 
     def update(self,
@@ -275,7 +298,7 @@ class RefreshSchedule:
         if enabled:
             self._add_job(schedule)
         self._schedules.append(schedule)
-        self.persist()
+        self._persist()
 
     def remove(self, id: str) -> None:
         for idx, schedule in enumerate(self._schedules):
@@ -283,20 +306,20 @@ class RefreshSchedule:
                 if self._aps.get_job(id) is not None:
                     self._aps.remove_job(id)
                 self._schedules.pop(idx)
-                self.persist()
+                self._persist()
                 return
         raise KeyError(id)
 
     def remove_all(self) -> None:
         self._aps.remove_all_jobs()
         self._schedules.clear()
-        self.persist()
+        self._persist()
 
-    def load(self) -> None:
+    def _load(self) -> None:
         with open(self._filepath, "r", encoding="utf-8") as f:
             self._schedules = [models.Schedule(**c) for c in json.load(f)]
 
-    def persist(self) -> None:
+    def _persist(self) -> None:
         with open(self._filepath, "w", encoding="utf-8") as f:
             json.dump([s.model_dump() for s in self._schedules], f, indent=4)
 
@@ -326,3 +349,8 @@ class RefreshSchedule:
             if schedule.id == id:
                 return True
         return False
+
+
+@utils.singleton
+class RefreshStatus:
+    pass

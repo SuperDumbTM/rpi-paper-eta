@@ -1,0 +1,94 @@
+{% extends "layout.jinja" %}
+{% include "includes/navbar.jinja" %}
+
+{% block link %}
+<link rel="stylesheet" href="//cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+{% endblock link %}
+
+{% block style %}
+<style>
+    .dt-buttons {
+        clear: both;
+    }
+
+    .dt-action a {
+        color: inherit;
+        text-decoration: none;
+    }
+</style>
+{% endblock style %}
+
+{% block content %}
+<div class="container-xxl">
+    <div class="row p-2">
+        <div class="col">
+            <table id="log-viewer" class="table table-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Level</th>
+                        <th>Module</th>
+                        <th>Message</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+<script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script src="//cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+<script src="{{ url_for('static', filename='scripts/datatable.js') }}"></script>
+
+<script>
+    let datatable = $('#log-viewer').DataTable({
+        ajax: {
+            url: "{{ url_for('api_log.get') }}",
+            dataSrc: "data.logs"
+        },
+        order: [[0, 'desc']],
+        pageLength: 25,
+        columns: [
+            { data: 'timestamp' },
+            {
+                data: 'level',
+                render: function(data, type, row, meta) {
+                    class_ = {
+                        DEBUG: 'badge bg-secondary',
+                        INFO: 'badge bg-success',
+                        WARNING: 'badge bg-warning',
+                        ERROR: 'badge bg-danger',
+                        CRITICAL: 'badge border border-2 border-danger rounded text-danger'
+                    }
+                    return `
+                        <span class="${class_[data]}">
+                            ${data}
+                        </span>
+                    `
+                }
+            },
+            {
+                data: 'module',
+                class: 'text-wrap',
+            },
+            { data: 'message'},
+        ],
+        dom: `<'row'<'col-sm-12 col-md-6 my-2'B>>
+                <'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>
+                <'row'<'col-sm-12'tr>>
+                <'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>`,
+        buttons: [
+            {
+                text: 'Download',
+                className: "btn btn-success",
+                action: function (e, dt, node, config) {
+                    window.location.assign("{{ url_for('log.download') }}")
+                }
+            }
+        ]
+    });
+</script>
+{% endblock script %}

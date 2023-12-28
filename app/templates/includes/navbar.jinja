@@ -13,6 +13,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('root.index') }}">Home</a>
                 </li>
+
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="/configuration" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
@@ -36,8 +37,13 @@
                         </li>
                     </ul>
                 </li>
+
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('schedule.schedules') }}">Schedule</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('log.logs') }}">Log</a>
                 </li>
             </ul>
         </div>

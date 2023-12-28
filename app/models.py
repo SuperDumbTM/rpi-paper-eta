@@ -1,8 +1,10 @@
+import datetime
 from typing import Optional
 
 import pydantic
 
 from app import enums
+from app.modules import image as eimage
 
 
 class EtaConfig(pydantic.BaseModel):
@@ -22,3 +24,13 @@ class Schedule(pydantic.BaseModel):
     layout: str
     is_partial: bool
     enabled: bool = True
+
+
+class RefreshLog(pydantic.BaseModel):
+    model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
+
+    timestamp: datetime.datetime
+    eta_type: eimage.enums.EtaType
+    layout: str
+    is_partial: bool
+    error: Optional[BaseException] = None
