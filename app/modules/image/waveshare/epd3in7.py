@@ -35,7 +35,7 @@ class Epd3in7(EtaImageGenerator):
         coords = self._config['coords']
 
         # row frame
-        for row in range(100):
+        for row in range(1, row_cnt):
             b.line((self._config['coords']['row']['offset'][0],
                     row_height * row, self.height, row_height * row))
 
@@ -67,7 +67,6 @@ class Epd3in7(EtaImageGenerator):
                                  self.fonts['stop']),
                    fill=self._bk, font=self.fonts['stop'])
 
-            # print(models.ErrorEta.)
             # error
             if isinstance(route, models.ErrorEta):
                 errmsg = utils.wrap(route.message,
@@ -100,6 +99,7 @@ class Epd3in7(EtaImageGenerator):
                         self.fonts['err_txt'],
                         align='c')
 
+                    # display the remark
                     b.text((coords['eta']['position']['offset'][0] + offset_x,
                             coords['eta']['position']['offset'][1] + offset_y + idx_offset),
                            utils.discard(
@@ -107,13 +107,15 @@ class Epd3in7(EtaImageGenerator):
                         fill=self._bk,
                         font=self.fonts['rmk_txt'])
                 else:
+                    # minute
                     b.text((coords['eta']['min']['offset'][0],
                             coords['eta']['min']['offset'][1] + idx_offset),
                            text=str(eta.eta_minute), fill=self._bk, font=self.fonts['minute'])
                     b.text((coords['eta']['min_txt']['offset'][0],
                             coords['eta']['min_txt']['offset'][1] + idx_offset),
-                           text="分",
+                           text=self._config['texts']['minute'][route.lang],
                            fill=self._bk, font=self.fonts['min_txt'])
+                    # time
                     b.text((coords['eta']['time']['offset'][0],
                             coords['eta']['time']['offset'][1] + idx_offset),
                            text=eta.eta.strftime("%H:%M"), fill=self._bk, font=self.fonts['time'])
@@ -123,7 +125,17 @@ class Epd3in7(EtaImageGenerator):
         image = Image.new('1', (self.width, self.height), 255)
         b = ImageDraw.Draw(image)
 
-        # TODO
+        offset_x, offset_y = utils.position(
+            message,
+            self.width,
+            self.height,
+            self.fonts['err_txt'],
+            align='c')
+
+        b.text((0 + offset_x, 0 + offset_y),
+               utils.discard(message, self.width, self.fonts['err_txt']),
+               fill=self._bk,
+               font=self.fonts['err_txt'])
 
         return {'black': image.rotate(degree)}
 
