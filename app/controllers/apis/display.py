@@ -17,24 +17,31 @@ bp = Blueprint('api_display',
 
 
 @bp.route("/models")
-def get_models():
+@webargs.flaskparser.use_args({
+    'epd_brand': webargs.fields.String(required=True)
+}, location='query')
+def get_models(args):
     return jsonify({
         'success': True,
         'message': "Success.",
         'data': {
-            "models": [b.__name__ for b in eimage.eta_image.EtaImageGeneratorFactory.models(request.args['brand'])]
+            "models": [b.__name__ for b in eimage.eta_image.EtaImageGeneratorFactory.models(args['epd_brand'])]
         }
     })
 
 
 @bp.route("/layouts")
-def get_layouts():
+@webargs.flaskparser.use_args({
+    'epd_brand': webargs.fields.String(required=True),
+    'epd_model': webargs.fields.String(required=True)
+}, location='query')
+def get_layouts(args):
     return jsonify({
         'success': True,
         'message': "Success.",
         'data': {
             "layouts": eimage.eta_image.EtaImageGeneratorFactory.get_generator(
-                request.args['brand'], request.args['model']).layouts()
+                args['epd_brand'], args['epd_model']).layouts()
         }
     })
 
@@ -46,25 +53,24 @@ def get_layouts():
     'layout': webargs.fields.String(required=True)
 }, location="query")
 def refresh(args):
-    api_setting = config.site_data.ApiServerSetting()
     bm_setting = config.site_data.BookmarkList()
-    epd_setting = config.site_data.EpaperSetting()
+    conf = config.site_data.AppConfiguration().confs
     generator = eimage.eta_image.EtaImageGeneratorFactory().get_generator(
-        epd_setting.brand, epd_setting.model
+        conf.epd_brand, conf.epd_model
     )(eimage.enums.EtaType(args['eta_type']), args['layout'])
 
     try:
         etas = []
         for bm in bm_setting.get_all():
             res = requests.get(
-                f'{api_setting.url}/{bm.company.value}/{bm.route}/{bm.direction.value}/etas',
+                f'{conf.url}/{bm.company.value}/{bm.route}/{bm.direction.value}/etas',
                 params={
                     'service_type': bm.service_type,
                     'lang': bm.lang,
                     'stop': bm.stop_code}
             ).json()
 
-            logo = (BytesIO(requests.get('{0}{1}'.format(api_setting.url,
+            logo = (BytesIO(requests.get('{0}{1}'.format(conf.url,
                                                          res['data'].pop(
                                                              'logo_url')
                                                          )).content

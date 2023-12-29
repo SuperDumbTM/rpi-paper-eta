@@ -34,3 +34,13 @@ class RefreshLog(pydantic.BaseModel):
     layout: str
     is_partial: bool
     error: Optional[BaseException] = None
+
+
+class Configuration(pydantic.BaseModel):
+    # API server setting
+    url: Optional[str] = None
+    username: Optional[str] = None
+    password: Optional[str] = None
+    # e-paper setting
+    epd_brand: Optional[str] = None
+    epd_model: Optional[str] = None

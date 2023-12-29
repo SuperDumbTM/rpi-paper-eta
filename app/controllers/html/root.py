@@ -13,7 +13,8 @@ bp = Blueprint('root',
 
 @bp.route("/")
 def index():
-    if not config.site_data.ApiServerSetting().url:
+    aconf = config.site_data.AppConfiguration()
+    if not aconf.get('url'):
         flash("Please set the API server URL")
         return redirect(url_for("configuration.api_server_setting"))
 
@@ -25,6 +26,4 @@ def index():
             images[path.name.removesuffix(path.suffix)] = base64.b64encode(
                 f.read()).decode("utf-8")
 
-    epd = config.site_data.EpaperSetting()
-
-    return render_template("index.jinja", images=images, epd=epd)
+    return render_template("index.jinja", images=images, aconf=aconf)

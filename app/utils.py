@@ -8,7 +8,7 @@ from io import BytesIO
 from pathlib import Path
 
 import requests
-from flask import current_app, request, url_for
+from flask import request, url_for
 from flask_babel import lazy_gettext
 from PIL import Image
 
@@ -57,7 +57,7 @@ def random_id_gen(length: int) -> str:
 def route_choices(company: str) -> list[tuple[str]]:
     routes: dict[str, dict] = (
         requests.get(
-            f"{config.site_data.ApiServerSetting().url}/{company}/routes")
+            f"{config.site_data.AppConfiguration().get('url')}/{company}/routes")
         .json()['data']['routes']
     )
     return [(route['name'], route['name']) for route in routes.values()]
@@ -67,7 +67,8 @@ def direction_choices(company: str,
                       route: str) -> list[tuple[str]]:
     details: dict[str, dict] = (
         requests.get(
-            f"{config.site_data.ApiServerSetting().url}/{company}/{route.upper()}")
+            f"{config.site_data.AppConfiguration().get('url')}"
+            f"/{company}/{route.upper()}")
         .json()['data']
     )
 
@@ -84,7 +85,8 @@ def type_choices(company: str,
                  direction: str) -> list[tuple[str]]:
     details: dict[str, dict] = (
         requests.get(
-            f"{config.site_data.ApiServerSetting().url}/{company}/{route}")
+            f"{config.site_data.AppConfiguration().get('url')}"
+            f"/{company}/{route}")
         .json()['data']
     )
 
@@ -98,7 +100,8 @@ def stop_choices(company: str,
                  service_type: str) -> list[tuple[str]]:
     stops: dict[str, dict] = (
         requests.get(
-            f"{config.site_data.ApiServerSetting().url}/{company}/{route.upper()}/{direction}/{service_type}/stops")
+            f"{config.site_data.AppConfiguration().get('url')}"
+            f"/{company}/{route.upper()}/{direction}/{service_type}/stops")
         .json()['data']
     )
 
@@ -120,25 +123,25 @@ def generate_image(eta_type: eimage.enums.EtaType, layout: str) -> dict[str, Ima
     Returns:
         dict[str, Image.Image]: generated image(s)
     """
-    api_setting = config.site_data.ApiServerSetting()
     bm_setting = config.site_data.BookmarkList()
-    epd_setting = config.site_data.EpaperSetting()
+    conf = config.site_data.AppConfiguration().confs
     generator = eimage.eta_image.EtaImageGeneratorFactory().get_generator(
-        epd_setting.brand, epd_setting.model
+        conf.epd_brand, conf.epd_model
     )(eta_type, layout)
 
     try:
         etas = []
         for bm in bm_setting:
             res = requests.get(
-                f'{api_setting.url}/{bm.company.value}/{bm.route}/{bm.direction.value}/etas',
+                f'{conf.url}'
+                f'/{bm.company.value}/{bm.route}/{bm.direction.value}/etas',
                 params={
                     'service_type': bm.service_type,
                     'lang': bm.lang,
                     'stop': bm.stop_code}
             ).json()
 
-            logo = (BytesIO(requests.get('{0}{1}'.format(api_setting.url,
+            logo = (BytesIO(requests.get('{0}{1}'.format(conf.url,
                                                          res['data'].pop(
                                                              'logo_url')
                                                          )).content

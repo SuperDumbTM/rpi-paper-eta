@@ -25,10 +25,10 @@
 
             <div class="form-group">
                 <label for="layout" class="form-label">Brand</label>
-                <select class="form-select" name="brand" required>
+                <select class="form-select" name="epd_brand" required>
                     <option value="" selected>-----</option>
                     {% for brand in brands %}
-                    {% if form.brand == brand %}
+                    {% if form.epd_brand == brand %}
                     <option value="{{ brand }}" selected>
                         {{ brand | title }}
                     </option>
@@ -43,8 +43,19 @@
 
             <div class="form-group">
                 <label for="layout" class="form-label">model</label>
-                <select class="form-select" name="model">
+                <select class="form-select" name="epd_model">
                     <option selected>-----</option>
+                    {% for model in models %}
+                    {% if form.epd_model == model %}
+                    <option value="{{ model }}" selected>
+                        {{ model | title }}
+                    </option>
+                    {% else %}
+                    <option value="{{ model }}">
+                        {{ model | title }}
+                    </option>
+                    {% endif %}
+                    {% endfor %}
                 </select>
             </div>
 
@@ -58,16 +69,15 @@
 
 {% block script %}
 <script>
-    $("select[name=brand]").change(function (e) {
-        const BRAND = $("select[name=brand]").children("option:selected").val()
+    $("select[name=epd_brand]").change(function (e) {
+        const BRAND = $("select[name=epd_brand]").children("option:selected").val()
         $("select[name=model]").find('option').not(':first').remove()
 
-        console.log(BRAND)
         if (!BRAND) return
-        $.get(`{{ url_for("api_display.get_models") }}?${$.param({ brand: BRAND })}`, function (res) {
+        $.get(`{{ url_for("api_display.get_models") }}?${$.param({ epd_brand: BRAND })}`, function (res) {
             if (res.success) {
                 res.data.models.forEach(function (e) {
-                    $("select[name=model]").append(new Option(e, e))
+                    $("select[name=epd_model]").append(new Option(e, e))
                 })
             } else {
 

@@ -26,8 +26,8 @@ class BookmarkForm(typing.NamedTuple):
 class EpaperForm(typing.NamedTuple):
     """Form inputs for creating/editing an Epaper display settings.
     """
-    brand: str = ''
-    model: str = ''
+    epd_brand: str = ''
+    epd_model: str = ''
 
 
 class ScheduleForm(typing.NamedTuple):

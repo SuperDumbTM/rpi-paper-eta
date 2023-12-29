@@ -86,19 +86,25 @@ def bookmark_edit(id: str):
 
 @bp.route('/epd')
 def epaper_setting():
-    setting = site_data.EpaperSetting()
+    conf = site_data.AppConfiguration().confs
+
+    if conf.epd_brand:
+        models = [m.__name__ for m in eimage.eta_image.EtaImageGeneratorFactory.models(
+            conf.epd_brand)]
+    else:
+        models = []
     return render_template("configuration/epd_form.jinja",
                            brands=eimage.eta_image.EtaImageGeneratorFactory.brands(),
-                           form=forms.EpaperForm(brand=setting.brand,
-                                                 model=setting.model))
+                           models=models,
+                           form=forms.EpaperForm(epd_brand=conf.epd_brand,
+                                                 epd_model=conf.epd_model))
 
 
 @bp.route('/api-server')
 def api_server_setting():
-    setting = site_data.ApiServerSetting()
-
+    conf = site_data.AppConfiguration().confs
     return render_template("configuration/api_server_form.jinja",
-                           form=forms.ApiServerForm(url=setting.url,
-                                                    username=setting.username,
-                                                    password=setting.password)
+                           form=forms.ApiServerForm(url=conf.url,
+                                                    username=conf.username,
+                                                    password=conf.password)
                            )

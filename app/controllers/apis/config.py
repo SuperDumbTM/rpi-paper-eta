@@ -33,7 +33,7 @@ def get_server_setting():
         'success': True,
         'message': "Success.",
         'data': {
-            'setting': config.site_data.ApiServerSetting().__dict__
+            'setting': config.site_data.AppConfiguration().confs.model_dump()
         }
     })
 
@@ -45,7 +45,8 @@ def get_server_setting():
     'password': webargs.fields.String(required=False)
 })
 def update_server_setting(args):
-    config.site_data.ApiServerSetting().update(**args).persist()
+    aconf = config.site_data.AppConfiguration()
+    aconf.update(aconf.update(aconf.confs.model_copy(**args)))
     return jsonify({
         'success': True,
         'message': "Updated.",
@@ -66,7 +67,7 @@ def get_bookmarks():
 
         try:
             stop_name = requests.get(
-                f"{config.site_data.ApiServerSetting().url}"
+                f"{config.site_data.AppConfiguration().get('url')}"
                 f"/{entry.company.value}/{entry.route}/{entry.direction.value}/{entry.service_type}/stop",
                 {'stop_code': entry.stop_code}
             ).json()['data']['stop']['name'][entry.lang]
@@ -233,7 +234,7 @@ def bookmark_delete(id: str):
 })
 def bookmark_swap(args):
     etas = config.site_data.BookmarkList()
-    etas.swap(args['source'], args['destination']).persist()
+    etas.swap(args['source'], args['destination'])
 
     return jsonify({
         'success': True,
@@ -249,22 +250,22 @@ def bookmark_swap(args):
 
 @bp.route("/epaper", methods=["POST", "PUT"])
 @webargs.flaskparser.use_args({
-    'brand': webargs.fields.String(
+    'epd_brand': webargs.fields.String(
         required=True, validate=lambda v: v in eimage.eta_image.EtaImageGeneratorFactory.brands()),
-    'model': webargs.fields.String(required=True)
+    'epd_model': webargs.fields.String(required=True)
 })
 def update_epaper_setting(args):
-    epd = config.site_data.EpaperSetting()
+    aconf = config.site_data.AppConfiguration()
     # TODO: validation
 
-    if epd.brand != args['brand'] or epd.model != args['model']:
+    if aconf.get('epd_brand') != args['epd_brand'] or aconf.get('epd_model') != args['epd_model']:
         # changing brand or model will invalidate the schedule
         scheduler = config.site_data.RefreshSchedule()
         for schedule in scheduler.get_all():
-            scheduler.update(schedule.model_dump(exclude=['enabled']),
+            scheduler.update(**schedule.model_dump(exclude=['enabled']),
                              enabled=False)
 
-    epd.update(**args)
+    aconf.update(aconf.confs.model_copy(update=args))
     return jsonify({
         'success': True,
         'message': "Updated.",
