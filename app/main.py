@@ -94,12 +94,6 @@ def create_app():
     init_site_data(app)
     init_babel(app)
 
-    logging.debug('debug')
-    logging.info('info')
-    logging.warn('warn')
-    logging.error('error')
-    logging.critical('critial')
-
     return app
 
 
