@@ -174,7 +174,7 @@ def bookmark_search(args, stype: Literal["route", "direction", "service_type", "
 def bookmark_create(args):
     bkms = config.site_data.BookmarkList()
     try:
-        bkms.create(models.EtaConfig(**args,)).persist()
+        bkms.create(models.EtaConfig(**args,))
     except KeyError:
         return jsonify({
             'success': False,
