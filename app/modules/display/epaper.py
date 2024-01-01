@@ -66,13 +66,14 @@ class ControllerFactory:
 
         match brand:
             case "waveshare":
-                return waveshare.__all__
+                return waveshare.epapers
         raise KeyError(f"Unrecognized epaper brand: {brand}")
 
     @classmethod
     def get_controller(cls, brand: str, model: str) -> type[DisplayController]:
         models = cls.models(brand)
-        for epaper in models:
-            if model == epaper.__name__:
-                return epaper
+
+        for controller in models:
+            if model == controller.__name__:
+                return controller
         raise KeyError(f"Unrecognized epaper: {brand}-{model}")

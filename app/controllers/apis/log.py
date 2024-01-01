@@ -11,7 +11,7 @@ def get():
     logs = []
     log_pattern = re.compile(
         r"\[(?P<timestamp>.*?)\]\[(?P<level>[A-Z]*?)\]\[(?P<module>.*?)\]:\s(?P<message>.*)")
-    with open(current_app.config['LOG_FILE_PATH'], 'r') as f:
+    with open(current_app.config['LOG_FILE_PATH'], 'r', encoding='utf-8') as f:
         for line in f:
             match = log_pattern.match(line)
             if not match:

@@ -9,6 +9,8 @@ from flask_babel import force_locale
 
 from app import config, translation
 from app.modules import image as eimage
+from app.modules import refresher
+from app.modules.display import epaper
 
 bp = Blueprint('api_display',
                __name__,
@@ -46,65 +48,47 @@ def get_layouts(args):
     })
 
 
-@bp.route("/refresh")
+@bp.route("/refresh", methods=['POST'])
 @webargs.flaskparser.use_args({
     'eta_type': webargs.fields.String(
         required=True, validate=webargs.validate.OneOf([t for t in eimage.enums.EtaType])),
-    'layout': webargs.fields.String(required=True)
-}, location="query")
+    'layout': webargs.fields.String(required=True),
+    'is_partial': webargs.fields.Boolean(required=True)
+})
 def refresh(args):
+    aconf = config.site_data.AppConfiguration()
+    if (not aconf.confs.epd_brand or not aconf.confs.epd_model):
+        return jsonify({
+            'success': False
+        })
+
     bm_setting = config.site_data.BookmarkList()
-    conf = config.site_data.AppConfiguration().confs
     generator = eimage.eta_image.EtaImageGeneratorFactory().get_generator(
-        conf.epd_brand, conf.epd_model
+        aconf.confs.epd_brand, aconf.confs.epd_model
     )(eimage.enums.EtaType(args['eta_type']), args['layout'])
+    images = refresher.generate_image(aconf.confs,
+                                      bm_setting.get_all(),
+                                      generator)
 
     try:
-        etas = []
-        for bm in bm_setting.get_all():
-            res = requests.get(
-                f'{conf.url}/{bm.company.value}/{bm.route}/{bm.direction.value}/etas',
-                params={
-                    'service_type': bm.service_type,
-                    'lang': bm.lang,
-                    'stop': bm.stop_code}
-            ).json()
+        controller = epaper.ControllerFactory().get_controller(
+            aconf.confs.epd_brand, aconf.confs.epd_model)(args['is_partial'])
 
-            logo = (BytesIO(requests.get('{0}{1}'.format(conf.url,
-                                                         res['data'].pop(
-                                                             'logo_url')
-                                                         )).content
-                            )
-                    if res['data']['logo_url'] is not None
-                    else None)
+        with controller:
+            controller.display(images)
 
-            if res['success']:
-                eta = res['data'].pop('etas')
-                etas.append(eimage.models.Etas(**res['data'],
-                                               etas=[eimage.models.Etas.Eta(**e)
-                                                     for e in eta],
-                                               logo=logo,
-                                               )
-                            )
-            else:
-                with force_locale('en' if bm.lang == 'en' else 'zh_Hant_HK'):
-                    res['data'].pop('etas')
-                    etas.append(eimage.models.ErrorEta(**res['data'],
-                                                       code=res['code'],
-                                                       message=str(translation.RP_CODE_TRANSL.get(
-                                                           res['code'], res['message'])),
-                                                       logo=logo,)
-                                )
-        images = generator.draw(etas)
-    except requests.RequestException as e:
-        logging.warning('Image generation failed with error: %s', str(e))
-        images = generator.draw_error('Network Error')
-    except Exception as e:
-        logging.exception('Image generation failed with error: %s', str(e))
-        images = generator.draw_error('Unexpected Error')
+            if (args['is_partial']):
+                # load the old image into the display's buffer
+                controller.display(refresher.cached_images(
+                    Path(config.flask_config.CACHE_DIR).joinpath('epaper')))
 
-    generator.write_images(
-        Path(config.flask_config.CACHE_DIR).joinpath('epaper'), images)
+            controller.display(images)
+
+        generator.write_images(
+            Path(config.flask_config.CACHE_DIR).joinpath('epaper'), images)
+    except OSError:
+        logging.exception(
+            "Unable to connect the E-paper due to unsupported platform.")
 
     return jsonify({
         'success': True
