@@ -4,23 +4,16 @@ from PIL import Image
 
 
 class DisplayController(ABC):
-    """A uniformed interface to control a e-paper display"""
+    """A uniformed interface to control a e-paper display
+    """
 
+    is_partial: bool
     _initialised: bool = False
 
     @property
     @abstractmethod
     def is_poweron(self) -> bool:
         """E-paper connection is sill alive (powering on)"""
-
-    @property
-    def partial_mode(self) -> bool:
-        """"""
-        return self.is_partial
-
-    @partial_mode.setter
-    def partial_mode(self, val: bool):
-        self.is_partial = val
 
     @staticmethod
     def partialable() -> bool:
@@ -77,7 +70,7 @@ class ControllerFactory:
         raise KeyError(f"Unrecognized epaper brand: {brand}")
 
     @classmethod
-    def epaper(cls, brand: str, model: str) -> type[DisplayController]:
+    def get_controller(cls, brand: str, model: str) -> type[DisplayController]:
         models = cls.models(brand)
         for epaper in models:
             if model == epaper.__name__:
