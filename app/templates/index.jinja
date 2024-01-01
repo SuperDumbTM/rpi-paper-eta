@@ -64,5 +64,44 @@
             </div>
         </div>
     </div>
+
+    <div class="row my-3">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    Refresh History
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Time</th>
+                                <th scope="col">ETA Type</th>
+                                <th scope="col">Layout</th>
+                                <th scope="col">Is Partial</th>
+                                <th scope="col">Error</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for log in refresh_logs[:5] %}
+                            <tr class="{{ 'table-warning' if log.error else '' }}">
+                                <td>{{ log.timestamp.strftime('%H:%M:%S') }}</td>
+                                <td>{{ log.eta_type.value | title }}</td>
+                                <td>{{ log.layout }}</td>
+                                <td>{{ log.is_partial }}</td>
+                                <td>{{ log.error }}</td>
+                            </tr>
+                            {% endfor %}
+                            {% if refresh_logs | length == 0 %}
+                                <tr>
+                                    <td colspan="5" class="text-center">None</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock content %}

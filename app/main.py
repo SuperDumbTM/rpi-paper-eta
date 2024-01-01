@@ -30,6 +30,7 @@ def init_site_data(app: Flask):
     """Initialise and load all the site data/user configuration
     """
     config.site_data.RefreshSchedule(app)
+    config.site_data.RefreshHistory(limit=20)
 
 
 def init_logger(app: Flask):

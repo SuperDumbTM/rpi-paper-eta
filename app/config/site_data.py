@@ -1,7 +1,7 @@
 import json
-from collections import abc
+from collections import abc, deque
 from pathlib import Path
-from typing import Any, Optional, Self
+from typing import Any, Iterable, Optional, Self
 
 import croniter
 import flask_apscheduler
@@ -268,5 +268,18 @@ class RefreshSchedule:
 
 
 @utils.singleton
-class RefreshStatus:
-    pass
+class RefreshHistory:
+    _data: deque[models.RefreshLog]
+
+    def __init__(self, limit: int = 20) -> None:
+        self._data = deque([], limit)
+        self.limit = limit
+
+    def put(self, log: models.RefreshLog) -> None:
+        self._data.appendleft(log)
+
+    def get(self) -> tuple[models.RefreshLog]:
+        return tuple(l for l in self._data)
+
+    def clear(self) -> None:
+        self._data.clear()

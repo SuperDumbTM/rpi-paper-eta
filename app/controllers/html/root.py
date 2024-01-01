@@ -20,6 +20,7 @@ def index():
         return redirect(url_for("configuration.api_server_setting"))
 
     return render_template("index.jinja",
+                           refresh_logs=config.site_data.RefreshHistory().get(),
                            images=refresher.cached_images(
                                Path(config.flask_config.CACHE_DIR).joinpath('epaper')),
                            aconf=aconf)

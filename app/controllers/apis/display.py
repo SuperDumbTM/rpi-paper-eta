@@ -7,7 +7,7 @@ import webargs
 from flask import Blueprint, jsonify, request
 from flask_babel import force_locale
 
-from app import config, translation
+from app import config, models, translation
 from app.modules import image as eimage
 from app.modules import refresher
 from app.modules.display import epaper
@@ -86,9 +86,11 @@ def refresh(args):
 
         generator.write_images(
             Path(config.flask_config.CACHE_DIR).joinpath('epaper'), images)
-    except OSError:
+        config.site_data.RefreshHistory().put(models.RefreshLog(**args))
+    except OSError as e:
         logging.exception(
             "Unable to connect the E-paper due to unsupported platform.")
+        config.site_data.RefreshHistory().put(models.RefreshLog(**args, error=e))
 
     return jsonify({
         'success': True

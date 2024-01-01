@@ -29,7 +29,8 @@ class Schedule(pydantic.BaseModel):
 class RefreshLog(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
 
-    timestamp: datetime.datetime
+    timestamp: datetime.datetime = pydantic.Field(
+        default_factory=datetime.datetime.now)
     eta_type: eimage.enums.EtaType
     layout: str
     is_partial: bool
