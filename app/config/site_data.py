@@ -137,7 +137,6 @@ class AppConfiguration:
     def _load(self) -> None:
         with open(self._filepath, "r", encoding="utf-8") as f:
             self._data = models.Configuration(**json.load(f))
-            print(self._data)
 
     def _persist(self) -> None:
         with open(self._filepath, "w", encoding="utf-8") as f:

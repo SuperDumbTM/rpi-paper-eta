@@ -12,5 +12,4 @@ __all__ = [
 
 @parser.error_handler
 def handle_error(error, req, schema, *, error_status_code, error_headers):
-    print(error)
     raise error
