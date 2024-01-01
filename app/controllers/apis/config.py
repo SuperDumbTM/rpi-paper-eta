@@ -46,7 +46,7 @@ def get_server_setting():
 })
 def update_server_setting(args):
     aconf = config.site_data.AppConfiguration()
-    aconf.update(aconf.update(aconf.confs.model_copy(**args)))
+    aconf.update(aconf.confs.model_copy(update=args))
     return jsonify({
         'success': True,
         'message': "Updated.",

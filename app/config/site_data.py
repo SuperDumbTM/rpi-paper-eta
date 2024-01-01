@@ -141,7 +141,10 @@ class AppConfiguration:
 
     def _persist(self) -> None:
         with open(self._filepath, "w", encoding="utf-8") as f:
-            f.write(self._data.model_dump_json(indent=4))
+            if self._data is None:
+                f.write({})
+            else:
+                f.write(self._data.model_dump_json(indent=4))
 
 
 @utils.singleton
