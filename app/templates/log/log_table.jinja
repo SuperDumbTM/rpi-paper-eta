@@ -25,10 +25,10 @@
             <table id="log-viewer" class="table table-striped" style="width:100%">
                 <thead>
                     <tr>
-                        <th>Timestamp</th>
-                        <th>Level</th>
-                        <th>Module</th>
-                        <th>Message</th>
+                        <th>{{ _('log_timestamp') }}</th>
+                        <th>{{ _('log_level') }}</th>
+                        <th>{{ _('log_module') }}</th>
+                        <th>{{ _('log_message') }}</th>
                     </tr>
                 </thead>
             </table>
@@ -82,7 +82,7 @@
                 <'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>`,
         buttons: [
             {
-                text: 'Download',
+                text: "{{ _('download') }}",
                 className: "btn btn-success",
                 action: function (e, dt, node, config) {
                     window.location.assign("{{ url_for('log.download') }}")

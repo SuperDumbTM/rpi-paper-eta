@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg bg-theme">
     <div class="container-fluid">
         <span class="navbar-brand">
-            E-paper Control
+            E-Paper Control
         </span>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -9,43 +9,61 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 200px;">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('root.index') }}">Home</a>
+                    <a class="nav-link" href="{{ url_for('root.index') }}">{{ _('home') }}</a>
                 </li>
 
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="/configuration" role="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        Configuration
+                    <a class="nav-link dropdown-toggle" href="/configuration" data-bs-toggle="dropdown">
+                        {{ _('configuration') }}
                     </a>
                     <ul class="dropdown-menu">
                         <li>
                             <a class="dropdown-item" href="{{ url_for('configuration.bookmark_list') }}">
-                                ETA
+                                {{ _('eta') }}
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="{{ url_for('configuration.epaper_setting') }}">
-                                E-Paper
+                                {{ _('e-paper') }}
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="{{ url_for('configuration.api_server_setting') }}">
-                                API Server
+                                {{ _('api_server') }}
                             </a>
                         </li>
                     </ul>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('schedule.schedules') }}">Schedule</a>
+                    <a class="nav-link" href="{{ url_for('schedule.schedules') }}">{{ _('schedule') }}</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('log.logs') }}">Log</a>
+                    <a class="nav-link" href="{{ url_for('log.logs') }}">{{ _('log') }}</a>
                 </li>
             </ul>
+
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    Site Language
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item" href="{{ url_for('root.change_language', lang='en') }}">
+                            English
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="{{ url_for('root.change_language', lang='zh_Hant_HK') }}">
+                            繁體中文
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
         </div>
     </div>
 </nav>

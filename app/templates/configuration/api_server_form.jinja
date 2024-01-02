@@ -8,28 +8,28 @@
     <div class="mx-auto col-10 col-md-8 col-lg-6">
         <form class="form" action="{{ url_for('api_config.update_server_setting') }}" method="post">
 
-            <h1>HKETA API Server Setting</h1>
+            <h1>{{ _('api_server_setting') }}</h1>
             <p class="description">
-                Update the API server details here.
+                {{ _('api_server_setting_help') }}
             </p>
 
             <div class="form-group">
-                <label for="url" class="form-label">API Server URL</label>
+                <label for="url" class="form-label">{{ _('api_server_url') }}</label>
                 <input type="url" class="form-control" name="url" placeholder="https://example.com"
                     value="{{ form.url }}" required>
             </div>
 
             <div class="form-group">
-                <label for="username" class="form-label">Username</label>
+                <label for="username" class="form-label">{{ _('api_server_username') }}</label>
                 <input type="text" class="form-control" name="username">
             </div>
 
             <div class="form-group">
-                <label for="password" class="form-label">Password</label>
+                <label for="password" class="form-label">{{ _('api_server_password') }}</label>
                 <input type="text" class="form-control" name="password">
             </div>
 
-            <input class="btn btn-primary btn-customized mt-4" id="submit" name="submit" type="submit" value="Submit">
+            <input class="btn btn-primary btn-customized mt-4" id="submit" name="submit" type="submit" value="{{ _('submit') }}">
         </form>
     </div>
 </div>
@@ -47,12 +47,12 @@
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             error: function (xhr, status, error) {
-                alertify.error("Something is wrong with the API server.")
+                alertify.error("{{ _('alert_server_error') }}")
                 alertify.error($.parseJSON(xhr.responseText).message)
             },
             success: function (res) {
                 if (res.success) {
-                    alertify.success('Updated.')
+                    alertify.success("{{ _('updated') }}")
                 } else {
                     alertify.error(res.message)
                 }

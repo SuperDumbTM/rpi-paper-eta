@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-11-24 13:15+0800\n"
+"POT-Creation-Date: 2024-01-02 14:50+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -16,23 +16,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.13.0\n"
-
-#: app/forms.py:77
-msgid "inbound"
-msgstr ""
-
-#: app/forms.py:79
-msgid "outbound"
-msgstr ""
-
-#: app/forms.py:116
-msgid "ETA Display Format"
-msgstr ""
-
-#: app/forms.py:121
-msgid "Model"
-msgstr ""
+"Generated-By: Babel 2.14.0\n"
 
 #: app/translation.py:4
 msgid "eta-end-of-service"
@@ -58,21 +42,281 @@ msgstr "Station Closure"
 msgid "eta-abnormal-service"
 msgstr "SSA"
 
+#: app/utils.py:77
+msgid "inbound"
+msgstr ""
+
+#: app/utils.py:79
+msgid "outbound"
+msgstr ""
+
+#: app/templates/index.jinja:11
+msgid "E-Paper"
+msgstr ""
+
+#: app/templates/index.jinja:11
+msgid "setting"
+msgstr ""
+
+#: app/templates/configuration/epd_form.jinja:28 app/templates/index.jinja:15
+msgid "brand"
+msgstr ""
+
+#: app/templates/configuration/epd_form.jinja:46 app/templates/index.jinja:21
+msgid "model"
+msgstr ""
+
+#: app/templates/index.jinja:35
+msgid "display_images"
+msgstr ""
+
+#: app/templates/index.jinja:39
+msgid "display_imagesHelp"
+msgstr ""
+
+#: app/templates/index.jinja:60
+msgid "not_available"
+msgstr ""
+
+#: app/templates/index.jinja:72
+msgid "refresh_history"
+msgstr ""
+
+#: app/templates/index.jinja:78
+msgid "time"
+msgstr ""
+
+#: app/templates/index.jinja:79 app/templates/schedule/schedule_list.jinja:33
+msgid "eta_type"
+msgstr ""
+
+#: app/templates/index.jinja:80 app/templates/schedule/schedule_list.jinja:34
+msgid "layout"
+msgstr ""
+
+#: app/templates/index.jinja:81 app/templates/schedule/schedule_list.jinja:37
+msgid "is_partial"
+msgstr ""
+
+#: app/templates/index.jinja:82
+msgid "error"
+msgstr ""
+
+#: app/templates/index.jinja:97
+msgid "no_record"
+msgstr ""
+
 #: app/templates/layout.jinja:43
 msgid "Loading"
 msgstr "Loading"
 
+#: app/templates/configuration/api_server_form.jinja:11
+msgid "api_server_setting"
+msgstr ""
+
+#: app/templates/configuration/api_server_form.jinja:13
+msgid "api_server_setting_help"
+msgstr ""
+
+#: app/templates/configuration/api_server_form.jinja:17
+msgid "api_server_url"
+msgstr ""
+
+#: app/templates/configuration/api_server_form.jinja:23
+msgid "api_server_username"
+msgstr ""
+
+#: app/templates/configuration/api_server_form.jinja:28
+msgid "api_server_password"
+msgstr ""
+
+#: app/templates/configuration/api_server_form.jinja:32
+#: app/templates/configuration/bookmark_form.jinja:124
+#: app/templates/configuration/epd_form.jinja:63
+msgid "submit"
+msgstr ""
+
+#: app/templates/configuration/api_server_form.jinja:50
+#: app/templates/configuration/epd_form.jinja:99
+msgid "alert_server_error"
+msgstr ""
+
+#: app/templates/configuration/api_server_form.jinja:55
+#: app/templates/configuration/epd_form.jinja:104
+msgid "updated"
+msgstr ""
+
+#: app/templates/configuration/bookmark_form.jinja:20
+msgid "create_bookmark"
+msgstr ""
+
+#: app/templates/configuration/bookmark_form.jinja:22
+msgid "create_bookmark_help"
+msgstr ""
+
+#: app/templates/configuration/bookmark_form.jinja:29
+#: app/templates/configuration/bookmark_list.jinja:33
+msgid "company"
+msgstr ""
+
+#: app/templates/configuration/bookmark_form.jinja:47
+#: app/templates/configuration/bookmark_list.jinja:34
+msgid "route"
+msgstr ""
+
+#: app/templates/configuration/bookmark_form.jinja:53
+#: app/templates/configuration/bookmark_list.jinja:35
+msgid "direction"
+msgstr ""
+
+#: app/templates/configuration/bookmark_form.jinja:71
+#: app/templates/configuration/bookmark_list.jinja:36
+msgid "service_type"
+msgstr ""
+
+#: app/templates/configuration/bookmark_form.jinja:89
+#: app/templates/configuration/bookmark_list.jinja:37
+msgid "stop"
+msgstr ""
+
+#: app/templates/configuration/bookmark_form.jinja:107
+msgid "language"
+msgstr ""
+
+#: app/templates/configuration/bookmark_list.jinja:32
+#: app/templates/schedule/schedule_list.jinja:32
+msgid "no."
+msgstr ""
+
+#: app/templates/configuration/bookmark_list.jinja:38
+msgid "lanugage"
+msgstr ""
+
+#: app/templates/configuration/bookmark_list.jinja:39
+#: app/templates/schedule/schedule_list.jinja:38
+msgid "action"
+msgstr ""
+
 #: app/templates/configuration/bookmark_list.jinja:98
-msgid "Delete"
+#: app/templates/schedule/schedule_list.jinja:95
+#, fuzzy
+msgid "delete"
 msgstr "Delete"
 
 #: app/templates/configuration/bookmark_list.jinja:104
-msgid "Edit"
+#: app/templates/schedule/schedule_list.jinja:101
+#, fuzzy
+msgid "edit"
 msgstr "Edit"
+
+#: app/templates/configuration/bookmark_list.jinja:116
+#: app/templates/schedule/schedule_list.jinja:113
+msgid "create"
+msgstr ""
+
+#: app/templates/configuration/epd_form.jinja:22
+msgid "display_setting"
+msgstr ""
+
+#: app/templates/configuration/epd_form.jinja:24
+msgid "display_setting_help"
+msgstr ""
+
+#: app/templates/includes/navbar.jinja:14
+msgid "home"
+msgstr ""
+
+#: app/templates/includes/navbar.jinja:19
+msgid "configuration"
+msgstr ""
+
+#: app/templates/includes/navbar.jinja:24
+msgid "eta"
+msgstr ""
+
+#: app/templates/includes/navbar.jinja:29
+msgid "e-paper"
+msgstr ""
+
+#: app/templates/includes/navbar.jinja:34
+msgid "api_server"
+msgstr ""
+
+#: app/templates/includes/navbar.jinja:41
+#: app/templates/schedule/schedule_list.jinja:35
+msgid "schedule"
+msgstr ""
+
+#: app/templates/includes/navbar.jinja:45
+#, fuzzy
+msgid "log"
+msgstr "Loading"
+
+#: app/templates/log/log_table.jinja:28
+msgid "log_timestamp"
+msgstr ""
+
+#: app/templates/log/log_table.jinja:29
+msgid "log_level"
+msgstr ""
+
+#: app/templates/log/log_table.jinja:30
+msgid "log_module"
+msgstr ""
+
+#: app/templates/log/log_table.jinja:31
+msgid "log_message"
+msgstr ""
+
+#: app/templates/log/log_table.jinja:85
+msgid "download"
+msgstr ""
+
+#: app/templates/schedule/schedule_list.jinja:36
+msgid "next_execution"
+msgstr ""
+
+#: app/templates/schedule/schedule_list.jinja:78
+msgid "no_data"
+msgstr ""
+
+#: app/templates/schedule/macros/cron_selector.jinja:5
+msgid "cron_mode"
+msgstr ""
+
+#: app/templates/schedule/macros/cron_selector.jinja:8
+msgid "cron_mode_range"
+msgstr ""
+
+#: app/templates/schedule/macros/cron_selector.jinja:9
+msgid "cron_mode_choice"
+msgstr ""
+
+#: app/templates/schedule/macros/cron_selector.jinja:20
+msgid "cron_from"
+msgstr ""
+
+#: app/templates/schedule/macros/cron_selector.jinja:32
+msgid "cron_to"
+msgstr ""
+
+#: app/templates/schedule/macros/cron_selector.jinja:49
+msgid "cron_every"
+msgstr ""
+
+#: app/templates/schedule/macros/cron_selector.jinja:52
+msgid "cron_no_repeat"
+msgstr ""
 
 #~ msgid "route-not-exist"
 #~ msgstr ""
 
 #~ msgid "datacode"
+#~ msgstr ""
+
+#~ msgid "ETA Display Format"
+#~ msgstr ""
+
+#~ msgid "Model"
 #~ msgstr ""
 

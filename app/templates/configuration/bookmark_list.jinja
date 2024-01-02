@@ -29,14 +29,14 @@
             <table id="eta-list" class="table table-striped" style="width:100%">
                 <thead>
                     <tr>
-                        <th>No.</th>
-                        <th>Company</th>
-                        <th>Route</th>
-                        <th>Direction</th>
-                        <th>Service Type</th>
-                        <th>Stop</th>
-                        <th>Language</th>
-                        <th>Action</th>
+                        <th>{{ _('no.') }}</th>
+                        <th>{{ _('company') }}</th>
+                        <th>{{ _('route') }}</th>
+                        <th>{{ _('direction') }}</th>
+                        <th>{{ _('service_type') }}</th>
+                        <th>{{ _('stop') }}</th>
+                        <th>{{ _('lanugage') }}</th>
+                        <th>{{ _('action') }}</th>
                     </tr>
                 </thead>
             </table>
@@ -83,7 +83,7 @@
                         ` : ""
                     const down = meta.settings.json.data.etas.length != meta.row + 1 ? `
                         <button type="button" class="dt-action btn btn-outline-dark btn-sm"
-                            data-href-method="PIT"
+                            data-href-method="PUT"
                             data-href={{ url_for('api_config.bookmark_swap') }}
                             data-href-payload=${JSON.stringify({source: row.id, destination: meta.settings.json.data.etas[meta.row + 1].id})}
                             style="height: 100%;">
@@ -95,13 +95,13 @@
                         <button type="button" class="dt-action btn btn-danger btn-sm"
                             data-href-method="DELETE"
                             data-href=${"{{ url_for('api_config.bookmark_delete', id='p1') }}".replace("p1", row.id)}
-                            title={{ _("Delete") }}>
+                            title={{ _("delete") }}>
                             <i class="bi bi-trash"></i>
                         </button>
                         <button type="button" class="dt-action btn btn-success btn-sm"
                             data-href-method=""
                             data-href=${"{{ url_for('configuration.bookmark_edit', id='p1') }}".replace("p1", row.id)}
-                            title={{ _("Edit") }}>
+                            title={{ _("edit") }}>
                             <i class="bi bi-pencil-square"></i>
                         </button>
                     `.concat(up, down);
@@ -113,7 +113,7 @@
                 <'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>`,
         buttons: [
             {
-                text: '新增',
+                text: "{{ _('create') }}",
                 className: "btn btn-success",
                 action: function (e, dt, node, config) {
                     window.location.href = "{{ url_for('configuration.bookmark_create') }}";

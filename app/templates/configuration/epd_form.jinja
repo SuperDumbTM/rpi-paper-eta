@@ -19,12 +19,13 @@
     <div class="mx-auto col-10 col-md-8 col-lg-6">
         <form class="form" action="{{ url_for('api_config.update_epaper_setting') }}" method="post" autocomplete="off">
 
-            <h1>Display Setting</h1>
+            <h1>{{ _('display_setting') }}</h1>
             <p class="description">
+                {{ _('display_setting_help') }}
             </p>
 
             <div class="form-group">
-                <label for="layout" class="form-label">Brand</label>
+                <label for="layout" class="form-label">{{ _('brand') }}</label>
                 <select class="form-select" name="epd_brand" required>
                     <option value="" selected>-----</option>
                     {% for brand in brands %}
@@ -42,7 +43,7 @@
             </div>
 
             <div class="form-group">
-                <label for="layout" class="form-label">model</label>
+                <label for="layout" class="form-label">{{ _('model') }}</label>
                 <select class="form-select" name="epd_model">
                     <option selected>-----</option>
                     {% for model in models %}
@@ -59,7 +60,7 @@
                 </select>
             </div>
 
-            <input class="btn btn-primary btn-customized mt-4" id="submit" name="submit" type="submit" value="Submit">
+            <input class="btn btn-primary btn-customized mt-4" id="submit" name="submit" type="submit" value="{{ _('submit') }}">
 
         </form>
     </div>
@@ -95,12 +96,12 @@
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             error: function (xhr, status, error) {
-                alertify.error("Something is wrong with the API server.")
+                alertify.error("{{ _('alert_server_error') }}")
                 alertify.error($.parseJSON(xhr.responseText).message)
             },
             success: function (res) {
                 if (res.success) {
-                    alertify.success('Updated.')
+                    alertify.success("{{ _('updated') }}")
                 } else {
                     alertify.error(res.message)
                 }

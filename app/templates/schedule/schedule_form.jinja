@@ -24,16 +24,16 @@
     <div class="mx-auto col-10 col-md-8 col-lg-6">
         <form class="form" action="{{ form_action }}" method="{{ form_method }}" autocomplete="off">
 
-            <h1>New Schedule</h1>
+            <h1>{{ _('new_schedule') }}</h1>
             <p class="description">
-
+                {{ _('new_schedule_help') }}
             </p>
 
             {% include "includes/flash_success.jinja" %}
             {% include "includes/flash_error.jinja" %}
 
             <div class="form-group">
-                <label for="schedule" class="form-label">Schedule</label>
+                <label for="schedule" class="form-label">{{ _('schedule') }}</label>
                 <div class="input-group">
                     <input type="text" class="form-control" name="schedule" placeholder="Cron Expression"
                         value="{{ form.schedule }}" required>
@@ -42,11 +42,11 @@
                         <i class="bi bi-pencil-square"></i>
                     </button>
                 </div>
-                <div class="form-text text-danger" id="cron-description">未能識別</div>
+                <div class="form-text text-danger" id="cron-description">{{ _('unrecognised') }}</div>
             </div>
 
             <div class="form-group">
-                <label for="eta_type" class="form-label">ETA Type</label>
+                <label for="eta_type" class="form-label">{{ _('eta_type') }}</label>
                 <select class="form-select" name="eta_type" required>
                     {% for type in eta_types %}
                     {% if form.eta_type == type %}
@@ -63,7 +63,7 @@
             </div>
 
             <div class="form-group">
-                <label for="layout" class="form-label">Layout</label>
+                <label for="layout" class="form-label">{{ _('layout') }}</label>
                 <div class="overflow-auto" id="select-box">
                     {# filled by Javascript #}
                 </div>
@@ -75,12 +75,12 @@
                 {% else %}
                 <input class="form-check-input" type="checkbox" name="is_partial">
                 {% endif %}
-                <label class="form-check-label">局部更新</label>
+                <label class="form-check-label">{{ _('partial_refresh') }}</label>
                 <div class="form-text">
-                    局部更新電子紙屏幕，提升屏幕影像更新速度。
+                    {{ _('partial_refresh_help') }}
                 </div>
                 <div class="form-text text-warning">
-                    需定期執行一次全屏更新以避免影像變得不清晰。
+                    {{ _('partial_refresh_limit_help') }}
                 </div>
             </div>
 
@@ -90,7 +90,7 @@
                 {% else %}
                 <input class="form-check-input" type="checkbox" name="enabled">
                 {% endif %}
-                <label class="form-check-label">啟用</label>
+                <label class="form-check-label">{{ _('enabl') }}</label>
             </div>
 
             <input class="btn btn-primary btn-customized mt-4" id="submit" name="submit" type="submit" value="Submit">
@@ -106,7 +106,7 @@
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">執行時間</h5>
+                <h5 class="modal-title">{{ _('execute_time') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -114,27 +114,27 @@
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
                         <a class="nav-link active" href="#minute" data-bs-toggle="tab">
-                            分鐘
+                            {{ _('minute') }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#hour" data-bs-toggle="tab">
-                            小時
+                            {{ _('hour') }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#month-day" data-bs-toggle="tab">
-                            日期
+                            {{ _('date') }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#month" data-bs-toggle="tab">
-                            月份
+                            {{ _('month') }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#week-day" data-bs-toggle="tab">
-                            星期
+                            {{ _('day_of_week') }}
                         </a>
                     </li>
                 </ul>
@@ -144,15 +144,25 @@
                     {{ cron_selector('hour', list(zip(range(24), range(24)))) }}
                     {{ cron_selector('month-day', list(zip(range(1, 32, 1), range(1, 32, 1)))) }}
                     {{ cron_selector('month', list(zip(range(1, 13, 1), range(1, 13, 1)))) }}
-                    {{ cron_selector('week-day', list(zip(range(0, 7, 1),
-                    ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])))
+                    {{ 
+                        cron_selector('week-day', list(zip(range(0, 7, 1),
+                            [
+                                {{ _('monday') }},
+                                {{ _('tuesday') }},
+                                {{ _('wednesday') }},
+                                {{ _('thursday') }},
+                                {{ _('friday') }},
+                                {{ _('saturday') }},
+                                {{ _('sunday') }}
+                            ]))
+                        )
                     }}
                 </div>
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary">完成</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _('cancel') }}</button>
+                <button type="button" class="btn btn-primary">{{ _('complete') }}</button>
             </div>
         </div>
     </div>
@@ -176,7 +186,7 @@
         })
         bootstrap.Tab.getOrCreateInstance($($('#cron-configurator a.nav-link')[0])).show()
 
-        
+
         $('input[name=schedule]').trigger('input')
 
         // trigger layout option update & select the previous choice if applicable
@@ -294,7 +304,7 @@
             callout.text(cronstrue.toString($(this).val(), { locale: "zh_TW" }))
             callout.removeClass('text-danger').addClass('text-success')
         } catch (error) {
-            callout.text('未能識別')
+            callout.text("{{ _('unrecognised') }}")
             callout.removeClass('text-success').addClass('text-danger')
         }
     })

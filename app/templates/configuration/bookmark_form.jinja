@@ -17,15 +17,16 @@
     <div class="mx-auto col-10 col-md-8 col-lg-6">
         <form class="form" action="{{ form_action }}" method="{{ 'put' if editing else 'post' }}" autocomplete="off">
 
-            <h1>ETA Entry</h1>
+            <h1>{{ _('create_bookmark') }}</h1>
             <p class="description">
+                {{ _('create_bookmark_help') }}
             </p>
 
             {% include "includes/flash_success.jinja" %}
             {% include "includes/flash_error.jinja" %}
 
             <div class="form-group">
-                <label for="company" class="form-label">Company</label>
+                <label for="company" class="form-label">{{ _('company') }}</label>
                 <select class="form-select" name="company">
                     <option value="" selected>-----</option>
                     {% for company in companys %}
@@ -43,13 +44,13 @@
             </div>
 
             <div class="form-group autocomplete">
-                <label for="route" class="form-label">Route</label>
+                <label for="route" class="form-label">{{ _('route') }}</label>
                 <input type="text" class="form-control" name="route" value="{{ form.route }}" required>
 
             </div>
 
             <div class="form-group">
-                <label for="direction" class="form-label">Direction</label>
+                <label for="direction" class="form-label">{{ _('direction') }}</label>
                 <select class="form-select" name="direction">
                     <option value="" selected>-----</option>
                     {% for direction in directions %}
@@ -67,7 +68,7 @@
             </div>
 
             <div class="form-group">
-                <label for="service_type" class="form-label">Service Type</label>
+                <label for="service_type" class="form-label">{{ _('service_type') }}</label>
                 <select class="form-select" name="service_type">
                     <option value="" selected>-----</option>
                     {% for service_type in service_types %}
@@ -85,7 +86,7 @@
             </div>
 
             <div class="form-group">
-                <label for="stop_code" class="form-label">Stop</label>
+                <label for="stop_code" class="form-label">{{ _('stop') }}</label>
                 <select class="form-select" name="stop_code">
                     <option value="" selected>-----</option>
                     {% for stop in stops %}
@@ -103,7 +104,7 @@
             </div>
 
             <div class="form-group">
-                <label for="lang" class="form-label">Language</label>
+                <label for="lang" class="form-label">{{ _('language') }}</label>
                 <select class="form-select" name="lang">
                     <option value="" selected>-----</option>
                     {% for lang in langs %}
@@ -120,7 +121,7 @@
                 </select>
             </div>
 
-            <input class="btn btn-primary btn-customized mt-4" id="submit" name="submit" type="submit" value="Submit">
+            <input class="btn btn-primary btn-customized mt-4" id="submit" name="submit" type="submit" value="{{ _('submit') }}">
 
         </form>
     </div>

@@ -8,17 +8,17 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    E-Paper 設定
+                    {{ _('E-Paper') ~ _('setting') }}
                 </div>
                 <div class="card-body">
                     <p class="fw-bold mb-2">
-                        <i class="bi bi-building"></i> Brand
+                        <i class="bi bi-building"></i> {{ _('brand')}}
                     </p>
                     <hr class="m-1">
                     {{ aconf.confs.epd_brand | title }}
 
                     <p class="fw-bold mb-2 mt-3">
-                        <i class="bi bi-building"></i> Model
+                        <i class="bi bi-building"></i> {{ _('model')}}
                     </p>
                     <hr class="m-1">
                     {{ aconf.confs.epd_model | title }}
@@ -32,11 +32,11 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    Display Image(s)
+                    {{ _('display_images') }}
                 </div>
                 <div class="card-body">
                     <p class="card-text text-muted">
-                        Current displaying image(s) to the E-paper screen.
+                        {{ _('display_imagesHelp') }}
                     </p>
 
                     {% for name, image in images.items() %}
@@ -57,7 +57,7 @@
 
                     {% if images | length == 0%}
                     <p class="text-danger">
-                        Not Available
+                        {{ _('not_available') }}
                     </p>
                     {% endif %}
                 </div>
@@ -69,17 +69,17 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    Refresh History
+                    {{ _('refresh_history') }}
                 </div>
                 <div class="card-body">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">Time</th>
-                                <th scope="col">ETA Type</th>
-                                <th scope="col">Layout</th>
-                                <th scope="col">Is Partial</th>
-                                <th scope="col">Error</th>
+                                <th scope="col">{{ _('time') }}</th>
+                                <th scope="col">{{ _('eta_type') }}</th>
+                                <th scope="col">{{ _('layout') }}</th>
+                                <th scope="col">{{ _('is_partial') }}</th>
+                                <th scope="col">{{ _('error') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -94,7 +94,7 @@
                             {% endfor %}
                             {% if refresh_logs | length == 0 %}
                                 <tr>
-                                    <td colspan="5" class="text-center">None</td>
+                                    <td colspan="5" class="text-center">{{ _('no_record') }}</td>
                                 </tr>
                             {% endif %}
                         </tbody>

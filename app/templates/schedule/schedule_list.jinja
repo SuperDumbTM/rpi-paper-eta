@@ -29,13 +29,13 @@
             <table id="schedule-list" class="table table-striped" style="width:100%">
                 <thead>
                     <tr>
-                        <th>No.</th>
-                        <th>ETA Type</th>
-                        <th>Layout</th>
-                        <th>Schedule</th>
-                        <th>Next Execution</th>
-                        <th>Is Partial</th>
-                        <th>Action</th>
+                        <th>{{ _('no.') }}</th>
+                        <th>{{ _('eta_type') }}</th>
+                        <th>{{ _('layout') }}</th>
+                        <th>{{ _('schedule') }}</th>
+                        <th>{{ _('next_execution') }}</th>
+                        <th>{{ _('is_partial') }}</th>
+                        <th>{{ _('action') }}</th>
                     </tr>
                 </thead>
             </table>
@@ -60,7 +60,6 @@
             {
                 "targets": 5,
                 "className": "text-center",
-                {# "width": "4%" #}
             }
         ],
         columns: [
@@ -76,7 +75,7 @@
                 data: 'future_executions',
                 render: function (data, type, row, meta) {
                     if (data.length <= 0) {
-                        return 'No data'
+                        return "{{ _('no_data') }}"
                     }
                     return data[0].replace('T', ' ')
                 }
@@ -93,13 +92,13 @@
                         <button type="button" class="dt-action btn btn-danger btn-sm"
                             data-href-method="DELETE"
                             data-href=${"{{ url_for('api_schedule.delete', id='p1') }}".replace("p1", row.id)}
-                            title={{ _("Delete") }}>
+                            title={{ _("delete") }}>
                             <i class="bi bi-trash"></i>
                         </button>
                         <button type="button" class="dt-action btn btn-success btn-sm"
                             data-href-method=""
                             data-href=${"{{ url_for('schedule.edit', id='p1') }}".replace("p1", row.id)}
-                            title={{ _("Edit") }}>
+                            title={{ _("edit") }}>
                             <i class="bi bi-pencil-square"></i>
                         </button>
                     `;
@@ -111,7 +110,7 @@
                 <'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>`,
         buttons: [
             {
-                text: '新增',
+                text: "{{ _('create') }}",
                 className: "btn btn-success",
                 action: function (e, dt, node, config) {
                     window.location.href = "{{ url_for('schedule.create') }}";
