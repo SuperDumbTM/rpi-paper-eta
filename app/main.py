@@ -7,7 +7,7 @@ from flask import Flask, request
 from flask.logging import default_handler
 from flask_babel import Babel
 
-from app import config, controllers, handles
+from app import commands, config, controllers, handles
 
 
 def init_babel(app: Flask):
@@ -88,6 +88,8 @@ def create_app():
     app.register_blueprint(controllers.apis.display.bp)
     app.register_blueprint(controllers.apis.schedule.bp)
     app.register_blueprint(controllers.apis.log.bp)
+
+    app.cli.add_command(commands.translation_cli)
 
     app.register_blueprint(handles.bp)
 
