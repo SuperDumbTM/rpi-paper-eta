@@ -71,6 +71,11 @@ def init_logger(app: Flask):
     })
 
 
+def init_jinja_helpers(app: Flask):
+    app.jinja_env.globals.update(
+        bool_to_icon=lambda b: '<i class="bi bi-check2"></i>' if b else '<i class="bi bi-x"></i>')
+
+
 def create_app():
     app = Flask(__name__, template_folder="template", static_folder="static")
 
@@ -93,6 +98,7 @@ def create_app():
 
     app.register_blueprint(handles.bp)
 
+    init_jinja_helpers(app)
     init_logger(app)
     init_site_data(app)
     init_babel(app)

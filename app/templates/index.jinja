@@ -88,7 +88,7 @@
                                 <td>{{ log.timestamp.strftime('%H:%M:%S') }}</td>
                                 <td>{{ log.eta_type.value | title }}</td>
                                 <td>{{ log.layout }}</td>
-                                <td>{{ log.is_partial }}</td>
+                                <td>{{ bool_to_icon(log.is_partial) }}</td>
                                 <td>{{ log.error }}</td>
                             </tr>
                             {% endfor %}
