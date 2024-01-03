@@ -5,17 +5,14 @@
 
 {% block link %}
 <link rel="stylesheet" href="//cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="//cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
 {% endblock link %}
 
 {% block style %}
 <style>
-    .dt-buttons {
-        clear: both;
-    }
-
-    .dt-action a {
-        color: inherit;
-        text-decoration: none;
+    #schedule-list_filter label {
+        /* search field right align */
+        float: right;
     }
 </style>
 {% endblock style %}
@@ -29,13 +26,13 @@
             <table id="schedule-list" class="table table-striped" style="width:100%">
                 <thead>
                     <tr>
-                        <th>{{ _('no.') }}</th>
+                        <th class="not-mobile">{{ _('no.') }}</th>
                         <th>{{ _('eta_type') }}</th>
                         <th>{{ _('layout') }}</th>
                         <th>{{ _('schedule') }}</th>
-                        <th>{{ _('next_execution') }}</th>
-                        <th>{{ _('is_partial') }}</th>
-                        <th>{{ _('action') }}</th>
+                        <th class="not-mobile">{{ _('next_execution') }}</th>
+                        <th class="not-mobile">{{ _('is_partial') }}</th>
+                        <th class="not-mobile">{{ _('action') }}</th>
                     </tr>
                 </thead>
             </table>
@@ -48,10 +45,12 @@
 <script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="//cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 <script src="//cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+<script src="//cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 <script src="{{ url_for('static', filename='scripts/datatable.js') }}"></script>
 
 <script>
     let datatable = $('#schedule-list').DataTable({
+        responsive: true,
         ajax: {
             url: "{{ url_for('api_schedule.get') }}",
             dataSrc: "data.schedules"
@@ -59,11 +58,12 @@
         'columnDefs': [
             {
                 "targets": 5,
-                "className": "text-center",
+                "className": "text-sm-center",
             }
         ],
         columns: [
             {
+                data: null,
                 render: function (data, type, row, meta) {
                     return meta.row + 1;
                 }
@@ -87,6 +87,7 @@
                 }
             },
             {
+                data: null,
                 render: function (data, type, row, meta) {
                     return `
                         <button type="button" class="dt-action btn btn-danger btn-sm"
@@ -107,7 +108,7 @@
         ],
         dom: `<'row'<'col-sm-12 col-md-6'B><'col-sm-12 col-md-6'f>>
                 <'row'<'col-sm-12'tr>>
-                <'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>`,
+                <'row'<'col-12'p>>`,
         buttons: [
             {
                 text: "{{ _('create') }}",
