@@ -2,6 +2,7 @@ import datetime
 from typing import Optional
 
 import pydantic
+from flask_babel import lazy_gettext
 
 from app import enums
 from app.modules import image as eimage
@@ -16,6 +17,9 @@ class EtaConfig(pydantic.BaseModel):
     lang: str
     id: Optional[str] = None
 
+    def model_dump_i18n(self) -> dict:
+        return {k: lazy_gettext(v) for k, v in self.model_dump().items()}
+
 
 class Schedule(pydantic.BaseModel):
     id: str
@@ -24,6 +28,9 @@ class Schedule(pydantic.BaseModel):
     layout: str
     is_partial: bool
     enabled: bool = True
+
+    def model_dump_i18n(self) -> dict:
+        return self.model_dump() | {'eta_type': lazy_gettext(self.eta_type)}
 
 
 class RefreshLog(pydantic.BaseModel):
@@ -35,6 +42,9 @@ class RefreshLog(pydantic.BaseModel):
     layout: str
     is_partial: bool
     error: Optional[BaseException] = None
+
+    def model_dump_i18n(self) -> dict:
+        return self.model_dump() | {'eta_type': lazy_gettext(self.eta_type.value)}
 
 
 class Configuration(pydantic.BaseModel):

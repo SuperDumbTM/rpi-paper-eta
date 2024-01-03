@@ -74,9 +74,9 @@ def direction_choices(company: str,
 
     directions = []
     if details['inbound']:
-        directions.append((lazy_gettext("inbound"), "inbound"))
+        directions.append(("inbound", lazy_gettext("inbound")))
     if details['outbound']:
-        directions.append((lazy_gettext("outbound"), "outbound"))
+        directions.append(("outbound", lazy_gettext("outbound")))
     return directions
 
 

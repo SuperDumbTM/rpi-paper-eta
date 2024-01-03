@@ -8,3 +8,15 @@ RP_CODE_TRANSL = {
     "eta-stop-closure": lazy_gettext("eta-stop-closure"),
     "eta-abnormal-service": lazy_gettext("eta-abnormal-service"),
 }
+
+# ETA companies
+
+lazy_gettext('kmb')
+lazy_gettext('mtr_lrt')
+lazy_gettext('mtr_train')
+lazy_gettext('mtr_bus')
+lazy_gettext('ctb')
+
+# ETA language
+lazy_gettext('en')
+lazy_gettext('tc')

@@ -25,9 +25,9 @@
         <form class="form" action="{{ form_action }}" method="{{ form_method }}" autocomplete="off">
 
             <h1>{{ _('new_schedule') }}</h1>
-            <p class="description">
-                {{ _('new_schedule_help') }}
-            </p>
+            <small class="form-text text-mute">
+                {{ _('new_schedule_help') | safe }}
+            </small>
 
             {% include "includes/flash_success.jinja" %}
             {% include "includes/flash_error.jinja" %}
@@ -90,7 +90,7 @@
                 {% else %}
                 <input class="form-check-input" type="checkbox" name="enabled">
                 {% endif %}
-                <label class="form-check-label">{{ _('enabl') }}</label>
+                <label class="form-check-label">{{ _('enable') }}</label>
             </div>
 
             <input class="btn btn-primary btn-customized mt-4" id="submit" name="submit" type="submit" value="Submit">
@@ -147,13 +147,13 @@
                     {{ 
                         cron_selector('week-day', list(zip(range(0, 7, 1),
                             [
-                                {{ _('monday') }},
-                                {{ _('tuesday') }},
-                                {{ _('wednesday') }},
-                                {{ _('thursday') }},
-                                {{ _('friday') }},
-                                {{ _('saturday') }},
-                                {{ _('sunday') }}
+                                _('monday'),
+                                _('tuesday'),
+                                _('wednesday'),
+                                _('thursday'),
+                                _('friday'),
+                                _('saturday'),
+                                _('sunday')
                             ]))
                         )
                     }}

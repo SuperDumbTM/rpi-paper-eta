@@ -20,9 +20,9 @@
         <form class="form" action="{{ url_for('api_config.update_epaper_setting') }}" method="post" autocomplete="off">
 
             <h1>{{ _('display_setting') }}</h1>
-            <p class="description">
-                {{ _('display_setting_help') }}
-            </p>
+            <small class="form-text text-mute">
+                {{ _('display_setting_help') | safe }}
+            </small>
 
             <div class="form-group">
                 <label for="layout" class="form-label">{{ _('brand') }}</label>

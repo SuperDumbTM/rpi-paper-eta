@@ -32,11 +32,11 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    {{ _('display_images') }}
+                    {{ _('screen_content') }}
                 </div>
                 <div class="card-body">
                     <p class="card-text text-muted">
-                        {{ _('display_imagesHelp') }}
+                        {{ _('screen_content_help') }}
                     </p>
 
                     {% for name, image in images.items() %}
@@ -57,7 +57,7 @@
 
                     {% if images | length == 0%}
                     <p class="text-danger">
-                        {{ _('not_available') }}
+                        {{ _('no_record') }}
                     </p>
                     {% endif %}
                 </div>

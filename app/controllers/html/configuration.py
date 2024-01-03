@@ -1,7 +1,9 @@
 from dataclasses import asdict
+
 import requests
 from flask import (Blueprint, current_app, flash, jsonify, redirect,
                    render_template, request, url_for)
+from flask_babel import lazy_gettext
 
 from app import enums, forms, models, utils
 from app.config import site_data
@@ -44,9 +46,9 @@ def bookmark_create():
     form = forms.BookmarkForm()
 
     return render_template("configuration/bookmark_form.jinja",
-                           companys=[(c.value, c.name)
+                           companys=[(c.value, lazy_gettext(c.value))
                                      for c in enums.EtaCompany],
-                           langs=[(l.value, l.name)
+                           langs=[(l.value, lazy_gettext(l.value))
                                   for l in enums.Locale],
                            form=form,
                            form_action=url_for(
@@ -70,12 +72,12 @@ def bookmark_edit(id: str):
         flash("API server error.", enums.FlashCategory.error)
 
     return render_template("configuration/bookmark_form.jinja",
-                           companys=[(c.value, c.name)
+                           companys=[(c.value, lazy_gettext(c.value))
                                      for c in enums.EtaCompany],
                            directions=directions,
                            service_types=service_types,
                            stops=stops,
-                           langs=[(l.value, l.name)
+                           langs=[(l.value, lazy_gettext(l.value))
                                   for l in enums.Locale],
                            form=forms.BookmarkForm(
                                **entry.model_dump(exclude=['id'])),

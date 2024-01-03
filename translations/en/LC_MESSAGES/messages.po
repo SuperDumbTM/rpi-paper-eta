@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-01-02 14:50+0800\n"
+"POT-Creation-Date: 2024-01-03 12:28+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -42,69 +42,98 @@ msgstr "Station Closure"
 msgid "eta-abnormal-service"
 msgstr "SSA"
 
+#: app/translation.py:14
+msgid "kmb"
+msgstr "KMB"
+
+#: app/translation.py:15
+msgid "mtr_lrt"
+msgstr "Light Rail"
+
+#: app/translation.py:16
+msgid "mtr_train"
+msgstr "MTR"
+
+#: app/translation.py:17
+msgid "mtr_bus"
+msgstr "MTR Bus"
+
+#: app/translation.py:18
+msgid "ctb"
+msgstr "CityBus"
+
+#: app/translation.py:21
+msgid "en"
+msgstr "English"
+
+#: app/translation.py:22
+msgid "tc"
+msgstr "Trad. Chinese"
+
 #: app/utils.py:77
 msgid "inbound"
-msgstr ""
+msgstr "Inbound"
 
 #: app/utils.py:79
 msgid "outbound"
-msgstr ""
+msgstr "Outbound"
+
+#: app/controllers/apis/config.py:76 app/templates/index.jinja:82
+msgid "error"
+msgstr "Error"
 
 #: app/templates/index.jinja:11
 msgid "E-Paper"
-msgstr ""
+msgstr "E-Paper"
 
 #: app/templates/index.jinja:11
 msgid "setting"
-msgstr ""
+msgstr "Setting"
 
 #: app/templates/configuration/epd_form.jinja:28 app/templates/index.jinja:15
 msgid "brand"
-msgstr ""
+msgstr "Brand"
 
 #: app/templates/configuration/epd_form.jinja:46 app/templates/index.jinja:21
 msgid "model"
-msgstr ""
+msgstr "Model"
 
 #: app/templates/index.jinja:35
-msgid "display_images"
-msgstr ""
+msgid "screen_content"
+msgstr "Screen Content"
 
 #: app/templates/index.jinja:39
-msgid "display_imagesHelp"
+msgid "screen_content_help"
 msgstr ""
+"Current screen content. For layouts that utilised multiple colors, there "
+"will be more than one image and each of them representing contents in a "
+"particular color."
 
-#: app/templates/index.jinja:60
-msgid "not_available"
-msgstr ""
+#: app/templates/index.jinja:60 app/templates/index.jinja:97
+msgid "no_record"
+msgstr "No Record"
 
 #: app/templates/index.jinja:72
 msgid "refresh_history"
-msgstr ""
+msgstr "Refresh History"
 
 #: app/templates/index.jinja:78
 msgid "time"
-msgstr ""
+msgstr "Time"
 
-#: app/templates/index.jinja:79 app/templates/schedule/schedule_list.jinja:33
+#: app/templates/index.jinja:79 app/templates/schedule/schedule_form.jinja:49
+#: app/templates/schedule/schedule_list.jinja:33
 msgid "eta_type"
-msgstr ""
+msgstr "ETA Type"
 
-#: app/templates/index.jinja:80 app/templates/schedule/schedule_list.jinja:34
+#: app/templates/index.jinja:80 app/templates/schedule/schedule_form.jinja:66
+#: app/templates/schedule/schedule_list.jinja:34
 msgid "layout"
-msgstr ""
+msgstr "Layout"
 
 #: app/templates/index.jinja:81 app/templates/schedule/schedule_list.jinja:37
 msgid "is_partial"
-msgstr ""
-
-#: app/templates/index.jinja:82
-msgid "error"
-msgstr ""
-
-#: app/templates/index.jinja:97
-msgid "no_record"
-msgstr ""
+msgstr "Is Partial"
 
 #: app/templates/layout.jinja:43
 msgid "Loading"
@@ -112,211 +141,318 @@ msgstr "Loading"
 
 #: app/templates/configuration/api_server_form.jinja:11
 msgid "api_server_setting"
-msgstr ""
+msgstr "API Server Setting"
 
 #: app/templates/configuration/api_server_form.jinja:13
 msgid "api_server_setting_help"
-msgstr ""
+msgstr "Enter the details of the ETA server for fetching all the reqiured data."
 
 #: app/templates/configuration/api_server_form.jinja:17
 msgid "api_server_url"
-msgstr ""
+msgstr "API Server URL"
 
 #: app/templates/configuration/api_server_form.jinja:23
 msgid "api_server_username"
-msgstr ""
+msgstr "Username"
 
 #: app/templates/configuration/api_server_form.jinja:28
 msgid "api_server_password"
-msgstr ""
+msgstr "Password"
 
 #: app/templates/configuration/api_server_form.jinja:32
 #: app/templates/configuration/bookmark_form.jinja:124
 #: app/templates/configuration/epd_form.jinja:63
 msgid "submit"
-msgstr ""
+msgstr "Submit"
 
 #: app/templates/configuration/api_server_form.jinja:50
 #: app/templates/configuration/epd_form.jinja:99
 msgid "alert_server_error"
-msgstr ""
+msgstr "API server error."
 
 #: app/templates/configuration/api_server_form.jinja:55
 #: app/templates/configuration/epd_form.jinja:104
 msgid "updated"
-msgstr ""
+msgstr "Updated!"
 
 #: app/templates/configuration/bookmark_form.jinja:20
-msgid "create_bookmark"
-msgstr ""
+msgid "new_bookmark"
+msgstr "New Bookmark"
 
 #: app/templates/configuration/bookmark_form.jinja:22
-msgid "create_bookmark_help"
+msgid "new_bookmark_help"
 msgstr ""
+"Create a new ETA bookmark that will be displayed on to the screen. Please"
+" note that although there is no limit on the number of bookmarks, if the "
+"number of bookmark exceeded the designed amount by the layout, the "
+"bookmark will be displayed."
 
 #: app/templates/configuration/bookmark_form.jinja:29
 #: app/templates/configuration/bookmark_list.jinja:33
 msgid "company"
-msgstr ""
+msgstr "Company"
 
 #: app/templates/configuration/bookmark_form.jinja:47
 #: app/templates/configuration/bookmark_list.jinja:34
 msgid "route"
-msgstr ""
+msgstr "Route"
 
 #: app/templates/configuration/bookmark_form.jinja:53
 #: app/templates/configuration/bookmark_list.jinja:35
 msgid "direction"
-msgstr ""
+msgstr "Direction"
 
 #: app/templates/configuration/bookmark_form.jinja:71
 #: app/templates/configuration/bookmark_list.jinja:36
 msgid "service_type"
-msgstr ""
+msgstr "Service Type"
 
 #: app/templates/configuration/bookmark_form.jinja:89
 #: app/templates/configuration/bookmark_list.jinja:37
 msgid "stop"
-msgstr ""
+msgstr "Stop"
 
 #: app/templates/configuration/bookmark_form.jinja:107
+#: app/templates/configuration/bookmark_list.jinja:38
 msgid "language"
-msgstr ""
+msgstr "Language"
 
 #: app/templates/configuration/bookmark_list.jinja:32
 #: app/templates/schedule/schedule_list.jinja:32
 msgid "no."
-msgstr ""
-
-#: app/templates/configuration/bookmark_list.jinja:38
-msgid "lanugage"
-msgstr ""
+msgstr "No."
 
 #: app/templates/configuration/bookmark_list.jinja:39
 #: app/templates/schedule/schedule_list.jinja:38
 msgid "action"
-msgstr ""
+msgstr "Action"
 
 #: app/templates/configuration/bookmark_list.jinja:98
 #: app/templates/schedule/schedule_list.jinja:95
-#, fuzzy
 msgid "delete"
 msgstr "Delete"
 
 #: app/templates/configuration/bookmark_list.jinja:104
 #: app/templates/schedule/schedule_list.jinja:101
-#, fuzzy
 msgid "edit"
 msgstr "Edit"
 
 #: app/templates/configuration/bookmark_list.jinja:116
 #: app/templates/schedule/schedule_list.jinja:113
 msgid "create"
-msgstr ""
+msgstr "Create"
 
 #: app/templates/configuration/epd_form.jinja:22
 msgid "display_setting"
-msgstr ""
+msgstr "Display Setting"
 
 #: app/templates/configuration/epd_form.jinja:24
 msgid "display_setting_help"
-msgstr ""
+msgstr "Select the installed e-paper display's detailes."
 
 #: app/templates/includes/navbar.jinja:14
-msgid "home"
-msgstr ""
+msgid "nav_home"
+msgstr "Home"
 
 #: app/templates/includes/navbar.jinja:19
-msgid "configuration"
-msgstr ""
+msgid "nav_configuration"
+msgstr "Configuration"
 
 #: app/templates/includes/navbar.jinja:24
-msgid "eta"
-msgstr ""
+msgid "nav_bookmark"
+msgstr "Bookmark"
 
 #: app/templates/includes/navbar.jinja:29
-msgid "e-paper"
-msgstr ""
+msgid "nav_e-paper"
+msgstr "E-Paper"
 
 #: app/templates/includes/navbar.jinja:34
-msgid "api_server"
-msgstr ""
+msgid "nav_api_server"
+msgstr "API Server"
 
 #: app/templates/includes/navbar.jinja:41
-#: app/templates/schedule/schedule_list.jinja:35
-msgid "schedule"
-msgstr ""
+msgid "nav_schedule"
+msgstr "Schedule"
 
 #: app/templates/includes/navbar.jinja:45
-#, fuzzy
-msgid "log"
-msgstr "Loading"
+msgid "nav_log"
+msgstr "Log"
 
 #: app/templates/log/log_table.jinja:28
 msgid "log_timestamp"
-msgstr ""
+msgstr "Timestamp"
 
 #: app/templates/log/log_table.jinja:29
 msgid "log_level"
-msgstr ""
+msgstr "Level"
 
 #: app/templates/log/log_table.jinja:30
 msgid "log_module"
-msgstr ""
+msgstr "Module"
 
 #: app/templates/log/log_table.jinja:31
 msgid "log_message"
-msgstr ""
+msgstr "Message"
 
 #: app/templates/log/log_table.jinja:85
 msgid "download"
+msgstr "Download"
+
+#: app/templates/schedule/schedule_form.jinja:27
+msgid "new_schedule"
+msgstr "New Schedule"
+
+#: app/templates/schedule/schedule_form.jinja:29
+msgid "new_schedule_help"
+msgstr "Create a new screen refresh schedule. "
+"The system utilsed "
+"<a href=\"https://en.wikipedia.org/wiki/Cron\" target=\"_blank\">cron</a> "
+"expression for scheduling. You can use the selector or enter directly if you "
+"know about cron for the desired schedule ."
+
+#: app/templates/schedule/schedule_form.jinja:36
+#: app/templates/schedule/schedule_list.jinja:35
+msgid "schedule"
+msgstr "Schedule"
+
+#: app/templates/schedule/schedule_form.jinja:45
+#: app/templates/schedule/schedule_form.jinja:307
+msgid "unrecognised"
+msgstr "Unrecongnised"
+
+#: app/templates/schedule/schedule_form.jinja:78
+msgid "partial_refresh"
+msgstr "Partial Refresh"
+
+#: app/templates/schedule/schedule_form.jinja:80
+msgid "partial_refresh_help"
 msgstr ""
+"Refresh the e-paper screen partially for a faster refresh time and "
+"flickerless refreshing."
+
+#: app/templates/schedule/schedule_form.jinja:83
+msgid "partial_refresh_limit_help"
+msgstr ""
+"Periodically performing a full refresh is required to avoid damages to "
+"the e-paper and improve sharpness of the content"
+
+#: app/templates/schedule/schedule_form.jinja:93
+msgid "enable"
+msgstr "Enable"
+
+#: app/templates/schedule/schedule_form.jinja:109
+msgid "execute_time"
+msgstr "Execute Time"
+
+#: app/templates/schedule/schedule_form.jinja:117
+msgid "minute"
+msgstr "Minute"
+
+#: app/templates/schedule/schedule_form.jinja:122
+msgid "hour"
+msgstr "Hour"
+
+#: app/templates/schedule/schedule_form.jinja:127
+msgid "date"
+msgstr "Date"
+
+#: app/templates/schedule/schedule_form.jinja:132
+msgid "month"
+msgstr "Month"
+
+#: app/templates/schedule/schedule_form.jinja:137
+msgid "day_of_week"
+msgstr "Day of Week"
+
+#: app/templates/schedule/schedule_form.jinja:150
+msgid "monday"
+msgstr "Monday"
+
+#: app/templates/schedule/schedule_form.jinja:151
+msgid "tuesday"
+msgstr "Tuesday"
+
+#: app/templates/schedule/schedule_form.jinja:152
+msgid "wednesday"
+msgstr "Wednesday"
+
+#: app/templates/schedule/schedule_form.jinja:153
+msgid "thursday"
+msgstr "Thursday"
+
+#: app/templates/schedule/schedule_form.jinja:154
+msgid "friday"
+msgstr "Friday"
+
+#: app/templates/schedule/schedule_form.jinja:155
+msgid "saturday"
+msgstr "Saturday"
+
+#: app/templates/schedule/schedule_form.jinja:156
+msgid "sunday"
+msgstr "Sunday"
+
+#: app/templates/schedule/schedule_form.jinja:164
+msgid "cancel"
+msgstr "Cancel"
+
+#: app/templates/schedule/schedule_form.jinja:165
+msgid "complete"
+msgstr "Complete"
 
 #: app/templates/schedule/schedule_list.jinja:36
 msgid "next_execution"
-msgstr ""
+msgstr "Next Execution"
 
 #: app/templates/schedule/schedule_list.jinja:78
 msgid "no_data"
-msgstr ""
+msgstr "No Data"
 
 #: app/templates/schedule/macros/cron_selector.jinja:5
 msgid "cron_mode"
-msgstr ""
+msgstr "Scheduling Method"
 
 #: app/templates/schedule/macros/cron_selector.jinja:8
 msgid "cron_mode_range"
-msgstr ""
+msgstr "Range"
 
 #: app/templates/schedule/macros/cron_selector.jinja:9
 msgid "cron_mode_choice"
-msgstr ""
+msgstr "Choice"
 
 #: app/templates/schedule/macros/cron_selector.jinja:20
 msgid "cron_from"
-msgstr ""
+msgstr "From"
 
 #: app/templates/schedule/macros/cron_selector.jinja:32
 msgid "cron_to"
-msgstr ""
+msgstr "To"
 
 #: app/templates/schedule/macros/cron_selector.jinja:49
 msgid "cron_every"
-msgstr ""
+msgstr "Every"
 
 #: app/templates/schedule/macros/cron_selector.jinja:52
 msgid "cron_no_repeat"
-msgstr ""
+msgstr "No Repeat"
 
-#~ msgid "route-not-exist"
-#~ msgstr ""
+#~ msgid "not_available"
+#~ msgstr "Not Available"
 
-#~ msgid "datacode"
-#~ msgstr ""
+#~ msgid "nav_eta"
+#~ msgstr "ETA"
 
-#~ msgid "ETA Display Format"
-#~ msgstr ""
+#~ msgid "display_images"
+#~ msgstr "Display Images"
 
-#~ msgid "Model"
+#~ msgid "display_images_help"
 #~ msgstr ""
+#~ "Current screen content. For layouts that"
+#~ " utilised multiple colors, there will "
+#~ "be more than one image, each of"
+#~ " them representing contents in the "
+#~ "particular color."
+
+#~ msgid "create_bookmark"
+#~ msgstr "Create New Bookmark"
 

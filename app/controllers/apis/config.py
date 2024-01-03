@@ -2,8 +2,9 @@ from dataclasses import asdict
 from typing import Literal
 
 import requests
-from flask import Blueprint, current_app,  jsonify, request
 import webargs
+from flask import Blueprint, current_app, jsonify, request
+from flask_babel import lazy_gettext
 
 from app import config, enums, models, utils
 from app.modules import image as eimage
@@ -72,8 +73,10 @@ def get_bookmarks():
                 {'stop_code': entry.stop_code}
             ).json()['data']['stop']['name'][entry.lang]
         except Exception:
-            stop_name = "Error"
-        bookmarks.append(entry.model_dump() | {'stop_name': stop_name.title()})
+            stop_name = lazy_gettext('error')
+
+        bookmarks.append(entry.model_dump_i18n() | {
+                         'stop_name': stop_name.title()})
 
     return jsonify({
         'success': True,

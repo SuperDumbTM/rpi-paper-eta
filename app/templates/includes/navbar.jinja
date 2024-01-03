@@ -11,38 +11,38 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 200px;">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('root.index') }}">{{ _('home') }}</a>
+                    <a class="nav-link" href="{{ url_for('root.index') }}">{{ _('nav_home') }}</a>
                 </li>
 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="/configuration" data-bs-toggle="dropdown">
-                        {{ _('configuration') }}
+                        {{ _('nav_configuration') }}
                     </a>
                     <ul class="dropdown-menu">
                         <li>
                             <a class="dropdown-item" href="{{ url_for('configuration.bookmark_list') }}">
-                                {{ _('eta') }}
+                                {{ _('nav_bookmark') }}
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="{{ url_for('configuration.epaper_setting') }}">
-                                {{ _('e-paper') }}
+                                {{ _('nav_e-paper') }}
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="{{ url_for('configuration.api_server_setting') }}">
-                                {{ _('api_server') }}
+                                {{ _('nav_api_server') }}
                             </a>
                         </li>
                     </ul>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('schedule.schedules') }}">{{ _('schedule') }}</a>
+                    <a class="nav-link" href="{{ url_for('schedule.schedules') }}">{{ _('nav_schedule') }}</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('log.logs') }}">{{ _('log') }}</a>
+                    <a class="nav-link" href="{{ url_for('log.logs') }}">{{ _('nav_log') }}</a>
                 </li>
             </ul>
 

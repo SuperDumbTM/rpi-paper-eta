@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-01-02 14:50+0800\n"
+"POT-Creation-Date: 2024-01-03 12:28+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hant_HK\n"
@@ -42,70 +42,95 @@ msgstr "車站關閉"
 msgid "eta-abnormal-service"
 msgstr "特別車務安排生效中"
 
+#: app/translation.py:14
+msgid "kmb"
+msgstr "九巴"
+
+#: app/translation.py:15
+msgid "mtr_lrt"
+msgstr "輕鐵"
+
+#: app/translation.py:16
+msgid "mtr_train"
+msgstr "港鐵"
+
+#: app/translation.py:17
+msgid "mtr_bus"
+msgstr "港鐵巴士"
+
+#: app/translation.py:18
+msgid "ctb"
+msgstr "城巴"
+
+#: app/translation.py:21
+msgid "en"
+msgstr "英文"
+
+#: app/translation.py:22
+msgid "tc"
+msgstr "繁中"
+
 #: app/utils.py:77
 msgid "inbound"
-msgstr ""
+msgstr "回程"
 
 #: app/utils.py:79
 msgid "outbound"
-msgstr ""
+msgstr "去程"
+
+#: app/controllers/apis/config.py:76 app/templates/index.jinja:82
+msgid "error"
+msgstr "錯誤"
 
 #: app/templates/index.jinja:11
-#, fuzzy
 msgid "E-Paper"
-msgstr "無法取得數據"
+msgstr "電子紙屏幕"
 
 #: app/templates/index.jinja:11
 msgid "setting"
-msgstr ""
+msgstr "設定"
 
 #: app/templates/configuration/epd_form.jinja:28 app/templates/index.jinja:15
 msgid "brand"
-msgstr ""
+msgstr "牌子"
 
 #: app/templates/configuration/epd_form.jinja:46 app/templates/index.jinja:21
 msgid "model"
-msgstr ""
+msgstr "型號"
 
 #: app/templates/index.jinja:35
-msgid "display_images"
-msgstr ""
+msgid "screen_content"
+msgstr "屏幕影像"
 
 #: app/templates/index.jinja:39
-msgid "display_imagesHelp"
-msgstr ""
+msgid "screen_content_help"
+msgstr "現正在電子紙屏幕上顯示的影像。如果所選的佈局支援多種顏色，屬於不同顏色的內容將會分表被顯示出來。"
 
-#: app/templates/index.jinja:60
-msgid "not_available"
-msgstr ""
+#: app/templates/index.jinja:60 app/templates/index.jinja:97
+msgid "no_record"
+msgstr "沒有紀錄"
 
 #: app/templates/index.jinja:72
 msgid "refresh_history"
-msgstr ""
+msgstr "屏幕更新紀錄"
 
 #: app/templates/index.jinja:78
 msgid "time"
-msgstr ""
+msgstr "時間"
 
-#: app/templates/index.jinja:79 app/templates/schedule/schedule_list.jinja:33
+#: app/templates/index.jinja:79 app/templates/schedule/schedule_form.jinja:49
+#: app/templates/schedule/schedule_list.jinja:33
 msgid "eta_type"
-msgstr ""
+msgstr "時間顯示模式"
 
-#: app/templates/index.jinja:80 app/templates/schedule/schedule_list.jinja:34
+#: app/templates/index.jinja:80 app/templates/schedule/schedule_form.jinja:66
+#: app/templates/schedule/schedule_list.jinja:34
 msgid "layout"
-msgstr ""
+msgstr "佈局"
 
 #: app/templates/index.jinja:81 app/templates/schedule/schedule_list.jinja:37
 msgid "is_partial"
-msgstr ""
-
-#: app/templates/index.jinja:82
-msgid "error"
-msgstr ""
-
-#: app/templates/index.jinja:97
-msgid "no_record"
-msgstr ""
+msgstr "快新更新"
 
 #: app/templates/layout.jinja:43
 msgid "Loading"
@@ -113,212 +138,304 @@ msgstr "載入中"
 
 #: app/templates/configuration/api_server_form.jinja:11
 msgid "api_server_setting"
-msgstr ""
+msgstr "API 伺服器設定"
 
 #: app/templates/configuration/api_server_form.jinja:13
 msgid "api_server_setting_help"
-msgstr ""
+msgstr "輸入 ETA 伺服器的資料，以便程式能夠取得預報數據及其他相關資料。"
 
 #: app/templates/configuration/api_server_form.jinja:17
 msgid "api_server_url"
-msgstr ""
+msgstr "伺服器網址"
 
 #: app/templates/configuration/api_server_form.jinja:23
 msgid "api_server_username"
-msgstr ""
+msgstr "登入名稱"
 
 #: app/templates/configuration/api_server_form.jinja:28
 msgid "api_server_password"
-msgstr ""
+msgstr "登入密碼"
 
 #: app/templates/configuration/api_server_form.jinja:32
 #: app/templates/configuration/bookmark_form.jinja:124
 #: app/templates/configuration/epd_form.jinja:63
 msgid "submit"
-msgstr ""
+msgstr "提交"
 
 #: app/templates/configuration/api_server_form.jinja:50
 #: app/templates/configuration/epd_form.jinja:99
 msgid "alert_server_error"
-msgstr ""
+msgstr "API 伺服器出錯。"
 
 #: app/templates/configuration/api_server_form.jinja:55
 #: app/templates/configuration/epd_form.jinja:104
 msgid "updated"
-msgstr ""
+msgstr "已更新。"
 
 #: app/templates/configuration/bookmark_form.jinja:20
-msgid "create_bookmark"
-msgstr ""
+msgid "new_bookmark"
+msgstr "路線收藏"
 
 #: app/templates/configuration/bookmark_form.jinja:22
-msgid "create_bookmark_help"
-msgstr ""
+msgid "new_bookmark_help"
+msgstr "加入新的到站時間預報收藏。收藏數量並沒有上限，但跟據使用的佈局，"
+"能夠顯示的數目各有不同。上限數量以後的收藏將無法被顯示。"
 
 #: app/templates/configuration/bookmark_form.jinja:29
 #: app/templates/configuration/bookmark_list.jinja:33
 msgid "company"
-msgstr ""
+msgstr "公司"
 
 #: app/templates/configuration/bookmark_form.jinja:47
 #: app/templates/configuration/bookmark_list.jinja:34
 msgid "route"
-msgstr ""
+msgstr "路線"
 
 #: app/templates/configuration/bookmark_form.jinja:53
 #: app/templates/configuration/bookmark_list.jinja:35
 msgid "direction"
-msgstr ""
+msgstr "行車方向"
 
 #: app/templates/configuration/bookmark_form.jinja:71
 #: app/templates/configuration/bookmark_list.jinja:36
 msgid "service_type"
-msgstr ""
+msgstr "班次類別"
 
 #: app/templates/configuration/bookmark_form.jinja:89
 #: app/templates/configuration/bookmark_list.jinja:37
 msgid "stop"
-msgstr ""
+msgstr "車站"
 
 #: app/templates/configuration/bookmark_form.jinja:107
+#: app/templates/configuration/bookmark_list.jinja:38
 msgid "language"
-msgstr ""
+msgstr "顯示語言"
 
 #: app/templates/configuration/bookmark_list.jinja:32
 #: app/templates/schedule/schedule_list.jinja:32
 msgid "no."
-msgstr ""
-
-#: app/templates/configuration/bookmark_list.jinja:38
-msgid "lanugage"
-msgstr ""
+msgstr "No."
 
 #: app/templates/configuration/bookmark_list.jinja:39
 #: app/templates/schedule/schedule_list.jinja:38
 msgid "action"
-msgstr ""
+msgstr "指令"
 
 #: app/templates/configuration/bookmark_list.jinja:98
 #: app/templates/schedule/schedule_list.jinja:95
-#, fuzzy
 msgid "delete"
 msgstr "刪除"
 
 #: app/templates/configuration/bookmark_list.jinja:104
 #: app/templates/schedule/schedule_list.jinja:101
-#, fuzzy
 msgid "edit"
 msgstr "編輯"
 
 #: app/templates/configuration/bookmark_list.jinja:116
 #: app/templates/schedule/schedule_list.jinja:113
 msgid "create"
-msgstr ""
+msgstr "建立"
 
 #: app/templates/configuration/epd_form.jinja:22
 msgid "display_setting"
-msgstr ""
+msgstr "屏幕設定"
 
 #: app/templates/configuration/epd_form.jinja:24
 msgid "display_setting_help"
-msgstr ""
+msgstr "選擇正在使用的電子紙屏幕。"
 
 #: app/templates/includes/navbar.jinja:14
-msgid "home"
-msgstr ""
+msgid "nav_home"
+msgstr "主頁"
 
 #: app/templates/includes/navbar.jinja:19
-msgid "configuration"
-msgstr ""
+msgid "nav_configuration"
+msgstr "設定"
 
 #: app/templates/includes/navbar.jinja:24
-msgid "eta"
-msgstr ""
+msgid "nav_bookmark"
+msgstr "路線收藏"
 
 #: app/templates/includes/navbar.jinja:29
-#, fuzzy
-msgid "e-paper"
-msgstr "無法取得數據"
+msgid "nav_e-paper"
+msgstr "屏幕"
 
 #: app/templates/includes/navbar.jinja:34
-msgid "api_server"
-msgstr ""
+msgid "nav_api_server"
+msgstr "API 伺服器"
 
 #: app/templates/includes/navbar.jinja:41
-#: app/templates/schedule/schedule_list.jinja:35
-msgid "schedule"
-msgstr ""
+msgid "nav_schedule"
+msgstr "排程"
 
 #: app/templates/includes/navbar.jinja:45
-#, fuzzy
-msgid "log"
-msgstr "載入中"
+msgid "nav_log"
+msgstr "程式記錄"
 
 #: app/templates/log/log_table.jinja:28
 msgid "log_timestamp"
-msgstr ""
+msgstr "時間"
 
 #: app/templates/log/log_table.jinja:29
 msgid "log_level"
-msgstr ""
+msgstr "類別"
 
 #: app/templates/log/log_table.jinja:30
 msgid "log_module"
-msgstr ""
+msgstr "位置"
 
 #: app/templates/log/log_table.jinja:31
 msgid "log_message"
-msgstr ""
+msgstr "訊息"
 
 #: app/templates/log/log_table.jinja:85
 msgid "download"
-msgstr ""
+msgstr "下載"
+
+#: app/templates/schedule/schedule_form.jinja:27
+msgid "new_schedule"
+msgstr "建立排程"
+
+#: app/templates/schedule/schedule_form.jinja:29
+msgid "new_schedule_help"
+msgstr "建立屏幕更新排程。排程系統參考了 "
+"<a href=\"https://en.wikipedia.org/wiki/Cron\" target=\"_blank\">cron</a> "
+"的格式來進行排程。 如果你熟悉 cron ，可以直接輸入排程或使用選擇器建立排程。"
+
+#: app/templates/schedule/schedule_form.jinja:36
+#: app/templates/schedule/schedule_list.jinja:35
+msgid "schedule"
+msgstr "排程"
+
+#: app/templates/schedule/schedule_form.jinja:45
+#: app/templates/schedule/schedule_form.jinja:307
+msgid "unrecognised"
+msgstr "未能識別"
+
+#: app/templates/schedule/schedule_form.jinja:78
+msgid "partial_refresh"
+msgstr "快速更新"
+
+#: app/templates/schedule/schedule_form.jinja:80
+msgid "partial_refresh_help"
+msgstr "局部更新電子紙屏幕顯示內容，以提升屏幕影像更新速度及避免完整更新的屏幕閃爍。"
+
+#: app/templates/schedule/schedule_form.jinja:83
+msgid "partial_refresh_limit_help"
+msgstr "需定期執行一次全屏更新以避免影像變得不清晰及對屏幕造成損害。"
+
+#: app/templates/schedule/schedule_form.jinja:93
+msgid "enable"
+msgstr "啟用"
+
+#: app/templates/schedule/schedule_form.jinja:109
+msgid "execute_time"
+msgstr "執行時間"
+
+#: app/templates/schedule/schedule_form.jinja:117
+msgid "minute"
+msgstr "分鐘"
+
+#: app/templates/schedule/schedule_form.jinja:122
+msgid "hour"
+msgstr "小時"
+
+#: app/templates/schedule/schedule_form.jinja:127
+msgid "date"
+msgstr "日期"
+
+#: app/templates/schedule/schedule_form.jinja:132
+msgid "month"
+msgstr "月份"
+
+#: app/templates/schedule/schedule_form.jinja:137
+msgid "day_of_week"
+msgstr "星期"
+
+#: app/templates/schedule/schedule_form.jinja:150
+msgid "monday"
+msgstr "星期一"
+
+#: app/templates/schedule/schedule_form.jinja:151
+msgid "tuesday"
+msgstr "星期二"
+
+#: app/templates/schedule/schedule_form.jinja:152
+msgid "wednesday"
+msgstr "星期三"
+
+#: app/templates/schedule/schedule_form.jinja:153
+msgid "thursday"
+msgstr "星期四"
+
+#: app/templates/schedule/schedule_form.jinja:154
+msgid "friday"
+msgstr "星期五"
+
+#: app/templates/schedule/schedule_form.jinja:155
+msgid "saturday"
+msgstr "星期六"
+
+#: app/templates/schedule/schedule_form.jinja:156
+msgid "sunday"
+msgstr "星期日"
+
+#: app/templates/schedule/schedule_form.jinja:164
+msgid "cancel"
+msgstr "取消"
+
+#: app/templates/schedule/schedule_form.jinja:165
+msgid "complete"
+msgstr "完成"
 
 #: app/templates/schedule/schedule_list.jinja:36
 msgid "next_execution"
-msgstr ""
+msgstr "下次執行時間"
 
 #: app/templates/schedule/schedule_list.jinja:78
 msgid "no_data"
-msgstr ""
+msgstr "沒有數據"
 
 #: app/templates/schedule/macros/cron_selector.jinja:5
 msgid "cron_mode"
-msgstr ""
+msgstr "排程模式"
 
 #: app/templates/schedule/macros/cron_selector.jinja:8
 msgid "cron_mode_range"
-msgstr ""
+msgstr "特定圍範"
 
 #: app/templates/schedule/macros/cron_selector.jinja:9
 msgid "cron_mode_choice"
-msgstr ""
+msgstr "特定數值"
 
 #: app/templates/schedule/macros/cron_selector.jinja:20
 msgid "cron_from"
-msgstr ""
+msgstr "由"
 
 #: app/templates/schedule/macros/cron_selector.jinja:32
 msgid "cron_to"
-msgstr ""
+msgstr "至"
 
 #: app/templates/schedule/macros/cron_selector.jinja:49
 msgid "cron_every"
-msgstr ""
+msgstr "每"
 
 #: app/templates/schedule/macros/cron_selector.jinja:52
 msgid "cron_no_repeat"
-msgstr ""
+msgstr "不重覆"
 
-#~ msgid "route-not-exist"
-#~ msgstr ""
+#~ msgid "not_available"
+#~ msgstr "不適用"
 
-#~ msgid "datacode"
-#~ msgstr ""
+#~ msgid "nav_eta"
+#~ msgstr "ETA"
 
-#~ msgid "ETA Display Format"
-#~ msgstr ""
+#~ msgid "display_images"
+#~ msgstr "屏幕內容"
 
-#~ msgid "Model"
-#~ msgstr ""
+#~ msgid "display_images_help"
+#~ msgstr "現正顯示在屏幕上的影像。如果所選的佈局支援多種顏色，屬於不同顏色的內容將會透過不同的圖片被顯示出來。"
+
+#~ msgid "create_bookmark"
+#~ msgstr "收藏新路線"
 

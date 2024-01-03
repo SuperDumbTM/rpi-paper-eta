@@ -31,7 +31,7 @@ class EtaCompany(str, Enum):
         else:
             match self:
                 case EtaCompany.KMB: return "九巴"
-                case EtaCompany.MTRBUS: return "港鐵巴宜"
+                case EtaCompany.MTRBUS: return "港鐵巴士"
                 case EtaCompany.MTRLRT: return "輕鐵"
                 case EtaCompany.MTRTRAIN: return "港鐵"
                 case EtaCompany.CTB: return "城巴"

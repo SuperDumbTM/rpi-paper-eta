@@ -9,9 +9,9 @@
         <form class="form" action="{{ url_for('api_config.update_server_setting') }}" method="post">
 
             <h1>{{ _('api_server_setting') }}</h1>
-            <p class="description">
+            <small class="form-text text-mute">
                 {{ _('api_server_setting_help') }}
-            </p>
+            </small>
 
             <div class="form-group">
                 <label for="url" class="form-label">{{ _('api_server_url') }}</label>

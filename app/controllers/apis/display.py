@@ -91,6 +91,10 @@ def refresh(args):
         logging.exception(
             "Unable to connect the E-paper due to unsupported platform.")
         config.site_data.RefreshHistory().put(models.RefreshLog(**args, error=e))
+    except Exception as e:
+        logging.exception(
+            "An unexpected error occurred.")
+        config.site_data.RefreshHistory().put(models.RefreshLog(**args, error=e))
 
     return jsonify({
         'success': True
