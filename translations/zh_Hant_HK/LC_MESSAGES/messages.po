@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-01-03 12:28+0800\n"
+"POT-Creation-Date: 2024-01-03 13:54+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hant_HK\n"
@@ -104,7 +104,7 @@ msgstr "屏幕影像"
 
 #: app/templates/index.jinja:39
 msgid "screen_content_help"
-msgstr "現正在電子紙屏幕上顯示的影像。如果所選的佈局支援多種顏色，屬於不同顏色的內容將會分表被顯示出來。"
+msgstr "現正在電子紙屏幕上顯示的影像。如果所選的佈局支援多種顏色，不同顏色的內容將會分別被顯示出來。"
 
 #: app/templates/index.jinja:60 app/templates/index.jinja:97
 msgid "no_record"
@@ -132,8 +132,9 @@ msgstr "佈局"
 msgid "is_partial"
 msgstr "快新更新"
 
+#: app/templates/configuration/bookmark_list.jinja:58
 #: app/templates/layout.jinja:43
-msgid "Loading"
+msgid "loading"
 msgstr "載入中"
 
 #: app/templates/configuration/api_server_form.jinja:11
@@ -157,20 +158,10 @@ msgid "api_server_password"
 msgstr "登入密碼"
 
 #: app/templates/configuration/api_server_form.jinja:32
-#: app/templates/configuration/bookmark_form.jinja:124
+#: app/templates/configuration/bookmark_form.jinja:125
 #: app/templates/configuration/epd_form.jinja:63
 msgid "submit"
 msgstr "提交"
-
-#: app/templates/configuration/api_server_form.jinja:50
-#: app/templates/configuration/epd_form.jinja:99
-msgid "alert_server_error"
-msgstr "API 伺服器出錯。"
-
-#: app/templates/configuration/api_server_form.jinja:55
-#: app/templates/configuration/epd_form.jinja:104
-msgid "updated"
-msgstr "已更新。"
 
 #: app/templates/configuration/bookmark_form.jinja:20
 msgid "new_bookmark"
@@ -178,8 +169,7 @@ msgstr "路線收藏"
 
 #: app/templates/configuration/bookmark_form.jinja:22
 msgid "new_bookmark_help"
-msgstr "加入新的到站時間預報收藏。收藏數量並沒有上限，但跟據使用的佈局，"
-"能夠顯示的數目各有不同。上限數量以後的收藏將無法被顯示。"
+msgstr "加入新的到站時間預報收藏。收藏數量並沒有上限，但跟據使用的佈局，能夠顯示的數目各有不同。上限數量以後的收藏將無法被顯示。"
 
 #: app/templates/configuration/bookmark_form.jinja:29
 #: app/templates/configuration/bookmark_list.jinja:33
@@ -221,17 +211,17 @@ msgstr "No."
 msgid "action"
 msgstr "指令"
 
-#: app/templates/configuration/bookmark_list.jinja:98
+#: app/templates/configuration/bookmark_list.jinja:102
 #: app/templates/schedule/schedule_list.jinja:95
 msgid "delete"
 msgstr "刪除"
 
-#: app/templates/configuration/bookmark_list.jinja:104
+#: app/templates/configuration/bookmark_list.jinja:108
 #: app/templates/schedule/schedule_list.jinja:101
 msgid "edit"
 msgstr "編輯"
 
-#: app/templates/configuration/bookmark_list.jinja:116
+#: app/templates/configuration/bookmark_list.jinja:120
 #: app/templates/schedule/schedule_list.jinja:113
 msgid "create"
 msgstr "建立"
@@ -298,9 +288,9 @@ msgstr "建立排程"
 
 #: app/templates/schedule/schedule_form.jinja:29
 msgid "new_schedule_help"
-msgstr "建立屏幕更新排程。排程系統參考了 "
-"<a href=\"https://en.wikipedia.org/wiki/Cron\" target=\"_blank\">cron</a> "
-"的格式來進行排程。 如果你熟悉 cron ，可以直接輸入排程或使用選擇器建立排程。"
+msgstr ""
+"建立屏幕更新排程。排程系統參考了 <a href=\"https://en.wikipedia.org/wiki/Cron\" "
+"target=\"_blank\">cron</a> 的格式來進行排程。 如果你熟悉 cron ，可以直接輸入排程或使用選擇器建立排程。"
 
 #: app/templates/schedule/schedule_form.jinja:36
 #: app/templates/schedule/schedule_list.jinja:35
@@ -308,7 +298,7 @@ msgid "schedule"
 msgstr "排程"
 
 #: app/templates/schedule/schedule_form.jinja:45
-#: app/templates/schedule/schedule_form.jinja:307
+#: app/templates/schedule/schedule_form.jinja:317
 msgid "unrecognised"
 msgstr "未能識別"
 
@@ -433,9 +423,12 @@ msgstr "不重覆"
 #~ msgid "display_images"
 #~ msgstr "屏幕內容"
 
-#~ msgid "display_images_help"
-#~ msgstr "現正顯示在屏幕上的影像。如果所選的佈局支援多種顏色，屬於不同顏色的內容將會透過不同的圖片被顯示出來。"
-
 #~ msgid "create_bookmark"
 #~ msgstr "收藏新路線"
+
+#~ msgid "alert_server_error"
+#~ msgstr "API 伺服器出錯。"
+
+#~ msgid "updated"
+#~ msgstr "已更新。"
 

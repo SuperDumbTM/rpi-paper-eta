@@ -121,7 +121,8 @@
                 </select>
             </div>
 
-            <input class="btn btn-primary btn-customized mt-4" id="submit" name="submit" type="submit" value="{{ _('submit') }}">
+            <input class="btn btn-primary btn-customized mt-4" id="submit" name="submit" type="submit"
+                value="{{ _('submit') }}">
 
         </form>
     </div>
@@ -145,17 +146,20 @@
         clearSelect($("select[name=service_type]"))
         {% endif %}
 
-        $.ajaxSetup({
-            error: function (xhr, status, error) {
-                alertify.error("Something is wrong with the API server.")
-                alertify.error($.parseJSON(xhr.responseText).message)
-            }
-        });
-
         // Browsers may cache the result of "company select"
         // Trigger "change" to initialisation the autocomplete
         if ($('select[name=company] option:selected').val())
             $('select[name=company]').trigger('change')
+
+        autoJsonFrom($('form'), {
+            success: function (res) {
+                if (res.success) {
+                    window.location.href = "{{ url_for('configuration.bookmark_list') }}"
+                } else {
+                    alertify.error(res.message)
+                }
+            }
+        })
     })
 
     // autocomplete for route name
@@ -245,28 +249,6 @@
             }
         })
     });
-
-    $('form').submit(function (e) {
-        e.preventDefault()
-
-        $.ajax({
-            url: $(this).attr('action'),
-            type: $(this).attr('method'),
-            data: JSON.stringify(formToJson($(this))),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            error: function (xhr, status, error) {
-                alertify.error($.parseJSON(xhr.responseText).message)
-            },
-            success: function (res) {
-                if (res.success) {
-                    window.location.href = "{{ url_for('configuration.bookmark_list') }}"
-                } else {
-                    alertify.error(res.message)
-                }
-            }
-        })
-    })
 
 </script>
 {% endblock script %}

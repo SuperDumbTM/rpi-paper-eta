@@ -70,6 +70,11 @@
 
 {% block script %}
 <script>
+    $(document).ready(function () {
+        autoJsonFrom($('form'))
+    })
+
+
     $("select[name=epd_brand]").change(function (e) {
         const BRAND = $("select[name=epd_brand]").children("option:selected").val()
         $("select[name=model]").find('option').not(':first').remove()
@@ -82,29 +87,6 @@
                 })
             } else {
 
-            }
-        })
-    })
-
-    $('form').submit(function (e) {
-        e.preventDefault()
-
-        $.ajax({
-            url: $(this).attr('action'),
-            type: $(this).attr('method'),
-            data: JSON.stringify(formToJson($(this))),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            error: function (xhr, status, error) {
-                alertify.error("{{ _('alert_server_error') }}")
-                alertify.error($.parseJSON(xhr.responseText).message)
-            },
-            success: function (res) {
-                if (res.success) {
-                    alertify.success("{{ _('updated') }}")
-                } else {
-                    alertify.error(res.message)
-                }
             }
         })
     })

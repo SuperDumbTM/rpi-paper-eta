@@ -144,18 +144,18 @@
                     {{ cron_selector('hour', list(zip(range(24), range(24)))) }}
                     {{ cron_selector('month-day', list(zip(range(1, 32, 1), range(1, 32, 1)))) }}
                     {{ cron_selector('month', list(zip(range(1, 13, 1), range(1, 13, 1)))) }}
-                    {{ 
-                        cron_selector('week-day', list(zip(range(0, 7, 1),
-                            [
-                                _('monday'),
-                                _('tuesday'),
-                                _('wednesday'),
-                                _('thursday'),
-                                _('friday'),
-                                _('saturday'),
-                                _('sunday')
-                            ]))
-                        )
+                    {{
+                    cron_selector('week-day', list(zip(range(0, 7, 1),
+                    [
+                    _('monday'),
+                    _('tuesday'),
+                    _('wednesday'),
+                    _('thursday'),
+                    _('friday'),
+                    _('saturday'),
+                    _('sunday')
+                    ]))
+                    )
                     }}
                 </div>
             </div>
@@ -194,6 +194,16 @@
         $('#select-box input[value={{form.layout or "null"}}]').click()
 
         var cronstrue = window.cronstrue
+
+        autoJsonFrom($('form'), {
+            success: function (res) {
+                if (res.success) {
+                    window.location.href = "{{ url_for('schedule.schedules') }}"
+                } else {
+                    alertify.error(res.message)
+                }
+            }
+        })
     })
 
     $('select.cron-mode').change(function (e) {
@@ -307,29 +317,6 @@
             callout.text("{{ _('unrecognised') }}")
             callout.removeClass('text-success').addClass('text-danger')
         }
-    })
-
-    $('form').submit(function (e) {
-        e.preventDefault()
-
-        $.ajax({
-            url: $(this).attr('action'),
-            type: $(this).attr('method'),
-            data: JSON.stringify(formToJson($(this))),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            error: function (xhr, status, error) {
-                alertify.error("Something is wrong with the API server.")
-                alertify.error($.parseJSON(xhr.responseText).message)
-            },
-            success: function (res) {
-                if (res.success) {
-                    window.location.href = "{{ url_for('schedule.schedules') }}"
-                } else {
-                    alertify.error(res.message)
-                }
-            }
-        })
     })
 
 </script>

@@ -1,39 +1,40 @@
-import logging
 from logging.config import dictConfig
 from pathlib import Path
+from typing import Optional
 
 import dotenv
-from flask import Flask, request
-from flask.logging import default_handler
+from flask import Flask, current_app, request
 from flask_babel import Babel
 
 from app import commands, config, controllers, handles
 
 
-def init_babel(app: Flask):
+def get_locale() -> Optional[str]:
+    crrt_locale = (request.cookies.get('locale')
+                   or request.headers.get("X-Locale"))
+    translations = [str(translation)
+                    for translation in current_app.config.get('I18N', [])]
+
+    if crrt_locale in translations:
+        return crrt_locale
+
+    return request.accept_languages.best_match(translations)
+
+
+def init_babel(app: Flask) -> Babel:
     """Initialise babel
     """
-    def get_locale():
-        crrt_locale = request.cookies.get(
-            'locale') or request.headers.get("X-Locale")
-
-        translations = [str(translation)
-                        for translation in babel.list_translations()]
-        if crrt_locale in translations:
-            return crrt_locale
-
-        return request.accept_languages.best_match(translations)
-    babel = Babel(app, locale_selector=get_locale)
+    return Babel(app, locale_selector=get_locale)
 
 
-def init_site_data(app: Flask):
+def init_site_data(app: Flask) -> None:
     """Initialise and load all the site data/user configuration
     """
     config.site_data.RefreshSchedule(app)
     config.site_data.RefreshHistory(limit=20)
 
 
-def init_logger(app: Flask):
+def init_logger(app: Flask) -> None:
     # https://flask.palletsprojects.com/en/2.3.x/logging/#basic-configuration
     # https://betterstack.com/community/guides/logging/how-to-start-logging-with-flask/
     dictConfig({
@@ -71,12 +72,14 @@ def init_logger(app: Flask):
     })
 
 
-def init_jinja_helpers(app: Flask):
+def init_jinja_helpers(app: Flask) -> None:
     app.jinja_env.globals.update(
-        bool_to_icon=lambda b: '<i class="bi bi-check2"></i>' if b else '<i class="bi bi-x"></i>')
+        bool_to_icon=lambda b: '<i class="bi bi-check2"></i>' if b else '<i class="bi bi-x"></i>',
+        get_locale=get_locale,
+    )
 
 
-def create_app():
+def create_app() -> Flask:
     app = Flask(__name__, template_folder="template", static_folder="static")
 
     app.config.from_pyfile(

@@ -99,7 +99,7 @@ def bookmark_search(args, stype: Literal["route", "direction", "service_type", "
                 'success': True,
                 'message': "Success.",
                 'data': {
-                    'routes': utils.route_choices(request.args['company'])
+                    'routes': utils.route_choices(args['company'])
                 }
             })
         elif stype == "direction":
@@ -114,7 +114,7 @@ def bookmark_search(args, stype: Literal["route", "direction", "service_type", "
                 'success': True,
                 'message': "Success.",
                 'data': {
-                    'directions': utils.direction_choices(request.args['company'],
+                    'directions': utils.direction_choices(args['company'],
                                                           request.args['route'])
                 }
             })
@@ -126,7 +126,7 @@ def bookmark_search(args, stype: Literal["route", "direction", "service_type", "
                 'success': True,
                 'message': "Success.",
                 'data': {
-                    'service_types': utils.type_choices(request.args['company'],
+                    'service_types': utils.type_choices(args['company'],
                                                         request.args['route'],
                                                         request.args['direction'])
                 }
@@ -139,7 +139,7 @@ def bookmark_search(args, stype: Literal["route", "direction", "service_type", "
                 'success': True,
                 'message': "Success.",
                 'data': {
-                    'stops': utils.stop_choices(request.args['company'],
+                    'stops': utils.stop_choices(args['company'],
                                                 request.args['route'],
                                                 request.args['direction'],
                                                 request.args['service_type'])

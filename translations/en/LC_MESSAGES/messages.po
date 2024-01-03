@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-01-03 12:28+0800\n"
+"POT-Creation-Date: 2024-01-03 13:54+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -135,8 +135,9 @@ msgstr "Layout"
 msgid "is_partial"
 msgstr "Is Partial"
 
+#: app/templates/configuration/bookmark_list.jinja:58
 #: app/templates/layout.jinja:43
-msgid "Loading"
+msgid "loading"
 msgstr "Loading"
 
 #: app/templates/configuration/api_server_form.jinja:11
@@ -160,20 +161,10 @@ msgid "api_server_password"
 msgstr "Password"
 
 #: app/templates/configuration/api_server_form.jinja:32
-#: app/templates/configuration/bookmark_form.jinja:124
+#: app/templates/configuration/bookmark_form.jinja:125
 #: app/templates/configuration/epd_form.jinja:63
 msgid "submit"
 msgstr "Submit"
-
-#: app/templates/configuration/api_server_form.jinja:50
-#: app/templates/configuration/epd_form.jinja:99
-msgid "alert_server_error"
-msgstr "API server error."
-
-#: app/templates/configuration/api_server_form.jinja:55
-#: app/templates/configuration/epd_form.jinja:104
-msgid "updated"
-msgstr "Updated!"
 
 #: app/templates/configuration/bookmark_form.jinja:20
 msgid "new_bookmark"
@@ -227,17 +218,17 @@ msgstr "No."
 msgid "action"
 msgstr "Action"
 
-#: app/templates/configuration/bookmark_list.jinja:98
+#: app/templates/configuration/bookmark_list.jinja:102
 #: app/templates/schedule/schedule_list.jinja:95
 msgid "delete"
 msgstr "Delete"
 
-#: app/templates/configuration/bookmark_list.jinja:104
+#: app/templates/configuration/bookmark_list.jinja:108
 #: app/templates/schedule/schedule_list.jinja:101
 msgid "edit"
 msgstr "Edit"
 
-#: app/templates/configuration/bookmark_list.jinja:116
+#: app/templates/configuration/bookmark_list.jinja:120
 #: app/templates/schedule/schedule_list.jinja:113
 msgid "create"
 msgstr "Create"
@@ -304,11 +295,11 @@ msgstr "New Schedule"
 
 #: app/templates/schedule/schedule_form.jinja:29
 msgid "new_schedule_help"
-msgstr "Create a new screen refresh schedule. "
-"The system utilsed "
-"<a href=\"https://en.wikipedia.org/wiki/Cron\" target=\"_blank\">cron</a> "
-"expression for scheduling. You can use the selector or enter directly if you "
-"know about cron for the desired schedule ."
+msgstr ""
+"Create a new screen refresh schedule. The system utilsed <a "
+"href=\"https://en.wikipedia.org/wiki/Cron\" target=\"_blank\">cron</a> "
+"expression for scheduling. You can use the selector or enter directly if "
+"you know about cron for the desired schedule ."
 
 #: app/templates/schedule/schedule_form.jinja:36
 #: app/templates/schedule/schedule_list.jinja:35
@@ -316,7 +307,7 @@ msgid "schedule"
 msgstr "Schedule"
 
 #: app/templates/schedule/schedule_form.jinja:45
-#: app/templates/schedule/schedule_form.jinja:307
+#: app/templates/schedule/schedule_form.jinja:317
 msgid "unrecognised"
 msgstr "Unrecongnised"
 
@@ -455,4 +446,10 @@ msgstr "No Repeat"
 
 #~ msgid "create_bookmark"
 #~ msgstr "Create New Bookmark"
+
+#~ msgid "alert_server_error"
+#~ msgstr "API server error."
+
+#~ msgid "updated"
+#~ msgstr "Updated!"
 
