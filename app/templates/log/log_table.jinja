@@ -3,20 +3,8 @@
 
 {% block link %}
 <link rel="stylesheet" href="//cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="//cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
 {% endblock link %}
-
-{% block style %}
-<style>
-    .dt-buttons {
-        clear: both;
-    }
-
-    .dt-action a {
-        color: inherit;
-        text-decoration: none;
-    }
-</style>
-{% endblock style %}
 
 {% block content %}
 <div class="container-xxl">
@@ -25,10 +13,10 @@
             <table id="log-viewer" class="table table-striped" style="width:100%">
                 <thead>
                     <tr>
-                        <th>{{ _('log_timestamp') }}</th>
-                        <th>{{ _('log_level') }}</th>
-                        <th>{{ _('log_module') }}</th>
-                        <th>{{ _('log_message') }}</th>
+                        <th class="not-mobile">{{ _('log_timestamp') }}</th>
+                        <th class="all">{{ _('log_level') }}</th>
+                        <th class="not-mobile">{{ _('log_module') }}</th>
+                        <th class="all">{{ _('log_message') }}</th>
                     </tr>
                 </thead>
             </table>
@@ -41,13 +29,17 @@
 <script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="//cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 <script src="//cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+<script src="//cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 <script src="{{ url_for('static', filename='scripts/datatable.js') }}"></script>
 
 <script>
     let datatable = $('#log-viewer').DataTable({
+        responsive: true,
         ajax: {
             url: "{{ url_for('api_log.get') }}",
-            dataSrc: "data.logs"
+            dataSrc: "data.logs",
+            beforeSend: showLoading,
+            complete: hideLoading
         },
         order: [[0, 'desc']],
         pageLength: 25,
@@ -83,7 +75,7 @@
         buttons: [
             {
                 text: "{{ _('download') }}",
-                className: "btn btn-success",
+                className: "btn btn-info",
                 action: function (e, dt, node, config) {
                     window.location.assign("{{ url_for('log.download') }}")
                 }

@@ -10,15 +10,6 @@
 
 {% block style %}
 <style>
-    .dt-buttons {
-        clear: both;
-    }
-
-    .dt-action a {
-        color: inherit;
-        text-decoration: none;
-    }
-
     #eta-list_filter label {
         /* search field right align */
         float: right;
@@ -61,7 +52,6 @@
 <script>
     let datatable = $('#eta-list').DataTable({
         responsive: true,
-        {# processing: true, #}
         ajax: {
             url: "{{ url_for('api_config.get_bookmarks') }}",
             dataSrc: "data.etas",
