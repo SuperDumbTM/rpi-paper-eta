@@ -141,10 +141,34 @@
                 <'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>`,
         buttons: [
             {
+                text: "{{ _('refresh') }}",
+                className: "btn btn-sm btn-success mr-1",
+                action: function (e, dt, node, config) {
+                    datatable.ajax.reload()
+                }
+            },
+            {
                 text: "{{ _('download') }}",
-                className: "btn btn-info",
+                className: "btn btn-sm btn-info mx-1",
                 action: function (e, dt, node, config) {
                     window.location.assign("{{ url_for('log.download') }}")
+                }
+            },
+            {
+                text: "{{ _('clear') }}",
+                className: "btn btn-sm btn-warning mx-1",
+                action: function (e, dt, node, config) {
+                    $.ajax({
+                        type: "DELETE",
+                        url: "{{ url_for("api_log.delete") }}",
+                        success: function (res) {
+                            datatable.ajax.reload()
+                        },
+                        error: function (xhr, status, error) {
+                            alertify.error("{{ _('unexpected_error_occured') }}")
+                        }
+
+                    })
                 }
             }
         ]

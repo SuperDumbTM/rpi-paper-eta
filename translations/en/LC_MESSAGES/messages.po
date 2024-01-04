@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-01-04 13:56+0800\n"
+"POT-Creation-Date: 2024-01-04 14:33+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -78,7 +78,7 @@ msgstr "Inbound"
 msgid "outbound"
 msgstr "Outbound"
 
-#: app/controllers/apis/config.py:76 app/templates/index.jinja:82
+#: app/controllers/apis/config.py:76 app/templates/index.jinja:85
 msgid "error"
 msgstr "Error"
 
@@ -109,29 +109,29 @@ msgstr ""
 "will be more than one image and each of them representing contents in a "
 "particular color."
 
-#: app/templates/index.jinja:60 app/templates/index.jinja:97
+#: app/templates/index.jinja:62 app/templates/index.jinja:100
 msgid "no_record"
 msgstr "No Record"
 
-#: app/templates/index.jinja:72
+#: app/templates/index.jinja:74
 msgid "refresh_history"
 msgstr "Refresh History"
 
-#: app/templates/index.jinja:78
+#: app/templates/index.jinja:81
 msgid "time"
 msgstr "Time"
 
-#: app/templates/index.jinja:79 app/templates/schedule/schedule_form.jinja:49
+#: app/templates/index.jinja:82 app/templates/schedule/schedule_form.jinja:49
 #: app/templates/schedule/schedule_list.jinja:30
 msgid "eta_type"
 msgstr "ETA Type"
 
-#: app/templates/index.jinja:80 app/templates/schedule/schedule_form.jinja:66
+#: app/templates/index.jinja:83 app/templates/schedule/schedule_form.jinja:66
 #: app/templates/schedule/schedule_list.jinja:31
 msgid "layout"
 msgstr "Layout"
 
-#: app/templates/index.jinja:81 app/templates/schedule/schedule_list.jinja:34
+#: app/templates/index.jinja:84 app/templates/schedule/schedule_list.jinja:34
 msgid "is_partial"
 msgstr "Is Partial"
 
@@ -293,8 +293,20 @@ msgid "log_message"
 msgstr "Message"
 
 #: app/templates/log/log_table.jinja:144
+msgid "refresh"
+msgstr "Refresh"
+
+#: app/templates/log/log_table.jinja:151
 msgid "download"
 msgstr "Download"
+
+#: app/templates/log/log_table.jinja:158
+msgid "clear"
+msgstr "Clear"
+
+#: app/templates/log/log_table.jinja:168
+msgid "unexpected_error_occured"
+msgstr "Unexpected error occured."
 
 #: app/templates/schedule/schedule_form.jinja:27
 msgid "new_schedule"
@@ -459,4 +471,3 @@ msgstr "No Repeat"
 
 #~ msgid "updated"
 #~ msgstr "Updated!"
-

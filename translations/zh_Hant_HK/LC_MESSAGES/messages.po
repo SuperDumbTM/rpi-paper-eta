@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-01-04 13:56+0800\n"
+"POT-Creation-Date: 2024-01-04 14:33+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hant_HK\n"
@@ -78,7 +78,7 @@ msgstr "回程"
 msgid "outbound"
 msgstr "去程"
 
-#: app/controllers/apis/config.py:76 app/templates/index.jinja:82
+#: app/controllers/apis/config.py:76 app/templates/index.jinja:85
 msgid "error"
 msgstr "錯誤"
 
@@ -106,29 +106,29 @@ msgstr "屏幕影像"
 msgid "screen_content_help"
 msgstr "現正在電子紙屏幕上顯示的影像。如果所選的佈局支援多種顏色，不同顏色的內容將會分別被顯示出來。"
 
-#: app/templates/index.jinja:60 app/templates/index.jinja:97
+#: app/templates/index.jinja:62 app/templates/index.jinja:100
 msgid "no_record"
 msgstr "沒有紀錄"
 
-#: app/templates/index.jinja:72
+#: app/templates/index.jinja:74
 msgid "refresh_history"
 msgstr "屏幕更新紀錄"
 
-#: app/templates/index.jinja:78
+#: app/templates/index.jinja:81
 msgid "time"
 msgstr "時間"
 
-#: app/templates/index.jinja:79 app/templates/schedule/schedule_form.jinja:49
+#: app/templates/index.jinja:82 app/templates/schedule/schedule_form.jinja:49
 #: app/templates/schedule/schedule_list.jinja:30
 msgid "eta_type"
 msgstr "時間顯示模式"
 
-#: app/templates/index.jinja:80 app/templates/schedule/schedule_form.jinja:66
+#: app/templates/index.jinja:83 app/templates/schedule/schedule_form.jinja:66
 #: app/templates/schedule/schedule_list.jinja:31
 msgid "layout"
 msgstr "佈局"
 
-#: app/templates/index.jinja:81 app/templates/schedule/schedule_list.jinja:34
+#: app/templates/index.jinja:84 app/templates/schedule/schedule_list.jinja:34
 msgid "is_partial"
 msgstr "快新更新"
 
@@ -286,8 +286,20 @@ msgid "log_message"
 msgstr "訊息"
 
 #: app/templates/log/log_table.jinja:144
+msgid "refresh"
+msgstr "重新載入"
+
+#: app/templates/log/log_table.jinja:151
 msgid "download"
 msgstr "下載"
+
+#: app/templates/log/log_table.jinja:158
+msgid "clear"
+msgstr "清除"
+
+#: app/templates/log/log_table.jinja:168
+msgid "unexpected_error_occured"
+msgstr "發生未知的錯誤。"
 
 #: app/templates/schedule/schedule_form.jinja:27
 msgid "new_schedule"
@@ -438,4 +450,7 @@ msgstr "不重覆"
 
 #~ msgid "updated"
 #~ msgstr "已更新。"
+
+#~ msgid "reload"
+#~ msgstr "載入中"
 

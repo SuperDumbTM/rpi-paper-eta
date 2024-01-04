@@ -25,3 +25,13 @@ def get():
             'logs': logs
         }
     })
+
+
+@bp.route('/', methods=['DELETE'])
+def delete():
+    open(current_app.config['LOG_FILE_PATH'], 'w', encoding='utf-8').close()
+    return jsonify({
+        'success': True,
+        'message': 'Deleted.',
+        'data': None
+    })
