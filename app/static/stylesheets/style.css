@@ -25,8 +25,19 @@ hr {
 /* form */
 
 .form-check-input:checked {
-    background-color: #0d6efd;
-    border-color: #0d6efd;
+    /* override */
+    background-color: #E49B0F;
+    border-color: #E49B0F;
+}
+
+.form-check-input:focus {
+    /* override */
+    /* remove blue shadow when focusing */
+    box-shadow: none;
+}
+
+.table-striped tbody tr:nth-of-type(odd) td {
+    background-color: rgba(var(--theme-color-rgb), 0.05);
 }
 
 /* ----- navbar ----- */
