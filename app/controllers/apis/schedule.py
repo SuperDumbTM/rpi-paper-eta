@@ -29,7 +29,7 @@ def get():
     for s in config.site_data.RefreshSchedule().get_all():
         cron = croniter.croniter(s.schedule, start_time=datetime.now())
         schedules.append({
-            **s.model_dump(),
+            **s.model_dump_i18n(),
             'future_executions': (tuple(cron.get_next(datetime).isoformat() for _ in range(10))
                                   if s.enabled else [])
         })

@@ -78,7 +78,7 @@
                 data: 'future_executions',
                 render: function (data, type, row, meta) {
                     if (data.length <= 0) {
-                        return "{{ _('no_data') }}"
+                        return "{{ _('not_enabled') }}"
                     }
                     return data[0].replace('T', ' ')
                 }
