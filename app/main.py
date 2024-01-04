@@ -6,25 +6,13 @@ import dotenv
 from flask import Flask, current_app, request
 from flask_babel import Babel
 
-from app import commands, config, controllers, handles
-
-
-def get_locale() -> Optional[str]:
-    crrt_locale = (request.cookies.get('locale')
-                   or request.headers.get("X-Locale"))
-    translations = [str(translation)
-                    for translation in current_app.config.get('I18N', [])]
-
-    if crrt_locale in translations:
-        return crrt_locale
-
-    return request.accept_languages.best_match(translations)
+from app import commands, config, controllers, handles, utils
 
 
 def init_babel(app: Flask) -> Babel:
     """Initialise babel
     """
-    return Babel(app, locale_selector=get_locale)
+    return Babel(app, locale_selector=utils.get_locale)
 
 
 def init_site_data(app: Flask) -> None:
@@ -75,7 +63,7 @@ def init_logger(app: Flask) -> None:
 def init_jinja_helpers(app: Flask) -> None:
     app.jinja_env.globals.update(
         bool_to_icon=lambda b: '<i class="bi bi-check2"></i>' if b else '<i class="bi bi-x"></i>',
-        get_locale=get_locale,
+        get_locale=utils.get_locale,
     )
 
 

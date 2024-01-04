@@ -6,9 +6,10 @@ import string
 from enum import Enum
 from io import BytesIO
 from pathlib import Path
+from typing import Literal, Optional
 
 import requests
-from flask import request, url_for
+from flask import current_app, request, url_for
 from flask_babel import lazy_gettext
 from PIL import Image
 
@@ -49,6 +50,18 @@ def random_id_gen(length: int) -> str:
     return ''.join(random.choice(string.ascii_uppercase + string.digits)
                    for _ in range(length))
 
+
+def get_locale() -> Optional[str]:
+    crrt_locale = (request.cookies.get('locale')
+                   or request.headers.get("X-Locale"))
+    translations = [str(translation)
+                    for translation in current_app.config.get('I18N', [])]
+
+    if crrt_locale in translations:
+        return crrt_locale
+
+    return request.accept_languages.best_match(translations)
+
 # ------------------------------------------------------------
 #                       API requests
 # ------------------------------------------------------------
@@ -82,7 +95,8 @@ def direction_choices(company: str,
 
 def type_choices(company: str,
                  route: str,
-                 direction: str) -> list[tuple[str]]:
+                 direction: str,
+                 lang: Literal['en', 'tc'] = 'en') -> list[tuple[str]]:
     details: dict[str, dict] = (
         requests.get(
             f"{config.site_data.AppConfiguration().get('url')}"
@@ -90,14 +104,15 @@ def type_choices(company: str,
         .json()['data']
     )
 
-    return [(t['service_type'], f"{t['service_type']} ({t['orig']['name']['tc']} -> {t['dest']['name']['tc']})")
+    return [(t['service_type'], f"{t['service_type']} ({t['orig']['name'][lang]} -> {t['dest']['name'][lang]})")
             for t in details[direction]]
 
 
 def stop_choices(company: str,
                  route: str,
                  direction: str,
-                 service_type: str) -> list[tuple[str]]:
+                 service_type: str,
+                 lang: Literal['en', 'tc'] = 'en') -> list[tuple[str]]:
     stops: dict[str, dict] = (
         requests.get(
             f"{config.site_data.AppConfiguration().get('url')}"
@@ -105,7 +120,7 @@ def stop_choices(company: str,
         .json()['data']
     )
 
-    return [(stop['stop_code'], f"{stop['seq']:02}. {stop['name']['tc']}")
+    return [(stop['stop_code'], f"{stop['seq']:02}. {stop['name'][lang]}")
             for stop in stops['stops']]
 
 
