@@ -20,8 +20,8 @@ class EtaCompany(str, Enum):
     MTRTRAIN = "mtr_train"
     CTB = "ctb"
 
-    def text(self, locale: "Locale"):
-        if locale == Locale.EN:
+    def text(self, locale: "EtaLocale"):
+        if locale == EtaLocale.EN:
             match self:
                 case EtaCompany.KMB: return "KMB"
                 case EtaCompany.MTRBUS: return "MTR (Bus)"
@@ -49,7 +49,7 @@ class RouteDirection(str, Enum):
     INBOUND = "inbound"
 
 
-class Locale(str, Enum):
+class EtaLocale(str, Enum):
     """Locale for ETA texts"""
 
     TC = "tc"

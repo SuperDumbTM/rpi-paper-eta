@@ -19,7 +19,7 @@ _bookmark_validation_rules = {
     'service_type': webargs.fields.String(required=True),
     'stop_code': webargs.fields.String(required=True),
     'lang': webargs.fields.String(
-        required=True, validate=webargs.validate.OneOf([l for l in enums.Locale]))
+        required=True, validate=webargs.validate.OneOf([l for l in enums.EtaLocale]))
 }
 
 
@@ -91,6 +91,8 @@ def get_bookmarks():
 @webargs.flaskparser.use_args({
     'company': webargs.fields.String(
         required=True, validate=webargs.validate.OneOf([c for c in enums.EtaCompany])),
+    'lang': webargs.fields.String(
+        required=True, validate=webargs.validate.OneOf([c for c in enums.EtaLocale]))
 }, location="query")
 def bookmark_search(args, stype: Literal["route", "direction", "service_type", "stop"]):
     try:
@@ -128,7 +130,8 @@ def bookmark_search(args, stype: Literal["route", "direction", "service_type", "
                 'data': {
                     'service_types': utils.type_choices(args['company'],
                                                         request.args['route'],
-                                                        request.args['direction'])
+                                                        request.args['direction'],
+                                                        args['lang'])
                 }
             })
         elif stype == "stop":
@@ -142,7 +145,8 @@ def bookmark_search(args, stype: Literal["route", "direction", "service_type", "
                     'stops': utils.stop_choices(args['company'],
                                                 request.args['route'],
                                                 request.args['direction'],
-                                                request.args['service_type'])
+                                                request.args['service_type'],
+                                                args['lang'])
                 }
             })
         else:

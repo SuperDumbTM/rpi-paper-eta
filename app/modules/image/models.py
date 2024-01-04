@@ -14,7 +14,7 @@ class Etas(BaseModel):
     origin: str
     destination: str
     stop_name: str
-    lang: enums.Locale
+    lang: enums.EtaLocale
     logo: Optional[BytesIO] = None
     timestamp: datetime.datetime
     etas: Optional[list["Eta"]] = None
@@ -39,6 +39,6 @@ class ErrorEta(BaseModel):
     origin: str
     destination: str
     stop_name: str
-    lang: enums.Locale
+    lang: enums.EtaLocale
     logo: Optional[BytesIO] = None
     timestamp: datetime.datetime

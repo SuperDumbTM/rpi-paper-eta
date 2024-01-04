@@ -49,7 +49,7 @@ def bookmark_create():
                            companys=[(c.value, lazy_gettext(c.value))
                                      for c in enums.EtaCompany],
                            langs=[(l.value, lazy_gettext(l.value))
-                                  for l in enums.Locale],
+                                  for l in enums.EtaLocale],
                            form=form,
                            form_action=url_for(
                                "api_config.bookmark_create"),
@@ -78,7 +78,7 @@ def bookmark_edit(id: str):
                            service_types=service_types,
                            stops=stops,
                            langs=[(l.value, lazy_gettext(l.value))
-                                  for l in enums.Locale],
+                                  for l in enums.EtaLocale],
                            form=forms.BookmarkForm(
                                **entry.model_dump(exclude=['id'])),
                            form_action=url_for(
