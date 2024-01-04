@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-01-03 13:54+0800\n"
+"POT-Creation-Date: 2024-01-04 13:56+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -70,11 +70,11 @@ msgstr "English"
 msgid "tc"
 msgstr "Trad. Chinese"
 
-#: app/utils.py:77
+#: app/utils.py:90
 msgid "inbound"
 msgstr "Inbound"
 
-#: app/utils.py:79
+#: app/utils.py:92
 msgid "outbound"
 msgstr "Outbound"
 
@@ -122,21 +122,20 @@ msgid "time"
 msgstr "Time"
 
 #: app/templates/index.jinja:79 app/templates/schedule/schedule_form.jinja:49
-#: app/templates/schedule/schedule_list.jinja:33
+#: app/templates/schedule/schedule_list.jinja:30
 msgid "eta_type"
 msgstr "ETA Type"
 
 #: app/templates/index.jinja:80 app/templates/schedule/schedule_form.jinja:66
-#: app/templates/schedule/schedule_list.jinja:34
+#: app/templates/schedule/schedule_list.jinja:31
 msgid "layout"
 msgstr "Layout"
 
-#: app/templates/index.jinja:81 app/templates/schedule/schedule_list.jinja:37
+#: app/templates/index.jinja:81 app/templates/schedule/schedule_list.jinja:34
 msgid "is_partial"
 msgstr "Is Partial"
 
-#: app/templates/configuration/bookmark_list.jinja:58
-#: app/templates/layout.jinja:43
+#: app/templates/layout.jinja:44
 msgid "loading"
 msgstr "Loading"
 
@@ -179,57 +178,57 @@ msgstr ""
 "bookmark will be displayed."
 
 #: app/templates/configuration/bookmark_form.jinja:29
-#: app/templates/configuration/bookmark_list.jinja:33
+#: app/templates/configuration/bookmark_list.jinja:30
 msgid "company"
 msgstr "Company"
 
 #: app/templates/configuration/bookmark_form.jinja:47
-#: app/templates/configuration/bookmark_list.jinja:34
+#: app/templates/configuration/bookmark_list.jinja:31
 msgid "route"
 msgstr "Route"
 
 #: app/templates/configuration/bookmark_form.jinja:53
-#: app/templates/configuration/bookmark_list.jinja:35
+#: app/templates/configuration/bookmark_list.jinja:32
 msgid "direction"
 msgstr "Direction"
 
 #: app/templates/configuration/bookmark_form.jinja:71
-#: app/templates/configuration/bookmark_list.jinja:36
+#: app/templates/configuration/bookmark_list.jinja:33
 msgid "service_type"
 msgstr "Service Type"
 
 #: app/templates/configuration/bookmark_form.jinja:89
-#: app/templates/configuration/bookmark_list.jinja:37
+#: app/templates/configuration/bookmark_list.jinja:34
 msgid "stop"
 msgstr "Stop"
 
 #: app/templates/configuration/bookmark_form.jinja:107
-#: app/templates/configuration/bookmark_list.jinja:38
+#: app/templates/configuration/bookmark_list.jinja:35
 msgid "language"
 msgstr "Language"
 
-#: app/templates/configuration/bookmark_list.jinja:32
-#: app/templates/schedule/schedule_list.jinja:32
+#: app/templates/configuration/bookmark_list.jinja:29
+#: app/templates/schedule/schedule_list.jinja:29
 msgid "no."
 msgstr "No."
 
-#: app/templates/configuration/bookmark_list.jinja:39
-#: app/templates/schedule/schedule_list.jinja:38
+#: app/templates/configuration/bookmark_list.jinja:36
+#: app/templates/schedule/schedule_list.jinja:35
 msgid "action"
 msgstr "Action"
 
-#: app/templates/configuration/bookmark_list.jinja:102
-#: app/templates/schedule/schedule_list.jinja:95
+#: app/templates/configuration/bookmark_list.jinja:101
+#: app/templates/schedule/schedule_list.jinja:96
 msgid "delete"
 msgstr "Delete"
 
-#: app/templates/configuration/bookmark_list.jinja:108
-#: app/templates/schedule/schedule_list.jinja:101
+#: app/templates/configuration/bookmark_list.jinja:107
+#: app/templates/schedule/schedule_list.jinja:102
 msgid "edit"
 msgstr "Edit"
 
-#: app/templates/configuration/bookmark_list.jinja:120
-#: app/templates/schedule/schedule_list.jinja:113
+#: app/templates/configuration/bookmark_list.jinja:119
+#: app/templates/schedule/schedule_list.jinja:114
 msgid "create"
 msgstr "Create"
 
@@ -269,23 +268,31 @@ msgstr "Schedule"
 msgid "nav_log"
 msgstr "Log"
 
-#: app/templates/log/log_table.jinja:28
-msgid "log_timestamp"
-msgstr "Timestamp"
-
-#: app/templates/log/log_table.jinja:29
+#: app/templates/log/log_table.jinja:14 app/templates/log/log_table.jinja:60
 msgid "log_level"
 msgstr "Level"
 
-#: app/templates/log/log_table.jinja:30
+#: app/templates/log/log_table.jinja:41
+msgid "log_request_related"
+msgstr "Request Related Logs"
+
+#: app/templates/log/log_table.jinja:48
+msgid "log_request_related_help"
+msgstr "Whether the HTTP request-related logs should be included or not."
+
+#: app/templates/log/log_table.jinja:59
+msgid "log_timestamp"
+msgstr "Timestamp"
+
+#: app/templates/log/log_table.jinja:61
 msgid "log_module"
 msgstr "Module"
 
-#: app/templates/log/log_table.jinja:31
+#: app/templates/log/log_table.jinja:62
 msgid "log_message"
 msgstr "Message"
 
-#: app/templates/log/log_table.jinja:85
+#: app/templates/log/log_table.jinja:144
 msgid "download"
 msgstr "Download"
 
@@ -302,7 +309,7 @@ msgstr ""
 "you know about cron for the desired schedule ."
 
 #: app/templates/schedule/schedule_form.jinja:36
-#: app/templates/schedule/schedule_list.jinja:35
+#: app/templates/schedule/schedule_list.jinja:32
 msgid "schedule"
 msgstr "Schedule"
 
@@ -391,7 +398,7 @@ msgstr "Cancel"
 msgid "complete"
 msgstr "Complete"
 
-#: app/templates/schedule/schedule_list.jinja:36
+#: app/templates/schedule/schedule_list.jinja:33
 msgid "next_execution"
 msgstr "Next Execution"
 
