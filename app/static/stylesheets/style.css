@@ -17,6 +17,18 @@
     z-index: 100;
 }
 
+hr {
+    /* override */
+    margin: .25rem;
+}
+
+/* form */
+
+.form-check-input:checked {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
 /* ----- navbar ----- */
 
 .dropdown-item.active,
@@ -25,6 +37,7 @@
     color: black;
     background-color: var(--theme-2-color);
 }
+
 
 .navbar-nav .nav-link.active {
     /* override */
