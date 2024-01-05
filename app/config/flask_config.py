@@ -13,6 +13,8 @@ ENV_FILE_PATH = Path(__file__).parent.parent.parent.joinpath(".env")
 LOG_FILE_PATH = CACHE_DIR.joinpath('app.log')
 """Path to app's log file"""
 
+EPD_IMG_PATH = CACHE_DIR.joinpath('epaper')
+
 I18N = ['en', 'zh_Hant_HK']
 """List of locale name that the app supports for translation"""
 

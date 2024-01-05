@@ -1,13 +1,10 @@
-from io import BytesIO
 import logging
 from pathlib import Path
 
-import requests
 import webargs
-from flask import Blueprint, jsonify, request
-from flask_babel import force_locale
+from flask import Blueprint, current_app, jsonify
 
-from app import config, models, translation
+from app import config, models
 from app.modules import image as eimage
 from app.modules import refresher
 from app.modules.display import epaper
@@ -59,43 +56,59 @@ def refresh(args):
     aconf = config.site_data.AppConfiguration()
     if (not aconf.confs.epd_brand or not aconf.confs.epd_model):
         return jsonify({
-            'success': False
+            'success': False,
+            'message': 'Configuration required.'
         })
 
     bm_setting = config.site_data.BookmarkList()
+
     generator = eimage.eta_image.EtaImageGeneratorFactory().get_generator(
         aconf.confs.epd_brand, aconf.confs.epd_model
     )(eimage.enums.EtaType(args['eta_type']), args['layout'])
-    images = refresher.generate_image(aconf.confs,
-                                      bm_setting.get_all(),
-                                      generator)
+    images = refresher.generate_image(
+        aconf.confs, bm_setting.get_all(), generator)
 
     try:
         controller = epaper.ControllerFactory().get_controller(
             aconf.confs.epd_brand, aconf.confs.epd_model)(args['is_partial'])
+    except (OSError, RuntimeError) as e:
+        logging.exception("Cannot initialise the e-paper controller.")
+        config.site_data.RefreshHistory().put(models.RefreshLog(**args, error=e))
 
-        with controller:
-            controller.display(images)
+        return jsonify({
+            'success': False,
+            'message': 'Failed to refresh the screen.'
+        })
 
-            if (args['is_partial']):
-                # load the old image into the display's buffer
-                controller.display(refresher.cached_images(
-                    Path(config.flask_config.CACHE_DIR).joinpath('epaper')))
+    try:
+        if args['is_partial']:
+            # load old screen into the display's buffer
+            refresher.display_images(
+                refresher.cached_images(
+                    Path(current_app.config['EPD_IMG_PATH'])),
+                controller, False, False)
 
-            controller.display(images)
-
-        generator.write_images(
-            Path(config.flask_config.CACHE_DIR).joinpath('epaper'), images)
+        refresher.display_images(images, controller, False, False)
+        generator.write_images(images)
         config.site_data.RefreshHistory().put(models.RefreshLog(**args))
-    except OSError as e:
-        logging.exception(
-            "Unable to connect the E-paper due to unsupported platform.")
+    except RuntimeError as e:
+        logging.exception("Failed to refresh the screen.")
         config.site_data.RefreshHistory().put(models.RefreshLog(**args, error=e))
     except Exception as e:
-        logging.exception(
-            "An unexpected error occurred.")
         config.site_data.RefreshHistory().put(models.RefreshLog(**args, error=e))
 
+        if type(e) is RuntimeError:
+            logging.exception("Failed to refresh the screen.")
+        else:
+            logging.exception(
+                "An unexpected error occurred during display refreshing.")
+
+        return jsonify({
+            'success': False,
+            'message': 'Failed to refresh the screen.'
+        })
+
     return jsonify({
-        'success': True
+        'success': True,
+        'message': 'Refreshed.'
     })

@@ -3,13 +3,17 @@ import logging
 from io import BytesIO
 import os
 from pathlib import Path
+import threading
 
 import requests
 from PIL import Image
 
 from app import models, translation
 from app.modules import image as eimage
-from app.modules.display import epaper
+from app.modules import display
+
+
+_ctrl_mutex = threading.Lock()
 
 
 def generate_image(
@@ -84,3 +88,32 @@ def cached_images(path: os.PathLike) -> dict[str, Image.Image]:
             images[path.name.removesuffix(path.suffix)] = base64.b64encode(
                 f.read()).decode("utf-8")
     return images
+
+
+def display_images(images: dict[str, Image.Image],
+                   controller: display.epaper.DisplayController,
+                   wait_if_locked: bool = False,
+                   close_display: bool = True) -> None:
+    """Display images to the e-paper display.
+
+    This function will ensure that only one refresh at a time.
+
+    Args:
+        images (dict[str, Image.Image]): images to be displayed
+        controller (display.epaper.DisplayController): e-paper controller
+        wait_if_locked (bool, optional): _description_. Defaults to True.
+        close_display (bool, optional): _description_. Defaults to True.
+
+    Raises:
+        RuntimeError: when not `wait_if_locked` and the 
+    """
+    if _ctrl_mutex.locked() and not wait_if_locked:
+        raise RuntimeError('Lock was aquired.')
+
+    with _ctrl_mutex:
+        try:
+            controller.initialize()
+            controller.display(images)
+        finally:
+            if close_display:
+                controller.close()
