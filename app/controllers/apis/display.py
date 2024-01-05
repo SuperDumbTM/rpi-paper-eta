@@ -89,7 +89,7 @@ def refresh(args):
                 controller, False, False)
 
         refresher.display_images(images, controller, False, False)
-        generator.write_images(images)
+        generator.write_images(current_app.config['EPD_IMG_PATH'], images)
         config.site_data.RefreshHistory().put(models.RefreshLog(**args))
     except RuntimeError as e:
         logging.exception("Failed to refresh the screen.")
