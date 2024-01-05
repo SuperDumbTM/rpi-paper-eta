@@ -85,7 +85,8 @@ def create_app() -> Flask:
     app.register_blueprint(controllers.apis.schedule.bp)
     app.register_blueprint(controllers.apis.log.bp)
 
-    app.cli.add_command(commands.translation_cli)
+    app.cli.add_command(commands.i18n_cli)
+    app.cli.add_command(commands.clean_cli)
 
     app.register_blueprint(handles.bp)
 
