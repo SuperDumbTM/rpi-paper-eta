@@ -8,7 +8,7 @@ class DisplayController(ABC):
     """
 
     is_partial: bool
-    is_debug: bool
+    is_dryrun: bool
 
     @property
     @abstractmethod
@@ -19,9 +19,9 @@ class DisplayController(ABC):
     def partialable() -> bool:
         """Partial refresh ability of the e-paper display"""
 
-    def __init__(self, is_partial: bool = False, is_debug: bool = False) -> None:
+    def __init__(self, is_partial: bool = False, is_dryrun: bool = False) -> None:
         self.is_partial = is_partial
-        self.is_debug = is_debug
+        self.is_dryrun = is_dryrun
 
     def __enter__(self):
         self.initialize()
