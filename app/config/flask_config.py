@@ -11,9 +11,6 @@ CACHE_DIR = Path(__file__).parent.parent.joinpath("caches")
 
 # Paths
 
-ENV_FILE_PATH = Path(__file__).parent.parent.parent.joinpath(".env")
-"""Path to `.env` file"""
-
 LOG_FILE_PATH = CACHE_DIR.joinpath('app.log')
 """Path to app's log file"""
 

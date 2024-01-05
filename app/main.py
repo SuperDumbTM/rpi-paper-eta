@@ -1,3 +1,4 @@
+import logging
 from logging.config import dictConfig
 from pathlib import Path
 from typing import Optional
@@ -25,10 +26,12 @@ def init_site_data(app: Flask) -> None:
 def init_logger(app: Flask) -> None:
     # https://flask.palletsprojects.com/en/2.3.x/logging/#basic-configuration
     # https://betterstack.com/community/guides/logging/how-to-start-logging-with-flask/
+    # https://gist.github.com/deepaksood619/99e790959f5eba6ba0815e056a8067d7
     dictConfig({
         'version': 1,
+        'disable_existing_loggers': False,
         'formatters': {
-            'console': {
+            'print': {
                 'format': '[%(levelname)s] %(message)s',
                 'datefmt': '%Y-%m-%dT%H:%M:%S',
             },
@@ -42,7 +45,13 @@ def init_logger(app: Flask) -> None:
                 'level': 'DEBUG' if app.debug else 'INFO',
                 'class': 'logging.StreamHandler',
                 'stream': 'ext://flask.logging.wsgi_errors_stream',
-                'formatter': 'console',
+                'formatter': 'print',
+            },
+            "console": {
+                "level": "DEBUG",
+                "class": "logging.StreamHandler",
+                "formatter": "print",
+                "stream": "ext://sys.stdout",
             },
             'size-rotate': {
                 'level': 'DEBUG',
@@ -53,9 +62,21 @@ def init_logger(app: Flask) -> None:
                 "formatter": "detailed",
             },
         },
+        'loggers': {
+            "gunicorn.error": {
+                "handlers": ['console', 'size-rotate'],
+                "level": "INFO",
+                "propagate": False,
+            },
+            "gunicorn.access": {
+                "handlers": ["console"] if app.debug else ['console', 'size-rotate'],
+                "level": "DEBUG",
+                "propagate": False,
+            },
+        },
         'root': {
             'level': 'DEBUG',
-            'handlers': ['wsgi', 'size-rotate']
+            'handlers': ['wsgi', 'size-rotate', 'console']
         },
     })
 
@@ -72,8 +93,7 @@ def create_app() -> Flask:
 
     app.config.from_pyfile(
         Path(__file__).parent / "config" / "flask_config.py")
-    app.config.from_mapping(
-        dotenv.dotenv_values(app.config.get("ENV_FILE_PATH")))
+    app.config.from_mapping(dotenv.dotenv_values('./.env'))
 
     app.register_blueprint(controllers.html.configuration.bp)
     app.register_blueprint(controllers.html.schedule.bp)
