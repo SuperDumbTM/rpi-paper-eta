@@ -13,10 +13,6 @@ except ImportError:
 
 class Epd3in7(epaper.DisplayController):
 
-    @property
-    def is_poweron(self) -> bool:
-        return self._inited
-
     @staticmethod
     def partialable() -> bool:
         return True

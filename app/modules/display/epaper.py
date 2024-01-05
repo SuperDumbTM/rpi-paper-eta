@@ -8,7 +8,6 @@ class DisplayController(ABC):
     """
 
     is_partial: bool
-    _initialised: bool = False
 
     @property
     @abstractmethod
