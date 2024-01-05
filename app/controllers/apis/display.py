@@ -70,7 +70,7 @@ def refresh(args):
 
     try:
         controller = epaper.ControllerFactory().get_controller(
-            aconf.confs.epd_brand, aconf.confs.epd_model)(args['is_partial'])
+            aconf.confs.epd_brand, aconf.confs.epd_model)(args['is_partial'], False)
     except (OSError, RuntimeError) as e:
         logging.exception("Cannot initialise the e-paper controller.")
         config.site_data.RefreshHistory().put(models.RefreshLog(**args, error=e))
