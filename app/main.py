@@ -116,6 +116,3 @@ def create_app() -> Flask:
     init_babel(app)
 
     return app
-
-
-app = create_app()
