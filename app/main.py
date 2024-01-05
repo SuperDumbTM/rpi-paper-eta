@@ -76,7 +76,7 @@ def init_logger(app: Flask) -> None:
         },
         'root': {
             'level': 'DEBUG',
-            'handlers': ['wsgi', 'size-rotate', 'console']
+            'handlers': ['wsgi', 'size-rotate']
         },
     })
 
