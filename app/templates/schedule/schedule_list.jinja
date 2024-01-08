@@ -105,6 +105,14 @@
                             title={{ _("edit") }}>
                             <i class="bi bi-pencil-square"></i>
                         </button>
+                        <button type="button" class="dt-action btn btn-outline btn-sm btn-outline-warning"
+                            data-href-method="GET"
+                            data-href="{{ url_for('api_display.refresh') }}?${$.param({ eta_type: row.eta_type, layout: row.layout, is_partial: row.is_partial })}"
+                            data-busy-load="true"
+                            data-200-reload="false"
+                            title={{ _('refresh_now') }}>
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </button>
                     `;
                 }
             }

@@ -16,22 +16,31 @@ $.extend(true, $.fn.dataTable.defaults, {
 })
 
 $(document).on("click", "td button.dt-action", function (e) {
-    if (!$(this).data('href')) return
+    var btn = $(this)
+    if (!btn.data('href')) return
 
 
-    if ($(this).data('href-method') === "") {
-        window.location.href = $(this).data('href')
+    if (btn.data('href-method') === "") {
+        window.location.href = btn.data('href')
     }
 
     $.ajax({
-        method: $(this).data('href-method'),
-        url: $(this).data('href'),
+        method: btn.data('href-method'),
+        url: btn.data('href'),
         contentType: "application/json; charset=utf-8",
-        data: JSON.stringify($(this).data('href-payload')),
+        data: JSON.stringify(btn.data('href-payload')),
+        beforeSend: btn.data('busy-load') ? () => $.busyLoadFull('show') : null,
+        complete: btn.data('busy-load') ? () => $.busyLoadFull('hide') : null,
         dataType: "json",
         success: function (res) {
-            alertify.success(res.message)
-            datatable.ajax.reload()
+            if (res.success) {
+                alertify.success(res.message)
+            } else {
+                alertify.error(res.message)
+            }
+
+            if (btn.data('200-reload') || true)
+                datatable.ajax.reload()
         },
         error: function (xhr, status, error) {
             if (error) {

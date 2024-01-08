@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-01-04 17:44+0800\n"
+"POT-Creation-Date: 2024-01-08 14:28+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -135,7 +135,7 @@ msgstr "Layout"
 msgid "is_partial"
 msgstr "Is Partial"
 
-#: app/templates/layout.jinja:44
+#: app/templates/layout.jinja:45 app/templates/layout.jinja:70
 msgid "loading"
 msgstr "Loading"
 
@@ -218,18 +218,18 @@ msgstr "No."
 msgid "action"
 msgstr "Action"
 
-#: app/templates/configuration/bookmark_list.jinja:104
+#: app/templates/configuration/bookmark_list.jinja:103
 #: app/templates/schedule/schedule_list.jinja:99
 msgid "delete"
 msgstr "Delete"
 
-#: app/templates/configuration/bookmark_list.jinja:110
+#: app/templates/configuration/bookmark_list.jinja:109
 #: app/templates/schedule/schedule_list.jinja:105
 msgid "edit"
 msgstr "Edit"
 
-#: app/templates/configuration/bookmark_list.jinja:122
-#: app/templates/schedule/schedule_list.jinja:117
+#: app/templates/configuration/bookmark_list.jinja:121
+#: app/templates/schedule/schedule_list.jinja:125
 msgid "create"
 msgstr "Create"
 
@@ -418,6 +418,10 @@ msgstr "Next Execution"
 #: app/templates/schedule/schedule_list.jinja:81
 msgid "not_enabled"
 msgstr "Not Enabled"
+
+#: app/templates/schedule/schedule_list.jinja:113
+msgid "refresh_now"
+msgstr "Refresh Now"
 
 #: app/templates/schedule/macros/cron_selector.jinja:5
 msgid "cron_mode"
