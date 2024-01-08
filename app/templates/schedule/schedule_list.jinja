@@ -22,6 +22,11 @@
 <div class="container-xxl">
     {% include "includes/flash_success.jinja" %}
     {% include "includes/flash_error.jinja" %}
+
+    <form id="file-import-form" method="POST" action="{{ url_for('schedule.import_') }}" enctype="multipart/form-data" style="display: none;">
+        <input type="file" name="schedule">
+    </form>
+
     <div class="row p-2">
         <div class="col">
             <table id="schedule-list" class="table table-striped" style="width:100%">
@@ -123,11 +128,43 @@
         buttons: [
             {
                 text: "{{ _('create') }}",
-                className: "btn btn-success",
+                className: "btn btn-sm btn-success mx-1",
                 action: function (e, dt, node, config) {
                     window.location.href = "{{ url_for('schedule.create') }}";
                 }
-            }
+            },
+            {
+                text: "{{ _('export') }}",
+                className: "btn btn-sm btn-info mx-1",
+                action: function (e, dt, node, config) {
+                    window.location.assign("{{ url_for('schedule.export') }}")
+                }
+            },
+            {
+                text: "{{ _('import') }}",
+                className: "btn btn-sm btn-secondary mx-1",
+                action: function (e, dt, node, config) {
+                    $('#file-import-form input')
+                        .click()
+                        .change(function (e) {
+                            $('#file-import-form').submit()
+                            {# let form = $('#file-import-form')
+                            var formData = new FormData(form[0])
+
+                            $.ajax({
+                                url: form.attr('action'),
+                                method: "POST",
+                                processData: false,
+                                contentType: false,
+                                data: formData,
+                                success: function (res) {
+                                    alertify.success(res.message)
+                                }
+                            }) #}
+                        })
+
+                }
+            },
         ]
     });
 </script>
