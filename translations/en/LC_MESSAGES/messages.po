@@ -274,11 +274,11 @@ msgid "log_level"
 msgstr "Level"
 
 #: app/templates/log/log_table.jinja:42
-msgid "log_request_related"
-msgstr "Request Related Logs"
+msgid "log_access_related"
+msgstr "Access Related Logs"
 
 #: app/templates/log/log_table.jinja:49
-msgid "log_request_related_help"
+msgid "log_access_related_help"
 msgstr "Whether the HTTP request-related logs should be included or not."
 
 #: app/templates/log/log_table.jinja:60

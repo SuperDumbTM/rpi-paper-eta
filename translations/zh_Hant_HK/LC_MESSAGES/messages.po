@@ -267,11 +267,11 @@ msgid "log_level"
 msgstr "類別"
 
 #: app/templates/log/log_table.jinja:42
-msgid "log_request_related"
+msgid "log_access_related"
 msgstr "網站連接"
 
 #: app/templates/log/log_table.jinja:49
-msgid "log_request_related_help"
+msgid "log_access_related_help"
 msgstr "是否顯示與網站連接相關的記錄。"
 
 #: app/templates/log/log_table.jinja:60
