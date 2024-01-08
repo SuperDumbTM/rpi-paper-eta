@@ -55,7 +55,7 @@
     let datatable = $('#schedule-list').DataTable({
         responsive: true,
         ajax: {
-            url: "{{ url_for('api_schedule.get') }}",
+            url: "{{ url_for('api_schedule.get_all') }}",
             dataSrc: "data.schedules"
         },
         'columnDefs': [
