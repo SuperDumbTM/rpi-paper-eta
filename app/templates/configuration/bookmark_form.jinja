@@ -174,8 +174,8 @@
         })
 
         $.ajaxSetup({
-            beforeSend: () => showLoading(),
-            complete: () => hideLoading(),
+            beforeSend: () => $.busyLoadFull("show"),
+            complete: () => $.busyLoadFull("hide"),
             error: function (xhr, status, error) {
                 let json = JSON.parse(xhr.responseText)
                 alertify.error(json.message)

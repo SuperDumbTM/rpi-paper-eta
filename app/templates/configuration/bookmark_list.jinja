@@ -15,6 +15,11 @@
         /* search field right align */
         float: right;
     }
+
+    .dataTables_wrapper .dataTables_processing {
+        position: fixed !important;
+        top: 50% !important;
+    }
 </style>
 {% endblock style %}
 
@@ -55,11 +60,10 @@
 <script>
     let datatable = $('#eta-list').DataTable({
         responsive: true,
+        processing: true,
         ajax: {
             url: "{{ url_for('api_config.get_bookmarks') }}",
             dataSrc: "data.etas",
-            beforeSend: showLoading,
-            complete: hideLoading
         },
         columns: [
             {
