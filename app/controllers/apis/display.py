@@ -45,13 +45,13 @@ def get_layouts(args):
     })
 
 
-@bp.route("/refresh", methods=['POST'])
+@bp.route("/refresh")
 @webargs.flaskparser.use_args({
     'eta_type': webargs.fields.String(
         required=True, validate=webargs.validate.OneOf([t for t in eimage.enums.EtaType])),
     'layout': webargs.fields.String(required=True),
     'is_partial': webargs.fields.Boolean(required=True)
-})
+}, location="query")
 def refresh(args):
     aconf = config.site_data.AppConfiguration()
     if (not aconf.confs.epd_brand or not aconf.confs.epd_model):

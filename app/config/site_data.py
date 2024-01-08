@@ -244,10 +244,10 @@ class RefreshSchedule:
 
         cron = schedule.schedule.split(' ')
         self._aps.add_job(schedule.id,
-                          requests.post,
+                          requests.get,
                           kwargs={
                               'url': 'http://localhost:8002/api/display/refresh',
-                              'json': {
+                              'params': {
                                   'eta_type': eimage.enums.EtaType(schedule.eta_type),
                                   'layout': schedule.layout,
                                   'is_partial': schedule.is_partial
