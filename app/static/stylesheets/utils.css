@@ -1,11 +1,15 @@
 :root {
-    --theme-color: #50C878;
-    --theme-color-rgb: 80, 200, 120;
-    --theme-2-color: #FDDA0D;
-    --theme-2-color-rgb: 253, 218, 13;
-    --theme-2a-color: #E49B0F;
-    --theme-2a-color-rgb: 228, 155, 15;
+    /* https://www.canva.com/colors/color-palettes/green-lemons/ */
+    --theme-color: #478c5c;
+    --theme-color-rgb: 81, 160, 112;
+    --theme-2-color: #c8d7a5;
+    --theme-2-color-rgb: 200, 215, 165;
+    --theme-3-color: #21492d;
+    --theme-3-color-rgb: 33, 73, 45;
+    --theme-4-color: #bacc81;
+    --theme-4-color-rgb: 186, 204, 129;
 }
+
 
 .bg-theme {
     --bs-bg-opacity: 1;

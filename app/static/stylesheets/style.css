@@ -46,7 +46,7 @@ hr {
 .dropdown-item:active {
     /* override */
     color: black;
-    background-color: var(--theme-2-color);
+    background-color: var(--theme-4-color);
 }
 
 
