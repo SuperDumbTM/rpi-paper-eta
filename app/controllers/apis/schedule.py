@@ -24,13 +24,21 @@ _schedule_validate_rules = {
 
 
 @bp.route('/schedules')
-def get_all():
+@webargs.flaskparser.use_args({
+    'enabled': webargs.fields.Boolean(load_default=None),
+    'n_future': webargs.fields.Integer(load_default=5)
+}, location="query")
+def get_all(args):
     schedules = []
     for s in config.site_data.RefreshSchedule().get_all():
         cron = croniter.croniter(s.schedule, start_time=datetime.now())
+
+        if args['enabled'] is not None and args['enabled'] != s.enabled:
+            continue
+
         schedules.append({
             **s.model_dump(),
-            'future_executions': (tuple(cron.get_next(datetime).isoformat() for _ in range(10))
+            'future_executions': (tuple(cron.get_next(datetime).isoformat() for _ in range(args['n_future']))
                                   if s.enabled else [])
         })
 

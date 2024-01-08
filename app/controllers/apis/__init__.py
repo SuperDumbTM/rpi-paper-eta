@@ -1,8 +1,9 @@
 from webargs.flaskparser import parser
 
-from . import config, display, log, schedule
+from . import bookmark, config, display, log, schedule
 
 __all__ = [
+    bookmark,
     config,
     display,
     schedule,

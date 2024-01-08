@@ -104,6 +104,7 @@ def create_app() -> Flask:
     app.register_blueprint(controllers.apis.display.bp)
     app.register_blueprint(controllers.apis.schedule.bp)
     app.register_blueprint(controllers.apis.log.bp)
+    app.register_blueprint(controllers.apis.bookmark.bp)
 
     app.cli.add_command(commands.i18n_cli)
     app.cli.add_command(commands.clean_cli)

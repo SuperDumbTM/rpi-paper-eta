@@ -131,7 +131,7 @@
 {% endblock content %}
 
 {% block script %}
-<script src="http://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<script src="//code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 
 <script src="{{ url_for('static', filename='scripts/jquery.ui.autocomplete.scroll.js') }}"></script>
 <script>
@@ -156,7 +156,7 @@
             beforeSend: () => $.busyLoadFull("show"),
             complete: () => $.busyLoadFull("hide"),
         })
-        
+
         {% if not editing %}
         $("form")[0].reset()
         clearSelect($("select[name=direction]"))
@@ -179,30 +179,28 @@
         })
     })
 
-    // autocomplete for route name
     $('select[name=company]').on('change', function (event) {
+        // autocomplete for route name
         // https://stackoverflow.com/questions/7617373/limit-results-in-jquery-ui-autocomplete
-        query = {...getParams(), type: "route"}
-
-        $.ajax({
-            type: "GET",
-            url: `{{ url_for("api_config.bookmark_search", stype="route") }}?${$.param(query)}`,
-            success: function (res) {
+        $.get(
+            '{{ url_for("api_bookmark.search", search_type="routes") }}',
+            getParams(),
+            function (res) {
                 $("input[name=route]").autocomplete({
                     maxShowItems: 6,
                     autoFocus: true,
                     source: res.data.routes.map((el) => el[0]),
                 });
-            },
-        })
+            }
+        )
     });
 
-    // direction option updates
     $("input[name=route]").on("autocompleteselect", function (event, ui) {
-        query = {...getParams(), 'route': ui.item.value, type: "direction",}
-
-        $.get(`{{ url_for("api_config.bookmark_search", stype="direction") }}?${$.param(query)}`)
-            .then(function (res) {
+        // direction option updates
+        $.get(
+            '{{ url_for("api_bookmark.search", search_type="directions") }}',
+            { ...getParams(), 'route': ui.item.value },
+            function (res) {
                 clearSelect(select = $("select[name=direction]"))
                 clearSelect($("select[name=service_type]"))
                 clearSelect($("select[name=stop]"))
@@ -212,12 +210,12 @@
             })
     });
 
-    // autocomplete for service type
     $('select[name=direction]').on('change', function (event) {
-        query = {...getParams(), type: "service_type"}
-
-        $.get(`{{ url_for("api_config.bookmark_search", stype="service_type") }}?${$.param(query)}`)
-            .then(function (res) {
+        // autocomplete for service type
+        $.get(
+            '{{ url_for("api_bookmark.search", search_type="service_types") }}',
+            getParams(),
+            function (res) {
                 clearSelect(select = $("select[name=service_type]"))
                 clearSelect($("select[name=stop]"))
 
@@ -226,20 +224,17 @@
             })
     });
 
-    // stop option updates
     $("select[name=service_type]").on("change", function (event) {
-        query = {...getParams(), type: "stop"}
-
-        $.ajax({
-            type: "GET",
-            url: `{{ url_for("api_config.bookmark_search", stype="stop") }}?${$.param(query)}`,
-            success: function (res) {
-                select = $("select[name=stop_code]")
-                clearSelect(select)
+        // stop option updates
+        $.get(
+            '{{ url_for("api_bookmark.search", search_type="stops") }}',
+            getParams(),
+            function (res) {
+                clearSelect(select = $("select[name=stop_code]"))
                 res.data.stops.forEach(
                     (el) => select.append(new Option(el[1], el[0])))
             }
-        })
+        )
     });
 
 </script>
