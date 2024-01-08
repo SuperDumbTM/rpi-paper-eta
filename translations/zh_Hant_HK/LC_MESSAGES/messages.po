@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-01-08 16:00+0800\n"
+"POT-Creation-Date: 2024-01-08 20:45+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hant_HK\n"
@@ -17,6 +17,10 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.14.0\n"
+
+#: app/handles.py:64 app/templates/layout.jinja:78
+msgid "unexpected_error_occured"
+msgstr "發生未知的錯誤。"
 
 #: app/translation.py:4
 msgid "eta-end-of-service"
@@ -78,9 +82,18 @@ msgstr "回程"
 msgid "outbound"
 msgstr "去程"
 
-#: app/controllers/apis/config.py:76 app/templates/index.jinja:95
+#: app/controllers/apis/bookmark.py:38 app/templates/error.jinja:3
+#: app/templates/index.jinja:95
 msgid "error"
 msgstr "錯誤"
+
+#: app/templates/error.jinja:9
+msgid "!"
+msgstr "！"
+
+#: app/templates/error.jinja:13
+msgid "go_home"
+msgstr "回到主頁"
 
 #: app/templates/index.jinja:21
 msgid "E-Paper"
@@ -136,10 +149,6 @@ msgstr "快新更新"
 #: app/templates/layout.jinja:45 app/templates/layout.jinja:70
 msgid "loading"
 msgstr "載入中"
-
-#: app/templates/layout.jinja:78
-msgid "unexpected_error_occured"
-msgstr "發生未知的錯誤。"
 
 #: app/templates/configuration/api_server_form.jinja:11
 msgid "api_server_setting"
@@ -471,4 +480,7 @@ msgstr "不重覆"
 
 #~ msgid "no_data"
 #~ msgstr "沒有數據"
+
+#~ msgid "something_goes_wrong"
+#~ msgstr "出錯了"
 
