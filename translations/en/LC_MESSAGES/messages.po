@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-01-08 14:28+0800\n"
+"POT-Creation-Date: 2024-01-08 16:00+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -122,6 +122,7 @@ msgid "time"
 msgstr "Time"
 
 #: app/templates/index.jinja:92 app/templates/schedule/schedule_form.jinja:49
+#: app/templates/schedule/schedule_form.jinja:273
 #: app/templates/schedule/schedule_list.jinja:31
 msgid "eta_type"
 msgstr "ETA Type"
@@ -138,6 +139,10 @@ msgstr "Is Partial"
 #: app/templates/layout.jinja:45 app/templates/layout.jinja:70
 msgid "loading"
 msgstr "Loading"
+
+#: app/templates/layout.jinja:78
+msgid "unexpected_error_occured"
+msgstr "Unexpected error occured."
 
 #: app/templates/configuration/api_server_form.jinja:11
 msgid "api_server_setting"
@@ -162,7 +167,7 @@ msgstr "Password"
 #: app/templates/configuration/api_server_form.jinja:32
 #: app/templates/configuration/bookmark_form.jinja:126
 #: app/templates/configuration/epd_form.jinja:63
-#: app/templates/schedule/schedule_form.jinja:96
+#: app/templates/schedule/schedule_form.jinja:97
 msgid "submit"
 msgstr "Submit"
 
@@ -305,10 +310,6 @@ msgstr "Download"
 msgid "clear"
 msgstr "Clear"
 
-#: app/templates/log/log_table.jinja:171
-msgid "unexpected_error_occured"
-msgstr "Unexpected error occured."
-
 #: app/templates/schedule/schedule_form.jinja:27
 msgid "new_schedule"
 msgstr "New Schedule"
@@ -327,7 +328,7 @@ msgid "schedule"
 msgstr "Schedule"
 
 #: app/templates/schedule/schedule_form.jinja:45
-#: app/templates/schedule/schedule_form.jinja:317
+#: app/templates/schedule/schedule_form.jinja:384
 msgid "unrecognised"
 msgstr "Unrecongnised"
 
@@ -351,65 +352,74 @@ msgstr ""
 msgid "enable"
 msgstr "Enable"
 
-#: app/templates/schedule/schedule_form.jinja:109
+#: app/templates/schedule/schedule_form.jinja:110
 msgid "execute_time"
 msgstr "Execute Time"
 
-#: app/templates/schedule/schedule_form.jinja:117
+#: app/templates/schedule/schedule_form.jinja:118
 msgid "minute"
 msgstr "Minute"
 
-#: app/templates/schedule/schedule_form.jinja:122
+#: app/templates/schedule/schedule_form.jinja:123
 msgid "hour"
 msgstr "Hour"
 
-#: app/templates/schedule/schedule_form.jinja:127
+#: app/templates/schedule/schedule_form.jinja:128
 msgid "date"
 msgstr "Date"
 
-#: app/templates/schedule/schedule_form.jinja:132
+#: app/templates/schedule/schedule_form.jinja:133
 msgid "month"
 msgstr "Month"
 
-#: app/templates/schedule/schedule_form.jinja:137
+#: app/templates/schedule/schedule_form.jinja:138
 msgid "day_of_week"
 msgstr "Day of Week"
 
-#: app/templates/schedule/schedule_form.jinja:150
+#: app/templates/schedule/schedule_form.jinja:151
 msgid "monday"
 msgstr "Monday"
 
-#: app/templates/schedule/schedule_form.jinja:151
+#: app/templates/schedule/schedule_form.jinja:152
 msgid "tuesday"
 msgstr "Tuesday"
 
-#: app/templates/schedule/schedule_form.jinja:152
+#: app/templates/schedule/schedule_form.jinja:153
 msgid "wednesday"
 msgstr "Wednesday"
 
-#: app/templates/schedule/schedule_form.jinja:153
+#: app/templates/schedule/schedule_form.jinja:154
 msgid "thursday"
 msgstr "Thursday"
 
-#: app/templates/schedule/schedule_form.jinja:154
+#: app/templates/schedule/schedule_form.jinja:155
 msgid "friday"
 msgstr "Friday"
 
-#: app/templates/schedule/schedule_form.jinja:155
+#: app/templates/schedule/schedule_form.jinja:156
 msgid "saturday"
 msgstr "Saturday"
 
-#: app/templates/schedule/schedule_form.jinja:156
+#: app/templates/schedule/schedule_form.jinja:157
 msgid "sunday"
 msgstr "Sunday"
 
-#: app/templates/schedule/schedule_form.jinja:164
+#: app/templates/schedule/schedule_form.jinja:165
 msgid "cancel"
 msgstr "Cancel"
 
-#: app/templates/schedule/schedule_form.jinja:165
+#: app/templates/schedule/schedule_form.jinja:166
 msgid "complete"
 msgstr "Complete"
+
+#: app/templates/schedule/schedule_form.jinja:176
+#: app/templates/schedule/schedule_form.jinja:265
+msgid "layout_preview"
+msgstr "Layout Preview"
+
+#: app/templates/schedule/schedule_form.jinja:273
+msgid ":"
+msgstr ":"
 
 #: app/templates/schedule/schedule_list.jinja:34
 msgid "next_execution"

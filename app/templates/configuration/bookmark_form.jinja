@@ -152,6 +152,11 @@
     }
 
     $(document).ready(function () {
+        $.ajaxSetup({
+            beforeSend: () => $.busyLoadFull("show"),
+            complete: () => $.busyLoadFull("hide"),
+        })
+        
         {% if not editing %}
         $("form")[0].reset()
         clearSelect($("select[name=direction]"))
@@ -170,15 +175,6 @@
                 } else {
                     alertify.error(res.message)
                 }
-            }
-        })
-
-        $.ajaxSetup({
-            beforeSend: () => $.busyLoadFull("show"),
-            complete: () => $.busyLoadFull("hide"),
-            error: function (xhr, status, error) {
-                let json = JSON.parse(xhr.responseText)
-                alertify.error(json.message)
             }
         })
     })
@@ -242,9 +238,6 @@
                 clearSelect(select)
                 res.data.stops.forEach(
                     (el) => select.append(new Option(el[1], el[0])))
-            },
-            error: function (xhr, ajaxOptions, errorThrown) {
-                alertify.error($.parseJSON(xhr.responseText).message)
             }
         })
     });

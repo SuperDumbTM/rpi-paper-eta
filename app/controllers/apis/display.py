@@ -1,8 +1,10 @@
+import base64
+from io import BytesIO
 import logging
 from pathlib import Path
 
 import webargs
-from flask import Blueprint, current_app, jsonify
+from flask import Blueprint, Response, current_app, jsonify
 
 from app import config, models
 from app.modules import image as eimage
@@ -45,6 +47,48 @@ def get_layouts(args):
     })
 
 
+@bp.route("/image")
+@webargs.flaskparser.use_args({
+    'eta_type': webargs.fields.String(
+        required=True, validate=webargs.validate.OneOf([t for t in eimage.enums.EtaType])),
+    'layout': webargs.fields.String(required=True),
+}, location="query")
+def image(args):
+    aconf = config.site_data.AppConfiguration()
+    if (not aconf.confs.epd_brand or not aconf.confs.epd_model):
+        return jsonify({
+            'success': False,
+            'message': 'Configuration required.'
+        }), 400
+
+    bm_setting = config.site_data.BookmarkList()
+    try:
+        generator = eimage.eta_image.EtaImageGeneratorFactory().get_generator(
+            aconf.confs.epd_brand, aconf.confs.epd_model
+        )(eimage.enums.EtaType(args['eta_type']), args['layout'])
+        images = refresher.generate_image(
+            aconf.confs, bm_setting.get_all(), generator)
+    except KeyError:
+        return jsonify({
+            'success': False,
+            'message': 'Layout dose not exists.',
+            'data': None
+        }), 400
+
+    for name, img in images.items():
+        buffer = BytesIO()
+        img.save(buffer, format='bmp')
+        images[name] = base64.b64encode(buffer.getvalue()).decode("utf-8")
+
+    return jsonify({
+        'success': True,
+        'message': 'Success.',
+        'data': {
+            'images': images
+        }
+    })
+
+
 @bp.route("/refresh")
 @webargs.flaskparser.use_args({
     'eta_type': webargs.fields.String(
@@ -58,16 +102,24 @@ def refresh(args):
         return jsonify({
             'success': False,
             'message': 'Configuration required.'
-        })
+        }), 400
 
+    # ---------- generate ETA images ----------
     bm_setting = config.site_data.BookmarkList()
+    try:
+        generator = eimage.eta_image.EtaImageGeneratorFactory().get_generator(
+            aconf.confs.epd_brand, aconf.confs.epd_model
+        )(eimage.enums.EtaType(args['eta_type']), args['layout'])
+        images = refresher.generate_image(
+            aconf.confs, bm_setting.get_all(), generator)
+    except KeyError:
+        return jsonify({
+            'success': False,
+            'message': 'Layout dose not exists.',
+            'data': None
+        }), 400
 
-    generator = eimage.eta_image.EtaImageGeneratorFactory().get_generator(
-        aconf.confs.epd_brand, aconf.confs.epd_model
-    )(eimage.enums.EtaType(args['eta_type']), args['layout'])
-    images = refresher.generate_image(
-        aconf.confs, bm_setting.get_all(), generator)
-
+    # ---------- initialise the e-paper controller ----------
     try:
         controller = epaper.ControllerFactory().get_controller(
             aconf.confs.epd_brand, aconf.confs.epd_model)(args['is_partial'], False)
@@ -77,9 +129,11 @@ def refresh(args):
 
         return jsonify({
             'success': False,
-            'message': 'Failed to refresh the screen.'
-        })
+            'message': 'Failed to refresh the screen.',
+            'data': None
+        }), 400
 
+    # ---------- refresh the e-paper screen ----------
     try:
         if args['is_partial']:
             # load old screen into the display's buffer
@@ -102,10 +156,12 @@ def refresh(args):
 
         return jsonify({
             'success': False,
-            'message': 'Failed to refresh the screen.'
-        })
+            'message': 'Failed to refresh the screen.',
+            'data': None
+        }), 400
 
     return jsonify({
         'success': True,
-        'message': 'Refreshed.'
+        'message': 'Refreshed.',
+        'data': None
     })

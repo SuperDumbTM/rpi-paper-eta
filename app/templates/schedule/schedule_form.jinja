@@ -93,7 +93,8 @@
                 <label class="form-check-label">{{ _('enable') }}</label>
             </div>
 
-            <input class="btn btn-primary btn-customized mt-4" id="submit" name="submit" type="submit" value="{{ _('submit') }}">
+            <input class="btn btn-primary btn-customized mt-4" id="submit" name="submit" type="submit"
+                value="{{ _('submit') }}">
         </form>
     </div>
 </div>
@@ -167,6 +168,20 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="preview-md">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">{{ _('layout_preview') }}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body"></div>
+        </div>
+    </div>
+</div>
+
 {% endblock body %}
 
 {% block script %}
@@ -240,10 +255,23 @@
                                     <input class="form-check-input" type="radio" name="layout"
                                         value="${el.name}" required>
                                     <label class="form-check-label">${(el.name)}</label>
+
+                                    <div class="float-end">
+                                        <button type="button"
+                                            class="btn btn-sm btn-outline-success preview-btn"
+                                            data-layout=${el.name}
+                                            data-eta_type=${val}    
+                                        >
+                                            {{ _('layout_preview') }}
+                                        </button>
+                                    </div>
                                 </div>
                             </h5>
+                            
                             <p class="card-text">
-                                <strong style="display: inline-block; width: 50px;">Type:</strong>
+                                <strong style="display: inline-block; width: 50px;">
+                                    {{ _('eta_type') ~ _(':') }}
+                                </strong>
                                 <span class="card-text-descr">${titleCase(val)}</span>
                             </p>
 
@@ -258,6 +286,45 @@
                         </div>
                     </div>
             `)
+        })
+    })
+
+    $(document).on('click', '.preview-btn', function (e) {
+        let container = $('#preview-md .modal-body')
+        container.html(null)
+
+        $.ajax({
+            url: "{{ url_for('api_display.image') }}",
+            data: {
+                layout: $(this).data('layout'),
+                eta_type: $(this).data('eta_type')
+            },
+            beforeSend: () => $.busyLoadFull('show'),
+            complete: () => $.busyLoadFull('hide'),
+            success: function (res, status, xhr) {
+                if (res.success) {
+                    Object.entries(res.data.images).forEach(function (entry) {
+                        const [key, value] = entry;
+                        container.append(`
+                            <div class="card my-1" style="width: 18rem; margin: auto;">
+                                <img class="m-2" src="data:image/bmp;base64, ${value}">
+
+                                <hr>
+
+                                <div class="card-body">
+                                    <span class="card-text">
+                                        ${key}
+                                    </span>
+                                </div>
+                            </div>
+                        `)
+                    })
+
+                    $('#preview-md').modal('show')
+                } else {
+                    alertify.error(res.message)
+                }
+            }
         })
     })
 
