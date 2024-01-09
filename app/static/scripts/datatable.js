@@ -41,18 +41,6 @@ $(document).on("click", "td button.dt-action", function (e) {
 
             if (btn.data('200-reload') || true)
                 datatable.ajax.reload()
-        },
-        error: function (xhr, status, error) {
-            if (error) {
-                alertify.error(error)
-            }
-
-            if (isJSON(xhr.responseText)) {
-                let = json = $.parseJSON(xhr.responseText)
-                if (json.message) {
-                    alertify.error(json.message)
-                }
-            }
-        },
+        }
     })
 })
