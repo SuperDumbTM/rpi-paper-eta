@@ -45,13 +45,16 @@ def generate_image(
                     'stop': bm.stop_code}
             ).json()
 
-            logo = (BytesIO(requests.get('{0}{1}'.format(app_config.url,
-                                                         res['data'].pop(
-                                                             'logo_url')
-                                                         )).content
-                            )
-                    if res['data']['logo_url'] is not None
-                    else None)
+            try:
+                logo = (BytesIO(requests.get('{0}{1}'.format(app_config.url,
+                                                             res['data'].pop(
+                                                                 'logo_url')
+                                                             )).content
+                                )
+                        if res['data']['logo_url'] is not None
+                        else None)
+            except Exception:
+                logo = None
 
             if res['success']:
                 eta = res['data'].pop('etas')
