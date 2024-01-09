@@ -23,6 +23,8 @@ class EtaConfig(pydantic.BaseModel):
 
 
 class Schedule(pydantic.BaseModel):
+    # This model is intened to be use only by `RefreshScheduler`, and the ID field will be filled by the class.
+
     id: str
     schedule: str
     eta_type: eimage.enums.EtaType
