@@ -52,7 +52,7 @@ def bookmark_create():
                                   for l in enums.EtaLocale],
                            form=form,
                            form_action=url_for(
-                               "api_config.bookmark_create"),
+                               "api_bookmark.create"),
                            editing=False)
 
 
@@ -82,7 +82,7 @@ def bookmark_edit(id: str):
                            form=forms.BookmarkForm(
                                **entry.model_dump(exclude=['id'])),
                            form_action=url_for(
-                               "api_config.bookmark_update", id=id),
+                               "api_bookmark.update", id=id),
                            editing=True,)
 
 
