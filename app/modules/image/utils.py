@@ -47,6 +47,9 @@ def wrap(text: str, length: float, height: float, font: ImageFont.FreeTypeFont) 
         # returns: "abc\\ndef\\ng..."
     ```
     """
+    if len(text) <= 0:
+        return text
+
     len_text = int(font.getlength(text))
     len_char = len_text / len(text)
 
