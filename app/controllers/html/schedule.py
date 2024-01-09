@@ -73,13 +73,13 @@ def export():
                 exclude=['id', 'enabled']), scheduler.get_all())),
             indent=4),
         mimetype='application/json',
-        headers={'Content-disposition': 'attachment; filename=schedule.json'})
+        headers={'Content-disposition': 'attachment; filename=schedules.json'})
 
 
 @bp.route('/import', methods=['POST'])
 def import_():
     try:
-        file = request.files['schedule']
+        file = request.files['schedules']
 
         scheduler = site_data.RefreshSchedule()
         for i, schedule in enumerate(json.load(file.stream)):
