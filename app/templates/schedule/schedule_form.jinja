@@ -50,11 +50,11 @@
                     {% for type in eta_types %}
                     {% if form.eta_type == type %}
                     <option value="{{ type.value }}" selected>
-                        {{ type.name.title() }}
+                        {{ _(type.value) }}
                     </option>
                     {% else %}
                     <option value="{{ type.value }}">
-                        {{ type.name.title() }}
+                        {{ _(type.value) }}
                     </option>
                     {% endif %}
                     {% endfor %}
@@ -268,7 +268,7 @@
                             </h5>
                             
                             <p class="card-text">
-                                <strong style="display: inline-block; width: 50px;">
+                                <strong style="display: inline-block; width: 120px;">
                                     {{ _('eta_type') ~ _(':') }}
                                 </strong>
                                 <span class="card-text-descr">${titleCase(val)}</span>

@@ -12,7 +12,6 @@ RP_CODE_TRANSL = {
 }
 
 # ETA companies
-
 lazy_gettext('kmb')
 lazy_gettext('mtr_lrt')
 lazy_gettext('mtr_train')
@@ -23,3 +22,6 @@ lazy_gettext('ctb')
 lazy_gettext('en')
 lazy_gettext('tc')
 lazy_gettext('default')
+
+# ETA Type
+lazy_gettext('mixed')

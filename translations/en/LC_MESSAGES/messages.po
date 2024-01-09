@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-01-10 00:19+0800\n"
+"POT-Creation-Date: 2024-01-10 01:03+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -66,37 +66,41 @@ msgstr "Route Not Exists"
 msgid "stop-not-exist"
 msgstr "Stop Not Exists"
 
-#: app/translation.py:16
+#: app/translation.py:15
 msgid "kmb"
 msgstr "KMB"
 
-#: app/translation.py:17
+#: app/translation.py:16
 msgid "mtr_lrt"
 msgstr "Light Rail"
 
-#: app/translation.py:18
+#: app/translation.py:17
 msgid "mtr_train"
 msgstr "MTR"
 
-#: app/translation.py:19
+#: app/translation.py:18
 msgid "mtr_bus"
 msgstr "MTR Bus"
 
-#: app/translation.py:20
+#: app/translation.py:19
 msgid "ctb"
 msgstr "CityBus"
 
-#: app/translation.py:23
+#: app/translation.py:22
 msgid "en"
 msgstr "English"
 
-#: app/translation.py:24
+#: app/translation.py:23
 msgid "tc"
 msgstr "Trad. Chinese"
 
-#: app/translation.py:25
+#: app/translation.py:24
 msgid "default"
 msgstr "Default"
+
+#: app/translation.py:27
+msgid "mixed"
+msgstr "Mixed"
 
 #: app/utils.py:90
 msgid "inbound"
