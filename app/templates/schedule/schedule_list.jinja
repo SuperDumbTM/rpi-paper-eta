@@ -26,7 +26,8 @@
         {% include "includes/flash_error.jinja" %}
     </div>
 
-    <form id="file-import-form" method="POST" action="{{ url_for('schedule.import_') }}" enctype="multipart/form-data" style="display: none;">
+    <form id="file-import-form" method="POST" action="{{ url_for('schedule.import_') }}" enctype="multipart/form-data"
+        style="display: none;">
         <input type="file" name="schedules">
     </form>
 
@@ -149,22 +150,7 @@
                 action: function (e, dt, node, config) {
                     $('#file-import-form input')
                         .click()
-                        .change(function (e) {
-                            $('#file-import-form').submit()
-                            {# let form = $('#file-import-form')
-                            var formData = new FormData(form[0])
-
-                            $.ajax({
-                                url: form.attr('action'),
-                                method: "POST",
-                                processData: false,
-                                contentType: false,
-                                data: formData,
-                                success: function (res) {
-                                    alertify.success(res.message)
-                                }
-                            }) #}
-                        })
+                        .change((e) => $('#file-import-form').submit())
 
                 }
             },

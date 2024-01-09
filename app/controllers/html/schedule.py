@@ -89,8 +89,8 @@ def import_():
                                  schedule['layout'],
                                  schedule['is_partial'],
                                  False)
-            except (KeyError, pydantic.ValidationError):
-                flash(lazy_gettext('import_failed_%(entry)s', entry=i),
+            except (KeyError, pydantic.ValidationError, TypeError):
+                flash(lazy_gettext('Failed to import no. %(entry)s schedule.', entry=i),
                       enums.FlashCategory.error)
                 logging.exception(
                     'Encountering missing field(s) or invalid values during refresh schedule import.')

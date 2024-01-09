@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-01-09 19:40+0800\n"
+"POT-Creation-Date: 2024-01-09 21:16+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -87,14 +87,19 @@ msgstr "Outbound"
 msgid "error"
 msgstr "Error"
 
-#: app/controllers/html/schedule.py:93
+#: app/controllers/html/configuration.py:91
 #, python-format
-msgid "import_failed_%(entry)s"
-msgstr "Schedule %(entry)s was not imported."
+msgid "Failed to import no. %(entry)s bookmark."
+msgstr "Failed to import no. %(entry)s bookmark."
 
-#: app/controllers/html/schedule.py:98
+#: app/controllers/html/configuration.py:96 app/controllers/html/schedule.py:98
 msgid "import_failed"
 msgstr "Import Failed"
+
+#: app/controllers/html/schedule.py:93
+#, python-format
+msgid "Failed to import no. %(entry)s schedule."
+msgstr "Failed to import no. %(entry)s schedule."
 
 #: app/templates/error.jinja:9
 msgid "!"
@@ -145,16 +150,16 @@ msgstr "Time"
 
 #: app/templates/index.jinja:92 app/templates/schedule/schedule_form.jinja:49
 #: app/templates/schedule/schedule_form.jinja:273
-#: app/templates/schedule/schedule_list.jinja:36
+#: app/templates/schedule/schedule_list.jinja:40
 msgid "eta_type"
 msgstr "ETA Type"
 
 #: app/templates/index.jinja:93 app/templates/schedule/schedule_form.jinja:66
-#: app/templates/schedule/schedule_list.jinja:37
+#: app/templates/schedule/schedule_list.jinja:41
 msgid "layout"
 msgstr "Layout"
 
-#: app/templates/index.jinja:94 app/templates/schedule/schedule_list.jinja:40
+#: app/templates/index.jinja:94 app/templates/schedule/schedule_list.jinja:44
 msgid "is_partial"
 msgstr "Is Partial"
 
@@ -202,59 +207,69 @@ msgstr ""
 "bookmark will be displayed."
 
 #: app/templates/configuration/bookmark_form.jinja:29
-#: app/templates/configuration/bookmark_list.jinja:36
+#: app/templates/configuration/bookmark_list.jinja:43
 msgid "language"
 msgstr "Language"
 
 #: app/templates/configuration/bookmark_form.jinja:48
-#: app/templates/configuration/bookmark_list.jinja:31
+#: app/templates/configuration/bookmark_list.jinja:38
 msgid "company"
 msgstr "Company"
 
 #: app/templates/configuration/bookmark_form.jinja:66
-#: app/templates/configuration/bookmark_list.jinja:32
+#: app/templates/configuration/bookmark_list.jinja:39
 msgid "route"
 msgstr "Route"
 
 #: app/templates/configuration/bookmark_form.jinja:72
-#: app/templates/configuration/bookmark_list.jinja:33
+#: app/templates/configuration/bookmark_list.jinja:40
 msgid "direction"
 msgstr "Direction"
 
 #: app/templates/configuration/bookmark_form.jinja:90
-#: app/templates/configuration/bookmark_list.jinja:34
+#: app/templates/configuration/bookmark_list.jinja:41
 msgid "service_type"
 msgstr "Service Type"
 
 #: app/templates/configuration/bookmark_form.jinja:108
-#: app/templates/configuration/bookmark_list.jinja:35
+#: app/templates/configuration/bookmark_list.jinja:42
 msgid "stop"
 msgstr "Stop"
 
-#: app/templates/configuration/bookmark_list.jinja:30
-#: app/templates/schedule/schedule_list.jinja:35
+#: app/templates/configuration/bookmark_list.jinja:37
+#: app/templates/schedule/schedule_list.jinja:39
 msgid "no."
 msgstr "No."
 
-#: app/templates/configuration/bookmark_list.jinja:37
-#: app/templates/schedule/schedule_list.jinja:41
+#: app/templates/configuration/bookmark_list.jinja:44
+#: app/templates/schedule/schedule_list.jinja:45
 msgid "action"
 msgstr "Action"
 
-#: app/templates/configuration/bookmark_list.jinja:103
-#: app/templates/schedule/schedule_list.jinja:104
+#: app/templates/configuration/bookmark_list.jinja:110
+#: app/templates/schedule/schedule_list.jinja:108
 msgid "delete"
 msgstr "Delete"
 
-#: app/templates/configuration/bookmark_list.jinja:109
-#: app/templates/schedule/schedule_list.jinja:110
+#: app/templates/configuration/bookmark_list.jinja:116
+#: app/templates/schedule/schedule_list.jinja:114
 msgid "edit"
 msgstr "Edit"
 
-#: app/templates/configuration/bookmark_list.jinja:121
-#: app/templates/schedule/schedule_list.jinja:130
+#: app/templates/configuration/bookmark_list.jinja:128
+#: app/templates/schedule/schedule_list.jinja:134
 msgid "create"
 msgstr "Create"
+
+#: app/templates/configuration/bookmark_list.jinja:135
+#: app/templates/schedule/schedule_list.jinja:141
+msgid "export"
+msgstr "Export"
+
+#: app/templates/configuration/bookmark_list.jinja:142
+#: app/templates/schedule/schedule_list.jinja:148
+msgid "import"
+msgstr "Import"
 
 #: app/templates/configuration/epd_form.jinja:22
 msgid "display_setting"
@@ -341,7 +356,7 @@ msgstr ""
 "you know about cron for the desired schedule ."
 
 #: app/templates/schedule/schedule_form.jinja:36
-#: app/templates/schedule/schedule_list.jinja:38
+#: app/templates/schedule/schedule_list.jinja:42
 msgid "schedule"
 msgstr "Schedule"
 
@@ -439,25 +454,17 @@ msgstr "Layout Preview"
 msgid ":"
 msgstr ":"
 
-#: app/templates/schedule/schedule_list.jinja:39
+#: app/templates/schedule/schedule_list.jinja:43
 msgid "next_execution"
 msgstr "Next Execution"
 
-#: app/templates/schedule/schedule_list.jinja:86
+#: app/templates/schedule/schedule_list.jinja:90
 msgid "not_enabled"
 msgstr "Not Enabled"
 
-#: app/templates/schedule/schedule_list.jinja:118
+#: app/templates/schedule/schedule_list.jinja:122
 msgid "refresh_now"
 msgstr "Refresh Now"
-
-#: app/templates/schedule/schedule_list.jinja:137
-msgid "export"
-msgstr "Export"
-
-#: app/templates/schedule/schedule_list.jinja:144
-msgid "import"
-msgstr "Import"
 
 #: app/templates/schedule/macros/cron_selector.jinja:5
 msgid "cron_mode"
@@ -518,4 +525,7 @@ msgstr "No Repeat"
 
 #~ msgid "something_goes_wrong"
 #~ msgstr ""
+
+#~ msgid "import_failed_%(entry)s"
+#~ msgstr "Schedule %(entry)s was not imported."
 

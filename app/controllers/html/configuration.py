@@ -67,6 +67,36 @@ def bookmark_edit(id: str):
                            editing=True,)
 
 
+@bp.route('/bookmark/export')
+def bookmark_export():
+    bm = config.site_data.BookmarkList()
+    return Response(
+        json.dumps(
+            tuple(map(lambda s: s.model_dump(exclude=['id']), bm.get_all())),
+            indent=4),
+        mimetype='application/json',
+        headers={'Content-disposition': 'attachment; filename=bookmarks.json'})
+
+
+@bp.route('/bookmark/import', methods=['POST'])
+def bookmark_import():
+    file = request.files['bookmarks']
+    bm = config.site_data.BookmarkList()
+    try:
+        for i, bookmark in enumerate(json.load(file.stream)):
+            try:
+                bm.create(**bookmark)
+            except (KeyError, pydantic.ValidationError, TypeError):
+                flash(lazy_gettext('Failed to import no. %(entry)s bookmark.', entry=i),
+                      enums.FlashCategory.error)
+                logging.exception(
+                    'Encountering missing field(s) or invalid values during refresh bookmark import.')
+    except (UnicodeDecodeError, json.decoder.JSONDecodeError):
+        flash(lazy_gettext('import_failed'), enums.FlashCategory.error)
+
+    return redirect(url_for('configuration.bookmark_list'))
+
+
 @bp.route('/epd')
 def epaper_setting():
     conf = config.site_data.AppConfiguration().confs
