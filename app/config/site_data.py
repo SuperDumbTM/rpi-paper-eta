@@ -184,15 +184,19 @@ class RefreshSchedule:
                layout: str,
                is_partial: bool,
                enabled: bool) -> str:
+
+        while 'id_' not in locals() or self._is_id_exist(id_):
+            id_ = utils.random_id_gen(8)
+
         schedule = models.Schedule(
-            id=(id := utils.random_id_gen(8)), schedule=schedule, eta_type=eta_type,
+            id=id_, schedule=schedule, eta_type=eta_type,
             layout=layout, is_partial=is_partial, enabled=enabled)
 
         if enabled:
             self._add_job(schedule)
         self._schedules.append(schedule)
         self._persist()
-        return id
+        return id_
 
     def update(self,
                id: str,
