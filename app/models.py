@@ -1,5 +1,6 @@
 import datetime
 from typing import Optional
+import croniter
 
 import pydantic
 from flask_babel import lazy_gettext
@@ -24,13 +25,25 @@ class EtaConfig(pydantic.BaseModel):
 class Schedule(pydantic.BaseModel):
     id: str
     schedule: str
-    eta_type: str
+    eta_type: eimage.enums.EtaType
     layout: str
-    is_partial: bool
+    is_partial: bool = False
     enabled: bool = True
 
     def model_dump_i18n(self) -> dict:
         return self.model_dump() | {'eta_type': lazy_gettext(self.eta_type)}
+
+    @pydantic.field_validator('schedule')
+    @classmethod
+    def check_cron_expression(cls, v: str):
+        if (not croniter.croniter.is_valid(v)):
+            raise ValueError('invalid cron expression')
+        return v
+
+    # @pydantic.root_validator
+    # def check_layout(cls, values):
+    #     eta_type, layout = values.get('eta_type'), values.get('layout')
+    #     return values
 
 
 class RefreshLog(pydantic.BaseModel):

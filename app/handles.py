@@ -2,9 +2,10 @@ import logging
 import traceback
 
 import marshmallow
+import pydantic
 from flask import Blueprint, current_app, jsonify, render_template, request
-from werkzeug.exceptions import HTTPException
 from flask_babel import lazy_gettext
+from werkzeug.exceptions import HTTPException
 
 bp = Blueprint('error_handlers', __name__)
 
@@ -14,16 +15,42 @@ def _need_json_response():
 
 
 @bp.app_errorhandler(marshmallow.ValidationError)
-def handle_validation_error(err: marshmallow.ValidationError):
-    location = list(err.messages_dict.keys())[0]
-    return jsonify({
-        'success': False,
-        'message': "Validation Failed.",
-        'data': {
-            'errors': err.messages_dict[location],
-            'errors_at': location
-        }
-    }), 400
+def handle_validation_error(e: marshmallow.ValidationError):
+    if _need_json_response():
+        location = list(e.messages_dict.keys())[0]
+        return jsonify({
+            'success': False,
+            'message': "Validation Failed.",
+            'data': {
+                'errors': e.messages_dict[location],
+                'errors_at': location
+            }
+        }), 422
+    return render_template('error.jinja', error=e, code=422, msg='Validation failed.')
+
+
+@bp.app_errorhandler(pydantic.ValidationError)
+def handle_pydantic_error(e: pydantic.ValidationError):
+    errors: dict[str, list[str]] = {}
+
+    for error in e.errors(include_url=False, include_input=False):
+        for location in error['loc']:
+            if type(location) is int:
+                logging.exception('Encounterd int type location.')
+                continue
+            errors.setdefault(location, [])
+            errors[location].append(error['msg'])
+
+    if _need_json_response():
+        return jsonify({
+            'success': False,
+            'message': "Validation Failed (Internal).",
+            'data': {
+                'errors': errors,
+                'errors_at': None
+            }
+        }), 422
+    return render_template('error.jinja', error=e, code=422, msg='Validation failed (Internal).')
 
 
 @bp.app_errorhandler(404)

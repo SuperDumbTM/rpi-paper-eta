@@ -7,7 +7,7 @@ from flask import Blueprint, jsonify
 from app import config
 from app.modules import image as eimage
 
-bp = Blueprint('api_schedule', __name__, url_prefix="/api/schedule")
+bp = Blueprint('api_schedule', __name__, url_prefix="/api")
 
 _schedule_validate_rules = {
     'schedule': webargs.fields.String(

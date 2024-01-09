@@ -1,9 +1,8 @@
 import json
 from collections import abc, deque
 from pathlib import Path
-from typing import Any, Iterable, Optional, Self
+from typing import Self
 
-import croniter
 import flask_apscheduler
 import requests
 
@@ -181,7 +180,7 @@ class RefreshSchedule:
 
     def create(self,
                schedule: str,
-               eta_type: str,
+               eta_type: eimage.enums.EtaType | str,
                layout: str,
                is_partial: bool,
                enabled: bool) -> str:
@@ -198,7 +197,7 @@ class RefreshSchedule:
     def update(self,
                id: str,
                schedule: str,
-               eta_type: str,
+               eta_type: eimage.enums.EtaType | str,
                layout: str,
                is_partial: bool,
                enabled: bool) -> None:
@@ -239,9 +238,6 @@ class RefreshSchedule:
             json.dump([s.model_dump() for s in self._schedules], f, indent=4)
 
     def _add_job(self, schedule: models.Schedule) -> None:
-        if (not croniter.croniter.is_valid(schedule.schedule)):
-            raise ValueError('The cron expression is invalid.')
-
         cron = schedule.schedule.split(' ')
         self._aps.add_job(schedule.id,
                           requests.get,
