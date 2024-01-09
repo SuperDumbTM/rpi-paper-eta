@@ -44,10 +44,11 @@ class Epd3in7(EtaImageGenerator):
                 break
 
             # titles
-            b.bitmap((coords['route']['logo']['offset'][0],
-                      coords['route']['logo']['offset'][1] + (row_height*row)),
-                     Image.open(route.logo).convert("1").resize((30, 30)),
-                     self._bk)
+            if route.logo:
+                b.bitmap((coords['route']['logo']['offset'][0],
+                          coords['route']['logo']['offset'][1] + (row_height*row)),
+                         Image.open(route.logo).convert("1").resize((30, 30)),
+                         self._bk)
             b.text((coords['route']['name']['offset'][0],
                     coords['route']['name']['offset'][1] + (row_height*row)),
                    utils.discard(route.route,

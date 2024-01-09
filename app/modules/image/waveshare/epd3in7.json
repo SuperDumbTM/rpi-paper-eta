@@ -114,11 +114,11 @@
                 "texts": {
                     "minute": {
                         "tc": "分",
-                        "en": "Min"
+                        "en": "M"
                     },
                     "minutes": {
                         "tc": "分",
-                        "en": "Mins"
+                        "en": "M"
                     }
                 }
             },

@@ -7,6 +7,8 @@ RP_CODE_TRANSL = {
     "eta-no-entry": lazy_gettext("eta-no-entry"),
     "eta-stop-closure": lazy_gettext("eta-stop-closure"),
     "eta-abnormal-service": lazy_gettext("eta-abnormal-service"),
+    "route-not-exist": lazy_gettext("route-not-exist"),
+    "stop-not-exist": lazy_gettext("stop-not-exist")
 }
 
 # ETA companies

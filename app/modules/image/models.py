@@ -36,9 +36,9 @@ class ErrorEta(BaseModel):
     message: str
 
     route: str
-    origin: str
-    destination: str
-    stop_name: str
-    lang: enums.EtaLocale
-    logo: Optional[BytesIO] = None
     timestamp: datetime.datetime
+    origin: Optional[str] = None
+    destination: Optional[str] = None
+    stop_name: Optional[str] = None
+    lang: Optional[enums.EtaLocale] = None
+    logo: Optional[BytesIO] = None
