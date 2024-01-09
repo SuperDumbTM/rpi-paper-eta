@@ -65,9 +65,9 @@ def bookmark_edit(id: str):
     try:
         directions = utils.direction_choices(entry.company.value, entry.route)
         service_types = utils.type_choices(
-            entry.company.value, entry.route, entry.direction.value)
+            entry.company.value, entry.route, entry.direction.value, entry.lang)
         stops = utils.stop_choices(
-            entry.company.value, entry.route, entry.direction.value, entry.service_type)
+            entry.company.value, entry.route, entry.direction.value, entry.service_type, entry.lang)
     except requests.exceptions.ConnectionError:
         flash("API server error.", enums.FlashCategory.error)
 
