@@ -5,6 +5,7 @@
         "ms-python.isort",
         "njpwerner.autodocstring",
         "ms-python.autopep8",
-        "samuelcolvin.jinjahtml"
+        "samuelcolvin.jinjahtml",
+        "mrorz.language-gettext"
     ]
 }
