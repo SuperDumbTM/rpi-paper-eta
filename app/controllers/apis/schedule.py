@@ -67,12 +67,20 @@ def create(args):
 @webargs.flaskparser.use_args(_schedule_validate_rules, location="json")
 def update(args, id: str):
     scheduler = config.site_data.RefreshSchedule()
-    scheduler.update(**args, id=id)
-    return jsonify({
-        'success': True,
-        'message': "Created.",
-        'data': None
-    })
+
+    try:
+        scheduler.update(**args, id=id)
+        return jsonify({
+            'success': True,
+            'message': "Updated.",
+            'data': None
+        })
+    except KeyError:
+        return jsonify({
+            'success': False,
+            'message': "Invalid ID.",
+            'data': None
+        }), 400
 
 
 @bp.route('/schedule/<id>', methods=["DELETE"])
@@ -89,4 +97,4 @@ def delete(id: str):
             'success': False,
             'message': "Invalid ID.",
             'data': None
-        })
+        }), 400
