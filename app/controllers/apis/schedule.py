@@ -3,6 +3,7 @@ from datetime import datetime
 import croniter
 import webargs
 from flask import Blueprint, jsonify
+from flask_babel import lazy_gettext
 
 from app import config
 from app.modules import image as eimage
@@ -44,7 +45,7 @@ def get_all(args):
 
     return jsonify({
         'success': True,
-        'message': "Success.",
+        'message': '{}.'.format(lazy_gettext("success")),
         'data': {
             'schedules': schedules
         }
@@ -58,7 +59,7 @@ def create(args):
     scheduler.create(**args)
     return jsonify({
         'success': True,
-        'message': "Created.",
+        'message': '{}.'.format(lazy_gettext("created")),
         'data': None
     })
 
@@ -72,13 +73,13 @@ def update(args, id: str):
         scheduler.update(**args, id=id)
         return jsonify({
             'success': True,
-            'message': "Updated.",
+            'message': '{}.'.format(lazy_gettext("updated")),
             'data': None
         })
     except KeyError:
         return jsonify({
             'success': False,
-            'message': "Invalid ID.",
+            'message': '{}.'.format(lazy_gettext("invalid_id")),
             'data': None
         }), 400
 
@@ -89,12 +90,12 @@ def delete(id: str):
         config.site_data.RefreshSchedule().remove(id)
         return jsonify({
             'success': True,
-            'message': "Success.",
+            'message': '{}.'.format(lazy_gettext("success")),
             'data': None
         })
     except KeyError:
         return jsonify({
             'success': False,
-            'message': "Invalid ID.",
+            'message': '{}.'.format(lazy_gettext("invalid_id")),
             'data': None
         }), 400

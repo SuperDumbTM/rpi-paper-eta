@@ -20,13 +20,14 @@ def handle_validation_error(e: marshmallow.ValidationError):
         location = list(e.messages_dict.keys())[0]
         return jsonify({
             'success': False,
-            'message': "Validation Failed.",
+            'message': '{}.'.format(lazy_gettext("validation_failed")),
             'data': {
                 'errors': e.messages_dict[location],
                 'errors_at': location
             }
         }), 422
-    return render_template('error.jinja', error=e, code=422, msg='Validation failed.')
+    return render_template(
+        'error.jinja', error=e, code=422, msg="{}.".format(lazy_gettext("validation_failed")))
 
 
 @bp.app_errorhandler(pydantic.ValidationError)
@@ -36,7 +37,7 @@ def handle_pydantic_error(e: pydantic.ValidationError):
     for error in e.errors(include_url=False, include_input=False):
         for location in error['loc']:
             if type(location) is int:
-                logging.exception('Encounterd int type location.')
+                logging.exception('Encountered int type location.')
                 continue
             errors.setdefault(location, [])
             errors[location].append(error['msg'])
@@ -44,13 +45,14 @@ def handle_pydantic_error(e: pydantic.ValidationError):
     if _need_json_response():
         return jsonify({
             'success': False,
-            'message': "Validation Failed (Internal).",
+            'message': "{}".format(lazy_gettext("Internal validation failed.")),
             'data': {
                 'errors': errors,
                 'errors_at': None
             }
         }), 422
-    return render_template('error.jinja', error=e, code=422, msg='Validation failed (Internal).')
+    return render_template(
+        'error.jinja', error=e, code=422, msg="{}".format(lazy_gettext("Internal validation failed.")))
 
 
 @bp.app_errorhandler(404)
@@ -58,10 +60,11 @@ def error_handler_404(e: HTTPException):
     if _need_json_response():
         return jsonify({
             'success': False,
-            'message': 'The requested URL was not found on the server.',
+            'message': "{}".format(lazy_gettext("The requested URL was not found on the server.")),
             'data': None
         }), 404
-    return render_template('error.jinja', error=e, code=404, msg=e.description)
+    return render_template(
+        'error.jinja', error=e, code=404, msg="{}".format(lazy_gettext("The requested URL was not found on the server.")))
 
 
 @bp.app_errorhandler(HTTPException)
@@ -81,7 +84,7 @@ def error_handler_all(e: Exception):
     if _need_json_response():
         return jsonify({
             'success': False,
-            'message': 'Unexpected internal server error.',
+            'message': "{}.".format(lazy_gettext("unexpected_error_occured")),
             'data': None if not current_app.debug else {
                 'type': e.__class__.__name__,
                 'error_message': str(e),
@@ -89,4 +92,4 @@ def error_handler_all(e: Exception):
             }
         }), 500
     return render_template(
-        'error.jinja', error=e, code=500, msg=lazy_gettext('unexpected_error_occured'))
+        'error.jinja', error=e, code=500, msg="{}.".format(lazy_gettext("unexpected_error_occured")))

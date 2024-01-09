@@ -2,7 +2,7 @@ from typing import Literal
 
 import requests
 import webargs
-from flask import Blueprint, current_app, jsonify, request
+from flask import Blueprint, abort, current_app, jsonify, request
 from flask_babel import lazy_gettext
 
 from app import config, enums, models, utils
@@ -41,7 +41,7 @@ def get_all():
 
     return jsonify({
         'success': True,
-        'message': "Success.",
+        'message': '{}.'.format(lazy_gettext("success")),
         'data': {
             "etas": bookmarks
         }
@@ -57,13 +57,13 @@ def create(args):
     except KeyError:
         return jsonify({
             'success': False,
-            'message': "Invalid ID.",
+            'message': '{}.'.format(lazy_gettext("invalid_id")),
             'data': None
         }), 400
     else:
         return jsonify({
             'success': True,
-            'message': "Updated.",
+            'message': '{}.'.format(lazy_gettext("updated")),
             'data': None
         })
 
@@ -77,13 +77,13 @@ def update(args, id: str):
     except KeyError:
         return jsonify({
             'success': False,
-            'message': "Invalid ID.",
+            'message': '{}.'.format(lazy_gettext("invalid_id")),
             'data': None
         }), 400
     else:
         return jsonify({
             'success': True,
-            'message': "Updated.",
+            'message': '{}.'.format(lazy_gettext("updated")),
             'data': None
         })
 
@@ -94,13 +94,13 @@ def delete(id: str):
     try:
         return jsonify({
             'success': True,
-            'message': "Deleted.",
+            'message': "{}.".format(lazy_gettext("deleted")),
             'data': etas.pop(etas.index(id)).model_dump()
         })
     except ValueError:
         return jsonify({
             'success': False,
-            'message': "Invalid ID.",
+            'message': '{}.'.format(lazy_gettext("invalid_id")),
             'data': None
         }), 400
 
@@ -118,7 +118,7 @@ def search(args,
         if search_type == "routes":
             return jsonify({
                 'success': True,
-                'message': "Success.",
+                'message': '{}.'.format(lazy_gettext("success")),
                 'data': {
                     'routes': utils.route_choices(args['company'])
                 }
@@ -133,7 +133,7 @@ def search(args,
 
             return jsonify({
                 'success': True,
-                'message': "Success.",
+                'message': '{}.'.format(lazy_gettext("success")),
                 'data': {
                     'directions': utils.direction_choices(
                         args['company'], request.args['route'])
@@ -145,7 +145,7 @@ def search(args,
 
             return jsonify({
                 'success': True,
-                'message': "Success.",
+                'message': '{}.'.format(lazy_gettext("success")),
                 'data': {
                     'service_types': utils.type_choices(
                         args['company'], request.args['route'],
@@ -158,7 +158,7 @@ def search(args,
 
             return jsonify({
                 'success': True,
-                'message': "Success.",
+                'message': '{}.'.format(lazy_gettext("success")),
                 'data': {
                     'stops': utils.stop_choices(
                         args['company'], request.args['route'], request.args['direction'],
@@ -166,31 +166,20 @@ def search(args,
                 }
             })
         else:
-            return jsonify({
-                'success': False,
-                'message': "Endpoint not found.",
-                'data': None
-            }), 404
+            abort(404)
     except requests.exceptions.ConnectionError:
         return jsonify({
             'success': False,
-            'message': "Connection timeout/error.",
+            'message': '{}.'.format(lazy_gettext("connection_error")),
             'data': None
-        }), 400
+        })
     except requests.exceptions.HTTPError:
         current_app.logger.exception("HTTPError occurs at 'bookmark_search'")
         return jsonify({
             'success': False,
-            'message': "Remote server error.",
+            'message': '{}.'.format(lazy_gettext("eta_server_error")),
             'data': None
-        }), 400
-    except Exception:
-        current_app.logger.exception("Unexpected exception.")
-        return jsonify({
-            'success': False,
-            'message': "Unexpected internet error.",
-            'data': None
-        }), 500
+        })
 
 
 @bp.route("/bookmark/order", methods=["PUT"])
@@ -204,6 +193,6 @@ def swap(args):
 
     return jsonify({
         'success': True,
-        'message': "Updated.",
+        'message': '{}.'.format(lazy_gettext("updated")),
         'data': None
     })

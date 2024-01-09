@@ -1,10 +1,11 @@
 import base64
-from io import BytesIO
 import logging
+from io import BytesIO
 from pathlib import Path
 
 import webargs
-from flask import Blueprint, Response, current_app, jsonify
+from flask import Blueprint, current_app, jsonify
+from flask_babel import lazy_gettext
 
 from app import config, models
 from app.modules import image as eimage
@@ -24,7 +25,7 @@ bp = Blueprint('api_display',
 def get_models(args):
     return jsonify({
         'success': True,
-        'message': "Success.",
+        'message': '{}.'.format(lazy_gettext("success")),
         'data': {
             "models": [b.__name__ for b in eimage.eta_image.EtaImageGeneratorFactory.models(args['epd_brand'])]
         }
@@ -39,7 +40,7 @@ def get_models(args):
 def get_layouts(args):
     return jsonify({
         'success': True,
-        'message': "Success.",
+        'message': '{}.'.format(lazy_gettext("success")),
         'data': {
             "layouts": eimage.eta_image.EtaImageGeneratorFactory.get_generator(
                 args['epd_brand'], args['epd_model']).layouts()
@@ -58,7 +59,7 @@ def image(args):
     if (not aconf.confs.epd_brand or not aconf.confs.epd_model):
         return jsonify({
             'success': False,
-            'message': 'Configuration required.'
+            'message': '{}.'.format(lazy_gettext('configuration_required')),
         }), 400
 
     bm_setting = config.site_data.BookmarkList()
@@ -71,7 +72,7 @@ def image(args):
     except KeyError:
         return jsonify({
             'success': False,
-            'message': 'Layout dose not exists.',
+            'message': '{}'.format(lazy_gettext('Layout does not exists.')),
             'data': None
         }), 400
 
@@ -82,7 +83,7 @@ def image(args):
 
     return jsonify({
         'success': True,
-        'message': 'Success.',
+        'message': '{}.'.format(lazy_gettext('success')),
         'data': {
             'images': images
         }
@@ -101,7 +102,7 @@ def refresh(args):
     if (not aconf.confs.epd_brand or not aconf.confs.epd_model):
         return jsonify({
             'success': False,
-            'message': 'Configuration required.'
+            'message': '{}.'.format(lazy_gettext('configuration_required')),
         }), 400
 
     # ---------- generate ETA images ----------
@@ -115,7 +116,7 @@ def refresh(args):
     except KeyError:
         return jsonify({
             'success': False,
-            'message': 'Layout dose not exists.',
+            'message': '{}'.format(lazy_gettext('Layout does not exists.')),
             'data': None
         }), 400
 
@@ -129,7 +130,7 @@ def refresh(args):
 
         return jsonify({
             'success': False,
-            'message': 'Failed to refresh the screen.',
+            'message': '{}'.format(lazy_gettext('Failed to refresh the screen.')),
             'data': None
         }), 400
 
@@ -156,12 +157,12 @@ def refresh(args):
 
         return jsonify({
             'success': False,
-            'message': 'Failed to refresh the screen.',
+            'message': '{}'.format(lazy_gettext('Failed to refresh the screen.')),
             'data': None
         }), 400
 
     return jsonify({
         'success': True,
-        'message': 'Refreshed.',
+        'message': '{}.'.format(lazy_gettext('success')),
         'data': None
     })

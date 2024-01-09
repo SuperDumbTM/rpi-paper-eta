@@ -1,6 +1,7 @@
 import re
 
 from flask import Blueprint, current_app, jsonify
+from flask_babel import lazy_gettext
 
 bp = Blueprint('api_log', __name__, url_prefix="/api/log")
 
@@ -20,7 +21,7 @@ def get():
 
     return jsonify({
         'success': True,
-        'message': 'Success.',
+        'message': '{}.'.format(lazy_gettext('success')),
         'data': {
             'logs': logs
         }
@@ -32,6 +33,6 @@ def delete():
     open(current_app.config['LOG_FILE_PATH'], 'w', encoding='utf-8').close()
     return jsonify({
         'success': True,
-        'message': 'Deleted.',
+        'message': '{}.'.format(lazy_gettext('deleted')),
         'data': None
     })

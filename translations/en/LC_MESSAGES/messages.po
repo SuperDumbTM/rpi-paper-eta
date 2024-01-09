@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-01-09 21:16+0800\n"
+"POT-Creation-Date: 2024-01-09 21:58+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -18,9 +18,21 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.14.0\n"
 
-#: app/handles.py:92 app/templates/layout.jinja:78
+#: app/handles.py:23 app/handles.py:30
+msgid "validation_failed"
+msgstr "Validation Failed"
+
+#: app/handles.py:48 app/handles.py:55
+msgid "Internal validation failed."
+msgstr "Internal validation failed."
+
+#: app/handles.py:63 app/handles.py:67
+msgid "The requested URL was not found on the server."
+msgstr "The requested URL was not found on the server."
+
+#: app/handles.py:87 app/handles.py:95 app/templates/layout.jinja:78
 msgid "unexpected_error_occured"
-msgstr "Unexpected error occured."
+msgstr "Unexpected Error Occured."
 
 #: app/translation.py:4
 msgid "eta-end-of-service"
@@ -87,12 +99,62 @@ msgstr "Outbound"
 msgid "error"
 msgstr "Error"
 
-#: app/controllers/html/configuration.py:91
+#: app/controllers/apis/bookmark.py:44 app/controllers/apis/bookmark.py:121
+#: app/controllers/apis/bookmark.py:136 app/controllers/apis/bookmark.py:148
+#: app/controllers/apis/bookmark.py:161 app/controllers/apis/config.py:20
+#: app/controllers/apis/display.py:28 app/controllers/apis/display.py:43
+#: app/controllers/apis/display.py:86 app/controllers/apis/display.py:166
+#: app/controllers/apis/log.py:24 app/controllers/apis/schedule.py:48
+#: app/controllers/apis/schedule.py:93
+msgid "success"
+msgstr "Success"
+
+#: app/controllers/apis/bookmark.py:60 app/controllers/apis/bookmark.py:80
+#: app/controllers/apis/bookmark.py:103 app/controllers/apis/schedule.py:82
+#: app/controllers/apis/schedule.py:99
+msgid "invalid_id"
+msgstr "Invalid ID"
+
+#: app/controllers/apis/bookmark.py:66 app/controllers/apis/bookmark.py:86
+#: app/controllers/apis/bookmark.py:196 app/controllers/apis/config.py:38
+#: app/controllers/apis/config.py:67 app/controllers/apis/schedule.py:76
+msgid "updated"
+msgstr "Updated"
+
+#: app/controllers/apis/bookmark.py:97 app/controllers/apis/log.py:36
+msgid "deleted"
+msgstr "Deleted"
+
+#: app/controllers/apis/bookmark.py:173
+msgid "connection_error"
+msgstr "Connection Error"
+
+#: app/controllers/apis/bookmark.py:180
+msgid "eta_server_error"
+msgstr "ETA Server Error"
+
+#: app/controllers/apis/display.py:62 app/controllers/apis/display.py:105
+msgid "configuration_required"
+msgstr "Configuration Required"
+
+#: app/controllers/apis/display.py:75 app/controllers/apis/display.py:119
+msgid "Layout does not exists."
+msgstr "Layout Does Not Exists"
+
+#: app/controllers/apis/display.py:133 app/controllers/apis/display.py:160
+msgid "Failed to refresh the screen."
+msgstr "Failed to refresh the screen."
+
+#: app/controllers/apis/schedule.py:62
+msgid "created"
+msgstr "Created"
+
+#: app/controllers/html/configuration.py:90
 #, python-format
 msgid "Failed to import no. %(entry)s bookmark."
 msgstr "Failed to import no. %(entry)s bookmark."
 
-#: app/controllers/html/configuration.py:96 app/controllers/html/schedule.py:98
+#: app/controllers/html/configuration.py:95 app/controllers/html/schedule.py:98
 msgid "import_failed"
 msgstr "Import Failed"
 

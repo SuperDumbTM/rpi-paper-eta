@@ -1,5 +1,6 @@
 import webargs
 from flask import Blueprint, jsonify
+from flask_babel import lazy_gettext
 
 from app import config
 from app.modules import image as eimage
@@ -16,7 +17,7 @@ bp = Blueprint('api_config', __name__, url_prefix="/api/config")
 def get_server_setting():
     return jsonify({
         'success': True,
-        'message': "Success.",
+        'message': '{}.'.format(lazy_gettext("success")),
         'data': {
             'setting': config.site_data.AppConfiguration().confs.model_dump()
         }
@@ -34,7 +35,7 @@ def update_server_setting(args):
     aconf.update(aconf.confs.model_copy(update=args))
     return jsonify({
         'success': True,
-        'message': "Updated.",
+        'message': '{}.'.format(lazy_gettext("updated")),
         'data': None
     })
 
@@ -63,6 +64,6 @@ def update_epaper_setting(args):
     aconf.update(aconf.confs.model_copy(update=args))
     return jsonify({
         'success': True,
-        'message': "Updated.",
+        'message': '{}.'.format(lazy_gettext("updated")),
         'data': None
     })
