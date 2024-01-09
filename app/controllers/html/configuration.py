@@ -1,12 +1,14 @@
 from dataclasses import asdict
+import json
+import logging
+import pydantic
 
 import requests
-from flask import (Blueprint, current_app, flash, jsonify, redirect,
+from flask import (Blueprint, Response, current_app, flash, jsonify, redirect,
                    render_template, request, url_for)
 from flask_babel import lazy_gettext
 
-from app import enums, forms, models, utils
-from app.config import site_data
+from app import enums, forms, models, utils, config
 from app.modules import image as eimage
 
 bp = Blueprint('configuration',
@@ -17,29 +19,8 @@ bp = Blueprint('configuration',
 
 @bp.route('/bookmarks')
 def bookmark_list():
-    return render_template("configuration/bookmark_list.jinja", etas=site_data.BookmarkList())
+    return render_template("configuration/bookmark_list.jinja", etas=config.site_data.BookmarkList())
 
-
-# @bp.route('/bookmark/create', methods=["GET", "POST"])
-# def bookmark_create():
-#     form = forms.BookmarkForm()
-
-#     if form.validate_on_submit():
-#         try:
-#             etas = site_data.BookmarkList()
-#             etas.create(models.EtaConfig(**form.data)).persist()
-#         except Exception as e:
-#             current_app.logger.error(e)
-#             flash("Update failed due to internal errors.",
-#                   enums.FlashCategory.error)
-#         else:
-#             flash("Updated.", enums.FlashCategory.success)
-
-#     return render_template("configuration/bookmark_form.jinja",
-#                            form=form,
-#                            form_action=url_for(
-#                                "configuration.bookmark_create"),
-#                            editing=False)
 
 @bp.route('/bookmark/create')
 def bookmark_create():
@@ -56,10 +37,10 @@ def bookmark_create():
                            editing=False)
 
 
-@bp.route('/bookmarks/edit/<id>')
+@bp.route('/bookmark/edit/<id>')
 def bookmark_edit(id: str):
-    etas = site_data.BookmarkList()
-    entry = etas.get(id)
+    bm = config.site_data.BookmarkList()
+    entry = bm.get(id)
 
     directions = service_types = stops = []
     try:
@@ -88,7 +69,7 @@ def bookmark_edit(id: str):
 
 @bp.route('/epd')
 def epaper_setting():
-    conf = site_data.AppConfiguration().confs
+    conf = config.site_data.AppConfiguration().confs
 
     if conf.epd_brand:
         models = [m.__name__ for m in eimage.eta_image.EtaImageGeneratorFactory.models(
@@ -104,7 +85,7 @@ def epaper_setting():
 
 @bp.route('/api-server')
 def api_server_setting():
-    conf = site_data.AppConfiguration().confs
+    conf = config.site_data.AppConfiguration().confs
     return render_template("configuration/api_server_form.jinja",
                            form=forms.ApiServerForm(url=conf.url,
                                                     username=conf.username,

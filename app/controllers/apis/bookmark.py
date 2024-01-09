@@ -53,7 +53,7 @@ def get_all():
 def create(args):
     bkms = config.site_data.BookmarkList()
     try:
-        bkms.create(models.EtaConfig(**args,))
+        bkms.create(**args)
     except KeyError:
         return jsonify({
             'success': False,
@@ -73,7 +73,7 @@ def create(args):
 def update(args, id: str):
     bkms = config.site_data.BookmarkList()
     try:
-        bkms.update(id, models.EtaConfig(id=id, **args,))
+        bkms.update(id, **args)
     except KeyError:
         return jsonify({
             'success': False,

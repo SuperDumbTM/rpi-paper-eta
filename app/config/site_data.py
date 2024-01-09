@@ -6,7 +6,7 @@ from typing import Self
 import flask_apscheduler
 import requests
 
-from app import config, models, utils
+from app import config, enums, models, utils
 from app.modules import image as eimage
 
 
@@ -59,22 +59,58 @@ class BookmarkList(abc.Sequence):
                 return idx
         raise KeyError(id)
 
-    def create(self, value: models.EtaConfig) -> None:
-        self.insert(-1, value)
+    def create(self,
+               company: enums.EtaCompany,
+               route: str,
+               direction: enums.RouteDirection,
+               service_type: str,
+               stop_code: str,
+               lang: str) -> None:
+        self.insert(
+            -1, company=company, route=route, direction=direction,
+            service_type=service_type, stop_code=stop_code, lang=lang)
 
-    def insert(self, index: int, value: models.EtaConfig) -> None:
-        while value.id is None or self._is_id_exist(value.id):
-            value.id = utils.random_id_gen(6)
-        self._data.insert(index, value)
+    def insert(self,
+               index: int,
+               company: enums.EtaCompany,
+               route: str,
+               direction: enums.RouteDirection,
+               service_type: str,
+               stop_code: str,
+               lang: str) -> None:
+
+        while 'id_' not in locals() or self._is_id_exist(id_):
+            id_ = utils.random_id_gen(8)
+
+        self._data.insert(index, models.EtaConfig(id=id_,
+                                                  company=company,
+                                                  route=route,
+                                                  direction=direction,
+                                                  service_type=service_type,
+                                                  stop_code=stop_code,
+                                                  lang=lang
+                                                  ))
+        self._persist()
+
+    def update(self, id: str, company: enums.EtaCompany,
+               route: str,
+               direction: enums.RouteDirection,
+               service_type: str,
+               stop_code: str,
+               lang: str) -> Self:
+        self._data[self.index(id)] = models.EtaConfig(id=id,
+                                                      company=company,
+                                                      route=route,
+                                                      direction=direction,
+                                                      service_type=service_type,
+                                                      stop_code=stop_code,
+                                                      lang=lang
+                                                      )
         self._persist()
 
     def swap(self, id1: str, id2: str) -> None:
         id1, id2 = self.index(id1), self.index(id2)
         self._data[id1], self._data[id2] = self._data[id2], self._data[id1]
-        self._persist()
-
-    def update(self, id: str, value: models.EtaConfig) -> Self:
-        self._data[self.index(id)] = value
         self._persist()
 
     def pop(self, index: int) -> models.EtaConfig:
