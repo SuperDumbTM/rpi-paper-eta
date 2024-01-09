@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-01-08 20:45+0800\n"
+"POT-Creation-Date: 2024-01-09 19:40+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hant_HK\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.14.0\n"
 
-#: app/handles.py:64 app/templates/layout.jinja:78
+#: app/handles.py:92 app/templates/layout.jinja:78
 msgid "unexpected_error_occured"
 msgstr "發生未知的錯誤。"
 
@@ -82,10 +82,19 @@ msgstr "回程"
 msgid "outbound"
 msgstr "去程"
 
-#: app/controllers/apis/bookmark.py:38 app/templates/error.jinja:3
+#: app/controllers/apis/bookmark.py:37 app/templates/error.jinja:3
 #: app/templates/index.jinja:95
 msgid "error"
 msgstr "錯誤"
+
+#: app/controllers/html/schedule.py:93
+#, python-format
+msgid "import_failed_%(entry)s"
+msgstr "未能匯入第%(entry)s個排程"
+
+#: app/controllers/html/schedule.py:98
+msgid "import_failed"
+msgstr "匯入失敗"
 
 #: app/templates/error.jinja:9
 msgid "!"
@@ -133,16 +142,16 @@ msgstr "時間"
 
 #: app/templates/index.jinja:92 app/templates/schedule/schedule_form.jinja:49
 #: app/templates/schedule/schedule_form.jinja:273
-#: app/templates/schedule/schedule_list.jinja:31
+#: app/templates/schedule/schedule_list.jinja:36
 msgid "eta_type"
 msgstr "預報顯示模式"
 
 #: app/templates/index.jinja:93 app/templates/schedule/schedule_form.jinja:66
-#: app/templates/schedule/schedule_list.jinja:32
+#: app/templates/schedule/schedule_list.jinja:37
 msgid "layout"
 msgstr "佈局"
 
-#: app/templates/index.jinja:94 app/templates/schedule/schedule_list.jinja:35
+#: app/templates/index.jinja:94 app/templates/schedule/schedule_list.jinja:40
 msgid "is_partial"
 msgstr "快新更新"
 
@@ -216,27 +225,27 @@ msgid "stop"
 msgstr "車站"
 
 #: app/templates/configuration/bookmark_list.jinja:30
-#: app/templates/schedule/schedule_list.jinja:30
+#: app/templates/schedule/schedule_list.jinja:35
 msgid "no."
 msgstr "No."
 
 #: app/templates/configuration/bookmark_list.jinja:37
-#: app/templates/schedule/schedule_list.jinja:36
+#: app/templates/schedule/schedule_list.jinja:41
 msgid "action"
 msgstr "指令"
 
 #: app/templates/configuration/bookmark_list.jinja:103
-#: app/templates/schedule/schedule_list.jinja:99
+#: app/templates/schedule/schedule_list.jinja:104
 msgid "delete"
 msgstr "刪除"
 
 #: app/templates/configuration/bookmark_list.jinja:109
-#: app/templates/schedule/schedule_list.jinja:105
+#: app/templates/schedule/schedule_list.jinja:110
 msgid "edit"
 msgstr "編輯"
 
 #: app/templates/configuration/bookmark_list.jinja:121
-#: app/templates/schedule/schedule_list.jinja:125
+#: app/templates/schedule/schedule_list.jinja:130
 msgid "create"
 msgstr "建立"
 
@@ -323,7 +332,7 @@ msgstr ""
 "target=\"_blank\">cron</a> 的格式來進行排程。 如果你熟悉 cron ，可以直接輸入排程或使用選擇器建立排程。"
 
 #: app/templates/schedule/schedule_form.jinja:36
-#: app/templates/schedule/schedule_list.jinja:33
+#: app/templates/schedule/schedule_list.jinja:38
 msgid "schedule"
 msgstr "排程"
 
@@ -417,17 +426,25 @@ msgstr "佈局預覽"
 msgid ":"
 msgstr "："
 
-#: app/templates/schedule/schedule_list.jinja:34
+#: app/templates/schedule/schedule_list.jinja:39
 msgid "next_execution"
 msgstr "下次執行時間"
 
-#: app/templates/schedule/schedule_list.jinja:81
+#: app/templates/schedule/schedule_list.jinja:86
 msgid "not_enabled"
 msgstr "未啟用"
 
-#: app/templates/schedule/schedule_list.jinja:113
+#: app/templates/schedule/schedule_list.jinja:118
 msgid "refresh_now"
 msgstr "更新屏幕"
+
+#: app/templates/schedule/schedule_list.jinja:137
+msgid "export"
+msgstr "匯出"
+
+#: app/templates/schedule/schedule_list.jinja:144
+msgid "import"
+msgstr "匯入"
 
 #: app/templates/schedule/macros/cron_selector.jinja:5
 msgid "cron_mode"

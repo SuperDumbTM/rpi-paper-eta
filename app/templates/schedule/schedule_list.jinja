@@ -20,8 +20,11 @@
 
 {% block content %}
 <div class="container-xxl">
-    {% include "includes/flash_success.jinja" %}
-    {% include "includes/flash_error.jinja" %}
+
+    <div class="row m-2">
+        {% include "includes/flash_success.jinja" %}
+        {% include "includes/flash_error.jinja" %}
+    </div>
 
     <form id="file-import-form" method="POST" action="{{ url_for('schedule.import_') }}" enctype="multipart/form-data" style="display: none;">
         <input type="file" name="schedule">

@@ -4,6 +4,7 @@ import logging
 from flask import (Blueprint, Response, flash, redirect, render_template,
                    request, url_for)
 from flask_babel import lazy_gettext
+import pydantic
 
 from app import config, enums, forms
 from app.config import site_data
@@ -81,19 +82,19 @@ def import_():
         file = request.files['schedule']
 
         scheduler = site_data.RefreshSchedule()
-        for schedule in json.load(file.stream):
+        for i, schedule in enumerate(json.load(file.stream)):
             try:
                 scheduler.create(schedule['schedule'],
                                  schedule['eta_type'],
                                  schedule['layout'],
                                  schedule['is_partial'],
                                  False)
-                # TODO: validation
-            except KeyError:
+            except (KeyError, pydantic.ValidationError):
+                flash(lazy_gettext('import_failed_%(entry)s', entry=i),
+                      enums.FlashCategory.error)
                 logging.exception(
-                    'Encountering missing field(s) during refresh schedule import.')
-                pass
-    except (UnicodeDecodeError, json.decoder.JSONDecodeError) as e:
-        print(e)
+                    'Encountering missing field(s) or invalid values during refresh schedule import.')
+    except (UnicodeDecodeError, json.decoder.JSONDecodeError):
         flash(lazy_gettext('import_failed'), enums.FlashCategory.error)
+
     return redirect(url_for('schedule.schedules'))
