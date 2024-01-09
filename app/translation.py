@@ -20,3 +20,4 @@ lazy_gettext('ctb')
 # ETA language
 lazy_gettext('en')
 lazy_gettext('tc')
+lazy_gettext('default')
