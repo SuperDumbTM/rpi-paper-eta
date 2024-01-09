@@ -22,22 +22,25 @@ _bookmark_validation_rules = {
 
 
 @bp.route("/bookmarks")
-def get_all():
+@webargs.flaskparser.use_args({
+    'i18n': webargs.fields.Boolean(load_default=False)
+}, location="query")
+def get_all(args):
     bookmarks = []
-    for entry in config.site_data.BookmarkList():
-        entry: models.EtaConfig
+    for bm in config.site_data.BookmarkList():
+        bm: models.EtaConfig
 
         try:
             stop_name = requests.get(
                 f"{config.site_data.AppConfiguration().get('url')}"
-                f"/{entry.company.value}/{entry.route}/{entry.direction.value}/{entry.service_type}/stop",
-                {'stop_code': entry.stop_code}
-            ).json()['data']['stop']['name'][entry.lang]
+                f"/{bm.company.value}/{bm.route}/{bm.direction.value}/{bm.service_type}/stop",
+                {'stop_code': bm.stop_code}
+            ).json()['data']['stop']['name'][bm.lang]
         except Exception:
             stop_name = lazy_gettext('error')
 
-        bookmarks.append(
-            entry.model_dump_i18n() | {'stop_name': stop_name.title()})
+        dump = (bm.model_dump()if not args['i18n'] else bm.model_dump_i18n())
+        bookmarks.append(dump | {'stop_name': stop_name})
 
     return jsonify({
         'success': True,
@@ -73,6 +76,7 @@ def create(args):
 def update(args, id: str):
     bkms = config.site_data.BookmarkList()
     try:
+        print(args)
         bkms.update(id, **args)
     except KeyError:
         return jsonify({

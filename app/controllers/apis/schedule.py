@@ -27,7 +27,8 @@ _schedule_validate_rules = {
 @bp.route('/schedules')
 @webargs.flaskparser.use_args({
     'enabled': webargs.fields.Boolean(load_default=None),
-    'n_future': webargs.fields.Integer(load_default=5)
+    'n_future': webargs.fields.Integer(load_default=5),
+    'i18n': webargs.fields.Boolean(load_default=False),
 }, location="query")
 def get_all(args):
     schedules = []
@@ -37,8 +38,9 @@ def get_all(args):
         if args['enabled'] is not None and args['enabled'] != s.enabled:
             continue
 
+        dump = s.model_dump() if not args['i18n'] else s.model_dump_i18n()
         schedules.append({
-            **s.model_dump(),
+            **dump,
             'future_executions': (tuple(cron.get_next(datetime).isoformat() for _ in range(args['n_future']))
                                   if s.enabled else [])
         })
@@ -50,6 +52,24 @@ def get_all(args):
             'schedules': schedules
         }
     })
+
+
+@bp.route('/schedule/<string:id>')
+def get(id: str):
+    try:
+        return jsonify({
+            'success': True,
+            'message': '{}.'.format(lazy_gettext("success")),
+            'data': {
+                'schedule': config.site_data.RefreshSchedule().get(id).model_dump()
+            }
+        })
+    except KeyError:
+        return jsonify({
+            'success': False,
+            'message': '{}.'.format(lazy_gettext("invalid_id")),
+            'data': None
+        }), 400
 
 
 @bp.route('/schedule', methods=['POST'])

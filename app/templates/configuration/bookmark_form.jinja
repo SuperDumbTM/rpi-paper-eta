@@ -15,7 +15,7 @@
 {% block content %}
 <div class="row align-items-center" style="height: 100vh;">
     <div class="mx-auto col-10 col-md-8 col-lg-6">
-        <form class="form" action="{{ form_action }}" method="{{ 'put' if editing else 'post' }}" autocomplete="off">
+        <form class="form" action="{{ form_action }}" method="{{ 'PUT' if editing else 'POST' }}" autocomplete="off">
 
             <h1>{{ _('new_bookmark') }}</h1>
             <small class="form-text text-mute">
@@ -27,7 +27,7 @@
 
             <div class="form-group">
                 <label for="lang" class="form-label">{{ _('language') }}</label>
-                <select class="form-select" name="lang">
+                <select class="form-select" name="lang" required>
                     {% for lang in langs %}
                     {% if form.lang == lang[0] %}
                     <option value="{{ lang[0] }}" selected>
@@ -46,7 +46,7 @@
 
             <div class="form-group">
                 <label for="company" class="form-label">{{ _('company') }}</label>
-                <select class="form-select" name="company">
+                <select class="form-select" name="company" required>
                     <option value="" selected>-----</option>
                     {% for company in companys %}
                     {% if form.company == company[0] %}
@@ -70,7 +70,7 @@
 
             <div class="form-group">
                 <label for="direction" class="form-label">{{ _('direction') }}</label>
-                <select class="form-select" name="direction">
+                <select class="form-select" name="direction" required>
                     <option value="" selected>-----</option>
                     {% for direction in directions %}
                     {% if form.direction == direction[0] %}
@@ -88,7 +88,7 @@
 
             <div class="form-group">
                 <label for="service_type" class="form-label">{{ _('service_type') }}</label>
-                <select class="form-select" name="service_type">
+                <select class="form-select" name="service_type" required>
                     <option value="" selected>-----</option>
                     {% for service_type in service_types %}
                     {% if form.service_type == service_type[0] %}
@@ -106,10 +106,10 @@
 
             <div class="form-group">
                 <label for="stop_code" class="form-label">{{ _('stop') }}</label>
-                <select class="form-select" name="stop_code">
+                <select class="form-select" name="stop_code" required>
                     <option value="" selected>-----</option>
                     {% for stop in stops %}
-                    {% if form.stop == stop[0] %}
+                    {% if form.stop_code == stop[0] %}
                     <option value="{{ stop[0] }}" selected>
                         {{ stop[1] }}
                     </option>

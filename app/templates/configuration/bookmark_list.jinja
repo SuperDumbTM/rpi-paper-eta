@@ -64,7 +64,7 @@
         responsive: true,
         processing: true,
         ajax: {
-            url: "{{ url_for('api_bookmark.get_all') }}",
+            url: "{{ url_for('api_bookmark.get_all') }}?i18n=true",
             dataSrc: "data.etas",
         },
         columns: [

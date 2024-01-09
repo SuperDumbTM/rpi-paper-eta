@@ -64,7 +64,7 @@
     let datatable = $('#schedule-list').DataTable({
         responsive: true,
         ajax: {
-            url: "{{ url_for('api_schedule.get_all') }}",
+            url: "{{ url_for('api_schedule.get_all') }}?i18n=true",
             dataSrc: "data.schedules"
         },
         'columnDefs': [
@@ -115,10 +115,7 @@
                             <i class="bi bi-pencil-square"></i>
                         </button>
                         <button type="button" class="dt-action btn btn-outline btn-sm btn-outline-warning"
-                            data-href-method="GET"
-                            data-href="{{ url_for('api_display.refresh') }}?${$.param({ eta_type: row.eta_type, layout: row.layout, is_partial: row.is_partial })}"
-                            data-busy-load="true"
-                            data-200-reload="false"
+                            onclick="refreshDisplay('${row.id}')"
                             title={{ _('refresh_now') }}>
                             <i class="bi bi-arrow-clockwise"></i>
                         </button>
@@ -156,5 +153,40 @@
             },
         ]
     });
+
+    function refreshDisplay(id) {
+        function refresh(eta_type, layout, is_partial) {
+            return $.ajax({
+                url: '{{ url_for("api_display.refresh")}}',
+                method: 'GET',
+                data: {
+                    eta_type: eta_type,
+                    layout: layout,
+                    is_partial: is_partial
+                },
+                beforeSend: () => $.busyLoadFull('show'),
+                complete: () => $.busyLoadFull('hide'),
+            })
+        }
+
+        $.get(
+            '{{ url_for("api_schedule.get", id="p1") }}'.replace('p1', id),
+            function (res, status, xhr) {
+                if (res.success) {
+                    schedule = res.data.schedule
+                    refresh(
+                        schedule.eta_type, schedule.layout, schedule.is_partial
+                    ).done(function (res, status, xhr) {
+                        if (res.success) {
+                            alertify.success(res.message)
+                        } else {
+                            alertify.error(res.message)
+                        }
+                    })
+                } else {
+                    alertify.error(res.message)
+                }
+            })
+    }
 </script>
 {% endblock script %}

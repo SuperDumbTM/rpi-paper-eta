@@ -19,7 +19,9 @@ class EtaConfig(pydantic.BaseModel):
     id: Optional[str] = None
 
     def model_dump_i18n(self) -> dict:
-        return {k: lazy_gettext(v) for k, v in self.model_dump().items()}
+        return self.model_dump() | {
+            k: lazy_gettext(v) for k, v in self.model_dump(exclude=['route', 'stop_code', 'id']).items()
+        }
 
 
 class Schedule(pydantic.BaseModel):
