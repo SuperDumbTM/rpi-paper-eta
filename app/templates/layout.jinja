@@ -29,6 +29,10 @@
 </head>
 
 <body>
+
+    {% block nav %}
+    {% endblock nav %}
+
     <div id="content">
         {% block content %}
         {% endblock %}
@@ -47,7 +51,7 @@
         </div>
     </div>
 
-    {% block body %}
+    {% block footer %}
     {% endblock %}
 
 </body>
@@ -78,6 +82,7 @@
                 500: (xhr) => alertify.error("{{ _('unexpected_error_occured') }}")
             },
             error: function (xhr, status, error) {
+                console.log('Default ajax error handling.', xhr)
                 if (isJSON(xhr.responseText)) {
                     let = json = $.parseJSON(xhr.responseText)
                     if (json.message) {

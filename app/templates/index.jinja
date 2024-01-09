@@ -1,15 +1,16 @@
 {% extends "layout.jinja" %}
-{% include "includes/navbar.jinja" %}
 
 {% block style %}
 <style>
-
-.card-header{
-    background-color: var(--theme-4-color);
-}
-
+    .card-header {
+        background-color: var(--theme-4-color);
+    }
 </style>
 {% endblock style %}
+
+{% block nav %}
+{% include "includes/navbar.jinja" %}
+{% endblock nav %}
 
 {% block content %}
 <div class="container">

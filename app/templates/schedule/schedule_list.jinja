@@ -1,7 +1,6 @@
 {% from "macros/render_field.jinja" import render_field %}
 
 {% extends "layout.jinja" %}
-{% include "includes/navbar.jinja" %}
 
 {% block link %}
 <link rel="stylesheet" href="//cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
@@ -17,6 +16,10 @@
     }
 </style>
 {% endblock style %}
+
+{% block nav %}
+{% include "includes/navbar.jinja" %}
+{% endblock nav %}
 
 {% block content %}
 <div class="container-xxl">

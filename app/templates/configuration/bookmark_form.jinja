@@ -1,16 +1,14 @@
 {% from "macros/render_field.jinja" import render_field %}
 
 {% extends "layout.jinja" %}
-{% include "includes/navbar.jinja" %}
 
 {% block link %}
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 {% endblock link %}
 
-{% block style %}
-<style>
-</style>
-{% endblock style %}
+{% block nav %}
+{% include "includes/navbar.jinja" %}
+{% endblock nav %}
 
 {% block content %}
 <div class="row align-items-center" style="height: 100vh;">
