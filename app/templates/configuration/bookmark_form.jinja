@@ -134,9 +134,10 @@
 <script src="{{ url_for('static', filename='scripts/jquery.ui.autocomplete.scroll.js') }}"></script>
 <script>
 
-    function clearSelect(dom) {
+    function clearSelect(dom, default_opt = true) {
         dom.find('option').remove().end()
-        dom.append(new Option("-----", ""))
+        if (default_opt)
+            dom.append(new Option("-----", ""))
     }
 
     function getParams() {
@@ -184,6 +185,11 @@
             '{{ url_for("api_bookmark.search", search_type="routes") }}',
             getParams(),
             function (res) {
+                $('input[name=route]').val(null)
+                clearSelect($("select[name=direction]"))
+                clearSelect($("select[name=service_type]"))
+                clearSelect($("select[name=stop]"))
+
                 $("input[name=route]").autocomplete({
                     maxShowItems: 6,
                     autoFocus: true,
@@ -199,7 +205,7 @@
             '{{ url_for("api_bookmark.search", search_type="directions") }}',
             { ...getParams(), 'route': ui.item.value },
             function (res) {
-                clearSelect(select = $("select[name=direction]"))
+                clearSelect(select = $("select[name=direction]"), false)
                 clearSelect($("select[name=service_type]"))
                 clearSelect($("select[name=stop]"))
 
@@ -229,6 +235,7 @@
             getParams(),
             function (res) {
                 clearSelect(select = $("select[name=stop_code]"))
+
                 res.data.stops.forEach(
                     (el) => select.append(new Option(el[1], el[0])))
             }
