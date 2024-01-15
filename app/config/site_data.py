@@ -156,6 +156,8 @@ class AppConfiguration:
         return self._data
 
     def __init__(self) -> None:
+        self._data = models.Configuration()
+
         if not self._filepath.exists():
             self._filepath.parent.mkdir(mode=711, parents=True, exist_ok=True)
             self._persist()
@@ -175,10 +177,7 @@ class AppConfiguration:
 
     def _persist(self) -> None:
         with open(self._filepath, "w", encoding="utf-8") as f:
-            if self._data is None:
-                f.write({})
-            else:
-                f.write(self._data.model_dump_json(indent=4))
+            f.write(self._data.model_dump_json(indent=4))
 
 
 @utils.singleton
