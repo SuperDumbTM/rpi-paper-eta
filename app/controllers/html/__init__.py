@@ -1,6 +1,7 @@
-from . import configuration, log, root, schedule
+from . import bookmark, configuration, log, root, schedule
 
 __all__ = [
+    bookmark,
     configuration,
     schedule,
     root,

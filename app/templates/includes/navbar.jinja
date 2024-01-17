@@ -11,7 +11,9 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 200px;">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('root.index') }}">{{ _('nav_home') }}</a>
+                    <a class="nav-link" href="{{ url_for('root.index') }}">
+                        {{ _('nav_home') }}
+                    </a>
                 </li>
 
                 <li class="nav-item dropdown">
@@ -19,11 +21,6 @@
                         {{ _('nav_configuration') }}
                     </a>
                     <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item" href="{{ url_for('configuration.bookmark_list') }}">
-                                {{ _('nav_bookmark') }}
-                            </a>
-                        </li>
                         <li>
                             <a class="dropdown-item" href="{{ url_for('configuration.epaper_setting') }}">
                                 {{ _('nav_e-paper') }}
@@ -38,11 +35,21 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('schedule.schedules') }}">{{ _('nav_schedule') }}</a>
+                    <a class="nav-link" href="{{ url_for('bookmark.index') }}">
+                            {{ _('nav_bookmark') }}
+                    </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('log.logs') }}">{{ _('nav_log') }}</a>
+                    <a class="nav-link" href="{{ url_for('schedule.index') }}">
+                        {{ _('nav_schedule') }}
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('log.logs') }}">
+                        {{ _('nav_log') }}
+                    </a>
                 </li>
             </ul>
 

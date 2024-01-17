@@ -28,7 +28,7 @@
         {% include "includes/flash_error.jinja" %}
     </div>
 
-    <form id="file-import-form" method="POST" action="{{ url_for('configuration.bookmark_import') }}" enctype="multipart/form-data" style="display: none;">
+    <form id="file-import-form" method="POST" action="{{ url_for('bookmark.import_') }}" enctype="multipart/form-data" style="display: none;">
         <input type="file" name="bookmarks">
     </form>
 
@@ -115,7 +115,7 @@
                         </button>
                         <button type="button" class="dt-action btn btn-success btn-sm"
                             data-href-method=""
-                            data-href=${"{{ url_for('configuration.bookmark_edit', id='p1') }}".replace("p1", row.id)}
+                            data-href=${"{{ url_for('bookmark.edit', id='p1') }}".replace("p1", row.id)}
                             title={{ _("edit") }}>
                             <i class="bi bi-pencil-square"></i>
                         </button>
@@ -131,14 +131,14 @@
                 text: "{{ _('create') }}",
                 className: "btn btn-sm btn-success mx-1",
                 action: function (e, dt, node, config) {
-                    window.location.href = "{{ url_for('configuration.bookmark_create') }}";
+                    window.location.href = "{{ url_for('bookmark.create') }}";
                 }
             },
             {
                 text: "{{ _('export') }}",
                 className: "btn btn-sm btn-info mx-1",
                 action: function (e, dt, node, config) {
-                    window.location.assign("{{ url_for('configuration.bookmark_export') }}")
+                    window.location.assign("{{ url_for('bookmark.export') }}")
                 }
             },
             {

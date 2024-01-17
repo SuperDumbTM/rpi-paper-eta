@@ -170,7 +170,7 @@
         autoJsonFrom($('form'), {
             success: function (res) {
                 if (res.success) {
-                    window.location.href = "{{ url_for('configuration.bookmark_list') }}"
+                    window.location.href = "{{ url_for('bookmark.index') }}"
                 } else {
                     alertify.error(res.message)
                 }

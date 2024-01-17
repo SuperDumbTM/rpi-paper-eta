@@ -98,6 +98,7 @@ def create_app() -> Flask:
         Path(__file__).parent.joinpath('config', 'flask_config.py'))
     app.config.from_mapping(dotenv.dotenv_values('./.env'))
 
+    app.register_blueprint(controllers.html.bookmark.bp)
     app.register_blueprint(controllers.html.configuration.bp)
     app.register_blueprint(controllers.html.schedule.bp)
     app.register_blueprint(controllers.html.root.bp)

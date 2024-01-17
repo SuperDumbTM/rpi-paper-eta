@@ -16,9 +16,9 @@ bp = Blueprint('schedule',
                url_prefix="/schedule")
 
 
-@bp.route('/')
-def schedules():
-    return render_template("schedule/schedule_list.jinja")
+@bp.route('/schedules')
+def index():
+    return render_template("schedule/list.jinja")
 
 
 @bp.route('/create')
@@ -31,7 +31,7 @@ def create():
 
     # the template needs zip and list
     # https://stackoverflow.com/questions/62029141/cant-use-zip-from-jinja2
-    return render_template("schedule/schedule_form.jinja",
+    return render_template("schedule/form.jinja",
                            zip=zip,
                            list=list,
                            form=forms.ScheduleForm(),
@@ -43,14 +43,14 @@ def create():
                            )
 
 
-@bp.route('/create/edit/<id>')
+@bp.route('/schedule/create/edit/<id>')
 def edit(id: str):
     conf = config.site_data.AppConfiguration().confs
     scheduler = config.site_data.RefreshSchedule()
 
     # the template needs zip and list
     # https://stackoverflow.com/questions/62029141/cant-use-zip-from-jinja2
-    return render_template("schedule/schedule_form.jinja",
+    return render_template("schedule/form.jinja",
                            zip=zip,
                            list=list,
                            form=forms.ScheduleForm(
@@ -64,7 +64,7 @@ def edit(id: str):
                            )
 
 
-@bp.route('/export')
+@bp.route('/schedule/export')
 def export():
     scheduler = config.site_data.RefreshSchedule()
     return Response(
@@ -76,7 +76,7 @@ def export():
         headers={'Content-disposition': 'attachment; filename=schedules.json'})
 
 
-@bp.route('/import', methods=['POST'])
+@bp.route('/schedule/import', methods=['POST'])
 def import_():
     try:
         file = request.files['schedules']
@@ -97,4 +97,4 @@ def import_():
     except (UnicodeDecodeError, json.decoder.JSONDecodeError):
         flash(lazy_gettext('import_failed'), enums.FlashCategory.error)
 
-    return redirect(url_for('schedule.schedules'))
+    return redirect(url_for('schedule.index'))

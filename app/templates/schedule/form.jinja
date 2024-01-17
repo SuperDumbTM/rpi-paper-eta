@@ -212,7 +212,7 @@
         autoJsonFrom($('form'), {
             success: function (res) {
                 if (res.success) {
-                    window.location.href = "{{ url_for('schedule.schedules') }}"
+                    window.location.href = "{{ url_for('schedule.index') }}"
                 } else {
                     alertify.error(res.message)
                 }
