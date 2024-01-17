@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-01-10 01:03+0800\n"
+"POT-Creation-Date: 2024-01-18 00:30+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hant_HK\n"
@@ -120,20 +120,20 @@ msgstr "錯誤"
 #: app/controllers/apis/bookmark.py:165 app/controllers/apis/config.py:20
 #: app/controllers/apis/display.py:28 app/controllers/apis/display.py:43
 #: app/controllers/apis/display.py:86 app/controllers/apis/display.py:166
-#: app/controllers/apis/log.py:24 app/controllers/apis/schedule.py:50
-#: app/controllers/apis/schedule.py:62 app/controllers/apis/schedule.py:113
+#: app/controllers/apis/log.py:24 app/controllers/apis/schedule.py:37
+#: app/controllers/apis/schedule.py:49 app/controllers/apis/schedule.py:120
 msgid "success"
 msgstr "成功"
 
 #: app/controllers/apis/bookmark.py:63 app/controllers/apis/bookmark.py:84
-#: app/controllers/apis/bookmark.py:107 app/controllers/apis/schedule.py:70
-#: app/controllers/apis/schedule.py:102 app/controllers/apis/schedule.py:119
+#: app/controllers/apis/bookmark.py:107 app/controllers/apis/schedule.py:57
+#: app/controllers/apis/schedule.py:109 app/controllers/apis/schedule.py:126
 msgid "invalid_id"
 msgstr "無效 ID"
 
 #: app/controllers/apis/bookmark.py:69 app/controllers/apis/bookmark.py:90
-#: app/controllers/apis/bookmark.py:200 app/controllers/apis/config.py:38
-#: app/controllers/apis/config.py:67 app/controllers/apis/schedule.py:96
+#: app/controllers/apis/bookmark.py:200 app/controllers/apis/config.py:50
+#: app/controllers/apis/schedule.py:102
 msgid "updated"
 msgstr "已更新"
 
@@ -161,16 +161,16 @@ msgstr "佈局不存在。"
 msgid "Failed to refresh the screen."
 msgstr "更新屏幕失敗。"
 
-#: app/controllers/apis/schedule.py:82
+#: app/controllers/apis/schedule.py:78
 msgid "created"
 msgstr "已建立"
 
-#: app/controllers/html/configuration.py:90
+#: app/controllers/html/bookmark.py:88
 #, python-format
 msgid "Failed to import no. %(entry)s bookmark."
 msgstr "未能匯入第%(entry)s個收藏。"
 
-#: app/controllers/html/configuration.py:95 app/controllers/html/schedule.py:98
+#: app/controllers/html/bookmark.py:93 app/controllers/html/schedule.py:98
 msgid "import_failed"
 msgstr "匯入失敗"
 
@@ -195,11 +195,13 @@ msgstr "電子紙屏幕"
 msgid "setting"
 msgstr "設定"
 
-#: app/templates/configuration/epd_form.jinja:31 app/templates/index.jinja:26
+#: app/templates/configuration/epd_form.jinja:31
+#: app/templates/configuration/index.jinja:35 app/templates/index.jinja:26
 msgid "brand"
 msgstr "牌子"
 
-#: app/templates/configuration/epd_form.jinja:49 app/templates/index.jinja:32
+#: app/templates/configuration/epd_form.jinja:49
+#: app/templates/configuration/index.jinja:53 app/templates/index.jinja:32
 msgid "model"
 msgstr "型號"
 
@@ -223,18 +225,17 @@ msgstr "屏幕更新紀錄"
 msgid "time"
 msgstr "時間"
 
-#: app/templates/index.jinja:93 app/templates/schedule/schedule_form.jinja:48
-#: app/templates/schedule/schedule_form.jinja:272
-#: app/templates/schedule/schedule_list.jinja:43
+#: app/templates/index.jinja:93 app/templates/schedule/form.jinja:48
+#: app/templates/schedule/form.jinja:272 app/templates/schedule/list.jinja:43
 msgid "eta_type"
 msgstr "預報顯示模式"
 
-#: app/templates/index.jinja:94 app/templates/schedule/schedule_form.jinja:65
-#: app/templates/schedule/schedule_list.jinja:44
+#: app/templates/index.jinja:94 app/templates/schedule/form.jinja:65
+#: app/templates/schedule/list.jinja:44
 msgid "layout"
 msgstr "佈局"
 
-#: app/templates/index.jinja:95 app/templates/schedule/schedule_list.jinja:47
+#: app/templates/index.jinja:95 app/templates/schedule/list.jinja:47
 msgid "is_partial"
 msgstr "快新更新"
 
@@ -242,15 +243,86 @@ msgstr "快新更新"
 msgid "loading"
 msgstr "載入中"
 
+#: app/templates/bookmark/edit.jinja:18
+msgid "new_bookmark"
+msgstr "路線收藏"
+
+#: app/templates/bookmark/edit.jinja:20
+msgid "new_bookmark_help"
+msgstr "加入新的到站時間預報收藏。收藏數量並沒有上限，但跟據使用的佈局，能夠顯示的數目各有不同。上限數量以後的收藏將無法被顯示。"
+
+#: app/templates/bookmark/edit.jinja:27 app/templates/bookmark/list.jinja:46
+msgid "language"
+msgstr "顯示語言"
+
+#: app/templates/bookmark/edit.jinja:46 app/templates/bookmark/list.jinja:41
+msgid "company"
+msgstr "公司"
+
+#: app/templates/bookmark/edit.jinja:64 app/templates/bookmark/list.jinja:42
+msgid "route"
+msgstr "路線"
+
+#: app/templates/bookmark/edit.jinja:70 app/templates/bookmark/list.jinja:43
+msgid "direction"
+msgstr "行車方向"
+
+#: app/templates/bookmark/edit.jinja:88 app/templates/bookmark/list.jinja:44
+msgid "service_type"
+msgstr "班次類別"
+
+#: app/templates/bookmark/edit.jinja:106 app/templates/bookmark/list.jinja:45
+msgid "stop"
+msgstr "車站"
+
+#: app/templates/bookmark/edit.jinja:124
+#: app/templates/configuration/api_server_form.jinja:35
+#: app/templates/configuration/epd_form.jinja:66
+#: app/templates/configuration/index.jinja:84
+#: app/templates/schedule/form.jinja:96
+msgid "submit"
+msgstr "提交"
+
+#: app/templates/bookmark/list.jinja:40 app/templates/schedule/list.jinja:42
+msgid "no."
+msgstr "No."
+
+#: app/templates/bookmark/list.jinja:47 app/templates/schedule/list.jinja:48
+msgid "action"
+msgstr "指令"
+
+#: app/templates/bookmark/list.jinja:113 app/templates/schedule/list.jinja:111
+msgid "delete"
+msgstr "刪除"
+
+#: app/templates/bookmark/list.jinja:119 app/templates/schedule/list.jinja:118
+msgid "edit"
+msgstr "編輯"
+
+#: app/templates/bookmark/list.jinja:131 app/templates/schedule/list.jinja:148
+msgid "create"
+msgstr "建立"
+
+#: app/templates/bookmark/list.jinja:138 app/templates/schedule/list.jinja:155
+msgid "export"
+msgstr "匯出"
+
+#: app/templates/bookmark/list.jinja:145 app/templates/schedule/list.jinja:162
+msgid "import"
+msgstr "匯入"
+
 #: app/templates/configuration/api_server_form.jinja:14
+#: app/templates/configuration/index.jinja:71
 msgid "api_server_setting"
 msgstr "API 伺服器設定"
 
 #: app/templates/configuration/api_server_form.jinja:16
+#: app/templates/configuration/index.jinja:73
 msgid "api_server_setting_help"
 msgstr "輸入 ETA 伺服器的資料，以便程式能夠取得預報數據及其他相關資料。"
 
 #: app/templates/configuration/api_server_form.jinja:20
+#: app/templates/configuration/index.jinja:79
 msgid "api_server_url"
 msgstr "伺服器網址"
 
@@ -262,272 +334,192 @@ msgstr "登入名稱"
 msgid "api_server_password"
 msgstr "登入密碼"
 
-#: app/templates/configuration/api_server_form.jinja:35
-#: app/templates/configuration/bookmark_form.jinja:124
-#: app/templates/configuration/epd_form.jinja:66
-#: app/templates/schedule/schedule_form.jinja:96
-msgid "submit"
-msgstr "提交"
-
-#: app/templates/configuration/bookmark_form.jinja:18
-msgid "new_bookmark"
-msgstr "路線收藏"
-
-#: app/templates/configuration/bookmark_form.jinja:20
-msgid "new_bookmark_help"
-msgstr "加入新的到站時間預報收藏。收藏數量並沒有上限，但跟據使用的佈局，能夠顯示的數目各有不同。上限數量以後的收藏將無法被顯示。"
-
-#: app/templates/configuration/bookmark_form.jinja:27
-#: app/templates/configuration/bookmark_list.jinja:46
-msgid "language"
-msgstr "顯示語言"
-
-#: app/templates/configuration/bookmark_form.jinja:46
-#: app/templates/configuration/bookmark_list.jinja:41
-msgid "company"
-msgstr "公司"
-
-#: app/templates/configuration/bookmark_form.jinja:64
-#: app/templates/configuration/bookmark_list.jinja:42
-msgid "route"
-msgstr "路線"
-
-#: app/templates/configuration/bookmark_form.jinja:70
-#: app/templates/configuration/bookmark_list.jinja:43
-msgid "direction"
-msgstr "行車方向"
-
-#: app/templates/configuration/bookmark_form.jinja:88
-#: app/templates/configuration/bookmark_list.jinja:44
-msgid "service_type"
-msgstr "班次類別"
-
-#: app/templates/configuration/bookmark_form.jinja:106
-#: app/templates/configuration/bookmark_list.jinja:45
-msgid "stop"
-msgstr "車站"
-
-#: app/templates/configuration/bookmark_list.jinja:40
-#: app/templates/schedule/schedule_list.jinja:42
-msgid "no."
-msgstr "No."
-
-#: app/templates/configuration/bookmark_list.jinja:47
-#: app/templates/schedule/schedule_list.jinja:48
-msgid "action"
-msgstr "指令"
-
-#: app/templates/configuration/bookmark_list.jinja:113
-#: app/templates/schedule/schedule_list.jinja:111
-msgid "delete"
-msgstr "刪除"
-
-#: app/templates/configuration/bookmark_list.jinja:119
-#: app/templates/schedule/schedule_list.jinja:117
-msgid "edit"
-msgstr "編輯"
-
-#: app/templates/configuration/bookmark_list.jinja:131
-#: app/templates/schedule/schedule_list.jinja:134
-msgid "create"
-msgstr "建立"
-
-#: app/templates/configuration/bookmark_list.jinja:138
-#: app/templates/schedule/schedule_list.jinja:141
-msgid "export"
-msgstr "匯出"
-
-#: app/templates/configuration/bookmark_list.jinja:145
-#: app/templates/schedule/schedule_list.jinja:148
-msgid "import"
-msgstr "匯入"
-
 #: app/templates/configuration/epd_form.jinja:25
+#: app/templates/configuration/index.jinja:27
 msgid "display_setting"
 msgstr "屏幕設定"
 
 #: app/templates/configuration/epd_form.jinja:27
+#: app/templates/configuration/index.jinja:29
 msgid "display_setting_help"
 msgstr "選擇正在使用的電子紙屏幕。"
 
-#: app/templates/includes/navbar.jinja:14
+#: app/templates/configuration/index.jinja:24
+msgid "app_configuration"
+msgstr "設定"
+
+#: app/templates/includes/navbar.jinja:15
 msgid "nav_home"
 msgstr "主頁"
 
-#: app/templates/includes/navbar.jinja:19
+#: app/templates/includes/navbar.jinja:21
 msgid "nav_configuration"
 msgstr "設定"
 
-#: app/templates/includes/navbar.jinja:24
+#: app/templates/includes/navbar.jinja:45
 msgid "nav_bookmark"
 msgstr "路線收藏"
 
-#: app/templates/includes/navbar.jinja:29
-msgid "nav_e-paper"
-msgstr "屏幕"
-
-#: app/templates/includes/navbar.jinja:34
-msgid "nav_api_server"
-msgstr "API 伺服器"
-
-#: app/templates/includes/navbar.jinja:41
+#: app/templates/includes/navbar.jinja:51
 msgid "nav_schedule"
 msgstr "排程"
 
-#: app/templates/includes/navbar.jinja:45
+#: app/templates/includes/navbar.jinja:57
 msgid "nav_log"
 msgstr "程式記錄"
 
-#: app/templates/log/log_table.jinja:18 app/templates/log/log_table.jinja:64
+#: app/templates/log/log_table.jinja:18 app/templates/log/log_table.jinja:74
 msgid "log_level"
 msgstr "類別"
 
-#: app/templates/log/log_table.jinja:45
+#: app/templates/log/log_table.jinja:55
 msgid "log_access_related"
 msgstr "網站連接"
 
-#: app/templates/log/log_table.jinja:52
+#: app/templates/log/log_table.jinja:62
 msgid "log_access_related_help"
 msgstr "是否顯示與網站連接相關的記錄。"
 
-#: app/templates/log/log_table.jinja:63
+#: app/templates/log/log_table.jinja:73
 msgid "log_timestamp"
 msgstr "時間"
 
-#: app/templates/log/log_table.jinja:65
+#: app/templates/log/log_table.jinja:75
 msgid "log_module"
 msgstr "位置"
 
-#: app/templates/log/log_table.jinja:66
+#: app/templates/log/log_table.jinja:76
 msgid "log_message"
 msgstr "訊息"
 
-#: app/templates/log/log_table.jinja:150
+#: app/templates/log/log_table.jinja:160
 msgid "refresh"
 msgstr "重新載入"
 
-#: app/templates/log/log_table.jinja:157
+#: app/templates/log/log_table.jinja:167
 msgid "download"
 msgstr "下載"
 
-#: app/templates/log/log_table.jinja:164
+#: app/templates/log/log_table.jinja:174
 msgid "clear"
 msgstr "清除"
 
-#: app/templates/schedule/schedule_form.jinja:26
+#: app/templates/schedule/form.jinja:26
 msgid "new_schedule"
 msgstr "建立排程"
 
-#: app/templates/schedule/schedule_form.jinja:28
+#: app/templates/schedule/form.jinja:28
 msgid "new_schedule_help"
 msgstr ""
 "建立屏幕更新排程。排程系統參考了 <a href=\"https://en.wikipedia.org/wiki/Cron\" "
 "target=\"_blank\">cron</a> 的格式來進行排程。 如果你熟悉 cron ，可以直接輸入排程或使用選擇器建立排程。"
 
-#: app/templates/schedule/schedule_form.jinja:35
-#: app/templates/schedule/schedule_list.jinja:45
+#: app/templates/schedule/form.jinja:35 app/templates/schedule/list.jinja:45
 msgid "schedule"
 msgstr "排程"
 
-#: app/templates/schedule/schedule_form.jinja:44
-#: app/templates/schedule/schedule_form.jinja:383
+#: app/templates/schedule/form.jinja:44 app/templates/schedule/form.jinja:383
 msgid "unrecognised"
 msgstr "未能識別"
 
-#: app/templates/schedule/schedule_form.jinja:77
+#: app/templates/schedule/form.jinja:77
 msgid "partial_refresh"
 msgstr "快速更新"
 
-#: app/templates/schedule/schedule_form.jinja:79
+#: app/templates/schedule/form.jinja:79
 msgid "partial_refresh_help"
 msgstr "局部更新電子紙屏幕顯示內容，以提升屏幕影像更新速度及避免完整更新的屏幕閃爍。"
 
-#: app/templates/schedule/schedule_form.jinja:82
+#: app/templates/schedule/form.jinja:82
 msgid "partial_refresh_limit_help"
 msgstr "需定期執行一次全屏更新以避免影像變得不清晰及對屏幕造成損害。"
 
-#: app/templates/schedule/schedule_form.jinja:92
+#: app/templates/schedule/form.jinja:92
 msgid "enable"
 msgstr "啟用"
 
-#: app/templates/schedule/schedule_form.jinja:109
+#: app/templates/schedule/form.jinja:109
 msgid "execute_time"
 msgstr "執行時間"
 
-#: app/templates/schedule/schedule_form.jinja:117
+#: app/templates/schedule/form.jinja:117
 msgid "minute"
 msgstr "分鐘"
 
-#: app/templates/schedule/schedule_form.jinja:122
+#: app/templates/schedule/form.jinja:122
 msgid "hour"
 msgstr "小時"
 
-#: app/templates/schedule/schedule_form.jinja:127
+#: app/templates/schedule/form.jinja:127
 msgid "date"
 msgstr "日期"
 
-#: app/templates/schedule/schedule_form.jinja:132
+#: app/templates/schedule/form.jinja:132
 msgid "month"
 msgstr "月份"
 
-#: app/templates/schedule/schedule_form.jinja:137
+#: app/templates/schedule/form.jinja:137
 msgid "day_of_week"
 msgstr "星期"
 
-#: app/templates/schedule/schedule_form.jinja:150
+#: app/templates/schedule/form.jinja:150
 msgid "monday"
 msgstr "星期一"
 
-#: app/templates/schedule/schedule_form.jinja:151
+#: app/templates/schedule/form.jinja:151
 msgid "tuesday"
 msgstr "星期二"
 
-#: app/templates/schedule/schedule_form.jinja:152
+#: app/templates/schedule/form.jinja:152
 msgid "wednesday"
 msgstr "星期三"
 
-#: app/templates/schedule/schedule_form.jinja:153
+#: app/templates/schedule/form.jinja:153
 msgid "thursday"
 msgstr "星期四"
 
-#: app/templates/schedule/schedule_form.jinja:154
+#: app/templates/schedule/form.jinja:154
 msgid "friday"
 msgstr "星期五"
 
-#: app/templates/schedule/schedule_form.jinja:155
+#: app/templates/schedule/form.jinja:155
 msgid "saturday"
 msgstr "星期六"
 
-#: app/templates/schedule/schedule_form.jinja:156
+#: app/templates/schedule/form.jinja:156
 msgid "sunday"
 msgstr "星期日"
 
-#: app/templates/schedule/schedule_form.jinja:164
+#: app/templates/schedule/form.jinja:164
 msgid "cancel"
 msgstr "取消"
 
-#: app/templates/schedule/schedule_form.jinja:165
+#: app/templates/schedule/form.jinja:165
 msgid "complete"
 msgstr "完成"
 
-#: app/templates/schedule/schedule_form.jinja:175
-#: app/templates/schedule/schedule_form.jinja:264
+#: app/templates/schedule/form.jinja:175 app/templates/schedule/form.jinja:264
 msgid "layout_preview"
 msgstr "佈局預覽"
 
-#: app/templates/schedule/schedule_form.jinja:272
+#: app/templates/schedule/form.jinja:272
 msgid ":"
 msgstr "："
 
-#: app/templates/schedule/schedule_list.jinja:46
+#: app/templates/schedule/list.jinja:46
 msgid "next_execution"
 msgstr "下次執行時間"
 
-#: app/templates/schedule/schedule_list.jinja:93
+#: app/templates/schedule/list.jinja:93
 msgid "not_enabled"
 msgstr "未啟用"
 
-#: app/templates/schedule/schedule_list.jinja:122
+#: app/templates/schedule/list.jinja:126
+#, fuzzy
+msgid "enable/disable"
+msgstr "啟用"
+
+#: app/templates/schedule/list.jinja:135
 msgid "refresh_now"
 msgstr "更新屏幕"
 
@@ -588,4 +580,13 @@ msgstr "不重覆"
 
 #~ msgid "import_failed_%(entry)s"
 #~ msgstr "未能匯入第%(entry)s個排程"
+
+#~ msgid "nav_e-paper"
+#~ msgstr "屏幕"
+
+#~ msgid "nav_api_server"
+#~ msgstr "API 伺服器"
+
+#~ msgid "app_configuration_help"
+#~ msgstr "設定"
 

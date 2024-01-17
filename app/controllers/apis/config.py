@@ -5,7 +5,7 @@ from flask_babel import lazy_gettext
 from app import config
 from app.modules import image as eimage
 
-bp = Blueprint('api_config', __name__, url_prefix="/api/config")
+bp = Blueprint('api_config', __name__, url_prefix="/api")
 
 
 # ------------------------------------------------------------
@@ -13,8 +13,8 @@ bp = Blueprint('api_config', __name__, url_prefix="/api/config")
 # ------------------------------------------------------------
 
 
-@bp.route("/eta-server")
-def get_server_setting():
+@bp.route("/configs")
+def get():
     return jsonify({
         'success': True,
         'message': '{}.'.format(lazy_gettext("success")),
@@ -24,44 +24,27 @@ def get_server_setting():
     })
 
 
-@bp.route("/eta-server", methods=["POST", "PUT"])
+@bp.route("/config", methods=["POST", "PUT"])
 @webargs.flaskparser.use_args({
-    'url': webargs.fields.Url(required=True),
-    'username': webargs.fields.String(required=False),
-    'password': webargs.fields.String(required=False)
-})
-def update_server_setting(args):
-    aconf = config.site_data.AppConfiguration()
-    aconf.update(aconf.confs.model_copy(update=args))
-    return jsonify({
-        'success': True,
-        'message': '{}.'.format(lazy_gettext("updated")),
-        'data': None
-    })
-
-# ------------------------------------------------------------
-#                          E-Paper
-# ------------------------------------------------------------
-
-
-@bp.route("/epaper", methods=["POST", "PUT"])
-@webargs.flaskparser.use_args({
+    'url': webargs.fields.Url(),
+    'username': webargs.fields.String(),
+    'password': webargs.fields.String(),
     'epd_brand': webargs.fields.String(
-        required=True, validate=lambda v: v in eimage.eta_image.EtaImageGeneratorFactory.brands()),
-    'epd_model': webargs.fields.String(required=True)
+        validate=lambda v: v in eimage.eta_image.EtaImageGeneratorFactory.brands()),
+    'epd_model': webargs.fields.String()
 })
-def update_epaper_setting(args):
-    aconf = config.site_data.AppConfiguration()
-    # TODO: validation
+def update(args):
+    app_conf = config.site_data.AppConfiguration()
 
-    if aconf.get('epd_brand') != args['epd_brand'] or aconf.get('epd_model') != args['epd_model']:
+    if (app_conf.get('epd_brand') != args['epd_brand']
+            or app_conf.get('epd_model') != args['epd_model']):
         # changing brand or model will invalidate the schedule
         scheduler = config.site_data.RefreshSchedule()
         for schedule in scheduler.get_all():
             scheduler.update(**schedule.model_dump(exclude=['enabled']),
                              enabled=False)
 
-    aconf.update(aconf.confs.model_copy(update=args))
+    app_conf.update(app_conf.confs.model_copy(update=args))
     return jsonify({
         'success': True,
         'message': '{}.'.format(lazy_gettext("updated")),

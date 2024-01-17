@@ -9,6 +9,21 @@ bp = Blueprint('configuration',
                url_prefix="/configuration")
 
 
+@bp.route('/')
+def index():
+    app_conf = config.site_data.AppConfiguration().confs
+    if app_conf.epd_brand:
+        models = [m.__name__
+                  for m in eimage.eta_image.EtaImageGeneratorFactory.models(app_conf.epd_brand)]
+    else:
+        models = []
+
+    return render_template("configuration/index.jinja",
+                           brands=eimage.eta_image.EtaImageGeneratorFactory.brands(),
+                           models=models,
+                           app_conf=app_conf)
+
+
 @bp.route('/epd')
 def epaper_setting():
     conf = config.site_data.AppConfiguration().confs
