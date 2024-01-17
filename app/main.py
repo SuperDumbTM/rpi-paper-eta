@@ -1,6 +1,7 @@
 import logging
 from logging.config import dictConfig
 from pathlib import Path
+import subprocess
 from typing import Optional
 
 import dotenv
@@ -13,6 +14,8 @@ from app import commands, config, controllers, handles, utils
 def init_babel(app: Flask) -> Babel:
     """Initialise babel
     """
+    app.logger.info("Compiling the translation files.")
+    subprocess.run(['pybabel', 'compile', '-d', 'translations'])
     return Babel(app, locale_selector=utils.get_locale)
 
 
@@ -92,7 +95,7 @@ def create_app() -> Flask:
     app = Flask(__name__, template_folder="template", static_folder="static")
 
     app.config.from_pyfile(
-        Path(__file__).parent / "config" / "flask_config.py")
+        Path(__file__).parent.joinpath('config', 'flask_config.py'))
     app.config.from_mapping(dotenv.dotenv_values('./.env'))
 
     app.register_blueprint(controllers.html.configuration.bp)
