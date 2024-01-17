@@ -108,18 +108,32 @@
                         <button type="button" class="dt-action btn btn-danger btn-sm"
                             data-href-method="DELETE"
                             data-href=${"{{ url_for('api_schedule.delete', id='p1') }}".replace("p1", row.id)}
-                            title={{ _("delete") }}>
+                            title={{ _("delete") }}
+                        >
                             <i class="bi bi-trash"></i>
                         </button>
                         <button type="button" class="dt-action btn btn-success btn-sm"
                             data-href-method=""
                             data-href=${"{{ url_for('schedule.edit', id='p1') }}".replace("p1", row.id)}
-                            title={{ _("edit") }}>
+                            title={{ _("edit") }}
+                        >
                             <i class="bi bi-pencil-square"></i>
                         </button>
-                        <button type="button" class="dt-action btn btn-outline btn-sm btn-outline-warning"
+                        <button type="button" class="dt-action btn btn-sm btn-light"
+                            data-href-method="PUT"
+                            data-href=${"{{ url_for('api_schedule.update', id='p1') }}".replace("p1", row.id)}
+                            data-href-payload=${JSON.stringify({ enabled: !row.enabled })}
+                            title={{ _('enable/disable') }}
+                        >
+                            ${row.enabled
+                                ? '<i class="bi bi-pause"></i>'
+                                : '<i class="bi bi-play-fill"></i>'
+                            }
+                        </button>
+                        <button type="button" class="dt-action btn btn-sm btn-outline-warning"
                             onclick="refreshDisplay('${row.id}')"
-                            title={{ _('refresh_now') }}>
+                            title={{ _('refresh_now') }}
+                        >
                             <i class="bi bi-arrow-clockwise"></i>
                         </button>
                     `;

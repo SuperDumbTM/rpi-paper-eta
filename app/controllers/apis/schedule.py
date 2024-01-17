@@ -10,19 +10,6 @@ from app.modules import image as eimage
 
 bp = Blueprint('api_schedule', __name__, url_prefix="/api")
 
-_schedule_validate_rules = {
-    'schedule': webargs.fields.String(
-        required=True, validate=lambda v: croniter.croniter.is_valid(v) and len(v.split(' ')) == 5,
-        error_messages={'validator_failed': 'Invalid cron expression.'}),
-    'eta_type': webargs.fields.String(
-        required=True, validate=webargs.validate.OneOf([v.value for v in eimage.enums.EtaType])),
-    'layout': webargs.fields.String(required=True),
-    'is_partial': webargs.fields.Boolean(required=True),
-    'enabled': webargs.fields.Boolean(required=True),
-}
-"""`webargs` validation rules for validating Display Refresh Schedule update endpoints
-"""
-
 
 @bp.route('/schedules')
 @webargs.flaskparser.use_args({
@@ -73,7 +60,16 @@ def get(id: str):
 
 
 @bp.route('/schedule', methods=['POST'])
-@webargs.flaskparser.use_args(_schedule_validate_rules, location="json")
+@webargs.flaskparser.use_args({
+    'schedule': webargs.fields.String(
+        required=True, validate=lambda v: croniter.croniter.is_valid(v) and len(v.split(' ')) == 5,
+        error_messages={'validator_failed': 'Invalid cron expression.'}),
+    'eta_type': webargs.fields.String(
+        required=True, validate=webargs.validate.OneOf([v.value for v in eimage.enums.EtaType])),
+    'layout': webargs.fields.String(required=True),
+    'is_partial': webargs.fields.Boolean(required=True),
+    'enabled': webargs.fields.Boolean(required=True),
+}, location="json")
 def create(args):
     scheduler = config.site_data.RefreshSchedule()
     scheduler.create(**args)
@@ -85,18 +81,29 @@ def create(args):
 
 
 @bp.route('/schedule/<id>', methods=['PUT'])
-@webargs.flaskparser.use_args(_schedule_validate_rules, location="json")
+@webargs.flaskparser.use_args({
+    'schedule': webargs.fields.String(
+        validate=lambda v: croniter.croniter.is_valid(
+            v) and len(v.split(' ')) == 5,
+        error_messages={'validator_failed': 'Invalid cron expression.'}),
+    'eta_type': webargs.fields.String(
+        validate=webargs.validate.OneOf([v.value for v in eimage.enums.EtaType])),
+    'layout': webargs.fields.String(),
+    'is_partial': webargs.fields.Boolean(),
+    'enabled': webargs.fields.Boolean(),
+}, location="json")
 def update(args, id: str):
     scheduler = config.site_data.RefreshSchedule()
-
     try:
-        scheduler.update(**args, id=id)
+        schedule = scheduler.get(id)
+        scheduler.update(**schedule.model_copy(update=args).model_dump())
         return jsonify({
             'success': True,
             'message': '{}.'.format(lazy_gettext("updated")),
             'data': None
         })
-    except KeyError:
+    except KeyError as e:
+        print(e)
         return jsonify({
             'success': False,
             'message': '{}.'.format(lazy_gettext("invalid_id")),

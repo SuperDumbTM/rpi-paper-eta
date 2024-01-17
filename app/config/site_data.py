@@ -1,5 +1,6 @@
 import json
 from collections import abc, deque
+import logging
 from pathlib import Path
 from typing import Self
 
@@ -213,6 +214,12 @@ class RefreshSchedule:
     def get_all(self) -> list[models.Schedule]:
         return self._schedules
 
+    def index(self, id: str) -> int:
+        for idx, schedule in enumerate(self._schedules):
+            if schedule.id == id:
+                return idx
+        raise KeyError(id)
+
     def create(self,
                schedule: str,
                eta_type: eimage.enums.EtaType | str,
@@ -246,11 +253,15 @@ class RefreshSchedule:
         schedule = models.Schedule(
             id=id, schedule=schedule, eta_type=eta_type,
             layout=layout, is_partial=is_partial, enabled=enabled)
-        # TODO: optimisa the implementation
-        self.remove(id)
         if enabled:
             self._add_job(schedule)
-        self._schedules.append(schedule)
+        else:
+            try:
+                self._aps.remove_job(id)
+            except KeyError:
+                logging.exception("Disabling a non exist job. %s", id)
+
+        self._schedules[self.index(id)] = schedule
         self._persist()
 
     def remove(self, id: str) -> None:
