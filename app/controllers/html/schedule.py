@@ -6,8 +6,8 @@ from flask import (Blueprint, Response, flash, redirect, render_template,
 from flask_babel import lazy_gettext
 import pydantic
 
-from app import config, enums, forms
-from app.config import site_data
+from app import site_data, enums, forms
+from app import site_data
 from app.modules import image as eimage
 
 bp = Blueprint('schedule',
@@ -23,7 +23,7 @@ def index():
 
 @bp.route('/create')
 def create():
-    conf = config.site_data.AppConfiguration().confs
+    conf = site_data.AppConfiguration().confs
 
     if conf.epd_brand is None or conf.epd_model is None:
         # TODO: handles no epd setting
@@ -45,8 +45,8 @@ def create():
 
 @bp.route('/schedule/create/edit/<id>')
 def edit(id: str):
-    conf = config.site_data.AppConfiguration().confs
-    scheduler = config.site_data.RefreshSchedule()
+    conf = site_data.AppConfiguration().confs
+    scheduler = site_data.RefreshSchedule()
 
     # the template needs zip and list
     # https://stackoverflow.com/questions/62029141/cant-use-zip-from-jinja2
@@ -66,7 +66,7 @@ def edit(id: str):
 
 @bp.route('/schedule/export')
 def export():
-    scheduler = config.site_data.RefreshSchedule()
+    scheduler = site_data.RefreshSchedule()
     return Response(
         json.dumps(
             tuple(map(lambda s: s.model_dump(

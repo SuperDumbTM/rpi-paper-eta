@@ -7,7 +7,7 @@ import webargs
 from flask import Blueprint, current_app, jsonify
 from flask_babel import lazy_gettext
 
-from app import config, models
+from app import site_data, models
 from app.modules import image as eimage
 from app.modules import refresher
 from app.modules.display import epaper
@@ -55,14 +55,14 @@ def get_layouts(args):
     'layout': webargs.fields.String(required=True),
 }, location="query")
 def image(args):
-    aconf = config.site_data.AppConfiguration()
+    aconf = site_data.AppConfiguration()
     if (not aconf.confs.epd_brand or not aconf.confs.epd_model):
         return jsonify({
             'success': False,
             'message': '{}.'.format(lazy_gettext('configuration_required')),
         }), 400
 
-    bm_setting = config.site_data.BookmarkList()
+    bm_setting = site_data.BookmarkList()
     try:
         generator = eimage.eta_image.EtaImageGeneratorFactory().get_generator(
             aconf.confs.epd_brand, aconf.confs.epd_model
@@ -98,7 +98,7 @@ def image(args):
     'is_partial': webargs.fields.Boolean(required=True)
 }, location="query")
 def refresh(args):
-    aconf = config.site_data.AppConfiguration()
+    aconf = site_data.AppConfiguration()
     if (not aconf.confs.epd_brand or not aconf.confs.epd_model):
         return jsonify({
             'success': False,
@@ -106,7 +106,7 @@ def refresh(args):
         }), 400
 
     # ---------- generate ETA images ----------
-    bm_setting = config.site_data.BookmarkList()
+    bm_setting = site_data.BookmarkList()
     try:
         generator = eimage.eta_image.EtaImageGeneratorFactory().get_generator(
             aconf.confs.epd_brand, aconf.confs.epd_model
@@ -126,7 +126,7 @@ def refresh(args):
             aconf.confs.epd_brand, aconf.confs.epd_model)(args['is_partial'], False)
     except (OSError, RuntimeError) as e:
         logging.exception("Cannot initialise the e-paper controller.")
-        config.site_data.RefreshHistory().put(models.RefreshLog(**args, error=e))
+        site_data.RefreshHistory().put(models.RefreshLog(**args, error=e))
 
         return jsonify({
             'success': False,
@@ -145,9 +145,9 @@ def refresh(args):
 
         refresher.display_images(images, controller, False, False)
         generator.write_images(current_app.config['EPD_IMG_PATH'], images)
-        config.site_data.RefreshHistory().put(models.RefreshLog(**args))
+        site_data.RefreshHistory().put(models.RefreshLog(**args))
     except Exception as e:
-        config.site_data.RefreshHistory().put(models.RefreshLog(**args, error=e))
+        site_data.RefreshHistory().put(models.RefreshLog(**args, error=e))
 
         if type(e) is RuntimeError:
             logging.exception("Failed to refresh the screen.")

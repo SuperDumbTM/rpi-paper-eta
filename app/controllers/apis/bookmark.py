@@ -5,7 +5,7 @@ import webargs
 from flask import Blueprint, abort, current_app, jsonify, request
 from flask_babel import lazy_gettext
 
-from app import config, enums, models, utils
+from app import enums, models, site_data, utils
 
 bp = Blueprint('api_bookmark', __name__, url_prefix="/api")
 
@@ -27,12 +27,12 @@ _bookmark_validation_rules = {
 }, location="query")
 def get_all(args):
     bookmarks = []
-    for bm in config.site_data.BookmarkList():
+    for bm in site_data.BookmarkList():
         bm: models.EtaConfig
 
         try:
             stop_name = requests.get(
-                f"{config.site_data.AppConfiguration().get('url')}"
+                f"{site_data.AppConfiguration().get('url')}"
                 f"/{bm.company.value}/{bm.route}/{bm.direction.value}/{bm.service_type}/stop",
                 {'stop_code': bm.stop_code}
             ).json()['data']['stop']['name'][bm.lang]
@@ -54,7 +54,7 @@ def get_all(args):
 @bp.route("/bookmark", methods=["POST"])
 @webargs.flaskparser.use_args(_bookmark_validation_rules)
 def create(args):
-    bkms = config.site_data.BookmarkList()
+    bkms = site_data.BookmarkList()
     try:
         bkms.create(**args)
     except KeyError:
@@ -74,7 +74,7 @@ def create(args):
 @bp.route("/bookmark/<id>", methods=["PUT"])
 @webargs.flaskparser.use_args(_bookmark_validation_rules)
 def update(args, id: str):
-    bkms = config.site_data.BookmarkList()
+    bkms = site_data.BookmarkList()
     try:
         print(args)
         bkms.update(id, **args)
@@ -94,7 +94,7 @@ def update(args, id: str):
 
 @bp.route("/bookmark/<id>", methods=["DELETE"])
 def delete(id: str):
-    etas = config.site_data.BookmarkList()
+    etas = site_data.BookmarkList()
     try:
         return jsonify({
             'success': True,
@@ -192,7 +192,7 @@ def search(args,
     'destination': webargs.fields.String(required=True),
 })
 def swap(args):
-    etas = config.site_data.BookmarkList()
+    etas = site_data.BookmarkList()
     etas.swap(args['source'], args['destination'])
 
     return jsonify({

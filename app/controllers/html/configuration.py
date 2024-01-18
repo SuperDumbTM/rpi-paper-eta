@@ -5,7 +5,7 @@ from flask import (Blueprint, Response, flash, redirect, render_template,
                    request, url_for)
 from flask_babel import lazy_gettext
 
-from app import config, enums, forms, models
+from app import enums, forms, models, site_data
 from app.modules import image as eimage
 
 bp = Blueprint('configuration',
@@ -16,7 +16,7 @@ bp = Blueprint('configuration',
 
 @bp.route('/')
 def index():
-    confs = config.site_data.AppConfiguration().confs
+    confs = site_data.AppConfiguration().confs
     if confs.epd_brand:
         models = [m.__name__
                   for m in eimage.eta_image.EtaImageGeneratorFactory.models(confs.epd_brand)]
@@ -31,7 +31,7 @@ def index():
 
 @bp.route('/export')
 def export():
-    confs = config.site_data.AppConfiguration().confs
+    confs = site_data.AppConfiguration().confs
     return Response(
         json.dumps(confs.model_dump(), indent=4),
         mimetype='application/json',
@@ -41,7 +41,7 @@ def export():
 @bp.route('/import', methods=['POST'])
 def import_():
     file = request.files.get('configurations')
-    app_conf = config.site_data.AppConfiguration()
+    app_conf = site_data.AppConfiguration()
 
     try:
         if file:
@@ -53,7 +53,7 @@ def import_():
 
 @bp.route('/epd')
 def epaper_setting():
-    confs = config.site_data.AppConfiguration().confs
+    confs = site_data.AppConfiguration().confs
 
     if confs.epd_brand:
         models = [m.__name__ for m in eimage.eta_image.EtaImageGeneratorFactory.models(
@@ -69,7 +69,7 @@ def epaper_setting():
 
 @bp.route('/api-server')
 def api_server_setting():
-    conf = config.site_data.AppConfiguration().confs
+    conf = site_data.AppConfiguration().confs
     return render_template("configuration/api_server_form.jinja",
                            form=forms.ApiServerForm(url=conf.url,
                                                     username=conf.username,

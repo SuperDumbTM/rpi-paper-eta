@@ -7,7 +7,7 @@ from typing import Self
 import flask_apscheduler
 import requests
 
-from app import config, enums, models, utils
+from app import enums, models, utils
 from app.modules import image as eimage
 
 
@@ -15,7 +15,8 @@ from app.modules import image as eimage
 class BookmarkList(abc.Sequence):
 
     _data: list[models.EtaConfig]
-    _filepath = Path(config.flask_config.CONFIG_DIR).joinpath("bookmarks.json")
+    _filepath = Path(__file__).parent.joinpath(
+        "configurations", "bookmarks.json")
 
     def __init__(self) -> None:
         self._data = []
@@ -150,7 +151,7 @@ class AppConfiguration:
     """
     _data: models.Configuration
 
-    _filepath = Path(config.flask_config.CONFIG_DIR).joinpath("config.json")
+    _filepath = Path(__file__).parent.joinpath("configurations", "config.json")
 
     @property
     def confs(self) -> models.Configuration:
@@ -187,7 +188,8 @@ class RefreshSchedule:
     """
 
     _schedules: list[models.Schedule]
-    _filepath = Path(config.flask_config.CONFIG_DIR).joinpath("schedules.json")
+    _filepath = Path(__file__).parent.joinpath(
+        "configurations", "schedules.json")
 
     def __init__(self, app) -> None:
         self._schedules = []
@@ -196,14 +198,13 @@ class RefreshSchedule:
         self._aps.start()
 
         if not self._filepath.exists():
-            self._filepath.parent.mkdir(mode=711, parents=True, exist_ok=True)
             self._persist()
-        else:
-            self._load()
-            for schedule in self._schedules:
-                if not schedule.enabled:
-                    continue
-                self._add_job(schedule)
+
+        self._load()
+        for schedule in self._schedules:
+            if not schedule.enabled:
+                continue
+            self._add_job(schedule)
 
     def get(self, id: str) -> models.Schedule:
         for schedule in self._schedules:

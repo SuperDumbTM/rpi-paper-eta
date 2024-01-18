@@ -1,14 +1,12 @@
-import logging
+import subprocess
 from logging.config import dictConfig
 from pathlib import Path
-import subprocess
-from typing import Optional
 
 import dotenv
-from flask import Flask, current_app, request
+from flask import Flask
 from flask_babel import Babel
 
-from app import commands, config, controllers, handles, utils
+from app import commands, controllers, handles, site_data, utils
 
 
 def init_babel(app: Flask) -> Babel:
@@ -22,8 +20,8 @@ def init_babel(app: Flask) -> Babel:
 def init_site_data(app: Flask) -> None:
     """Initialise and load all the site data/user configuration
     """
-    config.site_data.RefreshSchedule(app)
-    config.site_data.RefreshHistory(limit=20)
+    site_data.RefreshSchedule(app)
+    site_data.RefreshHistory(limit=20)
 
 
 def init_logger(app: Flask) -> None:
@@ -94,9 +92,18 @@ def init_jinja_helpers(app: Flask) -> None:
 def create_app() -> Flask:
     app = Flask(__name__, template_folder="template", static_folder="static")
 
-    app.config.from_pyfile(
-        Path(__file__).parent.joinpath('config', 'flask_config.py'))
+    app.config.from_mapping({
+        'CONFIG_DIR': Path(__file__).parent.joinpath("config", "data"),
+        'CACHE_DIR': Path(__file__).parent.joinpath("caches"),
+        'LOG_FILE_PATH': Path(__file__).parent.joinpath("caches", 'app.log'),
+        'EPD_IMG_PATH': Path(__file__).parent.joinpath("caches", 'epaper'),
+        'I18N': ['en', 'zh_Hant_HK'],
+        'BABEL_TRANSLATION_DIRECTORIES': str(Path(__file__).parent.parent.joinpath("translations")),
+    })
     app.config.from_mapping(dotenv.dotenv_values('./.env'))
+
+    import pprint
+    pprint.pprint(dict(app.config))
 
     app.register_blueprint(controllers.html.bookmark.bp)
     app.register_blueprint(controllers.html.configuration.bp)

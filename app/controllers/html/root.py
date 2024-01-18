@@ -1,9 +1,9 @@
-import base64
 from pathlib import Path
 
-from flask import Blueprint, flash, make_response, redirect, render_template, request, session, url_for
+from flask import (Blueprint, current_app, flash, make_response, redirect,
+                   render_template, request, url_for)
 
-from app import config
+from app import site_data
 from app.modules import refresher
 
 bp = Blueprint('root',
@@ -14,15 +14,15 @@ bp = Blueprint('root',
 
 @bp.route("/")
 def index():
-    aconf = config.site_data.AppConfiguration()
+    aconf = site_data.AppConfiguration()
     if not aconf.get('url'):
         flash("Please set the API server URL")
         return redirect(url_for("configuration.api_server_setting"))
 
     return render_template("index.jinja",
-                           refresh_logs=config.site_data.RefreshHistory().get(),
+                           refresh_logs=site_data.RefreshHistory().get(),
                            images=refresher.cached_images(
-                               Path(config.flask_config.CACHE_DIR).joinpath('epaper')),
+                               Path(current_app.config['CACHE_DIR']).joinpath('epaper')),
                            aconf=aconf)
 
 

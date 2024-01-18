@@ -7,7 +7,7 @@ from flask import (Blueprint, Response, flash, redirect, render_template,
                    request, url_for)
 from flask_babel import lazy_gettext
 
-from app import config, enums, forms, utils
+from app import enums, forms, site_data, utils
 
 bp = Blueprint('bookmark',
                __name__,
@@ -17,7 +17,7 @@ bp = Blueprint('bookmark',
 
 @bp.route('/bookmarks')
 def index():
-    return render_template("bookmark/list.jinja", etas=config.site_data.BookmarkList())
+    return render_template("bookmark/list.jinja", etas=site_data.BookmarkList())
 
 
 @bp.route('/bookmark/create')
@@ -37,7 +37,7 @@ def create():
 
 @bp.route('/bookmark/edit/<id>')
 def edit(id: str):
-    bm = config.site_data.BookmarkList()
+    bm = site_data.BookmarkList()
     entry = bm.get(id)
 
     directions = service_types = stops = []
@@ -67,7 +67,7 @@ def edit(id: str):
 
 @bp.route('/bookmark/export')
 def export():
-    bm = config.site_data.BookmarkList()
+    bm = site_data.BookmarkList()
     return Response(
         json.dumps(
             tuple(map(lambda s: s.model_dump(exclude=['id']), bm.get_all())),
@@ -79,7 +79,7 @@ def export():
 @bp.route('/bookmark/import', methods=['POST'])
 def import_():
     file = request.files['bookmarks']
-    bm = config.site_data.BookmarkList()
+    bm = site_data.BookmarkList()
     try:
         for i, bookmark in enumerate(json.load(file.stream)):
             try:

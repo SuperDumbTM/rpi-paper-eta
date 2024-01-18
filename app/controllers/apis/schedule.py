@@ -5,7 +5,7 @@ import webargs
 from flask import Blueprint, jsonify
 from flask_babel import lazy_gettext
 
-from app import config
+from app import site_data
 from app.modules import image as eimage
 
 bp = Blueprint('api_schedule', __name__, url_prefix="/api")
@@ -19,7 +19,7 @@ bp = Blueprint('api_schedule', __name__, url_prefix="/api")
 }, location="query")
 def get_all(args):
     schedules = []
-    for s in config.site_data.RefreshSchedule().get_all():
+    for s in site_data.RefreshSchedule().get_all():
         cron = croniter.croniter(s.schedule, start_time=datetime.now())
 
         if args['enabled'] is not None and args['enabled'] != s.enabled:
@@ -48,7 +48,7 @@ def get(id: str):
             'success': True,
             'message': '{}.'.format(lazy_gettext("success")),
             'data': {
-                'schedule': config.site_data.RefreshSchedule().get(id).model_dump()
+                'schedule': site_data.RefreshSchedule().get(id).model_dump()
             }
         })
     except KeyError:
@@ -71,7 +71,7 @@ def get(id: str):
     'enabled': webargs.fields.Boolean(required=True),
 }, location="json")
 def create(args):
-    scheduler = config.site_data.RefreshSchedule()
+    scheduler = site_data.RefreshSchedule()
     scheduler.create(**args)
     return jsonify({
         'success': True,
@@ -93,7 +93,7 @@ def create(args):
     'enabled': webargs.fields.Boolean(),
 }, location="json")
 def update(args, id: str):
-    scheduler = config.site_data.RefreshSchedule()
+    scheduler = site_data.RefreshSchedule()
     try:
         schedule = scheduler.get(id)
         scheduler.update(**schedule.model_copy(update=args).model_dump())
@@ -114,7 +114,7 @@ def update(args, id: str):
 @bp.route('/schedule/<id>', methods=["DELETE"])
 def delete(id: str):
     try:
-        config.site_data.RefreshSchedule().remove(id)
+        site_data.RefreshSchedule().remove(id)
         return jsonify({
             'success': True,
             'message': '{}.'.format(lazy_gettext("success")),

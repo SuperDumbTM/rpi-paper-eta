@@ -2,7 +2,7 @@ import webargs
 from flask import Blueprint, jsonify
 from flask_babel import lazy_gettext
 
-from app import config
+from app import site_data
 from app.modules import image as eimage
 
 bp = Blueprint('api_config', __name__, url_prefix="/api")
@@ -19,7 +19,7 @@ def get():
         'success': True,
         'message': '{}.'.format(lazy_gettext("success")),
         'data': {
-            'setting': config.site_data.AppConfiguration().confs.model_dump()
+            'setting': site_data.AppConfiguration().confs.model_dump()
         }
     })
 
@@ -34,12 +34,12 @@ def get():
     'epd_model': webargs.fields.String()
 })
 def update(args):
-    app_conf = config.site_data.AppConfiguration()
+    app_conf = site_data.AppConfiguration()
 
     if (app_conf.get('epd_brand') != args['epd_brand']
             or app_conf.get('epd_model') != args['epd_model']):
         # changing brand or model will invalidate the schedule
-        scheduler = config.site_data.RefreshSchedule()
+        scheduler = site_data.RefreshSchedule()
         for schedule in scheduler.get_all():
             scheduler.update(**schedule.model_dump(exclude=['enabled']),
                              enabled=False)
