@@ -45,7 +45,7 @@
             <div class="form-group">
                 <label for="company" class="form-label">{{ _('company') }}</label>
                 <select class="form-select" name="company" required>
-                    <option value="" selected>-----</option>
+                    <option value="">-----</option>
                     {% for company in companys %}
                     {% if form.company == company[0] %}
                     <option value="{{ company[0] }}" selected>
@@ -69,7 +69,7 @@
             <div class="form-group">
                 <label for="direction" class="form-label">{{ _('direction') }}</label>
                 <select class="form-select" name="direction" required>
-                    <option value="" selected>-----</option>
+                    <option value="">-----</option>
                     {% for direction in directions %}
                     {% if form.direction == direction[0] %}
                     <option value="{{ direction[0] }}" selected>
@@ -87,7 +87,7 @@
             <div class="form-group">
                 <label for="service_type" class="form-label">{{ _('service_type') }}</label>
                 <select class="form-select" name="service_type" required>
-                    <option value="" selected>-----</option>
+                    <option value="">-----</option>
                     {% for service_type in service_types %}
                     {% if form.service_type == service_type[0] %}
                     <option value="{{ service_type[0] }}" selected>
@@ -105,7 +105,7 @@
             <div class="form-group">
                 <label for="stop_code" class="form-label">{{ _('stop') }}</label>
                 <select class="form-select" name="stop_code" required>
-                    <option value="" selected>-----</option>
+                    <option value="">-----</option>
                     {% for stop in stops %}
                     {% if form.stop_code == stop[0] %}
                     <option value="{{ stop[0] }}" selected>
@@ -160,12 +160,12 @@
         $("form")[0].reset()
         clearSelect($("select[name=direction]"))
         clearSelect($("select[name=service_type]"))
-        {% endif %}
 
         // Browsers may cache the result of "company select"
         // Trigger "change" to initialisation the autocomplete
         if ($('select[name=company] option:selected').val())
             $('select[name=company]').trigger('change')
+        {% endif %}
 
         autoJsonFrom($('form'), {
             success: function (res) {
@@ -181,14 +181,23 @@
     $('select[name=company]').on('change', function (event) {
         // autocomplete for route name
         // https://stackoverflow.com/questions/7617373/limit-results-in-jquery-ui-autocomplete
+        function clear() {
+            $('input[name=route]').val(null)
+            clearSelect($("select[name=direction]"))
+            clearSelect($("select[name=service_type]"))
+            clearSelect($("select[name=stop]"))
+        }
+
+        if (!$(this).val()) {
+            clear()
+            return
+        }
+
         $.get(
             '{{ url_for("api_bookmark.search", search_type="routes") }}',
             getParams(),
             function (res) {
-                $('input[name=route]').val(null)
-                clearSelect($("select[name=direction]"))
-                clearSelect($("select[name=service_type]"))
-                clearSelect($("select[name=stop]"))
+                clear()
 
                 $("input[name=route]").autocomplete({
                     maxShowItems: 6,
@@ -201,43 +210,67 @@
 
     $("input[name=route]").on("autocompleteselect", function (event, ui) {
         // direction option updates
+        function clear() {
+            clearSelect($("select[name=direction]"))
+            clearSelect($("select[name=service_type]"))
+            clearSelect($("select[name=stop]"))
+        }
+
+        if (!$(this).val()) {
+            clear()
+            return
+        }
+
         $.get(
             '{{ url_for("api_bookmark.search", search_type="directions") }}',
             { ...getParams(), 'route': ui.item.value },
             function (res) {
-                clearSelect(select = $("select[name=direction]"), false)
-                clearSelect($("select[name=service_type]"))
-                clearSelect($("select[name=stop]"))
-
+                clear()
                 res.data.directions.forEach(
-                    (el) => select.append(new Option(el[1], el[0])))
+                    (el) => $("select[name=direction]").append(new Option(el[1], el[0])))
             })
     });
 
     $('select[name=direction]').on('change', function (event) {
         // autocomplete for service type
+        function clear() {
+            clearSelect($("select[name=service_type]"))
+            clearSelect($("select[name=stop]"))
+        }
+
+        if (!$(this).val()) {
+            clear()
+            return
+        }
+
         $.get(
             '{{ url_for("api_bookmark.search", search_type="service_types") }}',
             getParams(),
             function (res) {
-                clearSelect(select = $("select[name=service_type]"))
-                clearSelect($("select[name=stop]"))
-
                 res.data.service_types.forEach(
-                    (el) => select.append(new Option(el[1], el[0])))
+                    (el) => $("select[name=service_type]").append(new Option(el[1], el[0])))
             })
     });
 
     $("select[name=service_type]").on("change", function (event) {
         // stop option updates
+        function clear() {
+            clearSelect(select = $("select[name=stop_code]"))
+        }
+
+        if (!$(this).val()) {
+            clear()
+            return
+        }
+
         $.get(
             '{{ url_for("api_bookmark.search", search_type="stops") }}',
             getParams(),
             function (res) {
-                clearSelect(select = $("select[name=stop_code]"))
+                clear()
 
                 res.data.stops.forEach(
-                    (el) => select.append(new Option(el[1], el[0])))
+                    (el) => $("select[name=stop_code]").append(new Option(el[1], el[0])))
             }
         )
     });
