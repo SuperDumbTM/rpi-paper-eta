@@ -9,7 +9,7 @@
 {% block content %}
 <div class="row align-items-center" style="height: 100vh;">
     <div class="mx-auto col-10 col-md-8 col-lg-6">
-        <form class="form" action="{{ url_for('api_config.update_server_setting') }}" method="post">
+        <form action="{{ url_for('api_config.update_server_setting') }}" method="post">
 
             <h1>{{ _('api_server_setting') }}</h1>
             <small class="form-text text-mute">

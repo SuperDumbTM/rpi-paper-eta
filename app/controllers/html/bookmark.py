@@ -91,5 +91,4 @@ def import_():
                     'Encountering missing field(s) or invalid values during refresh bookmark import.')
     except (UnicodeDecodeError, json.decoder.JSONDecodeError):
         flash(lazy_gettext('import_failed'), enums.FlashCategory.error)
-
     return redirect(url_for('bookmark.index'))

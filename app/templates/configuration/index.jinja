@@ -19,9 +19,12 @@
 
 {% block content %}
 <div class="row align-items-center" style="height: 100vh;">
-    <form class="form" action="{{ url_for('api_config.update') }}" method="post" autocomplete="off">
+    <form id="config-form" action="{{ url_for('api_config.update') }}" method="post" autocomplete="off">
         <div class="col-10 col-md-8 col-lg-8 mx-auto my-3">
             <h1>{{ _('app_configuration') }}</h1>
+
+            {% include "includes/flash_success.jinja" %}
+            {% include "includes/flash_error.jinja" %}
 
             <div class="mt-5 mb-2">
                 <h5>{{ _('display_setting') }}</h5>
@@ -81,8 +84,28 @@
                     value="{{ app_conf.url }}" required>
             </div>
 
-            <input class="btn btn-primary btn-customized mt-4" id="submit" name="submit" type="submit" value="{{ _('submit') }}">
+            <div class="row mt-4">
+                <div class="col-6">
+                    <input class="btn btn-primary btn-customized" id="submit" name="submit" type="submit"
+                        value="{{ _('submit') }}">
+                </div>
+                <div class="col-6 text-end">
+                    <a href="{{ url_for('configuration.export') }}" class="btn btn-info mx-1">
+                        {{ _('export') }}
+                    </a>
+                    <button type="button" class="btn btn-secondary mx-1"
+                        onclick="$('#file-import-form input').click().change((e) => $('#file-import-form').submit())"
+                    >
+                        {{ _('import') }}
+                    </button>
+                </div>
+            </div>
         </div>
+    </form>
+
+    <form id="file-import-form" method="POST" action="{{ url_for('configuration.import_') }}"
+        enctype="multipart/form-data" style="display: none;">
+        <input type="file" name="configurations">
     </form>
 </div>
 
@@ -91,7 +114,7 @@
 {% block script %}
 <script>
     $(document).ready(function () {
-        autoJsonFrom($('form'))
+        autoJsonFrom($('#config-form'))
     })
 
 
