@@ -55,8 +55,8 @@ def get_layouts(args):
     'layout': webargs.fields.String(required=True),
 }, location="query")
 def image(args):
-    aconf = site_data.AppConfiguration()
-    if (not aconf.confs.epd_brand or not aconf.confs.epd_model):
+    app_conf = site_data.AppConfiguration()
+    if not app_conf.get('epd_brand') or not app_conf.get('epd_model'):
         return jsonify({
             'success': False,
             'message': '{}.'.format(lazy_gettext('configuration_required')),
@@ -65,10 +65,10 @@ def image(args):
     bm_setting = site_data.BookmarkList()
     try:
         generator = eimage.eta_image.EtaImageGeneratorFactory().get_generator(
-            aconf.confs.epd_brand, aconf.confs.epd_model
+            app_conf.get('epd_brand'), app_conf.get('epd_model')
         )(eimage.enums.EtaType(args['eta_type']), args['layout'])
         images = refresher.generate_image(
-            aconf.confs, bm_setting.get_all(), generator)
+            app_conf, bm_setting.get_all(), generator)
     except KeyError:
         return jsonify({
             'success': False,
@@ -98,8 +98,8 @@ def image(args):
     'is_partial': webargs.fields.Boolean(required=True)
 }, location="query")
 def refresh(args):
-    aconf = site_data.AppConfiguration()
-    if (not aconf.confs.epd_brand or not aconf.confs.epd_model):
+    app_conf = site_data.AppConfiguration()
+    if not app_conf.get('epd_brand') or not app_conf.get('epd_model'):
         return jsonify({
             'success': False,
             'message': '{}.'.format(lazy_gettext('configuration_required')),
@@ -109,10 +109,10 @@ def refresh(args):
     bm_setting = site_data.BookmarkList()
     try:
         generator = eimage.eta_image.EtaImageGeneratorFactory().get_generator(
-            aconf.confs.epd_brand, aconf.confs.epd_model
+            app_conf.get('epd_brand'), app_conf.get('epd_model')
         )(eimage.enums.EtaType(args['eta_type']), args['layout'])
         images = refresher.generate_image(
-            aconf.confs, bm_setting.get_all(), generator)
+            app_conf, bm_setting.get_all(), generator)
     except KeyError:
         return jsonify({
             'success': False,
@@ -123,7 +123,7 @@ def refresh(args):
     # ---------- initialise the e-paper controller ----------
     try:
         controller = epaper.ControllerFactory().get_controller(
-            aconf.confs.epd_brand, aconf.confs.epd_model)(args['is_partial'], False)
+            app_conf.get('epd_brand'), app_conf.get('epd_model'))(args['is_partial'], False)
     except (OSError, RuntimeError) as e:
         logging.exception("Cannot initialise the e-paper controller.")
         site_data.RefreshHistory().put(models.RefreshLog(**args, error=e))

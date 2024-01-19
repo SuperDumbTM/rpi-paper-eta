@@ -23,9 +23,9 @@ def index():
 
 @bp.route('/create')
 def create():
-    conf = site_data.AppConfiguration().confs
+    app_conf = site_data.AppConfiguration()
 
-    if conf.epd_brand is None or conf.epd_model is None:
+    if not app_conf.get('epd_brand') or not app_conf.get('epd_model'):
         # TODO: handles no epd setting
         return redirect()
 
@@ -39,13 +39,13 @@ def create():
                            form_method='post',
                            eta_types=eimage.enums.EtaType,
                            layouts=eimage.eta_image.EtaImageGeneratorFactory.get_generator(
-                               conf.epd_brand, conf.epd_model).layouts()
+                               app_conf.get('epd_brand'), app_conf.get('epd_model')).layouts()
                            )
 
 
 @bp.route('/schedule/create/edit/<id>')
 def edit(id: str):
-    conf = site_data.AppConfiguration().confs
+    app_conf = site_data.AppConfiguration()
     scheduler = site_data.RefreshSchedule()
 
     # the template needs zip and list
@@ -60,7 +60,7 @@ def edit(id: str):
                            form_method='put',
                            eta_types=eimage.enums.EtaType,
                            layouts=eimage.eta_image.EtaImageGeneratorFactory.get_generator(
-                               conf.epd_brand, conf.epd_model).layouts()
+                               app_conf.get('epd_brand'), app_conf.get('epd_model')).layouts()
                            )
 
 

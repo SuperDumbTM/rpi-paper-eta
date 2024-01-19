@@ -19,7 +19,7 @@ def get():
         'success': True,
         'message': '{}.'.format(lazy_gettext("success")),
         'data': {
-            'setting': site_data.AppConfiguration().confs.model_dump()
+            'setting': dict(site_data.AppConfiguration())
         }
     })
 
@@ -44,9 +44,16 @@ def update(args):
             scheduler.update(**schedule.model_dump(exclude=['enabled']),
                              enabled=False)
 
-    app_conf.update(app_conf.confs.model_copy(update=args))
-    return jsonify({
-        'success': True,
-        'message': '{}.'.format(lazy_gettext("updated")),
-        'data': None
-    })
+    try:
+        app_conf.updates(args)
+        return jsonify({
+            'success': True,
+            'message': '{}.'.format(lazy_gettext("updated")),
+            'data': None
+        })
+    except KeyError:
+        return jsonify({
+            'success': False,
+            'message': 'Got unexpected value(s).',
+            'data': None
+        }), 400

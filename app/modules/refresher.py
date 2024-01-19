@@ -8,7 +8,7 @@ import threading
 import requests
 from PIL import Image
 
-from app import models, translation
+from app import models, site_data, translation
 from app.modules import image as eimage
 from app.modules import display
 
@@ -17,7 +17,7 @@ _ctrl_mutex = threading.Lock()
 
 
 def generate_image(
-    app_config: models.Configuration,
+    app_conf: site_data.AppConfiguration,
     bookmarks: list[models.EtaConfig],
     generator: eimage.eta_image.EtaImageGenerator
 ) -> dict[str, Image.Image]:
@@ -37,7 +37,7 @@ def generate_image(
         etas = []
         for bm in bookmarks:
             res = requests.get(
-                f'{app_config.url}'
+                app_conf.get('api_url') +
                 f'/{bm.company.value}/{bm.route}/{bm.direction.value}/etas',
                 params={
                     'service_type': bm.service_type,
@@ -46,7 +46,7 @@ def generate_image(
             ).json()
 
             try:
-                logo = (BytesIO(requests.get('{0}{1}'.format(app_config.url,
+                logo = (BytesIO(requests.get('{0}{1}'.format(app_conf.get('api_url'),
                                                              res['data'].pop(
                                                                  'logo_url')
                                                              )).content

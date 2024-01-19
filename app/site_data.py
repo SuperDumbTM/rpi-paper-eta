@@ -2,7 +2,7 @@ import json
 from collections import abc, deque
 import logging
 from pathlib import Path
-from typing import Self
+from typing import Any, Iterator, Self
 
 import flask_apscheduler
 import requests
@@ -145,20 +145,18 @@ class BookmarkList(abc.Sequence):
 
 
 @utils.singleton
-class AppConfiguration:
+class AppConfiguration(abc.Mapping):
     """A Singleton class that mangage all the general configuration including 
         e-paper and API server settings.
     """
-    _data: models.Configuration
-
+    _data: dict[str,]
     _filepath = Path(__file__).parent.joinpath("configurations", "config.json")
 
-    @property
-    def confs(self) -> models.Configuration:
-        return self._data
+    __keys__ = ['api_url', 'api_username',
+                'api_password', 'epd_brand', 'epd_model',]
 
     def __init__(self) -> None:
-        self._data = models.Configuration()
+        self._data = {k: None for k in self.__keys__}
 
         if not self._filepath.exists():
             self._filepath.parent.mkdir(mode=711, parents=True, exist_ok=True)
@@ -166,20 +164,36 @@ class AppConfiguration:
         else:
             self._load()
 
-    def get(self, attr_name: str) -> models.Configuration:
-        return getattr(self._data, attr_name)
+    def __getitem__(self, __key: str) -> Any:
+        return self._data.__getitem__(__key)
 
-    def update(self, new: models.Configuration) -> None:
-        self._data = new
+    def __iter__(self) -> Iterator:
+        return self._data.__iter__()
+
+    def __len__(self) -> int:
+        return self._data.__len__()
+
+    def update(self, key: str, val: Any) -> None:
+        if key not in self.__keys__:
+            raise KeyError(key)
+
+        self._data[key] = val
+        self._persist()
+
+    def updates(self, mapping: dict) -> None:
+        if any(mapping.keys() not in self.__keys__):
+            raise KeyError(set(mapping.keys()) - set(self.__keys__))
+
+        self._data.update(mapping)
         self._persist()
 
     def _load(self) -> None:
         with open(self._filepath, "r", encoding="utf-8") as f:
-            self._data = models.Configuration(**json.load(f))
+            self._data = json.load(f)
 
     def _persist(self) -> None:
         with open(self._filepath, "w", encoding="utf-8") as f:
-            f.write(self._data.model_dump_json(indent=4))
+            json.dump(self._data, f, indent=4)
 
 
 @utils.singleton

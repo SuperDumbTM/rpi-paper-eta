@@ -15,15 +15,15 @@ bp = Blueprint('root',
 
 @bp.route("/")
 def index():
-    aconf = site_data.AppConfiguration()
-    if not aconf.get('url'):
+    app_conf = site_data.AppConfiguration()
+    if not app_conf.get('url'):
         flash(lazy_gettext('missing_api_err_msg'), enums.FlashCategory.error)
 
     return render_template("index.jinja",
                            refresh_logs=site_data.RefreshHistory().get(),
                            images=refresher.cached_images(
                                Path(current_app.config['CACHE_DIR']).joinpath('epaper')),
-                           aconf=aconf)
+                           app_conf=app_conf)
 
 
 @bp.route('language/<lang>')

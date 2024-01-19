@@ -5,7 +5,7 @@ from flask import (Blueprint, Response, flash, redirect, render_template,
                    request, url_for)
 from flask_babel import lazy_gettext
 
-from app import enums, forms, models, site_data
+from app import enums, forms, site_data
 from app.modules import image as eimage
 
 bp = Blueprint('configuration',
@@ -16,24 +16,24 @@ bp = Blueprint('configuration',
 
 @bp.route('/')
 def index():
-    confs = site_data.AppConfiguration().confs
-    if confs.epd_brand:
+    app_conf = site_data.AppConfiguration()
+    if app_conf.get('epd_brand'):
         models = [m.__name__
-                  for m in eimage.eta_image.EtaImageGeneratorFactory.models(confs.epd_brand)]
+                  for m in eimage.eta_image.EtaImageGeneratorFactory.models(app_conf.get('epd_brand'))]
     else:
         models = []
 
     return render_template("configuration/index.jinja",
                            brands=eimage.eta_image.EtaImageGeneratorFactory.brands(),
                            models=models,
-                           app_conf=confs)
+                           app_conf=app_conf)
 
 
 @bp.route('/export')
 def export():
-    confs = site_data.AppConfiguration().confs
+    app_conf = site_data.AppConfiguration()
     return Response(
-        json.dumps(confs.model_dump(), indent=4),
+        json.dumps(dict(app_conf), indent=4),
         mimetype='application/json',
         headers={'Content-disposition': 'attachment; filename=paper-eta-config.json'})
 
@@ -45,33 +45,34 @@ def import_():
 
     try:
         if file:
-            app_conf.update(models.Configuration(**json.load(file)))
-    except (pydantic.ValidationError, TypeError):
+            app_conf.updates(json.load(file))
+    except TypeError:
         flash(lazy_gettext('import_failed'), enums.FlashCategory.error)
     return redirect(url_for('configuration.index'))
 
 
 @bp.route('/epd')
 def epaper_setting():
-    confs = site_data.AppConfiguration().confs
+    app_conf = site_data.AppConfiguration()
 
-    if confs.epd_brand:
+    if app_conf.get('epd_brand'):
         models = [m.__name__ for m in eimage.eta_image.EtaImageGeneratorFactory.models(
-            confs.epd_brand)]
+            app_conf.get('epd_model'))]
     else:
         models = []
     return render_template("configuration/epd_form.jinja",
                            brands=eimage.eta_image.EtaImageGeneratorFactory.brands(),
                            models=models,
-                           form=forms.EpaperForm(epd_brand=confs.epd_brand,
-                                                 epd_model=confs.epd_model))
+                           form=forms.EpaperForm(epd_brand=app_conf.get('epd_brand'),
+                                                 epd_model=app_conf.get('epd_model')))
 
 
 @bp.route('/api-server')
 def api_server_setting():
-    conf = site_data.AppConfiguration().confs
+    app_conf = site_data.AppConfiguration()
     return render_template("configuration/api_server_form.jinja",
-                           form=forms.ApiServerForm(url=conf.url,
-                                                    username=conf.username,
-                                                    password=conf.password)
+                           form=forms.ApiServerForm(url=app_conf.get('api_url'),
+                                                    username=app_conf.get(
+                                                        'api_username'),
+                                                    password=app_conf.get('api_password'))
                            )
