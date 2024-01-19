@@ -1,3 +1,6 @@
+import random
+import shutil
+import string
 import subprocess
 from logging.config import dictConfig
 from pathlib import Path
@@ -91,6 +94,15 @@ def init_jinja_helpers(app: Flask) -> None:
 
 def create_app() -> Flask:
     app = Flask(__name__, template_folder="template", static_folder="static")
+    env_file_path = Path(__file__).parent.parent.joinpath('.env')
+
+    # .env file initialisation
+    if not env_file_path.exists():
+        shutil.copy(f'{env_file_path.name}.sample', env_file_path)
+        dotenv.set_key(env_file_path,
+                       'SECRET_KEY',
+                       ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits)
+                               for _ in range(64)))
 
     app.config.from_mapping({
         'CONFIG_DIR': Path(__file__).parent.joinpath("config", "data"),
@@ -101,9 +113,6 @@ def create_app() -> Flask:
         'BABEL_TRANSLATION_DIRECTORIES': str(Path(__file__).parent.parent.joinpath("translations")),
     })
     app.config.from_mapping(dotenv.dotenv_values('./.env'))
-
-    import pprint
-    pprint.pprint(dict(app.config))
 
     app.register_blueprint(controllers.html.bookmark.bp)
     app.register_blueprint(controllers.html.configuration.bp)
