@@ -2,8 +2,9 @@ from pathlib import Path
 
 from flask import (Blueprint, current_app, flash, make_response, redirect,
                    render_template, request, url_for)
+from flask_babel import lazy_gettext
 
-from app import site_data
+from app import enums, site_data
 from app.modules import refresher
 
 bp = Blueprint('root',
@@ -16,8 +17,7 @@ bp = Blueprint('root',
 def index():
     aconf = site_data.AppConfiguration()
     if not aconf.get('url'):
-        flash("Please set the API server URL")
-        return redirect(url_for("configuration.api_server_setting"))
+        flash(lazy_gettext('missing_api_err_msg'), enums.FlashCategory.error)
 
     return render_template("index.jinja",
                            refresh_logs=site_data.RefreshHistory().get(),

@@ -17,6 +17,13 @@
 
     <div class="row my-3">
         <div class="col-12">
+            {% include "includes/flash_success.jinja" %}
+            {% include "includes/flash_error.jinja" %}
+        </div>
+    </div>
+
+    <div class="row my-3">
+        <div class="col-12">
             <div class="card">
                 <div class="card-header">
                     {{ _('E-Paper') ~ _('setting') }}

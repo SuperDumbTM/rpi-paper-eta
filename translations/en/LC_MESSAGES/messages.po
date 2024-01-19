@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-01-18 00:30+0800\n"
+"POT-Creation-Date: 2024-01-19 14:41+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -111,7 +111,7 @@ msgid "outbound"
 msgstr "Outbound"
 
 #: app/controllers/apis/bookmark.py:40 app/templates/error.jinja:3
-#: app/templates/index.jinja:96
+#: app/templates/index.jinja:103
 msgid "error"
 msgstr "Error"
 
@@ -170,9 +170,14 @@ msgstr "Created"
 msgid "Failed to import no. %(entry)s bookmark."
 msgstr "Failed to import no. %(entry)s bookmark."
 
-#: app/controllers/html/bookmark.py:93 app/controllers/html/schedule.py:98
+#: app/controllers/html/bookmark.py:93 app/controllers/html/configuration.py:50
+#: app/controllers/html/schedule.py:98
 msgid "import_failed"
 msgstr "Import Failed"
+
+#: app/controllers/html/root.py:20
+msgid "missing_api_err_msg"
+msgstr "The ETA server configurations has not been set. For the Paper ETA to work properly, please configure at \"Configuration\""
 
 #: app/controllers/html/schedule.py:93
 #, python-format
@@ -187,58 +192,58 @@ msgstr "!"
 msgid "go_home"
 msgstr "Go Home"
 
-#: app/templates/index.jinja:22
+#: app/templates/index.jinja:29
 msgid "E-Paper"
 msgstr "E-Paper"
 
-#: app/templates/index.jinja:22
+#: app/templates/index.jinja:29
 msgid "setting"
 msgstr "Setting"
 
 #: app/templates/configuration/epd_form.jinja:31
-#: app/templates/configuration/index.jinja:35 app/templates/index.jinja:26
+#: app/templates/configuration/index.jinja:38 app/templates/index.jinja:33
 msgid "brand"
 msgstr "Brand"
 
 #: app/templates/configuration/epd_form.jinja:49
-#: app/templates/configuration/index.jinja:53 app/templates/index.jinja:32
+#: app/templates/configuration/index.jinja:56 app/templates/index.jinja:39
 msgid "model"
 msgstr "Model"
 
-#: app/templates/index.jinja:46
+#: app/templates/index.jinja:53
 msgid "screen_content"
 msgstr "Screen Content"
 
-#: app/templates/index.jinja:50
+#: app/templates/index.jinja:57
 msgid "screen_content_help"
 msgstr ""
 "Current screen content. For layouts that utilised multiple colors, there "
 "will be more than one image and each of them representing contents in a "
 "particular color."
 
-#: app/templates/index.jinja:73 app/templates/index.jinja:111
+#: app/templates/index.jinja:80 app/templates/index.jinja:118
 msgid "no_record"
 msgstr "No Record"
 
-#: app/templates/index.jinja:85
+#: app/templates/index.jinja:92
 msgid "refresh_history"
 msgstr "Refresh History"
 
-#: app/templates/index.jinja:92
+#: app/templates/index.jinja:99
 msgid "time"
 msgstr "Time"
 
-#: app/templates/index.jinja:93 app/templates/schedule/form.jinja:48
+#: app/templates/index.jinja:100 app/templates/schedule/form.jinja:48
 #: app/templates/schedule/form.jinja:272 app/templates/schedule/list.jinja:43
 msgid "eta_type"
 msgstr "ETA Type"
 
-#: app/templates/index.jinja:94 app/templates/schedule/form.jinja:65
+#: app/templates/index.jinja:101 app/templates/schedule/form.jinja:65
 #: app/templates/schedule/list.jinja:44
 msgid "layout"
 msgstr "Layout"
 
-#: app/templates/index.jinja:95 app/templates/schedule/list.jinja:47
+#: app/templates/index.jinja:102 app/templates/schedule/list.jinja:47
 msgid "is_partial"
 msgstr "Is Partial"
 
@@ -285,7 +290,7 @@ msgstr "Stop"
 #: app/templates/bookmark/edit.jinja:124
 #: app/templates/configuration/api_server_form.jinja:35
 #: app/templates/configuration/epd_form.jinja:66
-#: app/templates/configuration/index.jinja:84
+#: app/templates/configuration/index.jinja:90
 #: app/templates/schedule/form.jinja:96
 msgid "submit"
 msgstr "Submit"
@@ -310,26 +315,30 @@ msgstr "Edit"
 msgid "create"
 msgstr "Create"
 
-#: app/templates/bookmark/list.jinja:138 app/templates/schedule/list.jinja:155
+#: app/templates/bookmark/list.jinja:138
+#: app/templates/configuration/index.jinja:94
+#: app/templates/schedule/list.jinja:155
 msgid "export"
 msgstr "Export"
 
-#: app/templates/bookmark/list.jinja:145 app/templates/schedule/list.jinja:162
+#: app/templates/bookmark/list.jinja:145
+#: app/templates/configuration/index.jinja:99
+#: app/templates/schedule/list.jinja:162
 msgid "import"
 msgstr "Import"
 
 #: app/templates/configuration/api_server_form.jinja:14
-#: app/templates/configuration/index.jinja:71
+#: app/templates/configuration/index.jinja:74
 msgid "api_server_setting"
 msgstr "API Server Setting"
 
 #: app/templates/configuration/api_server_form.jinja:16
-#: app/templates/configuration/index.jinja:73
+#: app/templates/configuration/index.jinja:76
 msgid "api_server_setting_help"
 msgstr "Enter the details of the ETA server for fetching all the reqiured data."
 
 #: app/templates/configuration/api_server_form.jinja:20
-#: app/templates/configuration/index.jinja:79
+#: app/templates/configuration/index.jinja:82
 msgid "api_server_url"
 msgstr "API Server URL"
 
@@ -342,12 +351,12 @@ msgid "api_server_password"
 msgstr "Password"
 
 #: app/templates/configuration/epd_form.jinja:25
-#: app/templates/configuration/index.jinja:27
+#: app/templates/configuration/index.jinja:30
 msgid "display_setting"
 msgstr "Display Setting"
 
 #: app/templates/configuration/epd_form.jinja:27
-#: app/templates/configuration/index.jinja:29
+#: app/templates/configuration/index.jinja:32
 msgid "display_setting_help"
 msgstr "Select the installed e-paper display's detailes."
 

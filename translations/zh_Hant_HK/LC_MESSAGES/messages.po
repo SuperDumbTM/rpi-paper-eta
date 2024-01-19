@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-01-18 00:30+0800\n"
+"POT-Creation-Date: 2024-01-19 14:41+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hant_HK\n"
@@ -111,7 +111,7 @@ msgid "outbound"
 msgstr "去程"
 
 #: app/controllers/apis/bookmark.py:40 app/templates/error.jinja:3
-#: app/templates/index.jinja:96
+#: app/templates/index.jinja:103
 msgid "error"
 msgstr "錯誤"
 
@@ -170,9 +170,14 @@ msgstr "已建立"
 msgid "Failed to import no. %(entry)s bookmark."
 msgstr "未能匯入第%(entry)s個收藏。"
 
-#: app/controllers/html/bookmark.py:93 app/controllers/html/schedule.py:98
+#: app/controllers/html/bookmark.py:93 app/controllers/html/configuration.py:50
+#: app/controllers/html/schedule.py:98
 msgid "import_failed"
 msgstr "匯入失敗"
+
+#: app/controllers/html/root.py:20
+msgid "missing_api_err_msg"
+msgstr ""
 
 #: app/controllers/html/schedule.py:93
 #, python-format
@@ -187,55 +192,55 @@ msgstr "！"
 msgid "go_home"
 msgstr "回到主頁"
 
-#: app/templates/index.jinja:22
+#: app/templates/index.jinja:29
 msgid "E-Paper"
 msgstr "電子紙屏幕"
 
-#: app/templates/index.jinja:22
+#: app/templates/index.jinja:29
 msgid "setting"
 msgstr "設定"
 
 #: app/templates/configuration/epd_form.jinja:31
-#: app/templates/configuration/index.jinja:35 app/templates/index.jinja:26
+#: app/templates/configuration/index.jinja:38 app/templates/index.jinja:33
 msgid "brand"
 msgstr "牌子"
 
 #: app/templates/configuration/epd_form.jinja:49
-#: app/templates/configuration/index.jinja:53 app/templates/index.jinja:32
+#: app/templates/configuration/index.jinja:56 app/templates/index.jinja:39
 msgid "model"
 msgstr "型號"
 
-#: app/templates/index.jinja:46
+#: app/templates/index.jinja:53
 msgid "screen_content"
 msgstr "屏幕影像"
 
-#: app/templates/index.jinja:50
+#: app/templates/index.jinja:57
 msgid "screen_content_help"
 msgstr "現正在電子紙屏幕上顯示的影像。如果所選的佈局支援多種顏色，不同顏色的內容將會分別被顯示出來。"
 
-#: app/templates/index.jinja:73 app/templates/index.jinja:111
+#: app/templates/index.jinja:80 app/templates/index.jinja:118
 msgid "no_record"
 msgstr "沒有紀錄"
 
-#: app/templates/index.jinja:85
+#: app/templates/index.jinja:92
 msgid "refresh_history"
 msgstr "屏幕更新紀錄"
 
-#: app/templates/index.jinja:92
+#: app/templates/index.jinja:99
 msgid "time"
 msgstr "時間"
 
-#: app/templates/index.jinja:93 app/templates/schedule/form.jinja:48
+#: app/templates/index.jinja:100 app/templates/schedule/form.jinja:48
 #: app/templates/schedule/form.jinja:272 app/templates/schedule/list.jinja:43
 msgid "eta_type"
 msgstr "預報顯示模式"
 
-#: app/templates/index.jinja:94 app/templates/schedule/form.jinja:65
+#: app/templates/index.jinja:101 app/templates/schedule/form.jinja:65
 #: app/templates/schedule/list.jinja:44
 msgid "layout"
 msgstr "佈局"
 
-#: app/templates/index.jinja:95 app/templates/schedule/list.jinja:47
+#: app/templates/index.jinja:102 app/templates/schedule/list.jinja:47
 msgid "is_partial"
 msgstr "快新更新"
 
@@ -278,7 +283,7 @@ msgstr "車站"
 #: app/templates/bookmark/edit.jinja:124
 #: app/templates/configuration/api_server_form.jinja:35
 #: app/templates/configuration/epd_form.jinja:66
-#: app/templates/configuration/index.jinja:84
+#: app/templates/configuration/index.jinja:90
 #: app/templates/schedule/form.jinja:96
 msgid "submit"
 msgstr "提交"
@@ -303,26 +308,30 @@ msgstr "編輯"
 msgid "create"
 msgstr "建立"
 
-#: app/templates/bookmark/list.jinja:138 app/templates/schedule/list.jinja:155
+#: app/templates/bookmark/list.jinja:138
+#: app/templates/configuration/index.jinja:94
+#: app/templates/schedule/list.jinja:155
 msgid "export"
 msgstr "匯出"
 
-#: app/templates/bookmark/list.jinja:145 app/templates/schedule/list.jinja:162
+#: app/templates/bookmark/list.jinja:145
+#: app/templates/configuration/index.jinja:99
+#: app/templates/schedule/list.jinja:162
 msgid "import"
 msgstr "匯入"
 
 #: app/templates/configuration/api_server_form.jinja:14
-#: app/templates/configuration/index.jinja:71
+#: app/templates/configuration/index.jinja:74
 msgid "api_server_setting"
 msgstr "API 伺服器設定"
 
 #: app/templates/configuration/api_server_form.jinja:16
-#: app/templates/configuration/index.jinja:73
+#: app/templates/configuration/index.jinja:76
 msgid "api_server_setting_help"
 msgstr "輸入 ETA 伺服器的資料，以便程式能夠取得預報數據及其他相關資料。"
 
 #: app/templates/configuration/api_server_form.jinja:20
-#: app/templates/configuration/index.jinja:79
+#: app/templates/configuration/index.jinja:82
 msgid "api_server_url"
 msgstr "伺服器網址"
 
@@ -335,12 +344,12 @@ msgid "api_server_password"
 msgstr "登入密碼"
 
 #: app/templates/configuration/epd_form.jinja:25
-#: app/templates/configuration/index.jinja:27
+#: app/templates/configuration/index.jinja:30
 msgid "display_setting"
 msgstr "屏幕設定"
 
 #: app/templates/configuration/epd_form.jinja:27
-#: app/templates/configuration/index.jinja:29
+#: app/templates/configuration/index.jinja:32
 msgid "display_setting_help"
 msgstr "選擇正在使用的電子紙屏幕。"
 
