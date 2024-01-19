@@ -9,7 +9,7 @@ import dotenv
 from flask import Flask
 from flask_babel import Babel
 
-from app import commands, controllers, handles, site_data, utils
+from app import commands, controllers, handles, site_data, utils, database
 
 
 def init_babel(app: Flask) -> Babel:
@@ -23,7 +23,6 @@ def init_babel(app: Flask) -> Babel:
 def init_site_data(app: Flask) -> None:
     """Initialise and load all the site data/user configuration
     """
-    site_data.RefreshSchedule(app)
     site_data.RefreshHistory(limit=20)
 
 
@@ -92,6 +91,20 @@ def init_jinja_helpers(app: Flask) -> None:
     )
 
 
+def init_db(app: Flask) -> None:
+    database.db.init_app(app)
+
+    database.scheduler.init_app(app)
+    database.scheduler.start()
+
+    with app.app_context():
+        database.db.create_all()
+
+        for s in database.db.session.query(database.Schedule).all():
+            if s.enabled:
+                s.add_job()
+
+
 def create_app() -> Flask:
     app = Flask(__name__, template_folder="template", static_folder="static")
     env_file_path = Path(__file__).parent.parent.joinpath('.env')
@@ -110,7 +123,8 @@ def create_app() -> Flask:
         'LOG_FILE_PATH': Path(__file__).parent.joinpath("caches", 'app.log'),
         'EPD_IMG_PATH': Path(__file__).parent.joinpath("caches", 'epaper'),
         'I18N': ['en', 'zh_Hant_HK'],
-        'BABEL_TRANSLATION_DIRECTORIES': str(Path(__file__).parent.parent.joinpath("translations")),
+        'BABEL_TRANSLATION_DIRECTORIES': str(Path(__file__).parents[1].joinpath("translations")),
+        'SQLALCHEMY_DATABASE_URI': "sqlite:///{}".format(Path(__file__).parents[1].joinpath('app.db'))
     })
     app.config.from_mapping(dotenv.dotenv_values('./.env'))
 
@@ -131,6 +145,7 @@ def create_app() -> Flask:
 
     app.register_blueprint(handles.bp)
 
+    init_db(app)
     init_jinja_helpers(app)
     init_logger(app)
     init_site_data(app)

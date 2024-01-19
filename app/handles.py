@@ -60,7 +60,7 @@ def error_handler_404(e: HTTPException):
     if _need_json_response():
         return jsonify({
             'success': False,
-            'message': "{}".format(lazy_gettext("The requested URL was not found on the server.")),
+            'message': "{}".format(lazy_gettext("The requested resource was not found on the server.")),
             'data': None
         }), 404
     return render_template(

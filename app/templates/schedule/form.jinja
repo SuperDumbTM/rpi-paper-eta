@@ -35,7 +35,7 @@
                 <label for="schedule" class="form-label">{{ _('schedule') }}</label>
                 <div class="input-group">
                     <input type="text" class="form-control" name="schedule" placeholder="Cron Expression"
-                        value="{{ form.schedule }}" required>
+                        value="{{ schedule.schedule or '' }}" required>
                     <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
                         data-bs-target="#cron-configurator">
                         <i class="bi bi-pencil-square"></i>
@@ -48,7 +48,7 @@
                 <label for="eta_type" class="form-label">{{ _('eta_type') }}</label>
                 <select class="form-select" name="eta_type" required>
                     {% for type in eta_types %}
-                    {% if form.eta_type == type %}
+                    {% if schedule.eta_type == type %}
                     <option value="{{ type.value }}" selected>
                         {{ _(type.value) }}
                     </option>
@@ -69,7 +69,7 @@
             </div>
 
             <div class="form-check form-switch">
-                {% if form.is_partial %}
+                {% if schedule.is_partial %}
                 <input class="form-check-input" type="checkbox" name="is_partial" checked>
                 {% else %}
                 <input class="form-check-input" type="checkbox" name="is_partial">
@@ -84,7 +84,7 @@
             </div>
 
             <div class="form-check form-switch">
-                {% if form.enabled %}
+                {% if schedule.enabled %}
                 <input class="form-check-input" type="checkbox" name="enabled" checked>
                 {% else %}
                 <input class="form-check-input" type="checkbox" name="enabled">
@@ -205,7 +205,7 @@
 
         // trigger layout option update & select the previous choice if applicable
         $('select[name=eta_type]').trigger('change')
-        $('#select-box input[value={{form.layout or "null"}}]').click()
+        $('#select-box input[value={{schedule.layout or "null"}}]').click()
 
         var cronstrue = window.cronstrue
 

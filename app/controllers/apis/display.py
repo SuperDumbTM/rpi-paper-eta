@@ -7,7 +7,7 @@ import webargs
 from flask import Blueprint, current_app, jsonify
 from flask_babel import lazy_gettext
 
-from app import site_data, models
+from app import database, site_data, models
 from app.modules import image as eimage
 from app.modules import refresher
 from app.modules.display import epaper
@@ -62,13 +62,15 @@ def image(args):
             'message': '{}.'.format(lazy_gettext('configuration_required')),
         }), 400
 
-    bm_setting = site_data.BookmarkList()
+    bookmarks = [models.EtaConfig(**bm.as_dict())
+                 for bm in database.db.session.query(database.Bookmark)
+                 .order_by(database.Bookmark.ordering)
+                 .all()]
     try:
         generator = eimage.eta_image.EtaImageGeneratorFactory().get_generator(
             app_conf.get('epd_brand'), app_conf.get('epd_model')
         )(eimage.enums.EtaType(args['eta_type']), args['layout'])
-        images = refresher.generate_image(
-            app_conf, bm_setting.get_all(), generator)
+        images = refresher.generate_image(app_conf, bookmarks, generator)
     except KeyError:
         return jsonify({
             'success': False,
@@ -106,13 +108,17 @@ def refresh(args):
         }), 400
 
     # ---------- generate ETA images ----------
-    bm_setting = site_data.BookmarkList()
+    bookmarks = [models.EtaConfig(**bm.as_dict())
+                 for bm in database.db.session.query(database.Bookmark)
+                 .order_by(database.Bookmark.ordering)
+                 .all()]
+
     try:
         generator = eimage.eta_image.EtaImageGeneratorFactory().get_generator(
             app_conf.get('epd_brand'), app_conf.get('epd_model')
         )(eimage.enums.EtaType(args['eta_type']), args['layout'])
-        images = refresher.generate_image(
-            app_conf, bm_setting.get_all(), generator)
+
+        images = refresher.generate_image(app_conf, bookmarks, generator)
     except KeyError:
         return jsonify({
             'success': False,

@@ -1,11 +1,13 @@
+import sys
 from typing import Literal
 
 import requests
+from sqlalchemy import text
 import webargs
 from flask import Blueprint, abort, current_app, jsonify, request
 from flask_babel import lazy_gettext
 
-from app import enums, models, site_data, utils
+from app import database, enums, models, site_data, utils
 
 bp = Blueprint('api_bookmark', __name__, url_prefix="/api")
 
@@ -27,9 +29,7 @@ _bookmark_validation_rules = {
 }, location="query")
 def get_all(args):
     bookmarks = []
-    for bm in site_data.BookmarkList():
-        bm: models.EtaConfig
-
+    for bm in database.db.session.query(database.Bookmark).order_by(database.Bookmark.ordering).all():
         try:
             stop_name = requests.get(
                 f"{site_data.AppConfiguration().get('api_url')}"
@@ -39,9 +39,8 @@ def get_all(args):
         except Exception:
             stop_name = lazy_gettext('error')
 
-        dump = (bm.model_dump()if not args['i18n'] else bm.model_dump_i18n())
-        bookmarks.append(dump | {'stop_name': stop_name})
-
+        # TODO: i18n for fields
+        bookmarks.append(bm.as_dict() | {'stop_name': stop_name})
     return jsonify({
         'success': True,
         'message': '{}.'.format(lazy_gettext("success")),
@@ -54,59 +53,45 @@ def get_all(args):
 @bp.route("/bookmark", methods=["POST"])
 @webargs.flaskparser.use_args(_bookmark_validation_rules)
 def create(args):
-    bkms = site_data.BookmarkList()
-    try:
-        bkms.create(**args)
-    except KeyError:
-        return jsonify({
-            'success': False,
-            'message': '{}.'.format(lazy_gettext("invalid_id")),
-            'data': None
-        }), 400
-    else:
-        return jsonify({
-            'success': True,
-            'message': '{}.'.format(lazy_gettext("updated")),
-            'data': None
-        })
+    database.db.session.add(database.Bookmark(**args))
+    database.db.session.commit()
+    return jsonify({
+        'success': True,
+        'message': '{}.'.format(lazy_gettext("updated")),
+        'data': None
+    })
 
 
 @bp.route("/bookmark/<id>", methods=["PUT"])
 @webargs.flaskparser.use_args(_bookmark_validation_rules)
 def update(args, id: str):
-    bkms = site_data.BookmarkList()
-    try:
-        print(args)
-        bkms.update(id, **args)
-    except KeyError:
-        return jsonify({
-            'success': False,
-            'message': '{}.'.format(lazy_gettext("invalid_id")),
-            'data': None
-        }), 400
-    else:
-        return jsonify({
-            'success': True,
-            'message': '{}.'.format(lazy_gettext("updated")),
-            'data': None
-        })
+    bookmark = database.Bookmark.query.get_or_404(id)
+    for k, v in args.items():
+        setattr(bookmark, k, v)
+
+    database.db.session.merge(bookmark)
+    database.db.session.commit()
+    return jsonify({
+        'success': True,
+        'message': '{}.'.format(lazy_gettext("updated")),
+        'data': {
+            'bookmark': bookmark.as_dict()
+        }
+    })
 
 
 @bp.route("/bookmark/<id>", methods=["DELETE"])
 def delete(id: str):
-    etas = site_data.BookmarkList()
-    try:
-        return jsonify({
-            'success': True,
-            'message': "{}.".format(lazy_gettext("deleted")),
-            'data': etas.pop(etas.index(id)).model_dump()
-        })
-    except ValueError:
-        return jsonify({
-            'success': False,
-            'message': '{}.'.format(lazy_gettext("invalid_id")),
-            'data': None
-        }), 400
+    bookmark = database.Bookmark.query.get_or_404(id)
+    database.db.session.delete(bookmark)
+    database.db.session.commit()
+    return jsonify({
+        'success': True,
+        'message': "{}.".format(lazy_gettext("deleted")),
+        'data': {
+            'bookmark': bookmark.as_dict()
+        }
+    })
 
 
 @bp.route('/bookmark/<string:search_type>')
@@ -188,15 +173,32 @@ def search(args,
 
 @bp.route("/bookmark/order", methods=["PUT"])
 @webargs.flaskparser.use_args({
-    'source': webargs.fields.String(required=True),
-    'destination': webargs.fields.String(required=True),
+    'src_id': webargs.fields.Integer(required=True),
+    'dest_id': webargs.fields.Integer(required=True),
 })
 def swap(args):
-    etas = site_data.BookmarkList()
-    etas.swap(args['source'], args['destination'])
+    targets = database.db.session.query(database.Bookmark) \
+        .filter(database.Bookmark.id.in_(args.values())) \
+        .all()
 
-    return jsonify({
-        'success': True,
-        'message': '{}.'.format(lazy_gettext("updated")),
-        'data': None
-    })
+    if len(targets) == 2:
+        # BUG: possible inconsistent with high traffic
+        src_order, dest_order = targets[0].ordering, targets[1].ordering
+        targets[0].ordering, targets[1].ordering = sys.maxsize, sys.maxsize - 1
+        database.db.session.add_all(targets)
+        database.db.session.commit()
+        targets[0].ordering,  targets[1].ordering = dest_order, src_order
+        database.db.session.add_all(targets)
+        database.db.session.commit()
+
+        return jsonify({
+            'success': True,
+            'message': '{}.'.format(lazy_gettext("updated")),
+            'data': None
+        })
+    else:
+        return jsonify({
+            'success': False,
+            'message': '{}.'.format(lazy_gettext("invalid_id")),
+            'data': None
+        }), 400

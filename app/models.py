@@ -16,7 +16,6 @@ class EtaConfig(pydantic.BaseModel):
     service_type: str
     stop_code: str
     lang: str
-    id: Optional[str] = None
 
     def model_dump_i18n(self) -> dict:
         return self.model_dump() | {

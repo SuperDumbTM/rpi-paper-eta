@@ -5,7 +5,7 @@ import webargs
 from flask import Blueprint, jsonify
 from flask_babel import lazy_gettext
 
-from app import site_data
+from app import database
 from app.modules import image as eimage
 
 bp = Blueprint('api_schedule', __name__, url_prefix="/api")
@@ -19,17 +19,17 @@ bp = Blueprint('api_schedule', __name__, url_prefix="/api")
 }, location="query")
 def get_all(args):
     schedules = []
-    for s in site_data.RefreshSchedule().get_all():
-        cron = croniter.croniter(s.schedule, start_time=datetime.now())
+    for schedule in database.db.session.query(database.Schedule).all():
+        cron = croniter.croniter(schedule.schedule, start_time=datetime.now())
 
-        if args['enabled'] is not None and args['enabled'] != s.enabled:
+        if args['enabled'] is not None and args['enabled'] != schedule.enabled:
             continue
 
-        dump = s.model_dump() if not args['i18n'] else s.model_dump_i18n()
+        # TODO: i18n for eta_mode
         schedules.append({
-            **dump,
+            **dict(schedule.as_dict()),
             'future_executions': (tuple(cron.get_next(datetime).isoformat() for _ in range(args['n_future']))
-                                  if s.enabled else [])
+                                  if schedule.enabled else [])
         })
 
     return jsonify({
@@ -43,15 +43,16 @@ def get_all(args):
 
 @bp.route('/schedule/<string:id>')
 def get(id: str):
-    try:
+    schedule = database.Schedule.query.get(id)
+    if schedule:
         return jsonify({
             'success': True,
             'message': '{}.'.format(lazy_gettext("success")),
             'data': {
-                'schedule': site_data.RefreshSchedule().get(id).model_dump()
+                'schedule': schedule.as_dict()
             }
         })
-    except KeyError:
+    else:
         return jsonify({
             'success': False,
             'message': '{}.'.format(lazy_gettext("invalid_id")),
@@ -71,8 +72,8 @@ def get(id: str):
     'enabled': webargs.fields.Boolean(required=True),
 }, location="json")
 def create(args):
-    scheduler = site_data.RefreshSchedule()
-    scheduler.create(**args)
+    database.db.session.add(database.Schedule(**args))
+    database.db.session.commit()
     return jsonify({
         'success': True,
         'message': '{}.'.format(lazy_gettext("created")),
@@ -80,7 +81,7 @@ def create(args):
     })
 
 
-@bp.route('/schedule/<id>', methods=['PUT'])
+@bp.route('/schedule/<string:id>', methods=['PUT'])
 @webargs.flaskparser.use_args({
     'schedule': webargs.fields.String(
         validate=lambda v: croniter.croniter.is_valid(
@@ -93,36 +94,30 @@ def create(args):
     'enabled': webargs.fields.Boolean(),
 }, location="json")
 def update(args, id: str):
-    scheduler = site_data.RefreshSchedule()
-    try:
-        schedule = scheduler.get(id)
-        scheduler.update(**schedule.model_copy(update=args).model_dump())
-        return jsonify({
-            'success': True,
-            'message': '{}.'.format(lazy_gettext("updated")),
-            'data': None
-        })
-    except KeyError as e:
-        print(e)
-        return jsonify({
-            'success': False,
-            'message': '{}.'.format(lazy_gettext("invalid_id")),
-            'data': None
-        }), 400
+    schedule = database.Schedule.query.get_or_404(id)
+    for k, v in args.items():
+        setattr(schedule, k, v)
+
+    database.db.session.merge(schedule)
+    database.db.session.commit()
+    return jsonify({
+        'success': True,
+        'message': '{}.'.format(lazy_gettext("updated")),
+        'data': {
+            'schedule': schedule.as_dict()
+        }
+    })
 
 
-@bp.route('/schedule/<id>', methods=["DELETE"])
+@bp.route('/schedule/<string:id>', methods=["DELETE"])
 def delete(id: str):
-    try:
-        site_data.RefreshSchedule().remove(id)
-        return jsonify({
-            'success': True,
-            'message': '{}.'.format(lazy_gettext("success")),
-            'data': None
-        })
-    except KeyError:
-        return jsonify({
-            'success': False,
-            'message': '{}.'.format(lazy_gettext("invalid_id")),
-            'data': None
-        }), 400
+    schedule = database.Schedule.query.get_or_404(id)
+    database.db.session.delete(schedule)
+    database.db.session.commit()
+    return jsonify({
+        'success': True,
+        'message': '{}.'.format(lazy_gettext("success")),
+        'data': {
+            'schedule': schedule.as_dict()
+        }
+    })

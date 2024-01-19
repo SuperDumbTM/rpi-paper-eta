@@ -4,9 +4,9 @@ import logging
 from flask import (Blueprint, Response, flash, redirect, render_template,
                    request, url_for)
 from flask_babel import lazy_gettext
-import pydantic
+from sqlalchemy.exc import StatementError
 
-from app import site_data, enums, forms
+from app import database, site_data, enums, forms
 from app import site_data
 from app.modules import image as eimage
 
@@ -34,7 +34,7 @@ def create():
     return render_template("schedule/form.jinja",
                            zip=zip,
                            list=list,
-                           form=forms.ScheduleForm(),
+                           schedule=database.Schedule(),
                            form_action=url_for('api_schedule.create'),
                            form_method='post',
                            eta_types=eimage.enums.EtaType,
@@ -46,17 +46,13 @@ def create():
 @bp.route('/schedule/create/edit/<id>')
 def edit(id: str):
     app_conf = site_data.AppConfiguration()
-    scheduler = site_data.RefreshSchedule()
-
     # the template needs zip and list
     # https://stackoverflow.com/questions/62029141/cant-use-zip-from-jinja2
     return render_template("schedule/form.jinja",
                            zip=zip,
                            list=list,
-                           form=forms.ScheduleForm(
-                               **scheduler.get(id).model_dump(exclude=['id'])),
-                           form_action=url_for(
-                               'api_schedule.update', id=id),
+                           schedule=database.Schedule.query.get_or_404(id),
+                           form_action=url_for('api_schedule.update', id=id),
                            form_method='put',
                            eta_types=eimage.enums.EtaType,
                            layouts=eimage.eta_image.EtaImageGeneratorFactory.get_generator(
@@ -66,11 +62,11 @@ def edit(id: str):
 
 @bp.route('/schedule/export')
 def export():
-    scheduler = site_data.RefreshSchedule()
     return Response(
         json.dumps(
-            tuple(map(lambda s: s.model_dump(
-                exclude=['id', 'enabled']), scheduler.get_all())),
+            tuple(map(lambda s: s.as_dict(exclude=['id', 'enabled']),
+                      database.Schedule.query.all())
+                  ),
             indent=4),
         mimetype='application/json',
         headers={'Content-disposition': 'attachment; filename=schedules.json'})
@@ -78,23 +74,24 @@ def export():
 
 @bp.route('/schedule/import', methods=['POST'])
 def import_():
+    fields = ({c.name for c in database.Schedule.__table__.c} -
+              {'id', 'enabled', 'created_at', 'updated_at'})  # accepted fields for table inputs
     try:
-        file = request.files['schedules']
+        for i, schedule in enumerate(json.load(request.files['schedules'].stream)):
+            # reference: https://stackoverflow.com/a/76799290
+            with database.db.session.begin_nested() as session:
+                try:
+                    database.db.session.add(
+                        database.Schedule(**{**{k: schedule[k] for k in fields}, 'enabled': False}))
+                    database.db.session.flush()
+                except (KeyError, TypeError, StatementError):
+                    session.rollback()
 
-        scheduler = site_data.RefreshSchedule()
-        for i, schedule in enumerate(json.load(file.stream)):
-            try:
-                scheduler.create(schedule['schedule'],
-                                 schedule['eta_type'],
-                                 schedule['layout'],
-                                 schedule['is_partial'],
-                                 False)
-            except (KeyError, pydantic.ValidationError, TypeError):
-                flash(lazy_gettext('Failed to import no. %(entry)s schedule.', entry=i),
-                      enums.FlashCategory.error)
-                logging.exception(
-                    'Encountering missing field(s) or invalid values during refresh schedule import.')
+                    flash(lazy_gettext('Failed to import no. %(entry)s schedule.', entry=i),
+                          enums.FlashCategory.error)
+                    logging.exception('Encountering missing field(s) or invalid '
+                                      'values during refresh schedule import.')
+        database.db.session.commit()
     except (UnicodeDecodeError, json.decoder.JSONDecodeError):
         flash(lazy_gettext('import_failed'), enums.FlashCategory.error)
-
     return redirect(url_for('schedule.index'))

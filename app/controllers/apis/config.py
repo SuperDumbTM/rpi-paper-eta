@@ -2,7 +2,7 @@ import webargs
 from flask import Blueprint, jsonify
 from flask_babel import lazy_gettext
 
-from app import site_data
+from app import site_data, database
 from app.modules import image as eimage
 
 bp = Blueprint('api_config', __name__, url_prefix="/api")
@@ -26,9 +26,9 @@ def get():
 
 @bp.route("/config", methods=["POST", "PUT"])
 @webargs.flaskparser.use_args({
-    'url': webargs.fields.Url(),
-    'username': webargs.fields.String(),
-    'password': webargs.fields.String(),
+    'api_url': webargs.fields.Url(),
+    # 'api_username': webargs.fields.String(),
+    # 'api_password': webargs.fields.String(),
     'epd_brand': webargs.fields.String(
         validate=lambda v: v in eimage.eta_image.EtaImageGeneratorFactory.brands()),
     'epd_model': webargs.fields.String()
@@ -39,10 +39,8 @@ def update(args):
     if (app_conf.get('epd_brand') != args['epd_brand']
             or app_conf.get('epd_model') != args['epd_model']):
         # changing brand or model will invalidate the schedule
-        scheduler = site_data.RefreshSchedule()
-        for schedule in scheduler.get_all():
-            scheduler.update(**schedule.model_dump(exclude=['enabled']),
-                             enabled=False)
+        database.Schedule.query.update({database.Schedule.enabled: False})
+        database.db.session.commit()
 
     try:
         app_conf.updates(args)
