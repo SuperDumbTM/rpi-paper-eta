@@ -62,8 +62,8 @@
     <div class="cron-selector cron-choice-selector" style="display: none;">
         {% for val, text in options %}
         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="checkbox" value="{{ val }}">
-            <label class="form-check-label" onclick="$(this).siblings('input').click()">
+            <label class="form-check-label">
+                <input class="form-check-input" type="checkbox" value="{{ val }}">
                 {% if text == 0 or text|int != 0 %}
                     {# 0 will be eval. as False in the second condition #}
                     {{ '{:0>2d}'.format(text) }}
