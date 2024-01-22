@@ -4,6 +4,7 @@ from typing import Literal
 import requests
 from sqlalchemy import text
 import webargs
+from webargs import flaskparser
 from flask import Blueprint, abort, current_app, jsonify, request
 from flask_babel import lazy_gettext
 
@@ -95,14 +96,23 @@ def delete(id: str):
 
 
 @bp.route('/bookmark/<string:search_type>')
-@webargs.flaskparser.use_args({
-    'company': webargs.fields.String(
-        required=True, validate=webargs.validate.OneOf([c for c in enums.EtaCompany])),
-    'lang': webargs.fields.String(
-        required=True, validate=webargs.validate.OneOf([c for c in enums.EtaLocale]))
-}, location="query")
-def search(args,
-           search_type: Literal["routes", "directions", "service_types", "stops"]):
+def search(search_type: Literal["routes", "directions", "service_types", "stops"]):
+    args = flaskparser.parser.parse(
+        {
+            'company': webargs.fields.String(
+                required=True, validate=webargs.validate.OneOf([c for c in enums.EtaCompany])),
+            'lang': webargs.fields.String(
+                required=True, validate=webargs.validate.OneOf([c for c in enums.EtaLocale])),
+            'route': webargs.fields.String(
+                required=search_type in ('directions', 'service_types', 'stops')),
+            'direction': webargs.fields.String(
+                required=search_type in ('service_types', 'stops')),
+            'service_types': webargs.fields.String(
+                required=search_type == 'stops'),
+        },
+        request, location='query'
+    )
+
     try:
         if search_type == "routes":
             return jsonify({
@@ -113,45 +123,35 @@ def search(args,
                 }
             })
         elif search_type == "directions":
-            if "route" not in request.args:
-                return jsonify({
-                    'success': False,
-                    'message': "Missing required query parameter(s)",
-                    'data': {'missing': [{'route': ["This field is required"]}]}
-                }), 422
-
             return jsonify({
                 'success': True,
                 'message': '{}.'.format(lazy_gettext("success")),
                 'data': {
-                    'directions': utils.direction_choices(
-                        args['company'], request.args['route'])
+                    'directions': utils.direction_choices(args['company'],
+                                                          args['route'])
                 }
             })
         elif search_type == "service_types":
-            if ("route", "direction") not in request.args:
-                pass  # TODO: handle missing param
-
             return jsonify({
                 'success': True,
                 'message': '{}.'.format(lazy_gettext("success")),
                 'data': {
-                    'service_types': utils.type_choices(
-                        args['company'], request.args['route'],
-                        request.args['direction'], args['lang'])
+                    'service_types': utils.type_choices(args['company'],
+                                                        args['route'],
+                                                        args['direction'],
+                                                        args['lang'])
                 }
             })
         elif search_type == "stops":
-            if ("route", "direction", "service_type") not in request.args:
-                pass  # TODO: handle missing param
-
             return jsonify({
                 'success': True,
                 'message': '{}.'.format(lazy_gettext("success")),
                 'data': {
-                    'stops': utils.stop_choices(
-                        args['company'], request.args['route'], request.args['direction'],
-                        request.args['service_type'], args['lang'])
+                    'stops': utils.stop_choices(args['company'],
+                                                args['route'],
+                                                args['direction'],
+                                                args['service_type'],
+                                                args['lang'])
                 }
             })
         else:
@@ -161,14 +161,14 @@ def search(args,
             'success': False,
             'message': '{}.'.format(lazy_gettext("connection_error")),
             'data': None
-        })
+        }), 400
     except requests.exceptions.HTTPError:
         current_app.logger.exception("HTTPError occurs at 'bookmark_search'")
         return jsonify({
             'success': False,
             'message': '{}.'.format(lazy_gettext("eta_server_error")),
             'data': None
-        })
+        }), 400
 
 
 @bp.route("/bookmark/order", methods=["PUT"])
