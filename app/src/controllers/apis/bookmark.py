@@ -2,13 +2,12 @@ import sys
 from typing import Literal
 
 import requests
-from sqlalchemy import text
 import webargs
-from webargs import flaskparser
 from flask import Blueprint, abort, current_app, jsonify, request
 from flask_babel import lazy_gettext
+from webargs import flaskparser
 
-from app import database, enums, models, site_data, utils
+from app.src import database, enums, site_data, utils
 
 bp = Blueprint('api_bookmark', __name__, url_prefix="/api")
 

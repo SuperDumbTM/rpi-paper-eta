@@ -1,5 +1,5 @@
-from enum import Enum
 import io
+from enum import Enum
 from pathlib import Path
 from typing import Literal
 

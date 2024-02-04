@@ -7,10 +7,10 @@ import webargs
 from flask import Blueprint, current_app, jsonify
 from flask_babel import lazy_gettext
 
-from app import database, site_data, models
-from app.modules import image as eimage
-from app.modules import refresher
-from app.modules.display import epaper
+from app.src import database, site_data, models
+from app.src.modules import image as eimage
+from app.src.modules import refresher
+from app.src.modules.display import epaper
 
 bp = Blueprint('api_display',
                __name__,
@@ -146,11 +146,11 @@ def refresh(args):
             # load old screen into the display's buffer
             refresher.display_images(
                 refresher.cached_images(
-                    Path(current_app.config['EPD_IMG_PATH'])),
+                    Path(current_app.config['EPD_IMG_DIR'])),
                 controller, False, False)
 
         refresher.display_images(images, controller, False, False)
-        generator.write_images(current_app.config['EPD_IMG_PATH'], images)
+        generator.write_images(current_app.config['EPD_IMG_DIR'], images)
         site_data.RefreshHistory().put(models.RefreshLog(**args))
     except Exception as e:
         site_data.RefreshHistory().put(models.RefreshLog(**args, error=e))

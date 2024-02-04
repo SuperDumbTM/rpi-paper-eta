@@ -6,13 +6,12 @@ from flask import (Blueprint, Response, flash, redirect, render_template,
 from flask_babel import lazy_gettext
 from sqlalchemy.exc import StatementError
 
-from app import database, site_data, enums, forms
-from app import site_data
-from app.modules import image as eimage
+from app.src import database, enums, site_data
+from app.src.modules import image as eimage
 
 bp = Blueprint('schedule',
                __name__,
-               template_folder="../../templates",
+               template_folder="../../../templates",
                url_prefix="/schedule")
 
 

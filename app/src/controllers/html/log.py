@@ -6,7 +6,6 @@ from flask import Blueprint, Response, current_app, render_template, send_file
 
 bp = Blueprint('log',
                __name__,
-               template_folder="../../templates",
                url_prefix="/log")
 
 

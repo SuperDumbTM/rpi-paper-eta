@@ -1,6 +1,6 @@
 import typing
 
-from app.modules import image as eimage
+from app.src.modules import image as eimage
 
 
 class ApiServerForm(typing.NamedTuple):

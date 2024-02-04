@@ -4,12 +4,11 @@ from flask import (Blueprint, current_app, flash, make_response, redirect,
                    render_template, request, url_for)
 from flask_babel import lazy_gettext
 
-from app import enums, site_data
-from app.modules import refresher
+from app.src import enums, site_data
+from app.src.modules import refresher
 
 bp = Blueprint('root',
                __name__,
-               template_folder="../../templates",
                url_prefix="/")
 
 

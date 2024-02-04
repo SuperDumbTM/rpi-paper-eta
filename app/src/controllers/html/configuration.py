@@ -1,16 +1,14 @@
 import json
 
-import pydantic
 from flask import (Blueprint, Response, flash, redirect, render_template,
                    request, url_for)
 from flask_babel import lazy_gettext
 
-from app import enums, forms, site_data
-from app.modules import image as eimage
+from app.src import enums, forms, site_data
+from app.src.modules import image as eimage
 
 bp = Blueprint('configuration',
                __name__,
-               template_folder="../../templates",
                url_prefix="/configuration")
 
 

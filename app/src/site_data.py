@@ -3,7 +3,7 @@ from collections import abc, deque
 from pathlib import Path
 from typing import Any, Iterator
 
-from app import models, utils
+from app.src import models, utils
 
 
 @utils.singleton
@@ -12,7 +12,7 @@ class AppConfiguration(abc.Mapping):
         e-paper and API server settings.
     """
     _data: dict[str,]
-    _filepath = Path(__file__).parent.joinpath("configurations", "config.json")
+    _filepath = Path(__file__).parents[1].joinpath("data", "config.json")
 
     __keys__ = ['api_url', 'api_username',
                 'api_password', 'epd_brand', 'epd_model',]

@@ -1,7 +1,6 @@
 import subprocess
 from pathlib import Path
 
-import click
 from flask.cli import AppGroup
 
 i18n_cli = AppGroup('i18n')
@@ -17,12 +16,12 @@ def babel_extract():
 @i18n_cli.command('update')
 def babel_update():
     subprocess.run(['pybabel', 'update', '-i',
-                   'messages.pot', '-d', 'translations'])
+                   'messages.pot', '-d', 'app/translations'])
 
 
 @i18n_cli.command('compile')
 def babel_compile():
-    subprocess.run(['pybabel', 'compile', '-d', 'translations'])
+    subprocess.run(['pybabel', 'compile', '-d', 'app/translations'])
 
 
 @clean_cli.command('pycache')

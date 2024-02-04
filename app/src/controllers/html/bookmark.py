@@ -7,11 +7,10 @@ from flask import (Blueprint, Response, flash, redirect, render_template,
 from flask_babel import lazy_gettext
 from sqlalchemy.exc import StatementError
 
-from app import database, enums, forms, site_data, utils
+from app.src import database, enums, utils
 
 bp = Blueprint('bookmark',
                __name__,
-               template_folder="../../templates",
                url_prefix="/")
 
 

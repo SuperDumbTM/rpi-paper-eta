@@ -9,14 +9,14 @@ import dotenv
 from flask import Flask
 from flask_babel import Babel
 
-from app import commands, controllers, handles, site_data, utils, database
+from app.src import commands, controllers, handles, site_data, utils, database
 
 
 def init_babel(app: Flask) -> Babel:
     """Initialise babel
     """
     app.logger.info("Compiling the translation files.")
-    subprocess.run(['pybabel', 'compile', '-d', 'translations'])
+    subprocess.run(['pybabel', 'compile', '-d', 'app/translations'])
     return Babel(app, locale_selector=utils.get_locale)
 
 
@@ -106,9 +106,12 @@ def init_db(app: Flask) -> None:
 
 
 def create_app() -> Flask:
-    app = Flask(__name__, template_folder="template", static_folder="static")
-    env_file_path = Path(__file__).parent.parent.joinpath('.env')
+    app_root = Path(__file__).parents[1]
+    app = Flask(__name__,
+                template_folder=app_root.joinpath('templates'),
+                static_folder=app_root.joinpath('static'))
 
+    env_file_path = Path(__file__).parent.parent.joinpath('.env')
     # .env file initialisation
     if not env_file_path.exists():
         shutil.copy(f'{env_file_path.name}.sample', env_file_path)
@@ -118,13 +121,13 @@ def create_app() -> Flask:
                                for _ in range(64)))
 
     app.config.from_mapping({
-        'CONFIG_DIR': Path(__file__).parent.joinpath("config", "data"),
-        'CACHE_DIR': Path(__file__).parent.joinpath("caches"),
-        'LOG_FILE_PATH': Path(__file__).parent.joinpath("caches", 'app.log'),
-        'EPD_IMG_PATH': Path(__file__).parent.joinpath("caches", 'epaper'),
+        'DATA_DIR': app_root.joinpath("data"),
+        'CACHE_DIR': app_root.joinpath("caches"),
+        'EPD_IMG_DIR': app_root.joinpath("caches", 'epaper'),
+        'LOG_FILE_PATH': app_root.joinpath("logs", 'app.log'),
         'I18N': ['en', 'zh_Hant_HK'],
-        'BABEL_TRANSLATION_DIRECTORIES': str(Path(__file__).parents[1].joinpath("translations")),
-        'SQLALCHEMY_DATABASE_URI': "sqlite:///{}".format(Path(__file__).parents[1].joinpath('app.db'))
+        'BABEL_TRANSLATION_DIRECTORIES': str(app_root.joinpath("translations")),
+        'SQLALCHEMY_DATABASE_URI': "sqlite:///{}".format(app_root.joinpath('data', 'app.db'))
     })
     app.config.from_mapping(dotenv.dotenv_values('./.env'))
 

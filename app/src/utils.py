@@ -1,20 +1,15 @@
 import dataclasses
 import json
-import logging
 import random
 import string
 from enum import Enum
-from io import BytesIO
-from pathlib import Path
 from typing import Literal, Optional
 
 import requests
 from flask import current_app, request, url_for
 from flask_babel import lazy_gettext
-from PIL import Image
 
-from app import site_data, translation
-from app.modules import image as eimage
+from app.src import site_data
 
 
 def singleton(class_: object):

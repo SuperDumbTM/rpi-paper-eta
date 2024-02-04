@@ -8,8 +8,8 @@ import requests
 from sqlalchemy import event, func, inspect
 from sqlalchemy.orm import Mapped, mapped_column, validates
 
-from app import enums
-from app.modules import image as eimage
+from app.src import enums
+from app.src.modules import image as eimage
 
 db = SQLAlchemy()
 scheduler = APScheduler()

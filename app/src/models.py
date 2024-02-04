@@ -1,12 +1,12 @@
 import datetime
 from typing import Optional
-import croniter
 
+import croniter
 import pydantic
 from flask_babel import lazy_gettext
 
-from app import enums
-from app.modules import image as eimage
+from app.src import enums
+from app.src.modules import image as eimage
 
 
 class EtaConfig(pydantic.BaseModel):
