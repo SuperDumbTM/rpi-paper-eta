@@ -110,7 +110,7 @@ def search(search_type: Literal["routes", "directions", "service_types", "stops"
                 required=search_type in ('directions', 'service_types', 'stops')),
             'direction': webargs.fields.String(
                 required=search_type in ('service_types', 'stops')),
-            'service_types': webargs.fields.String(
+            'service_type': webargs.fields.String(
                 required=search_type == 'stops'),
         },
         request, location='query'
