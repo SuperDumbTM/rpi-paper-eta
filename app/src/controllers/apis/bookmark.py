@@ -33,8 +33,12 @@ def get_all(args):
         try:
             stop_name = requests.get(
                 f"{site_data.AppConfiguration().get('api_url')}"
-                f"/{bm.company.value}/{bm.route}/{bm.direction.value}/{bm.service_type}/stop",
-                {'stop_code': bm.stop_code}
+                f"/stop/{bm.company.value}/{bm.route}",
+                {
+                    'direction': bm.direction,
+                    'service_type': bm.service_type,
+                    'stop_code': bm.stop_code
+                }
             ).json()['data']['stop']['name'][bm.lang]
         except Exception:
             stop_name = lazy_gettext('error')

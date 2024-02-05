@@ -65,7 +65,7 @@ def get_locale() -> Optional[str]:
 def route_choices(company: str) -> list[tuple[str]]:
     routes: dict[str, dict] = (
         requests.get(
-            f"{site_data.AppConfiguration().get('api_url')}/{company}/routes")
+            f"{site_data.AppConfiguration().get('api_url')}/routes/{company}")
         .json()['data']['routes']
     )
     return [(route['name'], route['name']) for route in routes.values()]
@@ -76,7 +76,7 @@ def direction_choices(company: str,
     details: dict[str, dict] = (
         requests.get(
             f"{site_data.AppConfiguration().get('api_url')}"
-            f"/{company}/{route.upper()}")
+            f"/services/{company}/{route.upper()}")
         .json()['data']
     )
 
@@ -95,7 +95,7 @@ def type_choices(company: str,
     details: dict[str, dict] = (
         requests.get(
             f"{site_data.AppConfiguration().get('api_url')}"
-            f"/{company}/{route}")
+            f"/services/{company}/{route.upper()}")
         .json()['data']
     )
 
@@ -111,7 +111,8 @@ def stop_choices(company: str,
     stops: dict[str, dict] = (
         requests.get(
             f"{site_data.AppConfiguration().get('api_url')}"
-            f"/{company}/{route.upper()}/{direction}/{service_type}/stops")
+            f"/stops/{company}/{route.upper()}",
+            {'direction': direction, 'service_type': service_type})
         .json()['data']
     )
 
