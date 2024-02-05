@@ -599,8 +599,8 @@ msgstr "No Repeat"
 #~ msgid "updated"
 #~ msgstr "Updated!"
 
-#~ msgid "no_data"
-#~ msgstr "No Data"
+msgid "no_data"
+msgstr "No Data"
 
 #~ msgid "something_goes_wrong"
 #~ msgstr ""

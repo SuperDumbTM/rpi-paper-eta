@@ -581,8 +581,8 @@ msgstr "不重覆"
 #~ msgid "reload"
 #~ msgstr "載入中"
 
-#~ msgid "no_data"
-#~ msgstr "沒有數據"
+msgid "no_data"
+msgstr "沒有數據"
 
 #~ msgid "something_goes_wrong"
 #~ msgstr "出錯了"
