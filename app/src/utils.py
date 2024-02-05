@@ -68,7 +68,7 @@ def route_choices(company: str) -> list[tuple[str]]:
             f"{site_data.AppConfiguration().get('api_url')}/routes/{company}")
         .json()['data']['routes']
     )
-    return [(route['name'], route['name']) for route in routes.values()]
+    return [(route['route_no'], route['route_no']) for route in routes.values()]
 
 
 def direction_choices(company: str,
