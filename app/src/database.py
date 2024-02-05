@@ -124,7 +124,10 @@ def generate_ordering(mapper, connection, target: Bookmark):
     if target.ordering is not None:
         return target
 
+    crrt_max = db.session.query(func.max(Bookmark.ordering)).scalar()
+    if crrt_max is None:
+        crrt_max = -1
+
     # BUG: possible inconsistent with high traffic
-    target.ordering = \
-        (db.session.query(func.max(Bookmark.ordering)).scalar() or -1) + 1
+    target.ordering = crrt_max + 1
     return target
