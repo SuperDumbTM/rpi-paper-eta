@@ -177,7 +177,7 @@ msgstr "匯入失敗"
 
 #: app/controllers/html/root.py:20
 msgid "missing_api_err_msg"
-msgstr ""
+msgstr "尚未設定 ETA 伺服器。請到「設定」頁面設定以確保 Paper ETA 能夠正常運作。"
 
 #: app/controllers/html/schedule.py:93
 #, python-format
