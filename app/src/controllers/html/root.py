@@ -15,7 +15,7 @@ bp = Blueprint('root',
 @bp.route("/")
 def index():
     app_conf = site_data.AppConfiguration()
-    if not app_conf.get('url'):
+    if not app_conf.get('api_url'):
         flash(lazy_gettext('missing_api_err_msg'), enums.FlashCategory.error)
 
     return render_template("index.jinja",
