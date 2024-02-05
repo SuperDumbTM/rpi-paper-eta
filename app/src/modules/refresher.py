@@ -38,11 +38,13 @@ def generate_image(
         for bm in bookmarks:
             res = requests.get(
                 app_conf.get('api_url') +
-                f'/{bm.company.value}/{bm.route}/{bm.direction.value}/etas',
+                f'/eta/{bm.company.value}/{bm.route}',
                 params={
+                    'direction': bm.direction.value,
                     'service_type': bm.service_type,
+                    'stop_code': bm.stop_code,
                     'lang': bm.lang,
-                    'stop': bm.stop_code}
+                }
             ).json()
 
             try:
