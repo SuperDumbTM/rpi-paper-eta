@@ -19,22 +19,7 @@ class EtaCompany(str, Enum):
     MTRLRT = "mtr_lrt"
     MTRTRAIN = "mtr_train"
     CTB = "ctb"
-
-    def text(self, locale: "EtaLocale"):
-        if locale == EtaLocale.EN:
-            match self:
-                case EtaCompany.KMB: return "KMB"
-                case EtaCompany.MTRBUS: return "MTR (Bus)"
-                case EtaCompany.MTRLRT: return "MTR (Light Rail)"
-                case EtaCompany.MTRTRAIN: return "MTR"
-                case EtaCompany.CTB: return "City Bus"
-        else:
-            match self:
-                case EtaCompany.KMB: return "九巴"
-                case EtaCompany.MTRBUS: return "港鐵巴士"
-                case EtaCompany.MTRLRT: return "輕鐵"
-                case EtaCompany.MTRTRAIN: return "港鐵"
-                case EtaCompany.CTB: return "城巴"
+    NLB = "nlb"
 
     def icon(self, color: Literal['bw', 'c', 'bw_neg']) -> io.BufferedReader:
         base = Path(__file__).parent.joinpath(
