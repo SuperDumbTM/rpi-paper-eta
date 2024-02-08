@@ -92,9 +92,9 @@ class Epd3in7(EtaImageGenerator):
                 idx_offset = row_height*row + \
                     coords['eta']['position']['height']*idx
 
-                if eta.is_arriving:
+                if eta.is_arriving and eta.remark not in (None, ""):
                     offset_x, offset_y = utils.position(
-                        eta.remark or '',
+                        eta.remark,
                         coords['eta']['position']['width'],
                         coords['eta']['position']['height'],
                         self.fonts['err_txt'],
