@@ -94,7 +94,7 @@ class Epd3in7(EtaImageGenerator):
 
                 if eta.is_arriving:
                     offset_x, offset_y = utils.position(
-                        eta.remark,
+                        eta.remark or '',
                         coords['eta']['position']['width'],
                         coords['eta']['position']['height'],
                         self.fonts['err_txt'],

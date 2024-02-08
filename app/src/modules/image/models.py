@@ -20,7 +20,6 @@ class Etas(BaseModel):
     etas: Optional[list["Eta"]] = None
 
     class Eta(BaseModel):
-        company: str
         destination: str
         is_arriving: bool
         eta: datetime.datetime
