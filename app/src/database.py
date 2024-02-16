@@ -65,7 +65,7 @@ class Schedule(_BaseModel):
         scheduler.add_job(job_id,  # invoking str() here makes the formatter unhappy
                           requests.get,
                           kwargs={
-                              'url': 'http://localhost:8002/api/display/refresh',
+                              'url': 'http://localhost:8192/api/display/refresh',
                               'params': {
                                   'eta_type': eimage.enums.EtaType(self.eta_type),
                                   'layout': self.layout,
