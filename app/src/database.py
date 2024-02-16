@@ -1,6 +1,8 @@
 from datetime import datetime
+import logging
 from typing import Iterable
 
+import apscheduler.jobstores.base
 import croniter
 from flask_apscheduler import APScheduler
 from flask_sqlalchemy import SQLAlchemy
@@ -59,9 +61,17 @@ class Schedule(_BaseModel):
     is_partial: Mapped[bool] = mapped_column(default=False)
     enabled: Mapped[bool] = mapped_column(default=False)
 
+    def __repr__(self) -> str:
+        return f"Schedule({self.id}, {self.schedule})"
+
     def add_job(self) -> None:
         job_id = str(self.id)
         cron = self.schedule.split(' ')
+
+        if scheduler.get_job(job_id) is not None:
+            scheduler.remove_job(job_id)
+
+        # BUG: hardcoded URL
         scheduler.add_job(job_id,  # invoking str() here makes the formatter unhappy
                           requests.get,
                           kwargs={
@@ -80,10 +90,10 @@ class Schedule(_BaseModel):
                           day_of_week=cron[-1])
 
     def remove_job(self) -> None:
-        scheduler.remove_job(str(self.id))
-
-    def __repr__(self) -> str:
-        return f"Schedule({self.id}, {self.schedule})"
+        try:
+            scheduler.remove_job(str(self.id))
+        except apscheduler.jobstores.base.JobLookupError:
+            logging.exception('Removing non-exist job.')
 
     @validates("schedule")
     def validate_schedule(self, key, schedule: "Schedule"):
@@ -106,6 +116,11 @@ def add_refresh_job(mapper, connection, target: Schedule):
 def remove_refresh_job(mapper, connection, target: Schedule):
     if target.enabled:
         target.remove_job()
+
+
+@event.listens_for(Schedule, 'before_update')
+def update_refresh_job(mapper, connection, target: Schedule):
+    target.remove_job()
 
 
 @event.listens_for(Schedule, 'after_update')
