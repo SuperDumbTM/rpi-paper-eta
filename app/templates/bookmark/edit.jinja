@@ -161,10 +161,22 @@
         clearSelect($("select[name=direction]"))
         clearSelect($("select[name=service_type]"))
 
-        // Browsers may cache the result of "company select"
-        // Trigger "change" to initialisation the autocomplete
+        // trigger autocomplete option update
         if ($('select[name=company] option:selected').val())
             $('select[name=company]').trigger('change')
+        {% else %}
+        // trigger autocomplete option update
+        $.get(
+            '{{ url_for("api_bookmark.search", search_type="routes") }}',
+            getParams(),
+            function (res) {
+                $("input[name=route]").autocomplete({
+                    maxShowItems: 6,
+                    autoFocus: true,
+                    source: res.data.routes.map((el) => el[0]),
+                });
+            }
+        )
         {% endif %}
 
         autoJsonFrom($('form'), {
@@ -185,7 +197,7 @@
             $('input[name=route]').val(null)
             clearSelect($("select[name=direction]"))
             clearSelect($("select[name=service_type]"))
-            clearSelect($("select[name=stop]"))
+            clearSelect($("select[name=stop_code]"))
         }
 
         if (!$(this).val()) {
@@ -198,7 +210,6 @@
             getParams(),
             function (res) {
                 clear()
-
                 $("input[name=route]").autocomplete({
                     maxShowItems: 6,
                     autoFocus: true,
@@ -213,7 +224,7 @@
         function clear() {
             clearSelect($("select[name=direction]"))
             clearSelect($("select[name=service_type]"))
-            clearSelect($("select[name=stop]"))
+            clearSelect($("select[name=stop_code]"))
         }
 
         if (!$(this).val()) {
@@ -235,7 +246,7 @@
         // autocomplete for service type
         function clear() {
             clearSelect($("select[name=service_type]"))
-            clearSelect($("select[name=stop]"))
+            clearSelect($("select[name=stop_code]"))
         }
 
         if (!$(this).val()) {
