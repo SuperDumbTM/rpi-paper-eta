@@ -17,6 +17,7 @@ lazy_gettext('mtr_lrt')
 lazy_gettext('mtr_train')
 lazy_gettext('mtr_bus')
 lazy_gettext('ctb')
+lazy_gettext('nlb')
 
 # ETA language
 lazy_gettext('en')

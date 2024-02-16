@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-01-19 14:41+0800\n"
+"POT-Creation-Date: 2024-02-16 22:52+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -18,168 +18,188 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.14.0\n"
 
-#: app/handles.py:23 app/handles.py:30
+#: app/src/handles.py:23 app/src/handles.py:30
 msgid "validation_failed"
 msgstr "Validation Failed"
 
-#: app/handles.py:48 app/handles.py:55
+#: app/src/handles.py:48 app/src/handles.py:55
 msgid "Internal validation failed."
 msgstr "Internal validation failed."
 
-#: app/handles.py:63 app/handles.py:67
+#: app/src/handles.py:63
+msgid "The requested resource was not found on the server."
+msgstr "The requested URL was not found on the server."
+
+#: app/src/handles.py:67
 msgid "The requested URL was not found on the server."
 msgstr "The requested URL was not found on the server."
 
-#: app/handles.py:87 app/handles.py:95 app/templates/layout.jinja:82
+#: app/src/handles.py:87 app/src/handles.py:95 app/templates/layout.jinja:82
 msgid "unexpected_error_occured"
 msgstr "Unexpected Error Occured."
 
-#: app/translation.py:4
+#: app/src/translation.py:4
 msgid "eta-end-of-service"
 msgstr "End-of-Service"
 
-#: app/translation.py:5
+#: app/src/translation.py:5
 msgid "eta-error-response"
 msgstr "API Error"
 
-#: app/translation.py:6
+#: app/src/translation.py:6
 msgid "eta-api-error"
 msgstr ""
 
-#: app/translation.py:7
+#: app/src/translation.py:7
 msgid "eta-no-entry"
 msgstr "No Data"
 
-#: app/translation.py:8
+#: app/src/translation.py:8
 msgid "eta-stop-closure"
 msgstr "Station Closure"
 
-#: app/translation.py:9
+#: app/src/translation.py:9
 msgid "eta-abnormal-service"
 msgstr "SSA"
 
-#: app/translation.py:10
+#: app/src/translation.py:10
 msgid "route-not-exist"
 msgstr "Route Not Exists"
 
-#: app/translation.py:11
+#: app/src/translation.py:11
 msgid "stop-not-exist"
 msgstr "Stop Not Exists"
 
-#: app/translation.py:15
+#: app/src/translation.py:15
 msgid "kmb"
 msgstr "KMB"
 
-#: app/translation.py:16
+#: app/src/translation.py:16
 msgid "mtr_lrt"
 msgstr "Light Rail"
 
-#: app/translation.py:17
+#: app/src/translation.py:17
 msgid "mtr_train"
 msgstr "MTR"
 
-#: app/translation.py:18
+#: app/src/translation.py:18
 msgid "mtr_bus"
 msgstr "MTR Bus"
 
-#: app/translation.py:19
+#: app/src/translation.py:19
 msgid "ctb"
 msgstr "CityBus"
 
-#: app/translation.py:22
+#: app/src/translation.py:20
+msgid "nlb"
+msgstr "New Lantau Bus"
+
+#: app/src/translation.py:23
 msgid "en"
 msgstr "English"
 
-#: app/translation.py:23
+#: app/src/translation.py:24
 msgid "tc"
 msgstr "Trad. Chinese"
 
-#: app/translation.py:24
+#: app/src/translation.py:25
 msgid "default"
 msgstr "Default"
 
-#: app/translation.py:27
+#: app/src/translation.py:28
 msgid "mixed"
 msgstr "Mixed"
 
-#: app/utils.py:90
+#: app/src/utils.py:85
 msgid "inbound"
 msgstr "Inbound"
 
-#: app/utils.py:92
+#: app/src/utils.py:87
 msgid "outbound"
 msgstr "Outbound"
 
-#: app/controllers/apis/bookmark.py:40 app/templates/error.jinja:3
+#: app/src/controllers/apis/bookmark.py:44 app/templates/error.jinja:3
 #: app/templates/index.jinja:103
 msgid "error"
 msgstr "Error"
 
-#: app/controllers/apis/bookmark.py:47 app/controllers/apis/bookmark.py:125
-#: app/controllers/apis/bookmark.py:140 app/controllers/apis/bookmark.py:152
-#: app/controllers/apis/bookmark.py:165 app/controllers/apis/config.py:20
-#: app/controllers/apis/display.py:28 app/controllers/apis/display.py:43
-#: app/controllers/apis/display.py:86 app/controllers/apis/display.py:166
-#: app/controllers/apis/log.py:24 app/controllers/apis/schedule.py:37
-#: app/controllers/apis/schedule.py:49 app/controllers/apis/schedule.py:120
+#: app/src/controllers/apis/bookmark.py:50
+#: app/src/controllers/apis/bookmark.py:123
+#: app/src/controllers/apis/bookmark.py:131
+#: app/src/controllers/apis/bookmark.py:140
+#: app/src/controllers/apis/bookmark.py:151
+#: app/src/controllers/apis/config.py:20 app/src/controllers/apis/display.py:28
+#: app/src/controllers/apis/display.py:43
+#: app/src/controllers/apis/display.py:88
+#: app/src/controllers/apis/display.py:167 app/src/controllers/apis/log.py:24
+#: app/src/controllers/apis/schedule.py:37
+#: app/src/controllers/apis/schedule.py:50
+#: app/src/controllers/apis/schedule.py:119
 msgid "success"
 msgstr "Success"
 
-#: app/controllers/apis/bookmark.py:63 app/controllers/apis/bookmark.py:84
-#: app/controllers/apis/bookmark.py:107 app/controllers/apis/schedule.py:57
-#: app/controllers/apis/schedule.py:109 app/controllers/apis/schedule.py:126
-msgid "invalid_id"
-msgstr "Invalid ID"
-
-#: app/controllers/apis/bookmark.py:69 app/controllers/apis/bookmark.py:90
-#: app/controllers/apis/bookmark.py:200 app/controllers/apis/config.py:50
-#: app/controllers/apis/schedule.py:102
+#: app/src/controllers/apis/bookmark.py:64
+#: app/src/controllers/apis/bookmark.py:80
+#: app/src/controllers/apis/bookmark.py:199
+#: app/src/controllers/apis/config.py:49
+#: app/src/controllers/apis/schedule.py:105
 msgid "updated"
 msgstr "Updated"
 
-#: app/controllers/apis/bookmark.py:101 app/controllers/apis/log.py:36
+#: app/src/controllers/apis/bookmark.py:94 app/src/controllers/apis/log.py:36
 msgid "deleted"
 msgstr "Deleted"
 
-#: app/controllers/apis/bookmark.py:177
+#: app/src/controllers/apis/bookmark.py:165
 msgid "connection_error"
 msgstr "Connection Error"
 
-#: app/controllers/apis/bookmark.py:184
+#: app/src/controllers/apis/bookmark.py:172
 msgid "eta_server_error"
 msgstr "ETA Server Error"
 
-#: app/controllers/apis/display.py:62 app/controllers/apis/display.py:105
+#: app/src/controllers/apis/bookmark.py:205
+#: app/src/controllers/apis/schedule.py:58
+msgid "invalid_id"
+msgstr "Invalid ID"
+
+#: app/src/controllers/apis/display.py:62
+#: app/src/controllers/apis/display.py:107
 msgid "configuration_required"
 msgstr "Configuration Required"
 
-#: app/controllers/apis/display.py:75 app/controllers/apis/display.py:119
+#: app/src/controllers/apis/display.py:77
+#: app/src/controllers/apis/display.py:125
 msgid "Layout does not exists."
 msgstr "Layout Does Not Exists"
 
-#: app/controllers/apis/display.py:133 app/controllers/apis/display.py:160
+#: app/src/controllers/apis/display.py:139
+#: app/src/controllers/apis/display.py:161
 msgid "Failed to refresh the screen."
 msgstr "Failed to refresh the screen."
 
-#: app/controllers/apis/schedule.py:78
+#: app/src/controllers/apis/schedule.py:79
 msgid "created"
 msgstr "Created"
 
-#: app/controllers/html/bookmark.py:88
+#: app/src/controllers/html/bookmark.py:89
 #, python-format
 msgid "Failed to import no. %(entry)s bookmark."
 msgstr "Failed to import no. %(entry)s bookmark."
 
-#: app/controllers/html/bookmark.py:93 app/controllers/html/configuration.py:50
-#: app/controllers/html/schedule.py:98
+#: app/src/controllers/html/bookmark.py:94
+#: app/src/controllers/html/configuration.py:48
+#: app/src/controllers/html/schedule.py:95
 msgid "import_failed"
 msgstr "Import Failed"
 
-#: app/controllers/html/root.py:20
+#: app/src/controllers/html/root.py:19
 msgid "missing_api_err_msg"
-msgstr "The ETA server configurations has not been set. For the Paper ETA to work properly, please configure at \"Configuration\""
+msgstr ""
+"The ETA server configurations has not been set. For the Paper ETA to work"
+" properly, please configure at \"Configuration\""
 
-#: app/controllers/html/schedule.py:93
+#: app/src/controllers/html/schedule.py:89
 #, python-format
 msgid "Failed to import no. %(entry)s schedule."
 msgstr "Failed to import no. %(entry)s schedule."
@@ -221,9 +241,9 @@ msgstr ""
 "will be more than one image and each of them representing contents in a "
 "particular color."
 
-#: app/templates/index.jinja:80 app/templates/index.jinja:118
-msgid "no_record"
-msgstr "No Record"
+#: app/templates/index.jinja:80
+msgid "no_data"
+msgstr "No Data"
 
 #: app/templates/index.jinja:92
 msgid "refresh_history"
@@ -246,6 +266,10 @@ msgstr "Layout"
 #: app/templates/index.jinja:102 app/templates/schedule/list.jinja:47
 msgid "is_partial"
 msgstr "Is Partial"
+
+#: app/templates/index.jinja:118
+msgid "no_record"
+msgstr "No Record"
 
 #: app/templates/layout.jinja:49 app/templates/layout.jinja:74
 msgid "loading"
@@ -537,9 +561,8 @@ msgid "not_enabled"
 msgstr "Not Enabled"
 
 #: app/templates/schedule/list.jinja:126
-#, fuzzy
 msgid "enable/disable"
-msgstr "Enable"
+msgstr "Enable/Disable"
 
 #: app/templates/schedule/list.jinja:135
 msgid "refresh_now"
@@ -598,9 +621,6 @@ msgstr "No Repeat"
 
 #~ msgid "updated"
 #~ msgstr "Updated!"
-
-msgid "no_data"
-msgstr "No Data"
 
 #~ msgid "something_goes_wrong"
 #~ msgstr ""

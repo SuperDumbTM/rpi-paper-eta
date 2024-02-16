@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-01-19 14:41+0800\n"
+"POT-Creation-Date: 2024-02-16 22:52+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hant_HK\n"
@@ -18,168 +18,186 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.14.0\n"
 
-#: app/handles.py:23 app/handles.py:30
+#: app/src/handles.py:23 app/src/handles.py:30
 msgid "validation_failed"
 msgstr "輸入驗証失敗"
 
-#: app/handles.py:48 app/handles.py:55
+#: app/src/handles.py:48 app/src/handles.py:55
 msgid "Internal validation failed."
 msgstr "內部驗証失敗。"
 
-#: app/handles.py:63 app/handles.py:67
+#: app/src/handles.py:63
+msgid "The requested resource was not found on the server."
+msgstr "你所輸入的連結不存在。"
+
+#: app/src/handles.py:67
 msgid "The requested URL was not found on the server."
 msgstr "你所輸入的連結不存在。"
 
-#: app/handles.py:87 app/handles.py:95 app/templates/layout.jinja:82
+#: app/src/handles.py:87 app/src/handles.py:95 app/templates/layout.jinja:82
 msgid "unexpected_error_occured"
 msgstr "發生未知的錯誤。"
 
-#: app/translation.py:4
+#: app/src/translation.py:4
 msgid "eta-end-of-service"
 msgstr "最後班次已過"
 
-#: app/translation.py:5
+#: app/src/translation.py:5
 msgid "eta-error-response"
 msgstr "API 錯誤"
 
-#: app/translation.py:6
+#: app/src/translation.py:6
 msgid "eta-api-error"
 msgstr "無法取得數據"
 
-#: app/translation.py:7
+#: app/src/translation.py:7
 msgid "eta-no-entry"
 msgstr "沒有數據"
 
-#: app/translation.py:8
+#: app/src/translation.py:8
 msgid "eta-stop-closure"
 msgstr "車站關閉"
 
-#: app/translation.py:9
+#: app/src/translation.py:9
 msgid "eta-abnormal-service"
 msgstr "特別車務安排生效中"
 
-#: app/translation.py:10
+#: app/src/translation.py:10
 msgid "route-not-exist"
 msgstr "路線不存在。"
 
-#: app/translation.py:11
+#: app/src/translation.py:11
 msgid "stop-not-exist"
 msgstr "車站不存在。"
 
-#: app/translation.py:15
+#: app/src/translation.py:15
 msgid "kmb"
 msgstr "九巴"
 
-#: app/translation.py:16
+#: app/src/translation.py:16
 msgid "mtr_lrt"
 msgstr "輕鐵"
 
-#: app/translation.py:17
+#: app/src/translation.py:17
 msgid "mtr_train"
 msgstr "港鐵"
 
-#: app/translation.py:18
+#: app/src/translation.py:18
 msgid "mtr_bus"
 msgstr "港鐵巴士"
 
-#: app/translation.py:19
+#: app/src/translation.py:19
 msgid "ctb"
 msgstr "城巴"
 
-#: app/translation.py:22
+#: app/src/translation.py:20
+msgid "nlb"
+msgstr "新大嶼山巴士"
+
+#: app/src/translation.py:23
 msgid "en"
 msgstr "英文"
 
-#: app/translation.py:23
+#: app/src/translation.py:24
 msgid "tc"
 msgstr "繁中"
 
-#: app/translation.py:24
+#: app/src/translation.py:25
 msgid "default"
 msgstr "預設"
 
-#: app/translation.py:27
+#: app/src/translation.py:28
 msgid "mixed"
 msgstr "混合"
 
-#: app/utils.py:90
+#: app/src/utils.py:85
 msgid "inbound"
 msgstr "回程"
 
-#: app/utils.py:92
+#: app/src/utils.py:87
 msgid "outbound"
 msgstr "去程"
 
-#: app/controllers/apis/bookmark.py:40 app/templates/error.jinja:3
+#: app/src/controllers/apis/bookmark.py:44 app/templates/error.jinja:3
 #: app/templates/index.jinja:103
 msgid "error"
 msgstr "錯誤"
 
-#: app/controllers/apis/bookmark.py:47 app/controllers/apis/bookmark.py:125
-#: app/controllers/apis/bookmark.py:140 app/controllers/apis/bookmark.py:152
-#: app/controllers/apis/bookmark.py:165 app/controllers/apis/config.py:20
-#: app/controllers/apis/display.py:28 app/controllers/apis/display.py:43
-#: app/controllers/apis/display.py:86 app/controllers/apis/display.py:166
-#: app/controllers/apis/log.py:24 app/controllers/apis/schedule.py:37
-#: app/controllers/apis/schedule.py:49 app/controllers/apis/schedule.py:120
+#: app/src/controllers/apis/bookmark.py:50
+#: app/src/controllers/apis/bookmark.py:123
+#: app/src/controllers/apis/bookmark.py:131
+#: app/src/controllers/apis/bookmark.py:140
+#: app/src/controllers/apis/bookmark.py:151
+#: app/src/controllers/apis/config.py:20 app/src/controllers/apis/display.py:28
+#: app/src/controllers/apis/display.py:43
+#: app/src/controllers/apis/display.py:88
+#: app/src/controllers/apis/display.py:167 app/src/controllers/apis/log.py:24
+#: app/src/controllers/apis/schedule.py:37
+#: app/src/controllers/apis/schedule.py:50
+#: app/src/controllers/apis/schedule.py:119
 msgid "success"
 msgstr "成功"
 
-#: app/controllers/apis/bookmark.py:63 app/controllers/apis/bookmark.py:84
-#: app/controllers/apis/bookmark.py:107 app/controllers/apis/schedule.py:57
-#: app/controllers/apis/schedule.py:109 app/controllers/apis/schedule.py:126
-msgid "invalid_id"
-msgstr "無效 ID"
-
-#: app/controllers/apis/bookmark.py:69 app/controllers/apis/bookmark.py:90
-#: app/controllers/apis/bookmark.py:200 app/controllers/apis/config.py:50
-#: app/controllers/apis/schedule.py:102
+#: app/src/controllers/apis/bookmark.py:64
+#: app/src/controllers/apis/bookmark.py:80
+#: app/src/controllers/apis/bookmark.py:199
+#: app/src/controllers/apis/config.py:49
+#: app/src/controllers/apis/schedule.py:105
 msgid "updated"
 msgstr "已更新"
 
-#: app/controllers/apis/bookmark.py:101 app/controllers/apis/log.py:36
+#: app/src/controllers/apis/bookmark.py:94 app/src/controllers/apis/log.py:36
 msgid "deleted"
 msgstr "已刪除"
 
-#: app/controllers/apis/bookmark.py:177
+#: app/src/controllers/apis/bookmark.py:165
 msgid "connection_error"
 msgstr "連接失敗"
 
-#: app/controllers/apis/bookmark.py:184
+#: app/src/controllers/apis/bookmark.py:172
 msgid "eta_server_error"
 msgstr "ETA 伺服器出錯"
 
-#: app/controllers/apis/display.py:62 app/controllers/apis/display.py:105
+#: app/src/controllers/apis/bookmark.py:205
+#: app/src/controllers/apis/schedule.py:58
+msgid "invalid_id"
+msgstr "無效 ID"
+
+#: app/src/controllers/apis/display.py:62
+#: app/src/controllers/apis/display.py:107
 msgid "configuration_required"
 msgstr "未完成所需設置"
 
-#: app/controllers/apis/display.py:75 app/controllers/apis/display.py:119
+#: app/src/controllers/apis/display.py:77
+#: app/src/controllers/apis/display.py:125
 msgid "Layout does not exists."
 msgstr "佈局不存在。"
 
-#: app/controllers/apis/display.py:133 app/controllers/apis/display.py:160
+#: app/src/controllers/apis/display.py:139
+#: app/src/controllers/apis/display.py:161
 msgid "Failed to refresh the screen."
 msgstr "更新屏幕失敗。"
 
-#: app/controllers/apis/schedule.py:78
+#: app/src/controllers/apis/schedule.py:79
 msgid "created"
 msgstr "已建立"
 
-#: app/controllers/html/bookmark.py:88
+#: app/src/controllers/html/bookmark.py:89
 #, python-format
 msgid "Failed to import no. %(entry)s bookmark."
 msgstr "未能匯入第%(entry)s個收藏。"
 
-#: app/controllers/html/bookmark.py:93 app/controllers/html/configuration.py:50
-#: app/controllers/html/schedule.py:98
+#: app/src/controllers/html/bookmark.py:94
+#: app/src/controllers/html/configuration.py:48
+#: app/src/controllers/html/schedule.py:95
 msgid "import_failed"
 msgstr "匯入失敗"
 
-#: app/controllers/html/root.py:20
+#: app/src/controllers/html/root.py:19
 msgid "missing_api_err_msg"
 msgstr "尚未設定 ETA 伺服器。請到「設定」頁面設定以確保 Paper ETA 能夠正常運作。"
 
-#: app/controllers/html/schedule.py:93
+#: app/src/controllers/html/schedule.py:89
 #, python-format
 msgid "Failed to import no. %(entry)s schedule."
 msgstr "未能匯入第%(entry)s個排程。"
@@ -218,9 +236,9 @@ msgstr "屏幕影像"
 msgid "screen_content_help"
 msgstr "現正在電子紙屏幕上顯示的影像。如果所選的佈局支援多種顏色，不同顏色的內容將會分別被顯示出來。"
 
-#: app/templates/index.jinja:80 app/templates/index.jinja:118
-msgid "no_record"
-msgstr "沒有紀錄"
+#: app/templates/index.jinja:80
+msgid "no_data"
+msgstr "沒有數據"
 
 #: app/templates/index.jinja:92
 msgid "refresh_history"
@@ -243,6 +261,10 @@ msgstr "佈局"
 #: app/templates/index.jinja:102 app/templates/schedule/list.jinja:47
 msgid "is_partial"
 msgstr "快新更新"
+
+#: app/templates/index.jinja:118
+msgid "no_record"
+msgstr "沒有紀錄"
 
 #: app/templates/layout.jinja:49 app/templates/layout.jinja:74
 msgid "loading"
@@ -580,9 +602,6 @@ msgstr "不重覆"
 
 #~ msgid "reload"
 #~ msgstr "載入中"
-
-msgid "no_data"
-msgstr "沒有數據"
 
 #~ msgid "something_goes_wrong"
 #~ msgstr "出錯了"
