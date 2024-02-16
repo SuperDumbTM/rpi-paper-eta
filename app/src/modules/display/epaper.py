@@ -43,12 +43,8 @@ class DisplayController(ABC):
         """Power off the e-paper display"""
 
     @abstractmethod
-    def display(self, imgages: dict[str, Image.Image]) -> None:
+    def display(self, imgages: dict[str, Image.Image], old_images: dict[str, Image.Image] = None) -> None:
         """Display the `images` to the e-paper display
-
-        Args:
-            imgages (dict[str, Image.Image]): \
-                *key representing the color of the image
         """
 
 
