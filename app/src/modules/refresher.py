@@ -87,11 +87,11 @@ def generate_image(
 def cached_images(path: os.PathLike) -> dict[str, Image.Image]:
     images = {}
     for path in Path(str(path)).glob('**/*'):
+        if path.suffix != '.bmp':
+            continue
         with open(path, 'rb') as f:
-            if path.suffix != '.bmp':
-                continue
-            images[path.name.removesuffix(path.suffix)] = base64.b64encode(
-                f.read()).decode("utf-8")
+            images.setdefault(path.name.removesuffix(path.suffix),
+                              base64.b64encode(f.read()).decode("utf-8"))
     return images
 
 
