@@ -95,7 +95,8 @@ def cached_images(path: os.PathLike) -> dict[str, Image.Image]:
     return images
 
 
-def display_images(images: dict[str, Image.Image],
+def display_images(old_images: dict[str, Image.Image],
+                   images: dict[str, Image.Image],
                    controller: display.epaper.DisplayController,
                    wait_if_locked: bool = False,
                    close_display: bool = True) -> None:
@@ -112,13 +113,15 @@ def display_images(images: dict[str, Image.Image],
     Raises:
         RuntimeError: when not `wait_if_locked` and the 
     """
+
+    # BUG: the implementation is not thread-safe
     if _ctrl_mutex.locked() and not wait_if_locked:
         raise RuntimeError('Lock was aquired.')
 
     with _ctrl_mutex:
         try:
             controller.initialize()
-            controller.display(images)
+            controller.display(images, old_images)
         finally:
             if close_display:
                 controller.close()

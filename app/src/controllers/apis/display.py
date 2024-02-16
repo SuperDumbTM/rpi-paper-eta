@@ -142,14 +142,9 @@ def refresh(args):
 
     # ---------- refresh the e-paper screen ----------
     try:
-        if args['is_partial']:
-            # load old screen into the display's buffer
-            refresher.display_images(
-                refresher.cached_images(
-                    Path(current_app.config['EPD_IMG_DIR'])),
-                controller, False, False)
-
-        refresher.display_images(images, controller, False, False)
+        old_images = refresher.cached_images(
+            Path(current_app.config['EPD_IMG_DIR']))
+        refresher.display_images(old_images, images, controller, False, True)
         generator.write_images(current_app.config['EPD_IMG_DIR'], images)
         site_data.RefreshHistory().put(models.RefreshLog(**args))
     except Exception as e:
