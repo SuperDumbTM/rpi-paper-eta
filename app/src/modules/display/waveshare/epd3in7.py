@@ -54,19 +54,23 @@ class Epd3in7(epaper.DisplayController):
         else:
             self.epdlib.Clear(0xFF, 1)
 
-    def display(self, images: dict[str, Image.Image]):
+    def display(self, images: dict[str, Image.Image], old_images: dict[str, Image.Image] = None):
         if self.is_dryrun:
             return
         if not type(self)._inited:
             raise RuntimeError("The epaper display is not initialized.")
 
         with type(self)._mutex:
-            if self.is_partial:
-                self.epdlib.display_1Gray(
-                    self.epdlib.getbuffer(images['black']))
-            else:
+            if not self.is_partial:
                 self.epdlib.display_4Gray(
                     self.epdlib.getbuffer_4Gray(images['black']))
+                return
+            if not isinstance(old_images, dict) or 'black' not in old_images:
+                raise ValueError('old_images is required or '
+                                 'the required color of image does not exists.')
+
+            self.epdlib.display_1Gray(self.epdlib.getbuffer(images['black']))
+            self.epdlib.display_1Gray(self.epdlib.getbuffer(images['black']))
 
     def close(self):
         if not type(self)._inited or self.is_dryrun:
