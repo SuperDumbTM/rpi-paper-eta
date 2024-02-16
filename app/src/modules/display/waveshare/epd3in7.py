@@ -40,19 +40,21 @@ class Epd3in7(epaper.DisplayController):
         if type(self)._inited or self.is_dryrun:
             return
 
-        if ((self.is_partial and self.epdlib.init(1) != 0)
-                or (not self.is_partial and self.epdlib.init(0) != 0)):
-            raise RuntimeError('Failed to initialize the display.')
-        type(self)._inited = True
+        with type(self)._mutex:
+            if ((self.is_partial and self.epdlib.init(1) != 0)
+                    or (not self.is_partial and self.epdlib.init(0) != 0)):
+                raise RuntimeError('Failed to initialize the display.')
+            type(self)._inited = True
 
     def clear(self):
         if self.is_dryrun:
             return
 
-        if self.is_partial:
-            self.epdlib.Clear(0xFF, 0)
-        else:
-            self.epdlib.Clear(0xFF, 1)
+        with type(self)._mutex:
+            if self.is_partial:
+                self.epdlib.Clear(0xFF, 0)
+            else:
+                self.epdlib.Clear(0xFF, 1)
 
     def display(self, images: dict[str, Image.Image], old_images: dict[str, Image.Image] = None):
         if self.is_dryrun:
@@ -76,5 +78,6 @@ class Epd3in7(epaper.DisplayController):
         if not type(self)._inited or self.is_dryrun:
             return
 
-        self.epdlib.sleep()
-        type(self)._inited = False
+        with type(self)._mutex:
+            self.epdlib.sleep()
+            type(self)._inited = False
