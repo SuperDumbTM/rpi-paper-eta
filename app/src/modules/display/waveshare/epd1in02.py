@@ -1,5 +1,4 @@
 import sys
-import threading
 from pathlib import Path
 
 from PIL import Image
@@ -15,7 +14,6 @@ except ImportError:
 class Epd1in02(epaper.DisplayController):
 
     _inited = False
-    _mutex = threading.Lock()
 
     def is_poweron(self) -> bool:
         return type(self)._inited
@@ -48,27 +46,21 @@ class Epd1in02(epaper.DisplayController):
     def clear(self):
         if self.is_dryrun:
             return
-
-        with type(self)._mutex:
-            self.epdlib.Clear()
+        self.epdlib.Clear()
 
     def display(self, images: dict[str, Image.Image], old_images: dict[str, Image.Image]):
         if self.is_dryrun:
             return
         if not type(self)._inited:
             raise RuntimeError("The epaper display is not initialized.")
-
-        with type(self)._mutex:
-            if self.is_partial:
-                self.epdlib.DisplayPartial(self.epdlib.getbuffer(old_images['black']),
-                                           self.epdlib.getbuffer(images['black']))
-            else:
-                self.epdlib.display(self.epdlib.getbuffer(images['black']))
+        if self.is_partial:
+            self.epdlib.DisplayPartial(self.epdlib.getbuffer(old_images['black']),
+                                       self.epdlib.getbuffer(images['black']))
+        else:
+            self.epdlib.display(self.epdlib.getbuffer(images['black']))
 
     def close(self):
         if not type(self)._inited or self.is_dryrun:
             return
-
-        with type(self)._mutex:
-            self.epdlib.Sleep()
+        self.epdlib.Sleep()
         type(self)._inited = False
