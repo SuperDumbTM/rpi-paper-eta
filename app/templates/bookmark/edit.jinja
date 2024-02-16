@@ -258,6 +258,7 @@
             '{{ url_for("api_bookmark.search", search_type="service_types") }}',
             getParams(),
             function (res) {
+                clear()
                 res.data.service_types.forEach(
                     (el) => $("select[name=service_type]").append(new Option(el[1], el[0])))
             })
