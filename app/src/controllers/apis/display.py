@@ -4,7 +4,7 @@ from io import BytesIO
 from pathlib import Path
 
 import webargs
-from flask import Blueprint, current_app, jsonify
+from flask import Blueprint, Response, current_app, jsonify
 from flask_babel import lazy_gettext
 
 from app.src import database, site_data, models
@@ -169,3 +169,25 @@ def refresh(args):
         'message': '{}.'.format(lazy_gettext('success')),
         'data': None
     })
+
+
+@bp.route("/clear")
+def clear_screen():
+    app_conf = site_data.AppConfiguration()
+    if not app_conf.get('epd_brand') or not app_conf.get('epd_model'):
+        return jsonify({
+            'success': False,
+            'message': '{}.'.format(lazy_gettext('configuration_required')),
+        }), 400
+
+    try:
+        controller = epaper.ControllerFactory().get_controller(
+            app_conf.get('epd_brand'), app_conf.get('epd_model'))(False, False)
+        refresher.clear_screen(controller)
+    except (OSError, RuntimeError) as e:
+        logging.exception("Cannot initialise the e-paper controller.")
+        return jsonify({
+            'success': False,
+            'message': '{}'.format(lazy_gettext('Failed to refresh the screen.')),
+            'data': None
+        }), 400

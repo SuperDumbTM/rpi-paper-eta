@@ -124,3 +124,12 @@ def display_images(old_images: dict[str, Image.Image],
         finally:
             if close_display:
                 controller.close()
+
+
+def clear_screen(controller: display.epaper.DisplayController) -> None:
+    with _ctrl_mutex:
+        try:
+            controller.initialize()
+            controller.clear()
+        finally:
+            controller.close()
