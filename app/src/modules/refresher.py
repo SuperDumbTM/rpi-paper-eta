@@ -89,9 +89,8 @@ def cached_images(path: os.PathLike) -> dict[str, Image.Image]:
     for path in Path(str(path)).glob('**/*'):
         if path.suffix != '.bmp':
             continue
-        with open(path, 'rb') as f:
-            images.setdefault(path.name.removesuffix(path.suffix),
-                              base64.b64encode(f.read()).decode("utf-8"))
+        images.setdefault(path.name.removesuffix(path.suffix),
+                          Image.open(path))
     return images
 
 
