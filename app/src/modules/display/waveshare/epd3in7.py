@@ -61,9 +61,6 @@ class Epd3in7(epaper.DisplayController):
                 self.epdlib.getbuffer_4Gray(images['black']))
             return
 
-        if not isinstance(old_images, dict) or 'black' not in old_images:
-            raise ValueError('old_images is required or '
-                             'the required color of image does not exists.')
         self.epdlib.display_1Gray(self.epdlib.getbuffer(old_images['black']))
         self.epdlib.display_1Gray(self.epdlib.getbuffer(images['black']))
 
