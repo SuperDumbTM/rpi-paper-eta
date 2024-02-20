@@ -147,8 +147,6 @@ def refresh(args):
                                  controller,
                                  False,
                                  True)
-        generator.write_images(current_app.config['EPD_IMG_DIR'], images)
-        site_data.RefreshHistory().put(models.RefreshLog(**args))
     except Exception as e:
         site_data.RefreshHistory().put(models.RefreshLog(**args, error=e))
 
@@ -163,6 +161,9 @@ def refresh(args):
             'message': '{}'.format(lazy_gettext('Failed to refresh the screen.')),
             'data': None
         }), 400
+    else:
+        site_data.RefreshHistory().put(models.RefreshLog(**args))
+        generator.write_images(current_app.config['EPD_IMG_DIR'], images)
 
     return jsonify({
         'success': True,
