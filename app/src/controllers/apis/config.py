@@ -3,7 +3,7 @@ from flask import Blueprint, jsonify
 from flask_babel import lazy_gettext
 
 from app.src import site_data, database
-from app.src.libs import image as eimage
+from app.src.libs import eta_img
 
 bp = Blueprint('api_config', __name__, url_prefix="/api")
 
@@ -30,7 +30,7 @@ def get():
     # 'api_username': webargs.fields.String(),
     # 'api_password': webargs.fields.String(),
     'epd_brand': webargs.fields.String(
-        validate=lambda v: v in eimage.eta_image.EtaImageGeneratorFactory.brands()),
+        validate=lambda v: v in eta_img.generator.EtaImageGeneratorFactory.brands()),
     'epd_model': webargs.fields.String()
 })
 def update(args):

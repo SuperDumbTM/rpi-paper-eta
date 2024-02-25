@@ -1,6 +1,6 @@
-from . import display, image
+from . import display, eta_img
 
 __all__ = [
     display,
-    image,
+    eta_img,
 ]

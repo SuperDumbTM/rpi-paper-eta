@@ -5,7 +5,7 @@ from flask import (Blueprint, Response, flash, redirect, render_template,
 from flask_babel import lazy_gettext
 
 from app.src import enums, forms, site_data
-from app.src.libs import image as eimage
+from app.src.libs import eta_img
 
 bp = Blueprint('configuration',
                __name__,
@@ -17,12 +17,12 @@ def index():
     app_conf = site_data.AppConfiguration()
     if app_conf.get('epd_brand'):
         models = [m.__name__
-                  for m in eimage.eta_image.EtaImageGeneratorFactory.models(app_conf.get('epd_brand'))]
+                  for m in eta_img.generator.EtaImageGeneratorFactory.models(app_conf.get('epd_brand'))]
     else:
         models = []
 
     return render_template("configuration/index.jinja",
-                           brands=eimage.eta_image.EtaImageGeneratorFactory.brands(),
+                           brands=eta_img.generator.EtaImageGeneratorFactory.brands(),
                            models=models,
                            app_conf=app_conf)
 
@@ -54,12 +54,12 @@ def epaper_setting():
     app_conf = site_data.AppConfiguration()
 
     if app_conf.get('epd_brand'):
-        models = [m.__name__ for m in eimage.eta_image.EtaImageGeneratorFactory.models(
+        models = [m.__name__ for m in eta_img.generator.EtaImageGeneratorFactory.models(
             app_conf.get('epd_model'))]
     else:
         models = []
     return render_template("configuration/epd_form.jinja",
-                           brands=eimage.eta_image.EtaImageGeneratorFactory.brands(),
+                           brands=eta_img.generator.EtaImageGeneratorFactory.brands(),
                            models=models,
                            form=forms.EpaperForm(epd_brand=app_conf.get('epd_brand'),
                                                  epd_model=app_conf.get('epd_model')))

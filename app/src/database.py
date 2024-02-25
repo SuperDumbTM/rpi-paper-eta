@@ -11,7 +11,7 @@ from sqlalchemy import event, func, inspect
 from sqlalchemy.orm import Mapped, mapped_column, validates
 
 from app.src import enums
-from app.src.libs import image as eimage
+from app.src.libs import eta_img
 
 db = SQLAlchemy()
 scheduler = APScheduler()
@@ -77,7 +77,7 @@ class Schedule(_BaseModel):
                           kwargs={
                               'url': 'http://localhost:8192/api/display/refresh',
                               'params': {
-                                  'eta_type': eimage.enums.EtaType(self.eta_type),
+                                  'eta_type': eta_img.enums.EtaType(self.eta_type),
                                   'layout': self.layout,
                                   'is_partial': self.is_partial
                               },

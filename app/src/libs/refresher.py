@@ -10,7 +10,7 @@ from PIL import Image
 
 from app.src import models, site_data
 from app.src.libs import display
-from app.src.libs import image as eimage
+from app.src.libs import eta_img
 
 _ctrl_mutex = threading.Lock()
 
@@ -18,7 +18,7 @@ _ctrl_mutex = threading.Lock()
 def generate_image(
     app_conf: site_data.AppConfiguration,
     bookmarks: list[models.EtaConfig],
-    generator: eimage.eta_image.EtaImageGenerator
+    generator: eta_img.generator.EtaImageGenerator
 ) -> dict[str, Image.Image]:
     """Generate a ETA image.
 
@@ -27,7 +27,7 @@ def generate_image(
     Args:
         app_config (models.Configuration): _description_
         bookmarks (list[models.EtaConfig]): _description_
-        generator (eimage.eta_image.EtaImageGenerator): _description_
+        generator (eta_img.eta_image.EtaImageGenerator): _description_
 
     Returns:
         _type_: _description_
@@ -59,20 +59,20 @@ def generate_image(
 
             if res['success']:
                 eta = res['data'].pop('etas')
-                etas.append(eimage.models.Etas(**res['data'],
-                                               etas=[eimage.models.Etas.Eta(**e)
-                                                     for e in eta],
-                                               logo=logo,
-                                               )
+                etas.append(eta_img.models.Etas(**res['data'],
+                                                etas=[eta_img.models.Etas.Eta(**e)
+                                                      for e in eta],
+                                                logo=logo,
+                                                )
                             )
             else:
                 res['data'].pop('etas')
-                etas.append(eimage.models.ErrorEta(**res['data'],
-                                                   code=res['code'],
-                                                   message=str(
-                                                       lazy_gettext(res['code'])),
-                                                   logo=logo,)
-                            )
+                etas.append(eta_img.models.ErrorEta(**res['data'],
+                                                    code=res['code'],
+                                                    message=str(
+                    lazy_gettext(res['code'])),
+                    logo=logo,)
+                )
         images = generator.draw(etas)
     except requests.RequestException as e:
         logging.warning('Image generation failed with error: %s', str(e))

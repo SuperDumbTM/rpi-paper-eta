@@ -6,7 +6,7 @@ from flask import Blueprint, jsonify
 from flask_babel import lazy_gettext
 
 from app.src import database
-from app.src.libs import image as eimage
+from app.src.libs import eta_img
 
 bp = Blueprint('api_schedule', __name__, url_prefix="/api")
 
@@ -66,7 +66,7 @@ def get(id: str):
         required=True, validate=lambda v: croniter.croniter.is_valid(v) and len(v.split(' ')) == 5,
         error_messages={'validator_failed': 'Invalid cron expression.'}),
     'eta_type': webargs.fields.String(
-        required=True, validate=webargs.validate.OneOf([v.value for v in eimage.enums.EtaType])),
+        required=True, validate=webargs.validate.OneOf([v.value for v in eta_img.enums.EtaType])),
     'layout': webargs.fields.String(required=True),
     'is_partial': webargs.fields.Boolean(required=True),
     'enabled': webargs.fields.Boolean(required=True),
@@ -88,7 +88,7 @@ def create(args):
             v) and len(v.split(' ')) == 5,
         error_messages={'validator_failed': 'Invalid cron expression.'}),
     'eta_type': webargs.fields.String(
-        validate=webargs.validate.OneOf([v.value for v in eimage.enums.EtaType])),
+        validate=webargs.validate.OneOf([v.value for v in eta_img.enums.EtaType])),
     'layout': webargs.fields.String(),
     'is_partial': webargs.fields.Boolean(),
     'enabled': webargs.fields.Boolean(),

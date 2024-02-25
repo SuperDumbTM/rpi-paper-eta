@@ -4,12 +4,12 @@ from PIL import Image, ImageDraw
 
 
 try:
-    from ..eta_image import EtaImageGenerator
+    from ..generator import EtaImageGenerator
     from .. import utils, models
 except ImportError:
     import sys
     sys.path.append(str(Path(__file__).parent.parent))
-    from eta_image import EtaImageGenerator
+    from app.src.libs.eta_img.generator import EtaImageGenerator
     import utils
     import models
 

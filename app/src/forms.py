@@ -1,6 +1,6 @@
 import typing
 
-from app.src.libs import image as eimage
+from app.src.libs import eta_img
 
 
 class ApiServerForm(typing.NamedTuple):
@@ -34,7 +34,7 @@ class ScheduleForm(typing.NamedTuple):
     """Form inputs for creating/editing an Display refreshing schedules.
     """
     schedule: str = ''
-    eta_type: str = eimage.enums.EtaType.MIXED
+    eta_type: str = eta_img.enums.EtaType.MIXED
     layout: str = ''
     is_partial: bool = False
     enabled: bool = True

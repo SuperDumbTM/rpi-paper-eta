@@ -7,7 +7,7 @@ from flask_babel import lazy_gettext
 from sqlalchemy.exc import StatementError
 
 from app.src import database, enums, site_data
-from app.src.libs import image as eimage
+from app.src.libs import eta_img
 
 bp = Blueprint('schedule',
                __name__,
@@ -36,8 +36,8 @@ def create():
                            schedule=database.Schedule(),
                            form_action=url_for('api_schedule.create'),
                            form_method='post',
-                           eta_types=eimage.enums.EtaType,
-                           layouts=eimage.eta_image.EtaImageGeneratorFactory.get_generator(
+                           eta_types=eta_img.enums.EtaType,
+                           layouts=eta_img.generator.EtaImageGeneratorFactory.get_generator(
                                app_conf.get('epd_brand'), app_conf.get('epd_model')).layouts()
                            )
 
@@ -53,8 +53,8 @@ def edit(id: str):
                            schedule=database.Schedule.query.get_or_404(id),
                            form_action=url_for('api_schedule.update', id=id),
                            form_method='put',
-                           eta_types=eimage.enums.EtaType,
-                           layouts=eimage.eta_image.EtaImageGeneratorFactory.get_generator(
+                           eta_types=eta_img.enums.EtaType,
+                           layouts=eta_img.generator.EtaImageGeneratorFactory.get_generator(
                                app_conf.get('epd_brand'), app_conf.get('epd_model')).layouts()
                            )
 

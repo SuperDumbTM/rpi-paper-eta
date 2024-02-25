@@ -8,7 +8,7 @@ import pydantic
 from flask_babel import lazy_gettext
 
 from app.src import utils
-from app.src.libs import image as eimage
+from app.src.libs import eta_img
 
 
 @utils.singleton
@@ -71,7 +71,7 @@ class RefreshHistory:
 
         timestamp: datetime = pydantic.Field(
             default_factory=datetime.now)
-        eta_type: eimage.enums.EtaType
+        eta_type: eta_img.enums.EtaType
         layout: str
         is_partial: bool
         error: Optional[BaseException] = None
