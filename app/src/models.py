@@ -6,7 +6,7 @@ import pydantic
 from flask_babel import lazy_gettext
 
 from app.src import enums
-from app.src.modules import image as eimage
+from app.src.libs import image as eimage
 
 
 class EtaConfig(pydantic.BaseModel):

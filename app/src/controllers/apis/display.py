@@ -8,9 +8,9 @@ from flask import Blueprint, Response, current_app, jsonify
 from flask_babel import lazy_gettext
 
 from app.src import database, site_data, models
-from app.src.modules import image as eimage
-from app.src.modules import refresher
-from app.src.modules.display import epaper
+from app.src.libs import image as eimage
+from app.src.libs import refresher
+from app.src.libs.display import epaper
 
 bp = Blueprint('api_display',
                __name__,

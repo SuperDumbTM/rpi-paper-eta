@@ -11,7 +11,7 @@ from sqlalchemy import event, func, inspect
 from sqlalchemy.orm import Mapped, mapped_column, validates
 
 from app.src import enums
-from app.src.modules import image as eimage
+from app.src.libs import image as eimage
 
 db = SQLAlchemy()
 scheduler = APScheduler()

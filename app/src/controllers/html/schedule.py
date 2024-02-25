@@ -7,7 +7,7 @@ from flask_babel import lazy_gettext
 from sqlalchemy.exc import StatementError
 
 from app.src import database, enums, site_data
-from app.src.modules import image as eimage
+from app.src.libs import image as eimage
 
 bp = Blueprint('schedule',
                __name__,

@@ -1,4 +1,4 @@
-from . import database, enums, exceptions, forms, handles, models, modules
+from . import database, enums, exceptions, forms, handles, models, libs
 
 __all__ = [
     database,
@@ -7,5 +7,5 @@ __all__ = [
     forms,
     handles,
     models,
-    modules
+    libs
 ]

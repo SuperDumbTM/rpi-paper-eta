@@ -7,7 +7,7 @@ from flask_babel import lazy_gettext
 from PIL import Image
 
 from app.src import enums, site_data
-from app.src.modules import refresher
+from app.src.libs import refresher
 
 bp = Blueprint('root', __name__, url_prefix="/")
 

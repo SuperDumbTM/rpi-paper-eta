@@ -9,8 +9,8 @@ import requests
 from PIL import Image
 
 from app.src import models, site_data, translation
-from app.src.modules import image as eimage
-from app.src.modules import display
+from app.src.libs import image as eimage
+from app.src.libs import display
 
 
 _ctrl_mutex = threading.Lock()

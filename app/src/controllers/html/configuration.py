@@ -5,7 +5,7 @@ from flask import (Blueprint, Response, flash, redirect, render_template,
 from flask_babel import lazy_gettext
 
 from app.src import enums, forms, site_data
-from app.src.modules import image as eimage
+from app.src.libs import image as eimage
 
 bp = Blueprint('configuration',
                __name__,
