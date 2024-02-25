@@ -1,17 +1,16 @@
-import base64
 import logging
-from io import BytesIO
 import os
-from pathlib import Path
 import threading
+from io import BytesIO
+from pathlib import Path
 
 import requests
+from flask_babel import lazy_gettext
 from PIL import Image
 
-from app.src import models, site_data, translation
-from app.src.libs import image as eimage
+from app.src import models, site_data
 from app.src.libs import display
-
+from app.src.libs import image as eimage
 
 _ctrl_mutex = threading.Lock()
 
@@ -70,8 +69,8 @@ def generate_image(
                 res['data'].pop('etas')
                 etas.append(eimage.models.ErrorEta(**res['data'],
                                                    code=res['code'],
-                                                   message=str(translation.RP_CODE_TRANSL.get(
-                                                       res['code'], res['message'])),
+                                                   message=str(
+                                                       lazy_gettext(res['code'])),
                                                    logo=logo,)
                             )
         images = generator.draw(etas)
