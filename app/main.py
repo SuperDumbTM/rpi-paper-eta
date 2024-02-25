@@ -23,7 +23,7 @@ def init_babel(app: Flask) -> Babel:
 def init_site_data(app: Flask) -> None:
     """Initialise and load all the site data/user configuration
     """
-    site_data.RefreshHistory(limit=20)
+    site_data.RefreshHistory()
 
 
 def init_logger(app: Flask) -> None:
