@@ -1,11 +1,7 @@
-import datetime
-from typing import Optional
-
 import pydantic
 from flask_babel import lazy_gettext
 
 from app.src import enums
-from app.src.libs import image as eimage
 
 
 class EtaConfig(pydantic.BaseModel):
