@@ -1,4 +1,4 @@
-wsgi_app = "app.src.main:create_app()"
+wsgi_app = "app.main:create_app()"
 proc_name = "rpi-paper-eta"
 bind = "0.0.0.0:8192"
 workers = 1

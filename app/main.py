@@ -106,7 +106,7 @@ def init_db(app: Flask) -> None:
 
 
 def create_app() -> Flask:
-    app_root = Path(__file__).parents[1]
+    app_root = Path(__file__).parent
     app = Flask(__name__,
                 template_folder=app_root.joinpath('templates'),
                 static_folder=app_root.joinpath('static'))
