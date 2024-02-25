@@ -1,9 +1,14 @@
+from datetime import datetime
 import json
 from collections import abc, deque
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any, Iterator, Optional
+
+import pydantic
+from flask_babel import lazy_gettext
 
 from app.src import models, utils
+from app.src.libs import image as eimage
 
 
 @utils.singleton
@@ -60,16 +65,30 @@ class AppConfiguration(abc.Mapping):
 
 @utils.singleton
 class RefreshHistory:
-    _data: deque[models.RefreshLog]
+
+    class Log(pydantic.BaseModel):
+        model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
+
+        timestamp: datetime.datetime = pydantic.Field(
+            default_factory=datetime.datetime.now)
+        eta_type: eimage.enums.EtaType
+        layout: str
+        is_partial: bool
+        error: Optional[BaseException] = None
+
+        def model_dump_i18n(self) -> dict:
+            return self.model_dump() | {'eta_type': lazy_gettext(self.eta_type.value)}
+
+    _data: deque[Log]
 
     def __init__(self, limit: int = 20) -> None:
         self._data = deque([], limit)
         self.limit = limit
 
-    def put(self, log: models.RefreshLog) -> None:
+    def put(self, log: Log) -> None:
         self._data.appendleft(log)
 
-    def get(self) -> tuple[models.RefreshLog]:
+    def get(self) -> tuple[Log]:
         return tuple(l for l in self._data)
 
     def clear(self) -> None:

@@ -132,7 +132,7 @@ def refresh(args):
             app_conf.get('epd_brand'), app_conf.get('epd_model'))(args['is_partial'], False)
     except (OSError, RuntimeError) as e:
         logging.exception("Cannot initialise the e-paper controller.")
-        site_data.RefreshHistory().put(models.RefreshLog(**args, error=e))
+        site_data.RefreshHistory().put(site_data.RefreshHistory.Log(**args, error=e))
 
         return jsonify({
             'success': False,
@@ -148,7 +148,7 @@ def refresh(args):
                                  False,
                                  True)
     except Exception as e:
-        site_data.RefreshHistory().put(models.RefreshLog(**args, error=e))
+        site_data.RefreshHistory().put(site_data.RefreshHistory.Log(**args, error=e))
 
         if type(e) is RuntimeError:
             logging.exception("Failed to refresh the screen.")
@@ -162,7 +162,7 @@ def refresh(args):
             'data': None
         }), 400
     else:
-        site_data.RefreshHistory().put(models.RefreshLog(**args))
+        site_data.RefreshHistory().put(site_data.RefreshHistory.Log(**args))
         generator.write_images(current_app.config['EPD_IMG_DIR'], images)
 
     return jsonify({
