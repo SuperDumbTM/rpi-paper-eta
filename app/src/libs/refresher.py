@@ -9,8 +9,7 @@ from flask_babel import lazy_gettext
 from PIL import Image
 
 from app.src import models, site_data
-from app.src.libs import display
-from app.src.libs import eta_img
+from app.src.libs import epcdon, eta_img
 
 _ctrl_mutex = threading.Lock()
 
@@ -95,7 +94,8 @@ def cached_images(path: os.PathLike) -> dict[str, Image.Image]:
 
 def display_images(old_images: dict[str, Image.Image],
                    images: dict[str, Image.Image],
-                   controller: display.epaper.DisplayController,
+                   controller: epcdon.DisplayController,
+                   is_partial: bool,
                    wait_if_locked: bool = False,
                    close_display: bool = True) -> None:
     """Display images to the e-paper display.
@@ -119,13 +119,16 @@ def display_images(old_images: dict[str, Image.Image],
     with _ctrl_mutex:
         try:
             controller.initialize()
-            controller.display(images, old_images)
+            if is_partial:
+                controller.display_partial(old_images, images)
+            else:
+                controller.display(images, old_images)
         finally:
             if close_display:
                 controller.close()
 
 
-def clear_screen(controller: display.epaper.DisplayController) -> None:
+def clear_screen(controller: epcdon.DisplayController) -> None:
     with _ctrl_mutex:
         try:
             controller.initialize()

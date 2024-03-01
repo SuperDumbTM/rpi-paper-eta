@@ -6,12 +6,12 @@ from PIL import Image
 sys.path.append(Path(__file__).parent.parent.parent)
 
 try:
-    from .. import epaper
+    from .. import controller
 except ImportError:
-    from display import epaper
+    from epcdon import controller
 
 
-class Epd1in02(epaper.DisplayController):
+class Epd1in02(controller.DisplayController, controller.Partialable):
 
     _inited = False
 
@@ -22,11 +22,8 @@ class Epd1in02(epaper.DisplayController):
     def partialable() -> bool:
         return True
 
-    def __init__(self, is_partial: bool, is_dryrun: bool = False) -> None:
-        super().__init__(is_partial, is_dryrun)
-
-        if is_dryrun:
-            return
+    def __init__(self, is_partial: bool) -> None:
+        super().__init__(is_partial)
 
         try:
             from .epd_lib import epd1in02
@@ -35,7 +32,7 @@ class Epd1in02(epaper.DisplayController):
         self.epdlib = epd1in02.EPD()
 
     def initialize(self):
-        if type(self)._inited or self.is_dryrun:
+        if type(self)._inited:
             return
 
         if ((self.is_partial and self.epdlib.Init() != 0)
@@ -44,23 +41,24 @@ class Epd1in02(epaper.DisplayController):
         type(self)._inited = True
 
     def clear(self):
-        if self.is_dryrun:
-            return
         self.epdlib.Clear()
 
-    def display(self, images: dict[str, Image.Image], old_images: dict[str, Image.Image]):
-        if self.is_dryrun:
-            return
+    def display(self, images: dict[str, Image.Image],):
+        if not type(self)._inited:
+            raise RuntimeError("The epaper display is not initialized.")
+        self.epdlib.display(self.epdlib.getbuffer(images['black']))
+
+    def display_partial(self,
+                        old_images: dict[str, Image.Image],
+                        images: dict[str, Image.Image]):
         if not type(self)._inited:
             raise RuntimeError("The epaper display is not initialized.")
         if self.is_partial:
             self.epdlib.DisplayPartial(self.epdlib.getbuffer(old_images['black']),
                                        self.epdlib.getbuffer(images['black']))
-        else:
-            self.epdlib.display(self.epdlib.getbuffer(images['black']))
 
     def close(self):
-        if not type(self)._inited or self.is_dryrun:
-            return
+        if not type(self)._inited:
+            raise RuntimeError("The epaper display is not initialized.")
         self.epdlib.Sleep()
         type(self)._inited = False

@@ -6,10 +6,8 @@ import webargs
 from flask import Blueprint, current_app, jsonify
 from flask_babel import lazy_gettext
 
-from app.src import database, site_data, models
-from app.src.libs import eta_img
-from app.src.libs import refresher
-from app.src.libs.display import epaper
+from app.src import database, models, site_data
+from app.src.libs import epcdon, eta_img, refresher
 
 bp = Blueprint('api_display',
                __name__,
@@ -127,8 +125,9 @@ def refresh(args):
 
     # ---------- initialise the e-paper controller ----------
     try:
-        controller = epaper.ControllerFactory().get_controller(
-            app_conf.get('epd_brand'), app_conf.get('epd_model'))(args['is_partial'], False)
+        controller = epcdon.get(app_conf.get('epd_brand'),
+                                app_conf.get('epd_model'),
+                                is_partial=args['is_partial'])
     except (OSError, RuntimeError) as e:
         logging.exception("Cannot initialise the e-paper controller.")
         site_data.RefreshHistory().put(site_data.RefreshHistory.Log(**args, error=e))
@@ -144,6 +143,7 @@ def refresh(args):
         refresher.display_images(refresher.cached_images(current_app.config['EPD_IMG_DIR']),
                                  images,
                                  controller,
+                                 args['is_partial'],
                                  False,
                                  True)
     except Exception as e:
@@ -181,8 +181,9 @@ def clear_screen():
         }), 400
 
     try:
-        controller = epaper.ControllerFactory().get_controller(
-            app_conf.get('epd_brand'), app_conf.get('epd_model'))(False, False)
+        controller = epcdon.get(app_conf.get('epd_brand'),
+                                app_conf.get('epd_model'),
+                                is_partial=False)
         refresher.clear_screen(controller)
     except (OSError, RuntimeError) as e:
         logging.exception("Cannot initialise the e-paper controller.")
