@@ -7,11 +7,19 @@ from typing import Any, Generator, Iterator, Optional
 import pydantic
 from flask_babel import lazy_gettext
 
-from app.src import utils
 from app.src.libs import eta_img
 
 
-@utils.singleton
+class _Singleton(type):
+    _instances = {}
+
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(
+                _Singleton, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
+
+
 class AppConfiguration(abc.Mapping):
     """A Singleton class that mangage all the general configuration including 
         e-paper and API server settings.
@@ -21,6 +29,7 @@ class AppConfiguration(abc.Mapping):
 
     __keys__ = ['api_url', 'api_username',
                 'api_password', 'epd_brand', 'epd_model',]
+    __metaclass__ = _Singleton
 
     def __init__(self) -> None:
         self._data = {k: None for k in self.__keys__}
@@ -63,8 +72,7 @@ class AppConfiguration(abc.Mapping):
             json.dump(self._data, f, indent=4)
 
 
-@utils.singleton
-class RefreshHistory:
+class RefreshHistory(metaclass=_Singleton):
 
     class Log(pydantic.BaseModel):
         model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
