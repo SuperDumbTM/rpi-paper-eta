@@ -143,7 +143,6 @@ def refresh(args):
         refresher.display_images(refresher.cached_images(current_app.config['EPD_IMG_DIR']),
                                  images,
                                  controller,
-                                 args['is_partial'],
                                  False,
                                  True)
     except Exception as e:
