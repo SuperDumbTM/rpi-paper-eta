@@ -11,7 +11,7 @@ except ImportError:
     from epdcon import controller
 
 
-class Epd4in2bV2(controller.DisplayController):
+class Epd4in2bV2(controller.Controller):
 
     _inited = False
 

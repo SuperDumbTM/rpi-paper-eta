@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from PIL import Image
 
 
-class DisplayController(ABC):
+class Controller(ABC):
     """A uniformed interface to control a e-paper display
     """
 

@@ -94,7 +94,7 @@ def cached_images(path: os.PathLike) -> dict[str, Image.Image]:
 
 def display_images(old_images: dict[str, Image.Image],
                    images: dict[str, Image.Image],
-                   controller: epdcon.DisplayController,
+                   controller: epdcon.Controller,
                    is_partial: bool,
                    wait_if_locked: bool = False,
                    close_display: bool = True) -> None:
@@ -128,7 +128,7 @@ def display_images(old_images: dict[str, Image.Image],
                 controller.close()
 
 
-def clear_screen(controller: epdcon.DisplayController) -> None:
+def clear_screen(controller: epdcon.Controller) -> None:
     with _ctrl_mutex:
         try:
             controller.initialize()

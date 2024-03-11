@@ -11,7 +11,7 @@ except ImportError:
     from epdcon import controller
 
 
-class Epd1in02(controller.DisplayController, controller.Partialable):
+class Epd1in02(controller.Controller, controller.Partialable):
 
     _inited = False
 
