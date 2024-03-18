@@ -1,11 +1,14 @@
-from . import database, enums, exceptions, forms, handles, models, libs
+from . import (enums, exceptions, extensions, forms, handles, libs, models,
+               utils)
+from .extensions import db, scheduler
 
 __all__ = [
-    database,
     enums,
+    extensions,
     exceptions,
     forms,
     handles,
     models,
-    libs
+    libs,
+    utils,
 ]

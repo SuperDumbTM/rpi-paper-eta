@@ -4,9 +4,7 @@ from typing import Generator
 
 from flask import Blueprint, Response, current_app, render_template, send_file
 
-bp = Blueprint('log',
-               __name__,
-               url_prefix="/log")
+bp = Blueprint('log', __name__, url_prefix="/log")
 
 
 @bp.route("/")

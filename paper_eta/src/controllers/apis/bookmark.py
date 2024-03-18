@@ -7,7 +7,8 @@ from flask import Blueprint, abort, current_app, jsonify, request
 from flask_babel import lazy_gettext
 from webargs import flaskparser
 
-from paper_eta.src import database, enums, site_data, utils
+from ....src import enums, site_data
+from ... import utils, models, db
 
 bp = Blueprint('api_bookmark', __name__, url_prefix="/api")
 
@@ -29,7 +30,7 @@ _bookmark_validation_rules = {
 }, location="query")
 def get_all(args):
     bookmarks = []
-    for bm in database.db.session.query(database.Bookmark).order_by(database.Bookmark.ordering).all():
+    for bm in models.Bookmark.query.order_by(models.Bookmark.ordering).all():
         try:
             stop_name = requests.get(
                 f"{site_data.AppConfiguration().get('api_url')}"
@@ -57,8 +58,8 @@ def get_all(args):
 @bp.route("/bookmark", methods=["POST"])
 @webargs.flaskparser.use_args(_bookmark_validation_rules)
 def create(args):
-    database.db.session.add(database.Bookmark(**args))
-    database.db.session.commit()
+    db.session.add(models.Bookmark(**args))
+    db.session.commit()
     return jsonify({
         'success': True,
         'message': '{}.'.format(lazy_gettext("updated")),
@@ -69,12 +70,12 @@ def create(args):
 @bp.route("/bookmark/<id>", methods=["PUT"])
 @webargs.flaskparser.use_args(_bookmark_validation_rules)
 def update(args, id: str):
-    bookmark = database.Bookmark.query.get_or_404(id)
+    bookmark = models.Bookmark.query.get_or_404(id)
     for k, v in args.items():
         setattr(bookmark, k, v)
 
-    database.db.session.merge(bookmark)
-    database.db.session.commit()
+    db.session.merge(bookmark)
+    db.session.commit()
     return jsonify({
         'success': True,
         'message': '{}.'.format(lazy_gettext("updated")),
@@ -86,9 +87,9 @@ def update(args, id: str):
 
 @bp.route("/bookmark/<id>", methods=["DELETE"])
 def delete(id: str):
-    bookmark = database.Bookmark.query.get_or_404(id)
-    database.db.session.delete(bookmark)
-    database.db.session.commit()
+    bookmark = models.Bookmark.query.get_or_404(id)
+    db.session.delete(bookmark)
+    db.session.commit()
     return jsonify({
         'success': True,
         'message': "{}.".format(lazy_gettext("deleted")),
@@ -122,7 +123,7 @@ def search(search_type: Literal["routes", "directions", "service_types", "stops"
                 'success': True,
                 'message': '{}.'.format(lazy_gettext("success")),
                 'data': {
-                    'routes': utils.route_choices(args['company'])
+                    'routes': utils.eta_api.route_choices(args['company'])
                 }
             })
         elif search_type == "directions":
@@ -130,8 +131,8 @@ def search(search_type: Literal["routes", "directions", "service_types", "stops"
                 'success': True,
                 'message': '{}.'.format(lazy_gettext("success")),
                 'data': {
-                    'directions': utils.direction_choices(args['company'],
-                                                          args['route'])
+                    'directions': utils.eta_api.direction_choices(args['company'],
+                                                                  args['route'])
                 }
             })
         elif search_type == "service_types":
@@ -139,10 +140,10 @@ def search(search_type: Literal["routes", "directions", "service_types", "stops"
                 'success': True,
                 'message': '{}.'.format(lazy_gettext("success")),
                 'data': {
-                    'service_types': utils.type_choices(args['company'],
-                                                        args['route'],
-                                                        args['direction'],
-                                                        args['lang'])
+                    'service_types': utils.eta_api.type_choices(args['company'],
+                                                                args['route'],
+                                                                args['direction'],
+                                                                args['lang'])
                 }
             })
         elif search_type == "stops":
@@ -150,11 +151,11 @@ def search(search_type: Literal["routes", "directions", "service_types", "stops"
                 'success': True,
                 'message': '{}.'.format(lazy_gettext("success")),
                 'data': {
-                    'stops': utils.stop_choices(args['company'],
-                                                args['route'],
-                                                args['direction'],
-                                                args['service_type'],
-                                                args['lang'])
+                    'stops': utils.eta_api.stop_choices(args['company'],
+                                                        args['route'],
+                                                        args['direction'],
+                                                        args['service_type'],
+                                                        args['lang'])
                 }
             })
         else:
@@ -180,19 +181,19 @@ def search(search_type: Literal["routes", "directions", "service_types", "stops"
     'dest_id': webargs.fields.Integer(required=True),
 })
 def swap(args):
-    targets = database.db.session.query(database.Bookmark) \
-        .filter(database.Bookmark.id.in_(args.values())) \
+    targets: list[models.Bookmark] = models.Bookmark.query \
+        .filter(models.Bookmark.id.in_(args.values())) \
         .all()
 
     if len(targets) == 2:
         # BUG: possible inconsistent with high traffic
         src_order, dest_order = targets[0].ordering, targets[1].ordering
         targets[0].ordering, targets[1].ordering = sys.maxsize, sys.maxsize - 1
-        database.db.session.add_all(targets)
-        database.db.session.commit()
+        db.session.add_all(targets)
+        db.session.commit()
         targets[0].ordering,  targets[1].ordering = dest_order, src_order
-        database.db.session.add_all(targets)
-        database.db.session.commit()
+        db.session.add_all(targets)
+        db.session.commit()
 
         return jsonify({
             'success': True,

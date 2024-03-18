@@ -2,7 +2,7 @@ import webargs
 from flask import Blueprint, jsonify
 from flask_babel import lazy_gettext
 
-from paper_eta.src import site_data, database
+from paper_eta.src import db, models, site_data
 from paper_eta.src.libs import eta_img
 
 bp = Blueprint('api_config', __name__, url_prefix="/api")
@@ -39,8 +39,8 @@ def update(args):
     if (app_conf.get('epd_brand') != args['epd_brand']
             or app_conf.get('epd_model') != args['epd_model']):
         # changing brand or model will invalidate the schedule
-        database.Schedule.query.update({database.Schedule.enabled: False})
-        database.db.session.commit()
+        models.Schedule.query.update({models.Schedule.enabled: False})
+        db.session.commit()
 
     try:
         app_conf.updates(args)

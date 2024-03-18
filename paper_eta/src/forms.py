@@ -1,7 +1,5 @@
 import typing
 
-from paper_eta.src.libs import eta_img
-
 
 class ApiServerForm(typing.NamedTuple):
     """Form inputs for editing the details of the API server.
@@ -12,29 +10,8 @@ class ApiServerForm(typing.NamedTuple):
     password: str = ''
 
 
-class BookmarkForm(typing.NamedTuple):
-    """Form inputs for creating/editing an ETA bookmarks.
-    """
-    company: str = ''
-    route: str = ''
-    direction: str = ''
-    service_type: str = ''
-    stop_code: str = ''
-    lang: str = ''
-
-
 class EpaperForm(typing.NamedTuple):
     """Form inputs for creating/editing an Epaper display settings.
     """
     epd_brand: str = ''
     epd_model: str = ''
-
-
-class ScheduleForm(typing.NamedTuple):
-    """Form inputs for creating/editing an Display refreshing schedules.
-    """
-    schedule: str = ''
-    eta_type: str = eta_img.enums.EtaType.MIXED
-    layout: str = ''
-    is_partial: bool = False
-    enabled: bool = True

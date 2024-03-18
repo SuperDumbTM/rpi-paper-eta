@@ -15,5 +15,6 @@
       "editor.defaultFormatter": "ms-python.autopep8",
       "editor.formatOnSave": true
     },
+    "python.analysis.importFormat": "relative",
     "autoDocstring.docstringFormat": "google"
   }

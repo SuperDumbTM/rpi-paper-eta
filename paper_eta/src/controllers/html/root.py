@@ -7,7 +7,7 @@ from flask_babel import lazy_gettext
 from PIL import Image
 
 from paper_eta.src import enums, site_data
-from paper_eta.src.libs import refresher
+from paper_eta.src.libs import refresher, epd_log
 
 bp = Blueprint('root', __name__, url_prefix="/")
 
@@ -26,12 +26,11 @@ def index():
         flash(lazy_gettext('missing_api_err_msg'), enums.FlashCategory.error)
 
     return render_template("index.jinja",
-                           refresh_logs=tuple(
-                               site_data.RefreshHistory().get()),
+                           refresh_logs=tuple(epd_log.epdlog.get()),
                            images={
                                k: _img_2_b64(v)
                                for k, v in refresher.cached_images(
-                                   current_app.config['CACHE_DIR'].joinpath('epaper')).items()
+                                   current_app.config['DIR_SCREEN_DUMP'].joinpath('epaper')).items()
                            },
                            app_conf=app_conf)
 

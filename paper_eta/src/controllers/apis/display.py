@@ -6,8 +6,8 @@ import webargs
 from flask import Blueprint, current_app, jsonify
 from flask_babel import lazy_gettext
 
-from paper_eta.src import database, models, site_data
-from paper_eta.src.libs import epdcon, eta_img, refresher
+from ....src import models, site_data
+from ...libs import epd_log, epdcon, eta_img, refresher
 
 bp = Blueprint('api_display',
                __name__,
@@ -60,9 +60,10 @@ def image(args):
         }), 400
 
     bookmarks = [models.EtaConfig(**bm.as_dict())
-                 for bm in database.db.session.query(database.Bookmark)
-                 .order_by(database.Bookmark.ordering)
-                 .all()]
+                 for bm in models.Bookmark.query
+                 .order_by(models.Bookmark.ordering)
+                 .all()
+                 ]
     try:
         generator = eta_img.generator.EtaImageGeneratorFactory().get_generator(
             app_conf.get('epd_brand'), app_conf.get('epd_model')
@@ -104,10 +105,11 @@ def refresh(args):
             'message': '{}.'.format(lazy_gettext('configuration_required')),
         }), 400
 
+    # TODO: module name clash
     # ---------- generate ETA images ----------
     bookmarks = [models.EtaConfig(**bm.as_dict())
-                 for bm in database.db.session.query(database.Bookmark)
-                 .order_by(database.Bookmark.ordering)
+                 for bm in models.Bookmark.query
+                 .order_by(models.Bookmark.ordering)
                  .all()]
 
     try:
@@ -130,7 +132,7 @@ def refresh(args):
                                 is_partial=args['is_partial'])
     except (OSError, RuntimeError) as e:
         logging.exception("Cannot initialise the e-paper controller.")
-        site_data.RefreshHistory().put(site_data.RefreshHistory.Log(**args, error=e))
+        epd_log.epdlog.put(epd_log.Log(**args, error=e))
 
         return jsonify({
             'success': False,
@@ -146,7 +148,7 @@ def refresh(args):
                                  False,
                                  True)
     except Exception as e:
-        site_data.RefreshHistory().put(site_data.RefreshHistory.Log(**args, error=e))
+        epd_log.epdlog.put(epd_log.Log(**args, error=e))
 
         if type(e) is RuntimeError:
             logging.exception("Failed to refresh the screen.")
@@ -160,7 +162,7 @@ def refresh(args):
             'data': None
         }), 400
     else:
-        site_data.RefreshHistory().put(site_data.RefreshHistory.Log(**args))
+        epd_log.epdlog.put(epd_log.Log(**args))
         generator.write_images(current_app.config['EPD_IMG_DIR'], images)
 
     return jsonify({

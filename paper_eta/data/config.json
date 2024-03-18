@@ -1,0 +1,7 @@
+{
+    "api_url": "http://192.168.5.6:8100",
+    "api_username": null,
+    "api_password": null,
+    "epd_brand": "waveshare",
+    "epd_model": "Epd3in7"
+}

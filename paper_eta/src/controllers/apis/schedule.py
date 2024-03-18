@@ -5,8 +5,8 @@ import webargs
 from flask import Blueprint, jsonify
 from flask_babel import lazy_gettext
 
-from paper_eta.src import database
-from paper_eta.src.libs import eta_img
+from ....src import db, models
+from ...libs import eta_img
 
 bp = Blueprint('api_schedule', __name__, url_prefix="/api")
 
@@ -19,9 +19,10 @@ bp = Blueprint('api_schedule', __name__, url_prefix="/api")
 }, location="query")
 def get_all(args):
     schedules = []
-    for schedule in database.db.session.query(database.Schedule).all():
-        cron = croniter.croniter(schedule.schedule, start_time=datetime.now())
+    for schedule in models.Schedule.query.all():
+        schedule: models.Schedule
 
+        cron = croniter.croniter(schedule.schedule, start_time=datetime.now())
         if args['enabled'] is not None and args['enabled'] != schedule.enabled:
             continue
 
@@ -43,7 +44,7 @@ def get_all(args):
 
 @bp.route('/schedule/<string:id>')
 def get(id: str):
-    schedule = database.Schedule.query.get(id)
+    schedule = models.Schedule.query.get(id)
     if schedule:
         return jsonify({
             'success': True,
@@ -72,8 +73,8 @@ def get(id: str):
     'enabled': webargs.fields.Boolean(required=True),
 }, location="json")
 def create(args):
-    database.db.session.add(database.Schedule(**args))
-    database.db.session.commit()
+    db.session.add(models.Schedule(**args))
+    db.session.commit()
     return jsonify({
         'success': True,
         'message': '{}.'.format(lazy_gettext("created")),
@@ -94,12 +95,12 @@ def create(args):
     'enabled': webargs.fields.Boolean(),
 }, location="json")
 def update(args, id: str):
-    schedule = database.Schedule.query.get_or_404(id)
+    schedule = models.Schedule.query.get_or_404(id)
     for k, v in args.items():
         setattr(schedule, k, v)
 
-    database.db.session.merge(schedule)
-    database.db.session.commit()
+    db.session.merge(schedule)
+    db.session.commit()
     return jsonify({
         'success': True,
         'message': '{}.'.format(lazy_gettext("updated")),
@@ -111,9 +112,9 @@ def update(args, id: str):
 
 @bp.route('/schedule/<string:id>', methods=["DELETE"])
 def delete(id: str):
-    schedule = database.Schedule.query.get_or_404(id)
-    database.db.session.delete(schedule)
-    database.db.session.commit()
+    schedule = models.Schedule.query.get_or_404(id)
+    db.session.delete(schedule)
+    db.session.commit()
     return jsonify({
         'success': True,
         'message': '{}.'.format(lazy_gettext("success")),

@@ -6,8 +6,8 @@ from flask import (Blueprint, Response, flash, redirect, render_template,
 from flask_babel import lazy_gettext
 from sqlalchemy.exc import StatementError
 
-from paper_eta.src import database, enums, site_data
-from paper_eta.src.libs import eta_img
+from ....src import db, enums, models, site_data
+from ...libs import eta_img
 
 bp = Blueprint('schedule',
                __name__,
@@ -33,7 +33,7 @@ def create():
     return render_template("schedule/form.jinja",
                            zip=zip,
                            list=list,
-                           schedule=database.Schedule(),
+                           schedule=models.Schedule(),
                            form_action=url_for('api_schedule.create'),
                            form_method='post',
                            eta_types=eta_img.enums.EtaType,
@@ -50,7 +50,7 @@ def edit(id: str):
     return render_template("schedule/form.jinja",
                            zip=zip,
                            list=list,
-                           schedule=database.Schedule.query.get_or_404(id),
+                           schedule=models.Schedule.query.get_or_404(id),
                            form_action=url_for('api_schedule.update', id=id),
                            form_method='put',
                            eta_types=eta_img.enums.EtaType,
@@ -64,7 +64,7 @@ def export():
     return Response(
         json.dumps(
             tuple(map(lambda s: s.as_dict(exclude=['id', 'enabled']),
-                      database.Schedule.query.all())
+                      models.Schedule.query.all())
                   ),
             indent=4),
         mimetype='application/json',
@@ -73,16 +73,16 @@ def export():
 
 @bp.route('/schedule/import', methods=['POST'])
 def import_():
-    fields = ({c.name for c in database.Schedule.__table__.c} -
+    fields = ({c.name for c in models.Schedule.__table__.c} -
               {'id', 'enabled', 'created_at', 'updated_at'})  # accepted fields for table inputs
     try:
         for i, schedule in enumerate(json.load(request.files['schedules'].stream)):
             # reference: https://stackoverflow.com/a/76799290
-            with database.db.session.begin_nested() as session:
+            with db.session.begin_nested() as session:
                 try:
-                    database.db.session.add(
-                        database.Schedule(**{**{k: schedule[k] for k in fields}, 'enabled': False}))
-                    database.db.session.flush()
+                    db.session.add(
+                        models.Schedule(**{**{k: schedule[k] for k in fields}, 'enabled': False}))
+                    db.session.flush()
                 except (KeyError, TypeError, StatementError):
                     session.rollback()
 
@@ -90,7 +90,7 @@ def import_():
                           enums.FlashCategory.error)
                     logging.exception('Encountering missing field(s) or invalid '
                                       'values during refresh schedule import.')
-        database.db.session.commit()
+        db.session.commit()
     except (UnicodeDecodeError, json.decoder.JSONDecodeError):
         flash(lazy_gettext('import_failed'), enums.FlashCategory.error)
     return redirect(url_for('schedule.index'))
