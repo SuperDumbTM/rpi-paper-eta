@@ -9,7 +9,7 @@ import dotenv
 from flask import Flask
 from flask_babel import Babel
 
-from app.src import commands, controllers, handles, site_data, utils, database
+from paper_eta.src import commands, controllers, handles, site_data, utils, database
 
 
 def init_babel(app: Flask) -> Babel:

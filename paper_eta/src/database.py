@@ -10,8 +10,8 @@ import requests
 from sqlalchemy import event, func, inspect
 from sqlalchemy.orm import Mapped, mapped_column, validates
 
-from app.src import enums
-from app.src.libs import eta_img
+from paper_eta.src import enums
+from paper_eta.src.libs import eta_img
 
 db = SQLAlchemy()
 scheduler = APScheduler()

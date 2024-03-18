@@ -9,7 +9,7 @@ import requests
 from flask import current_app, request, url_for
 from flask_babel import lazy_gettext
 
-from app.src import site_data
+from paper_eta.src import site_data
 
 
 def singleton(class_: object):

@@ -8,8 +8,8 @@ import requests
 from flask_babel import lazy_gettext
 from PIL import Image
 
-from app.src import models, site_data
-from app.src.libs import epdcon, eta_img
+from paper_eta.src import models, site_data
+from paper_eta.src.libs import epdcon, eta_img
 
 _ctrl_mutex = threading.Lock()
 

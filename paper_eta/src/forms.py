@@ -1,6 +1,6 @@
 import typing
 
-from app.src.libs import eta_img
+from paper_eta.src.libs import eta_img
 
 
 class ApiServerForm(typing.NamedTuple):

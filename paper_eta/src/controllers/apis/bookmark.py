@@ -7,7 +7,7 @@ from flask import Blueprint, abort, current_app, jsonify, request
 from flask_babel import lazy_gettext
 from webargs import flaskparser
 
-from app.src import database, enums, site_data, utils
+from paper_eta.src import database, enums, site_data, utils
 
 bp = Blueprint('api_bookmark', __name__, url_prefix="/api")
 

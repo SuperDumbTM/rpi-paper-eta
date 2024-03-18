@@ -4,7 +4,7 @@ from typing import Any, Optional
 
 from pydantic import BaseModel, ConfigDict
 
-from app.src import enums
+from paper_eta.src import enums
 
 
 class Etas(BaseModel):

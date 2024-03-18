@@ -9,7 +9,7 @@ try:
 except ImportError:
     import sys
     sys.path.append(str(Path(__file__).parent.parent))
-    from app.src.libs.eta_img.generator import EtaImageGenerator
+    from eta_img.generator import EtaImageGenerator
     import utils
     import models
 

@@ -2,8 +2,8 @@ import webargs
 from flask import Blueprint, jsonify
 from flask_babel import lazy_gettext
 
-from app.src import site_data, database
-from app.src.libs import eta_img
+from paper_eta.src import site_data, database
+from paper_eta.src.libs import eta_img
 
 bp = Blueprint('api_config', __name__, url_prefix="/api")
 

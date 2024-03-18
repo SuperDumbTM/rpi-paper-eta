@@ -4,8 +4,8 @@ from flask import (Blueprint, Response, flash, redirect, render_template,
                    request, url_for)
 from flask_babel import lazy_gettext
 
-from app.src import enums, forms, site_data
-from app.src.libs import eta_img
+from paper_eta.src import enums, forms, site_data
+from paper_eta.src.libs import eta_img
 
 bp = Blueprint('configuration',
                __name__,

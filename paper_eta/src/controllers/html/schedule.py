@@ -6,8 +6,8 @@ from flask import (Blueprint, Response, flash, redirect, render_template,
 from flask_babel import lazy_gettext
 from sqlalchemy.exc import StatementError
 
-from app.src import database, enums, site_data
-from app.src.libs import eta_img
+from paper_eta.src import database, enums, site_data
+from paper_eta.src.libs import eta_img
 
 bp = Blueprint('schedule',
                __name__,

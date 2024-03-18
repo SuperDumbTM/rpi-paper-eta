@@ -1,7 +1,7 @@
 import pydantic
 from flask_babel import lazy_gettext
 
-from app.src import enums
+from paper_eta.src import enums
 
 
 class EtaConfig(pydantic.BaseModel):

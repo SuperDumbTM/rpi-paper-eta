@@ -7,7 +7,7 @@ from flask import (Blueprint, Response, flash, redirect, render_template,
 from flask_babel import lazy_gettext
 from sqlalchemy.exc import StatementError
 
-from app.src import database, enums, utils
+from paper_eta.src import database, enums, utils
 
 bp = Blueprint('bookmark',
                __name__,

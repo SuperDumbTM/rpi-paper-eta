@@ -6,8 +6,8 @@ import webargs
 from flask import Blueprint, current_app, jsonify
 from flask_babel import lazy_gettext
 
-from app.src import database, models, site_data
-from app.src.libs import epdcon, eta_img, refresher
+from paper_eta.src import database, models, site_data
+from paper_eta.src.libs import epdcon, eta_img, refresher
 
 bp = Blueprint('api_display',
                __name__,
