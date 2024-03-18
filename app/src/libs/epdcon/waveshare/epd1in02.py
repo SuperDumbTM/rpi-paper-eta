@@ -8,10 +8,10 @@ sys.path.append(Path(__file__).parent.parent.parent)
 try:
     from .. import controller
 except ImportError:
-    from epcdon import controller
+    from epdcon import controller
 
 
-class Epd1in02(controller.DisplayController, controller.Partialable):
+class Epd1in02(controller.Controller, controller.Partialable):
 
     _inited = False
 

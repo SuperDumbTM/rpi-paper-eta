@@ -1,5 +1,5 @@
 from . import controller, waveshare
-from .controller import DisplayController, Partialable
+from .controller import Controller, Partialable
 
 __all__ = [
     controller,
@@ -11,7 +11,7 @@ def brands() -> tuple[str]:
     return ("waveshare",)
 
 
-def models(brand: str) -> list[type[DisplayController]]:
+def models(brand: str) -> list[type[Controller]]:
     try:
         import waveshare
     except ImportError:
@@ -27,7 +27,7 @@ def get(brand: str,
         model: str,
         *,
         is_partial: bool
-        ) -> DisplayController:
+        ) -> Controller:
     for controller in models(brand):
         if model == controller.__name__:
             return controller(is_partial)

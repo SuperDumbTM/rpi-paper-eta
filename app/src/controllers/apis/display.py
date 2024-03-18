@@ -7,7 +7,7 @@ from flask import Blueprint, current_app, jsonify
 from flask_babel import lazy_gettext
 
 from app.src import database, models, site_data
-from app.src.libs import epcdon, eta_img, refresher
+from app.src.libs import epdcon, eta_img, refresher
 
 bp = Blueprint('api_display',
                __name__,
@@ -125,7 +125,7 @@ def refresh(args):
 
     # ---------- initialise the e-paper controller ----------
     try:
-        controller = epcdon.get(app_conf.get('epd_brand'),
+        controller = epdcon.get(app_conf.get('epd_brand'),
                                 app_conf.get('epd_model'),
                                 is_partial=args['is_partial'])
     except (OSError, RuntimeError) as e:
@@ -180,7 +180,7 @@ def clear_screen():
         }), 400
 
     try:
-        controller = epcdon.get(app_conf.get('epd_brand'),
+        controller = epdcon.get(app_conf.get('epd_brand'),
                                 app_conf.get('epd_model'),
                                 is_partial=False)
         refresher.clear_screen(controller)

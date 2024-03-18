@@ -1,6 +1,6 @@
-from . import epcdon, eta_img
+from . import epdcon, eta_img
 
 __all__ = [
-    epcdon,
+    epdcon,
     eta_img,
 ]
