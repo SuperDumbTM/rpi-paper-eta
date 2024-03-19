@@ -43,3 +43,11 @@ def clean_pyc():
         pyf.unlink()
     for pyf in Path('.').rglob('__pycache__'):
         pyf.rmdir()
+
+
+@clean_cli.command('log')
+def clean_log():
+    if (not current_app.config.get('PATH_LOG_FILE').exists()):
+        return
+    with open(current_app.config.get('PATH_LOG_FILE'), 'w') as f:
+        return
