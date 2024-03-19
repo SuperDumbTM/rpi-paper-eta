@@ -1,12 +1,15 @@
 from typing import Optional
-from flask import current_app, request
+
+from flask import request
+
+from .. import extensions
 
 
 def get_locale() -> Optional[str]:
     crrt_locale = (request.cookies.get('locale')
                    or request.headers.get("X-Locale"))
     translations = [str(translation)
-                    for translation in current_app.config.get('I18N', [])]
+                    for translation in extensions.babel.list_translations()]
 
     if crrt_locale in translations:
         return crrt_locale
