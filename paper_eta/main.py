@@ -3,7 +3,7 @@ from pathlib import Path
 
 from flask import Flask
 
-from .src import commands, controllers, extensions, handles, models, utils
+from .src import cli, controllers, extensions, handles, models, utils
 
 
 def create_app() -> Flask:
@@ -37,8 +37,8 @@ def create_app() -> Flask:
     app.register_blueprint(controllers.apis.bookmark.bp)
 
     # cli registration
-    app.cli.add_command(commands.i18n_cli)
-    app.cli.add_command(commands.clean_cli)
+    app.cli.add_command(cli.i18n_cli)
+    app.cli.add_command(cli.clean_cli)
 
     # exception handler registration
     app.register_blueprint(handles.bp)
