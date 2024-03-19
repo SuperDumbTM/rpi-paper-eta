@@ -5,14 +5,22 @@ from pathlib import Path
 from flask.cli import AppGroup
 from flask import current_app
 
-i18n_cli = AppGroup('i18n')
-clean_cli = AppGroup('clean')
+clean_cli = AppGroup('clean', short_help="Remove cache or config files.")
+db_cli = AppGroup('db', short_help="Database utilities.")
+i18n_cli = AppGroup('i18n', short_help="Translation (Babel) utilities.")
 
 
 @i18n_cli.command('extract')
 def babel_extract():
-    subprocess.run(['pybabel', 'extract', '-F', 'babel.cfg',
-                   '-k', 'lazy_gettext', '-o', 'messages.pot', '.'])
+    subprocess.run(['pybabel',
+                    'extract',
+                    '-F',
+                    'babel.cfg',
+                   '-k',
+                    'lazy_gettext',
+                    '-o',
+                    'messages.pot',
+                    '.'])
 
 
 @i18n_cli.command('update')
