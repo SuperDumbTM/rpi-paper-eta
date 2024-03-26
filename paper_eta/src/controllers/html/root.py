@@ -30,7 +30,7 @@ def index():
                            images={
                                k: _img_2_b64(v)
                                for k, v in refresher.cached_images(
-                                   current_app.config['DIR_SCREEN_DUMP'].joinpath('epaper')).items()
+                                   current_app.config['DIR_SCREEN_DUMP']).items()
                            },
                            app_conf=app_conf)
 
