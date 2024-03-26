@@ -142,7 +142,7 @@ def refresh(args):
 
     # ---------- refresh the e-paper screen ----------
     try:
-        refresher.display_images(refresher.cached_images(current_app.config['EPD_IMG_DIR']),
+        refresher.display_images(refresher.cached_images(current_app.config['DIR_SCREEN_DUMP']),
                                  images,
                                  controller,
                                  False,
@@ -163,7 +163,7 @@ def refresh(args):
         }), 400
     else:
         epd_log.epdlog.put(epd_log.Log(**args))
-        generator.write_images(current_app.config['EPD_IMG_DIR'], images)
+        generator.write_images(current_app.config['DIR_SCREEN_DUMP'], images)
 
     return jsonify({
         'success': True,
