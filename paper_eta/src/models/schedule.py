@@ -16,7 +16,7 @@ class Schedule(BaseModel):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     schedule: Mapped[str]
-    eta_type: Mapped[str]
+    eta_format: Mapped[str]
     layout: Mapped[str]
     is_partial: Mapped[bool] = mapped_column(default=False)
     enabled: Mapped[bool] = mapped_column(default=False)
@@ -37,7 +37,7 @@ class Schedule(BaseModel):
                                      kwargs={
                                          'url': 'http://localhost:8192/api/display/refresh',
                                          'params': {
-                                             'eta_type': eta_img.enums.EtaType(self.eta_type),
+                                             'eta_format': eta_img.enums.EtaFormat(self.eta_format),
                                              'layout': self.layout,
                                              'is_partial': self.is_partial
                                          },

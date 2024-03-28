@@ -11,7 +11,7 @@ from . import eta_img
 class Log(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
 
-    eta_type: eta_img.enums.EtaType
+    eta_format: eta_img.enums.EtaFormat
     layout: str
     is_partial: bool
     timestamp: datetime = pydantic.Field(default_factory=datetime.now)
@@ -19,7 +19,7 @@ class Log(pydantic.BaseModel):
     error: Optional[BaseException] = None
 
     def model_dump_i18n(self) -> dict:
-        return self.model_dump() | {'eta_type': lazy_gettext(self.eta_type.value)}
+        return self.model_dump() | {'eta_format': lazy_gettext(self.eta_format.value)}
 
 
 class EpdLog:

@@ -45,10 +45,10 @@
             </div>
 
             <div class="form-group">
-                <label for="eta_type" class="form-label">{{ _('eta_type') }}</label>
-                <select class="form-select" name="eta_type" required>
-                    {% for type in eta_types %}
-                    {% if schedule.eta_type == type %}
+                <label for="eta_format" class="form-label">{{ _('eta_format') }}</label>
+                <select class="form-select" name="eta_format" required>
+                    {% for type in eta_formats %}
+                    {% if schedule.eta_format == type %}
                     <option value="{{ type.value }}" selected>
                         {{ _(type.value) }}
                     </option>
@@ -204,7 +204,7 @@
         $('input[name=schedule]').trigger('input')
 
         // trigger layout option update & select the previous choice if applicable
-        $('select[name=eta_type]').trigger('change')
+        $('select[name=eta_format]').trigger('change')
         $('#select-box input[value={{schedule.layout or "null"}}]').click()
 
         var cronstrue = window.cronstrue
@@ -237,7 +237,7 @@
         }
     })
 
-    $('select[name=eta_type]').change(function (e) {
+    $('select[name=eta_format]').change(function (e) {
         // update choices for layout
         let val = $('option:selected', this).val()
         let select = $('select[name=layout]')
@@ -259,7 +259,7 @@
                                         <button type="button"
                                             class="btn btn-sm btn-outline-success preview-btn"
                                             data-layout=${el.name}
-                                            data-eta_type=${val}    
+                                            data-eta_format=${val}    
                                         >
                                             {{ _('layout_preview') }}
                                         </button>
@@ -269,7 +269,7 @@
                             
                             <p class="card-text">
                                 <strong style="display: inline-block; width: 120px;">
-                                    {{ _('eta_type') ~ _(':') }}
+                                    {{ _('eta_format') ~ _(':') }}
                                 </strong>
                                 <span class="card-text-descr">${titleCase(val)}</span>
                             </p>
@@ -296,7 +296,7 @@
             url: "{{ url_for('api_display.image') }}",
             data: {
                 layout: $(this).data('layout'),
-                eta_type: $(this).data('eta_type')
+                eta_format: $(this).data('eta_format')
             },
             beforeSend: () => $.busyLoadFull('show'),
             complete: () => $.busyLoadFull('hide'),

@@ -143,5 +143,5 @@ class Epd3in7(EtaImageGenerator):
 
 if __name__ == "__main__":
     import enums
-    print(Epd3in7.layouts(enums.EtaType.MIXED))
+    print(Epd3in7.layouts(enums.EtaFormat.MIXED))
     print(Epd3in7.width)

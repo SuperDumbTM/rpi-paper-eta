@@ -36,7 +36,7 @@ def create():
                            schedule=models.Schedule(),
                            form_action=url_for('api_schedule.create'),
                            form_method='post',
-                           eta_types=eta_img.enums.EtaType,
+                           eta_formats=eta_img.enums.EtaFormat,
                            layouts=eta_img.generator.EtaImageGeneratorFactory.get_generator(
                                app_conf.get('epd_brand'), app_conf.get('epd_model')).layouts()
                            )
@@ -53,7 +53,7 @@ def edit(id: str):
                            schedule=models.Schedule.query.get_or_404(id),
                            form_action=url_for('api_schedule.update', id=id),
                            form_method='put',
-                           eta_types=eta_img.enums.EtaType,
+                           eta_formats=eta_img.enums.EtaFormat,
                            layouts=eta_img.generator.EtaImageGeneratorFactory.get_generator(
                                app_conf.get('epd_brand'), app_conf.get('epd_model')).layouts()
                            )

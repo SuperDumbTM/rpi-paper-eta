@@ -47,8 +47,8 @@ def get_layouts(args):
 
 @bp.route("/image")
 @webargs.flaskparser.use_args({
-    'eta_type': webargs.fields.String(
-        required=True, validate=webargs.validate.OneOf([t for t in eta_img.enums.EtaType])),
+    'eta_format': webargs.fields.String(
+        required=True, validate=webargs.validate.OneOf([t for t in eta_img.enums.EtaFormat])),
     'layout': webargs.fields.String(required=True),
 }, location="query")
 def image(args):
@@ -67,7 +67,7 @@ def image(args):
     try:
         generator = eta_img.generator.EtaImageGeneratorFactory().get_generator(
             app_conf.get('epd_brand'), app_conf.get('epd_model')
-        )(eta_img.enums.EtaType(args['eta_type']), args['layout'])
+        )(eta_img.enums.EtaFormat(args['eta_format']), args['layout'])
         images = refresher.generate_image(app_conf, bookmarks, generator)
     except KeyError:
         return jsonify({
@@ -92,8 +92,8 @@ def image(args):
 
 @bp.route("/refresh")
 @webargs.flaskparser.use_args({
-    'eta_type': webargs.fields.String(
-        required=True, validate=webargs.validate.OneOf([t for t in eta_img.enums.EtaType])),
+    'eta_format': webargs.fields.String(
+        required=True, validate=webargs.validate.OneOf([t for t in eta_img.enums.EtaFormat])),
     'layout': webargs.fields.String(required=True),
     'is_partial': webargs.fields.Boolean(required=True)
 }, location="query")
@@ -115,7 +115,7 @@ def refresh(args):
     try:
         generator = eta_img.generator.EtaImageGeneratorFactory().get_generator(
             app_conf.get('epd_brand'), app_conf.get('epd_model')
-        )(eta_img.enums.EtaType(args['eta_type']), args['layout'])
+        )(eta_img.enums.EtaFormat(args['eta_format']), args['layout'])
 
         images = refresher.generate_image(app_conf, bookmarks, generator)
     except KeyError:

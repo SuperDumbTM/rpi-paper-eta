@@ -66,8 +66,8 @@ def get(id: str):
     'schedule': webargs.fields.String(
         required=True, validate=lambda v: croniter.croniter.is_valid(v) and len(v.split(' ')) == 5,
         error_messages={'validator_failed': 'Invalid cron expression.'}),
-    'eta_type': webargs.fields.String(
-        required=True, validate=webargs.validate.OneOf([v.value for v in eta_img.enums.EtaType])),
+    'eta_format': webargs.fields.String(
+        required=True, validate=webargs.validate.OneOf([v.value for v in eta_img.enums.EtaFormat])),
     'layout': webargs.fields.String(required=True),
     'is_partial': webargs.fields.Boolean(required=True),
     'enabled': webargs.fields.Boolean(required=True),
@@ -88,8 +88,8 @@ def create(args):
         validate=lambda v: croniter.croniter.is_valid(
             v) and len(v.split(' ')) == 5,
         error_messages={'validator_failed': 'Invalid cron expression.'}),
-    'eta_type': webargs.fields.String(
-        validate=webargs.validate.OneOf([v.value for v in eta_img.enums.EtaType])),
+    'eta_format': webargs.fields.String(
+        validate=webargs.validate.OneOf([v.value for v in eta_img.enums.EtaFormat])),
     'layout': webargs.fields.String(),
     'is_partial': webargs.fields.Boolean(),
     'enabled': webargs.fields.Boolean(),

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-03-19 18:30+0800\n"
+"POT-Creation-Date: 2024-03-28 00:10+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -270,8 +270,8 @@ msgstr "Time"
 #: paper_eta/templates/schedule/form.jinja:48
 #: paper_eta/templates/schedule/form.jinja:272
 #: paper_eta/templates/schedule/list.jinja:43
-msgid "eta_type"
-msgstr "ETA Type"
+msgid "eta_format"
+msgstr "ETA Format"
 
 #: paper_eta/templates/index.jinja:101
 #: paper_eta/templates/schedule/form.jinja:65

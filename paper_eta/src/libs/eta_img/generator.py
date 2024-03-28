@@ -18,7 +18,7 @@ except ImportError:
 
 class EtaImageGenerator(ABC):
 
-    eta_type: enums.EtaType
+    eta_format: enums.EtaFormat
     # _data: dict[str, dict]
     fonts: "FontLoader"
 
@@ -29,9 +29,9 @@ class EtaImageGenerator(ABC):
         pass
 
     @classmethod
-    def layouts(cls) -> dict[enums.EtaType, list[dict[str, str]]]:
+    def layouts(cls) -> dict[enums.EtaFormat, list[dict[str, str]]]:
         layouts = {}
-        for mode in enums.EtaType:
+        for mode in enums.EtaFormat:
             layouts[mode] = [{
                 'name': layout['details']['name'],
                 'description': layout['details']['description']
@@ -48,11 +48,11 @@ class EtaImageGenerator(ABC):
         ) as f:
             return json.load(f)
 
-    def __init__(self, eta_type: enums.EtaType, layout_name: str) -> None:
-        self.eta_type = eta_type
+    def __init__(self, eta_format: enums.EtaFormat, layout_name: str) -> None:
+        self.eta_format = eta_format
         self.layout_name = layout_name
 
-        for layout in self.layout_data()[eta_type.value]['layouts']:
+        for layout in self.layout_data()[eta_format.value]['layouts']:
             if layout['details']['name'] == layout_name:
                 self._config = layout
                 self.fonts = FontLoader(layout['fonts'])

@@ -40,7 +40,7 @@
                 <thead>
                     <tr>
                         <th class="not-mobile">{{ _('no.') }}</th>
-                        <th>{{ _('eta_type') }}</th>
+                        <th>{{ _('eta_format') }}</th>
                         <th>{{ _('layout') }}</th>
                         <th>{{ _('schedule') }}</th>
                         <th class="not-mobile">{{ _('next_execution') }}</th>
@@ -83,7 +83,7 @@
                     return meta.row + 1;
                 }
             },
-            { data: 'eta_type' },
+            { data: 'eta_format' },
             { data: 'layout' },
             { data: 'schedule' },
             {
@@ -172,12 +172,12 @@
     });
 
     function refreshDisplay(id) {
-        function refresh(eta_type, layout, is_partial) {
+        function refresh(eta_format, layout, is_partial) {
             return $.ajax({
                 url: '{{ url_for("api_display.refresh")}}',
                 method: 'GET',
                 data: {
-                    eta_type: eta_type,
+                    eta_format: eta_format,
                     layout: layout,
                     is_partial: is_partial
                 },
@@ -192,7 +192,7 @@
                 if (res.success) {
                     schedule = res.data.schedule
                     refresh(
-                        schedule.eta_type, schedule.layout, schedule.is_partial
+                        schedule.eta_format, schedule.layout, schedule.is_partial
                     ).done(function (res, status, xhr) {
                         if (res.success) {
                             alertify.success(res.message)
