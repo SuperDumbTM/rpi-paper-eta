@@ -118,7 +118,7 @@ def display_images(old_images: dict[str, Image.Image],
     with _ctrl_mutex:
         try:
             controller.initialize()
-            if controller.is_partial and isinstance(controller, epdcon.Partialable):
+            if controller.is_partial and issubclass(type(controller), epdcon.Partialable):
                 controller.display_partial(old_images, images)
             else:
                 controller.display(images)
