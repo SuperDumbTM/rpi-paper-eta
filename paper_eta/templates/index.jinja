@@ -1,0 +1,129 @@
+{% extends "layout.jinja" %}
+
+{% block style %}
+<style>
+    .card-header {
+        background-color: var(--theme-4-color);
+    }
+</style>
+{% endblock style %}
+
+{% block nav %}
+{% include "includes/navbar.jinja" %}
+{% endblock nav %}
+
+{% block content %}
+<div class="container">
+
+    <div class="row my-3">
+        <div class="col-12">
+            {% include "includes/flash_success.jinja" %}
+            {% include "includes/flash_error.jinja" %}
+        </div>
+    </div>
+
+    <div class="row my-3">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    {{ _('E-Paper') ~ ' ' ~_('setting') }}
+                </div>
+                <div class="card-body">
+                    <p class="fw-bold mb-2">
+                        <i class="bi bi-building"></i> {{ _('brand')}}
+                    </p>
+                    <hr>
+                    {{ app_conf.get('epd_brand') | title }}
+
+                    <p class="fw-bold mb-2 mt-3">
+                        <i class="bi bi-building"></i> {{ _('model')}}
+                    </p>
+                    <hr>
+                    {{ app_conf.get('epd_model') | title }}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row my-3">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    {{ _('screen_content') }}
+                </div>
+                <div class="card-body">
+                    <p class="card-text text-muted">
+                        {{ _('screen_content_help') }}
+                    </p>
+
+                    <div class="row">
+                        {% for name, image in images.items() %}
+                        <div class="col-md-3 col-12 my-sm-0 my-1">
+                            <div class="card" style="width: 18rem; margin: auto;">
+                                <img class="m-2" src="data:image/bmp;base64, {{ image }}">
+
+                                <hr style="margin: unset;">
+
+                                <div class="card-body">
+                                    <span class="card-text">
+                                        {{ name | title }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    {% if images | length == 0%}
+                    <p class="text-danger">
+                        {{ _('no_data') }}
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row my-3">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    {{ _('refresh_history') }}
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">{{ _('time') }}</th>
+                                    <th scope="col">{{ _('eta_format') }}</th>
+                                    <th scope="col">{{ _('layout') }}</th>
+                                    <th scope="col">{{ _('is_partial') }}</th>
+                                    <th scope="col">{{ _('error') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for log in refresh_logs[:5] %}
+                                <tr class="{{ 'table-danger' if log.error else '' }}">
+                                    <td>{{ log.timestamp.strftime('%H:%M:%S') }}</td>
+                                    <td>{{ log.eta_format.value | title }}</td>
+                                    <td>{{ log.layout }}</td>
+                                    <td>{{ bool_to_icon(log.is_partial) }}</td>
+                                    <td class="not-mobile">{{ log.error or '' }}</td>
+                                </tr>
+                                {% endfor %}
+                                {% if refresh_logs | length == 0 %}
+                                <tr>
+                                    <td colspan="5" class="text-center">{{ _('no_record') }}</td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,389 @@
+{% from "macros/render_field.jinja" import render_field %}
+{% from "schedule/macros/cron_selector.jinja" import cron_selector %}
+
+{% extends "layout.jinja" %}
+
+{% block nav %}
+{% include "includes/navbar.jinja" %}
+{% endblock nav %}
+
+{% block style %}
+<style>
+    #select-box {
+        border-radius: 5px;
+        border: var(--bs-border-width) solid var(--bs-border-color);
+        padding: 20px;
+        height: 400px;
+    }
+</style>
+{% endblock style %}
+
+{% block content %}
+<div class="row align-items-center" style="height: 100vh;">
+    <div class="mx-auto col-10 col-md-8 col-lg-6">
+        <form action="{{ form_action }}" method="{{ form_method }}" autocomplete="off">
+
+            <h1>{{ _('new_schedule') }}</h1>
+            <small class="form-text text-mute">
+                {{ _('new_schedule_help') | safe }}
+            </small>
+
+            {% include "includes/flash_success.jinja" %}
+            {% include "includes/flash_error.jinja" %}
+
+            <div class="form-group">
+                <label for="schedule" class="form-label">{{ _('schedule') }}</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" name="schedule" placeholder="Cron Expression"
+                        value="{{ schedule.schedule or '' }}" required>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
+                        data-bs-target="#cron-configurator">
+                        <i class="bi bi-pencil-square"></i>
+                    </button>
+                </div>
+                <div class="form-text text-danger" id="cron-description">{{ _('unrecognised') }}</div>
+            </div>
+
+            <div class="form-group">
+                <label for="eta_format" class="form-label">{{ _('eta_format') }}</label>
+                <select class="form-select" name="eta_format" required>
+                    {% for type in eta_formats %}
+                    {% if schedule.eta_format == type %}
+                    <option value="{{ type.value }}" selected>
+                        {{ _(type.value) }}
+                    </option>
+                    {% else %}
+                    <option value="{{ type.value }}">
+                        {{ _(type.value) }}
+                    </option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="layout" class="form-label">{{ _('layout') }}</label>
+                <div class="overflow-auto" id="select-box">
+                    {# filled by Javascript #}
+                </div>
+            </div>
+
+            <div class="form-check form-switch">
+                {% if schedule.is_partial %}
+                <input class="form-check-input" type="checkbox" name="is_partial" checked>
+                {% else %}
+                <input class="form-check-input" type="checkbox" name="is_partial">
+                {% endif %}
+                <label class="form-check-label">{{ _('partial_refresh') }}</label>
+                <div class="form-text">
+                    {{ _('partial_refresh_help') }}
+                </div>
+                <div class="form-text text-warning">
+                    {{ _('partial_refresh_limit_help') }}
+                </div>
+            </div>
+
+            <div class="form-check form-switch">
+                {% if schedule.enabled %}
+                <input class="form-check-input" type="checkbox" name="enabled" checked>
+                {% else %}
+                <input class="form-check-input" type="checkbox" name="enabled">
+                {% endif %}
+                <label class="form-check-label">{{ _('enable') }}</label>
+            </div>
+
+            <input class="btn btn-primary btn-customized mt-4" id="submit" name="submit" type="submit"
+                value="{{ _('submit') }}">
+        </form>
+    </div>
+</div>
+{% endblock content %}
+
+{% block footer %}
+<!-- Modal -->
+<div class="modal fade" id="cron-configurator" tabindex="-1">
+    {# modal-dialog-centered #}
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ _('execute_time') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#minute" data-bs-toggle="tab">
+                            {{ _('minute') }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#hour" data-bs-toggle="tab">
+                            {{ _('hour') }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#month-day" data-bs-toggle="tab">
+                            {{ _('date') }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#month" data-bs-toggle="tab">
+                            {{ _('month') }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#week-day" data-bs-toggle="tab">
+                            {{ _('day_of_week') }}
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="tab-content" style="margin-top: 10px;">
+                    {{ cron_selector('minute', list(zip(range(60), range(60))), True) }}
+                    {{ cron_selector('hour', list(zip(range(24), range(24)))) }}
+                    {{ cron_selector('month-day', list(zip(range(1, 32, 1), range(1, 32, 1)))) }}
+                    {{ cron_selector('month', list(zip(range(1, 13, 1), range(1, 13, 1)))) }}
+                    {{
+                    cron_selector('week-day', list(zip(range(0, 7, 1),
+                    [
+                    _('monday'),
+                    _('tuesday'),
+                    _('wednesday'),
+                    _('thursday'),
+                    _('friday'),
+                    _('saturday'),
+                    _('sunday')
+                    ]))
+                    )
+                    }}
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _('cancel') }}</button>
+                <button type="button" class="btn btn-primary">{{ _('complete') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="preview-md">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">{{ _('layout_preview') }}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body"></div>
+        </div>
+    </div>
+</div>
+
+{% endblock footer %}
+
+{% block script %}
+<script src="https://unpkg.com/cronstrue@latest/dist/cronstrue.min.js" async></script>
+<script src="https://unpkg.com/cronstrue@latest/locales/zh_TW.min.js" async></script>
+
+<script>
+
+    const LAYOUT = {{ layouts | tojson }}
+
+    $(document).ready(function () {
+        $('.cron-mode').each(function (idx, el) {
+            // need to acticvate the tab to trigger the mode layout update
+            // https://stackoverflow.com/a/77581119
+            bootstrap.Tab.getOrCreateInstance($('#cron-configurator a.nav-link')[idx]).show()
+            $(el).trigger('change')
+        })
+        bootstrap.Tab.getOrCreateInstance($($('#cron-configurator a.nav-link')[0])).show()
+
+
+        $('input[name=schedule]').trigger('input')
+
+        // trigger layout option update & select the previous choice if applicable
+        $('select[name=eta_format]').trigger('change')
+        $('#select-box input[value={{schedule.layout or "null"}}]').click()
+
+        var cronstrue = window.cronstrue
+
+        autoJsonFrom($('form'), {
+            success: function (res) {
+                if (res.success) {
+                    window.location.href = "{{ url_for('schedule.index') }}"
+                } else {
+                    alertify.error(res.message)
+                }
+            }
+        })
+    })
+
+    $('select.cron-mode').change(function (e) {
+        // display the respected selector
+        let mode = $('option:selected', this).val()
+        let tabPane = $(this).closest('.tab-pane.active')
+
+        tabPane.children('.cron-selector').slideUp()
+
+        switch (mode) {
+            case 'step':
+                tabPane.children('.cron-step-selector').slideDown()
+                break
+            case 'choice':
+                tabPane.children('.cron-choice-selector').slideDown()
+                break
+        }
+    })
+
+    $('select[name=eta_format]').change(function (e) {
+        // update choices for layout
+        let val = $('option:selected', this).val()
+        let select = $('select[name=layout]')
+
+        $('#select-box').html('')
+        LAYOUT[val].forEach(function (el) {
+            $('#select-box').append(`
+                <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title" style="line-height: unset;">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="layout"
+                                        value="${el.name}" checked required>
+                                    <input class="form-check-input" type="radio" name="layout"
+                                        value="${el.name}" required>
+                                    <label class="form-check-label">${(el.name)}</label>
+
+                                    <div class="float-end">
+                                        <button type="button"
+                                            class="btn btn-sm btn-outline-success preview-btn"
+                                            data-layout=${el.name}
+                                            data-eta_format=${val}    
+                                        >
+                                            {{ _('layout_preview') }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </h5>
+                            
+                            <p class="card-text">
+                                <strong style="display: inline-block; width: 120px;">
+                                    {{ _('eta_format') ~ _(':') }}
+                                </strong>
+                                <span class="card-text-descr">${titleCase(val)}</span>
+                            </p>
+
+                            <hr>
+
+                            <p class="card-text">
+                                ${el.description.en}
+                            </p>
+                            <p class="card-text">
+                                ${el.description.zh_Hant_HK}
+                            </p>
+                        </div>
+                    </div>
+            `)
+        })
+    })
+
+    $(document).on('click', '.preview-btn', function (e) {
+        let container = $('#preview-md .modal-body')
+        container.html(null)
+
+        $.ajax({
+            url: "{{ url_for('api_display.image') }}",
+            data: {
+                layout: $(this).data('layout'),
+                eta_format: $(this).data('eta_format')
+            },
+            beforeSend: () => $.busyLoadFull('show'),
+            complete: () => $.busyLoadFull('hide'),
+            success: function (res, status, xhr) {
+                if (res.success) {
+                    Object.entries(res.data.images).forEach(function (entry) {
+                        const [key, value] = entry;
+                        container.append(`
+                            <div class="card my-1" style="width: 18rem; margin: auto;">
+                                <img class="m-2" src="data:image/bmp;base64, ${value}">
+
+                                <hr>
+
+                                <div class="card-body">
+                                    <span class="card-text">
+                                        ${key}
+                                    </span>
+                                </div>
+                            </div>
+                        `)
+                    })
+
+                    $('#preview-md').modal('show')
+                } else {
+                    alertify.error(res.message)
+                }
+            }
+        })
+    })
+
+    $('select.cron-step-from').change(function (e) {
+        // enable/disable step-from input field
+        let val = $('option:selected', this).val()
+        let target = $(this)
+            .closest('.form-group')
+            .siblings('.form-group')
+            .find('select.cron-step-to')
+
+        target.prop('disabled', !$.isNumeric(val))
+    })
+
+    $('#cron-configurator .modal-footer>.btn-primary').click(function (e) {
+        // gather inputs and generate the schedule
+
+        let schedule = []
+        $('#cron-configurator .tab-pane').each(function (idx, el) {
+            let mode = $('select.cron-mode', el).val()
+
+            switch (mode) {
+                case 'step':
+                    let section = $('.cron-step-selector', el)
+
+                    let choice = $('select.cron-step-from :selected', section).val()
+                    let to = $('select.cron-step-to :selected', section).val()
+                    let repeat = $('select.cron-step-repeat :selected', section).val()
+
+                    if (!$('select.cron-step-to', section).is(':disabled') && to != "*") {
+                        choice = choice.concat(`-${to}`)
+                    }
+
+                    schedule.push(repeat ? `${choice}/${repeat}` : choice)
+                    break
+                case 'choice':
+                    let choices = []
+                    $('.cron-choice-selector input:checked', el).each(function (idx, el) {
+                        choices.push($(el).val())
+                    })
+                    schedule.push(choices.join(',') || '*')
+                    break
+            }
+        })
+
+        $('input[name=schedule]').val(schedule.join(' ')).trigger('input')
+        $(this).closest('.modal').modal('hide')
+    })
+
+    $('input[name=schedule]').on('input change keyup', function (e) {
+        // display the description of the schedule input
+        let callout = $('#cron-description')
+        try {
+            callout.text(cronstrue.toString($(this).val(), { locale: "zh_TW" }))
+            callout.removeClass('text-danger').addClass('text-success')
+        } catch (error) {
+            callout.text("{{ _('unrecognised') }}")
+            callout.removeClass('text-success').addClass('text-danger')
+        }
+    })
+
+</script>
+{% endblock script %}
