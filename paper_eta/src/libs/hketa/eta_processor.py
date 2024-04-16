@@ -1,26 +1,20 @@
 import asyncio
-import os
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta
-from pathlib import Path
 
 import pytz
 
 try:
-    from . import api, enums, exceptions, models, predictor
+    from . import api, enums, exceptions, models
     from .route import Route
 except (ImportError, ModuleNotFoundError):
     import api
     import enums
     import exceptions
     import models
-    import predictor
     from route import Route
 
 _GMT8_TZ = pytz.timezone('Asia/Hong_kong')
-_DATASET_PATH = Path(os.environ.get('APP_CACHE_PATH',
-                                    str(Path(__file__).parents[3].joinpath('caches')))) \
-    .joinpath('datasets')
 
 
 def _8601str(dt: datetime) -> str:
@@ -79,14 +73,9 @@ class KmbEta(EtaProcessor):
         #   Timestamps include tzinfo (GMT+8)
         #   Remark (ETA) at "rmk_{locale}"
 
-        predictor_ = predictor.KmbPredictor(
-            _DATASET_PATH,
-            self.route.provider
-        )
-
         response = asyncio.run(self.raw_etas())
         timestamp = datetime.fromisoformat(response['generated_timestamp'])
-        locale = self._locale_map[self.route.entry.lang]
+        locale = self._locale_map[self.route.entry.locale]
         etas = []
 
         for stop in response['data']:
@@ -106,15 +95,6 @@ class KmbEta(EtaProcessor):
                 eta=_8601str(eta_dt),
                 eta_minute=int((eta_dt - timestamp).total_seconds() / 60),
                 remark=stop[f'rmk_{locale}'],
-                extras=models.Eta.Extras(accuracy=predictor_.predict(self.route.entry.no,
-                                                                     self.route.entry.direction,
-                                                                     self.route.stop_seq(),
-                                                                     datetime.fromisoformat(
-                                                                         stop['data_timestamp']),
-                                                                     datetime.fromisoformat(
-                                                                         stop['eta']),
-                                                                     stop['rmk_en'],
-                                                                     ))
             ))
 
             if len(etas) == 3:
@@ -147,18 +127,13 @@ class MtrBusEta(EtaProcessor):
         #   Remark (route) at "routeStatusRemarkTitle" & "routeStatusRemarkContent"
         #   Remark (stop) at "busStopStatusRemarkTitle" & "busStopStatusRemarkContent"
 
-        predictor_ = predictor.MtrBusPredictor(
-            _DATASET_PATH,
-            self.route.provider
-        )
-
         response = asyncio.run(self.raw_etas())
         timestamp = datetime.strptime(response["routeStatusTime"], "%Y/%m/%d %H:%M") \
             .replace(tzinfo=pytz.timezone('Etc/GMT-8'))
         etas = []
 
         for stop in response["busStop"]:
-            if stop["busStopId"] != self.route.entry.stop:
+            if stop["busStopId"] != self.route.entry.stop_id:
                 continue
 
             for eta in stop["bus"]:
@@ -170,20 +145,15 @@ class MtrBusEta(EtaProcessor):
                     # eta TimeText has numbers (e.g. 3 分鐘/3 Minutes)
                     eta_sec = int(eta[f'{time_ref}TimeInSecond'])
                     etas.append(models.Eta(
-                        destination=self.route.destination().name.get(self.route.entry.lang),
+                        destination=self.route.destination().name.get(self.route.entry.locale),
                         is_arriving=False,
                         is_scheduled=eta['busLocation']['longitude'] == 0,
                         eta=_8601str(timestamp + timedelta(seconds=eta_sec)),
                         eta_minute=eta[f'{time_ref}TimeText'].split(" ")[0],
-                        extras=models.Eta.Extras(accuracy=predictor_.predict(self.route.entry.no,
-                                                                             self.route.entry.direction,
-                                                                             self.route.entry.stop,
-                                                                             timestamp,
-                                                                             timestamp + timedelta(seconds=eta_sec)))
                     ))
                 else:
                     etas.append(models.Eta(
-                        destination=self.route.destination().name.get(self.route.entry.lang),
+                        destination=self.route.destination().name.get(self.route.entry.locale),
                         is_arriving=True,
                         is_scheduled=eta['busLocation']['longitude'] == 0,
                         eta=_8601str(datetime.now().astimezone(_GMT8_TZ)),
@@ -203,7 +173,7 @@ class MtrBusEta(EtaProcessor):
         #  elif data["routeStatusRemarkTitle"] == "停止服務":
         #      raise EndOfServices
         response = await api.mtr_bus_eta(
-            self.route.name(), self._locale_map[self.route.entry.lang])
+            self.route.name(), self._locale_map[self.route.entry.locale])
 
         if len(response) == 0:
             raise exceptions.APIError
@@ -228,7 +198,7 @@ class MtrLrtEta(EtaProcessor):
         response = asyncio.run(self.raw_etas())
         timestamp = datetime.fromisoformat(response['system_time']) \
             .replace(tzinfo=pytz.timezone('Etc/GMT-8'))
-        lang_code = self._locale_map[self.route.entry.lang]
+        lang_code = self._locale_map[self.route.entry.locale]
         etas = []
 
         for platform in response['platform_list']:
@@ -237,7 +207,7 @@ class MtrLrtEta(EtaProcessor):
                 # 751P have no destination and eta
                 destination = eta.get(f'dest_{lang_code}')
                 if (eta['route_no'] != self.route.entry.no
-                        or destination != self.route.destination().name.get(self.route.entry.lang)):
+                        or destination != self.route.destination().name.get(self.route.entry.locale)):
                     continue
 
                 # e.g. 3 分鐘 / 即將抵達
@@ -272,7 +242,7 @@ class MtrLrtEta(EtaProcessor):
         return etas
 
     async def raw_etas(self) -> dict[str | int]:
-        response = await api.mtr_lrt_eta(self.route.entry.stop)
+        response = await api.mtr_lrt_eta(self.route.entry.stop_id)
 
         if len(response) == 0 or response.get('status', 0) == 0:
             raise exceptions.APIError
@@ -302,7 +272,7 @@ class MtrTrainEta(EtaProcessor):
             .replace(tzinfo=pytz.timezone('Etc/GMT-8'))
         etas = []
 
-        etadata = response['data'][f'{self.linename}-{self.route.entry.stop}'].get(
+        etadata = response['data'][f'{self.linename}-{self.route.entry.stop_id}'].get(
             self.direction, [])
         for entry in etadata:
             eta_dt = datetime.fromisoformat(entry["time"]) \
@@ -310,7 +280,7 @@ class MtrTrainEta(EtaProcessor):
             etas.append(models.Eta(
                 destination=(self.route.stop_details(entry['dest'])
                              .name
-                             .get(self.route.entry.lang)),
+                             .get(self.route.entry.locale)),
                 is_arriving=(eta_dt - timestamp).total_seconds() < 90,
                 is_scheduled=False,
                 eta=_8601str(eta_dt),
@@ -322,8 +292,8 @@ class MtrTrainEta(EtaProcessor):
 
     async def raw_etas(self) -> dict[str | int]:
         response = await api.mtr_train_eta(self.linename,
-                                           self.route.entry.stop,
-                                           self.route.entry.lang)
+                                           self.route.entry.stop_id,
+                                           self.route.entry.locale)
         if len(response) == 0:
             raise exceptions.APIError
         if response.get('status', 0) == 0:
@@ -333,7 +303,7 @@ class MtrTrainEta(EtaProcessor):
                 raise exceptions.AbnormalService(response['message'])
             raise exceptions.APIError
 
-        if response['data'][f'{self.linename}-{self.route.entry.stop}'].get(self.direction) is None:
+        if response['data'][f'{self.linename}-{self.route.entry.stop_id}'].get(self.direction) is None:
             raise exceptions.EmptyEta
         else:
             return response
@@ -350,7 +320,7 @@ class BravoBusEta(EtaProcessor):
 
         response = asyncio.run(self.raw_etas())
         timestamp = datetime.fromisoformat(response['generated_timestamp'])
-        lang_code = self._locale_map[self.route.entry.lang]
+        lang_code = self._locale_map[self.route.entry.locale]
         etas = []
 
         for eta in response['data']:
@@ -380,8 +350,8 @@ class BravoBusEta(EtaProcessor):
         return etas
 
     async def raw_etas(self) -> dict[str | int]:
-        response = await api.bravobus_eta(self.route.entry.company.value,
-                                          self.route.entry.stop,
+        response = await api.bravobus_eta(self.route.entry.transport.value,
+                                          self.route.entry.stop_id,
                                           self.route.entry.no)
         if len(response) == 0 or response.get('data') is None:
             raise exceptions.APIError
@@ -414,7 +384,7 @@ class NlbEta(EtaProcessor):
 
             etas.append(models.Eta(
                 destination=(
-                    self.route.destination().name.get(self.route.entry.lang)),
+                    self.route.destination().name.get(self.route.entry.locale)),
                 is_arriving=(eta_dt - timestamp).total_seconds() < 60,
                 is_scheduled=not (eta.get('departed') == '1'
                                   and eta.get('noGPS') == '1'),
@@ -428,8 +398,8 @@ class NlbEta(EtaProcessor):
 
     async def raw_etas(self) -> dict[str | int]:
         response = await api.nlb_eta(self.route.id(),
-                                     self.route.entry.stop,
-                                     self._lang_map[self.route.entry.lang])
+                                     self.route.entry.stop_id,
+                                     self._lang_map[self.route.entry.locale])
 
         if len(response) == 0:
             # incorrect parameter will result in a empty json response
