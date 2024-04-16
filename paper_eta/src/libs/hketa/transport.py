@@ -5,11 +5,10 @@ import json
 import logging
 import os
 from abc import ABC, abstractmethod
-from dataclasses import asdict, is_dataclass
 from datetime import datetime
 from functools import cmp_to_key
 from pathlib import Path
-from typing import Any, Generator, Optional
+from typing import Any, Optional
 
 import aiohttp
 
@@ -20,32 +19,6 @@ except ImportError:
     import enums
     import exceptions
     import models
-
-_DIRLOGO = os.path.join(os.path.dirname(__file__), "logo", "mono_neg")
-_TODAY = datetime.utcnow().isoformat(timespec="seconds")
-"""Today's date (ISO-8601 datetime)"""
-
-
-def singleton(cls):
-    instances = {}
-
-    def wrapper(*args, **kwargs):
-        if cls not in instances:
-            instances[cls] = cls(*args, **kwargs)
-        return instances[cls]
-    return wrapper
-
-
-class _DataclassJSONEncoder(json.JSONEncoder):
-    """Encoder with dataclass support
-
-    Reference: https://stackoverflow.com/a/51286749
-    """
-
-    def default(self, o):
-        if is_dataclass(o):
-            return asdict(o)
-        return super().default(o)
 
 
 class Transport(ABC):
@@ -82,8 +55,8 @@ class Transport(ABC):
         """Path to \"route\" data directory"""
         return self._root.joinpath('routes')
 
-    @classmethod
-    def _put_data_file(cls, path: os.PathLike, data) -> None:
+    @staticmethod
+    def _put_data_file(path: os.PathLike, data) -> None:
         """Write `data` to local file system.
         """
         path = Path(str(path))
@@ -91,94 +64,45 @@ class Transport(ABC):
             os.makedirs(path.parent)
 
         with open(path, "w", encoding="utf-8") as f:
-            logging.info("Saving %s data to %s", type(cls).__name__, path)
-            json.dump({'last_update': _TODAY, 'data': data},
-                      f,
-                      indent=4,
-                      cls=_DataclassJSONEncoder)
+            json.dump(
+                {
+                    'last_update': datetime.now().isoformat(timespec="seconds"),
+                    'data': data
+                },
+                f,
+                indent=4
+            )
+
+    @staticmethod
+    def _route_fname(no: str,
+                     direction: enums.Direction,
+                     service_type: str) -> str:
+        return f"{no.upper()}-{direction.value.lower()}-{service_type.lower()}.json"
 
     def __init__(self,
                  root: os.PathLike[str] = None,
-                 store_local: bool = False,
                  threshold: int = 30) -> None:
-        if store_local and root is None:
-            raise TypeError("No directory is provided for storing data files.")
-
-        logging.debug(
-            "Expiry threshold:\t%d\nStore to local:\t%s\nDirectory:\t%s",
-            threshold, 'yes' if store_local else 'no', root)
 
         self._root = Path(str(root)).joinpath(self.__path_prefix__)
-        self.is_store = store_local
-        self.threshold = threshold
-
-        if store_local and not self._root.exists():
+        if not self._root.exists():
             logging.info("'%s' does not exists, creating...", root)
             os.makedirs(self.stops_list_dir)
 
-        self.routes = self.route_list()
-
-    @abstractmethod
-    def logo(self) -> io.BufferedReader:
-        """Get the company logo in bytes"""
-
-    @abstractmethod
-    async def fetch_route_list(self) -> dict[str, dict[str, list]]:
-        """Fetch the route list and route details from API
-
-        Returns:
-            >>> example
-            {
-                '<route name>': {
-                    'inbound': [{
-                        'service_type': str,
-                        'seq': int,
-                        'name': {
-                            '<locale>': str
-                        }    
-                    }],
-                    'outbound': list
-                }
-            }
-        """
-
-    @abstractmethod
-    async def fetch_stop_list(self,
-                              route_no: str,
-                              direction: enums.Direction,
-                              service_type: str) -> list[dict[str, Any]]:
-        """Fetch the stop list of a the `entry` and stop details from API
-
-        Returns:
-            >>> example
-                [{
-                    'stop_code': str
-                    'seq': int,
-                    'name': {
-                        '<locale>': str
-                    }
-                }]
-        """
+        self.threshold = threshold
 
     def route_list(self) -> dict[str, models.RouteInfo]:
         """Retrive all route list and data operating by the operator.
 
         Create/update local cache when necessary.
         """
-        if not self.is_store:
-            logging.info("retiving %s routes data (no store is set)",
-                         type(self).__name__)
-            routes = asyncio.run(self.fetch_route_list())
-        elif self._is_outdated(self.route_list_path):
-            logging.info("%s route list cache is outdated or not exists, updating...",
-                         type(self).__name__)
+        if self._is_outdated(self.route_list_path):
+            routes = asyncio.run(self._fetch_route_list())
 
-            routes = asyncio.run(self.fetch_route_list())
+            logging.info("%s's route list cache is outdated or not exists, updating...",
+                         str(self.company))
             self._put_data_file(self.route_list_path, routes)
         else:
             with open(self.route_list_path, "r", encoding="utf-8") as f:
-                logging.debug("Loading route list stop list from %s",
-                              self.route_list_path)
                 routes = json.load(f)['data']
 
         return {
@@ -190,13 +114,13 @@ class Transport(ABC):
                         route_id=rt_type.get('route_id'),
                         service_type=rt_type['service_type'],
                         orig=models.RouteInfo.Stop(
-                            stop_code=rt_type['orig']['stop_code'],
+                            stop_id=rt_type['orig']['stop_id'],
                             seq=rt_type['orig']['seq'],
                             name={
                                 enums.Locale[locale.upper()]: text for locale, text in rt_type['orig']['name'].items()}
                         ),
                         dest=models.RouteInfo.Stop(
-                            stop_code=rt_type['dest']['stop_code'],
+                            stop_id=rt_type['dest']['stop_id'],
                             seq=rt_type['dest']['seq'],
                             name={
                                 enums.Locale[locale.upper()]: text for locale, text in rt_type['dest']['name'].items()}
@@ -208,13 +132,13 @@ class Transport(ABC):
                         route_id=rt_type.get('route_id'),
                         service_type=rt_type['service_type'],
                         orig=models.RouteInfo.Stop(
-                            stop_code=rt_type['orig']['stop_code'],
+                            stop_id=rt_type['orig']['stop_id'],
                             seq=rt_type['orig']['seq'],
                             name={
                                 enums.Locale[locale.upper()]: text for locale, text in rt_type['orig']['name'].items()}
                         ),
                         dest=models.RouteInfo.Stop(
-                            stop_code=rt_type['dest']['stop_code'],
+                            stop_id=rt_type['dest']['stop_id'],
                             seq=rt_type['dest']['seq'],
                             name={
                                 enums.Locale[locale.upper()]: text for locale, text in rt_type['dest']['name'].items()}
@@ -227,48 +151,41 @@ class Transport(ABC):
     def stop_list(self,
                   route_no: str,
                   direction: enums.Direction,
-                  service_type: str) -> Generator[models.RouteInfo.Stop, None, None]:
+                  service_type: str) -> tuple[models.RouteInfo.Stop]:
         """Retrive stop list and data of the `route`.
 
         Create/update local cache when necessary.
         """
-        if route_no not in self.routes.keys():
+        if route_no not in self.route_list().keys():
             raise exceptions.RouteNotExist(route_no)
 
         fpath = os.path.join(self.stops_list_dir,
-                             self.route_fname(route_no, direction, service_type))
+                             self._route_fname(route_no, direction, service_type))
 
-        if not self.is_store:
-            # logging.info("Retiving %s route data (no store is set)", route_id)
+        if self._is_outdated(fpath):
             stops = asyncio.run(
-                self.fetch_stop_list(route_no, direction, service_type))
-        elif self._is_outdated(fpath):
-            # logging.info(
-            #     "%s stop list cache is outdated, updating...", route_id)
-            stops = asyncio.run(
-                self.fetch_stop_list(route_no, direction, service_type))
+                self._fetch_stop_list(route_no, direction, service_type))
+
+            logging.info(
+                "%s stop list cache is outdated, updating...", route_no)
             self._put_data_file(
-                self.stops_list_dir.joinpath(self.route_fname(route_no, direction, service_type)), stops)
+                self.stops_list_dir.joinpath(self._route_fname(route_no, direction, service_type)), stops)
         else:
             with open(fpath, "r", encoding="utf-8") as f:
-                # logging.debug("Loading %s stop list from %s", route_id, fpath)
                 stops = json.load(f)['data']
-        return (models.RouteInfo.Stop(**stop) for stop in stops)
 
-    def route_fname(self,
-                    no: str,
-                    direction: enums.Direction,
-                    service_type: str) -> str:
-        """Get file name of target `entry` stop data
+        return tuple(models.RouteInfo.Stop(**stop) for stop in stops)
 
-        Args:
-            entry (route_entry.RouteEntry): Target route
+    @abstractmethod
+    async def _fetch_route_list(self) -> dict[str, dict[str, list]]:
+        pass
 
-        Returns:
-            str: Name of the route data file 
-                (e.g. "1A-outbound-1.json", "TML-outbound.json")
-        """
-        return f"{no.upper()}-{direction.value.lower()}-{service_type.lower()}.json"
+    @abstractmethod
+    async def _fetch_stop_list(self,
+                               route_no: str,
+                               direction: enums.Direction,
+                               service_type: str) -> list[dict[str, Any]]:
+        pass
 
     def _is_outdated(self, fpath: os.PathLike) -> bool:
         """Determine whether a data file is outdated.
@@ -283,12 +200,11 @@ class Transport(ABC):
         if fpath.exists():
             with open(fpath, "r", encoding="utf-8") as f:
                 lastupd = datetime.fromisoformat(json.load(f)['last_update'])
-                return (datetime.utcnow() - lastupd).days > self.threshold
+                return (datetime.now() - lastupd).days > self.threshold
         else:
             return True
 
 
-@singleton
 class KowloonMotorBus(Transport):
     __path_prefix__ = "kmb"
 
@@ -302,7 +218,7 @@ class KowloonMotorBus(Transport):
     def company(self) -> enums.Transport:
         return enums.Transport.KMB
 
-    async def fetch_route_list(self) -> dict:
+    async def _fetch_route_list(self) -> dict:
         async def fetch_route_details(session: aiohttp.ClientSession,
                                       stop: dict) -> dict:
             """Fetch the terminal stops details for the `stop`
@@ -310,14 +226,15 @@ class KowloonMotorBus(Transport):
             direction = self._bound_map[stop['bound']]
             stop_list = (await api.kmb_route_stop_list(
                 stop['route'], direction, stop['service_type'], session))['data']
+
             return {
                 'name': stop['route'],
                 'direction': direction,
-                'terminal': {
+                'details': {
                     'route_id': f"{stop['route']}_{direction}_{stop['service_type']}",
                     'service_type': stop['service_type'],
                     'orig': {
-                        'stop_code': stop_list[0]['stop'],
+                        'stop_id': stop_list[0]['stop'],
                         'seq': int(stop_list[0]['seq']),
                         'name': {
                             enums.Locale.EN.value: stop.get('orig_en', "N/A"),
@@ -325,7 +242,7 @@ class KowloonMotorBus(Transport):
                         }
                     },
                     'dest': {
-                        'stop_code': stop_list[-1]['stop'],
+                        'stop_id': stop_list[-1]['stop'],
                         'seq': int(stop_list[-1]['seq']),
                         'name': {
                             enums.Locale.EN.value: stop.get('dest_en', "N/A"),
@@ -345,23 +262,23 @@ class KowloonMotorBus(Transport):
                 route_list.setdefault(
                     route['name'], {'inbound': [], 'outbound': []})
                 # service type
-                route_list[route['name']][route['direction']].append(
-                    route['terminal'])
+                route_list[route['name']][route['direction']] \
+                    .append(route['details'])
         return route_list
 
-    async def fetch_stop_list(self,
-                              route_no: str,
-                              direction: enums.Direction,
-                              service_type: str) -> dict:
-        if route_no not in self.routes.keys():
+    async def _fetch_stop_list(self,
+                               route_no: str,
+                               direction: enums.Direction,
+                               service_type: str) -> dict:
+        if route_no not in self.route_list().keys():
             raise exceptions.RouteNotExist(route_no)
 
         async def fetch_stop_details(session: aiohttp.ClientSession, stop: dict):
-            """Fetch `stop_code`, `seq`, `name` of the 'stop'
+            """Fetch `stop_id`, `seq`, `name` of the 'stop'
             """
             dets = (await api.kmb_stop_details(stop['stop'], session))['data']
             return {
-                'stop_code': stop['stop'],
+                'stop_id': stop['stop'],
                 'seq': stop['seq'],
                 'name': {
                     enums.Locale.TC.value: dets.get('name_tc'),
@@ -380,11 +297,7 @@ class KowloonMotorBus(Transport):
                 f"{route_no}/{direction.value}/{service_type}")
         return stops
 
-    def logo(self) -> io.BufferedReader:
-        return open(os.path.join(_DIRLOGO, "kmb.bmp"), "rb")
 
-
-@singleton
 class MTRBus(Transport):
     __path_prefix__ = "mtr_bus"
 
@@ -398,7 +311,7 @@ class MTRBus(Transport):
     def company(self) -> enums.Transport:
         return enums.Transport.MTRBUS
 
-    async def fetch_route_list(self) -> dict:
+    async def _fetch_route_list(self) -> dict:
         route_list = {}
         apidata = csv.reader(await api.mtr_bus_stop_list())
         next(apidata)  # ignore header line
@@ -412,10 +325,10 @@ class MTRBus(Transport):
             if row[2] == "1.00" or row[2] == "1":
                 # orignal
                 route_list[row[0]][direction].append({
-                    'route_id': f"{row[0]}_{direction}_default",
+                    'stop_id': f"{row[0]}_{direction}_default",
                     'service_type': "default",
                     'orig': {
-                        'stop_code': row[3],
+                        'stop_id': row[3],
                         'seq': int(row[2].strip(".00")),
                         'name': {enums.Locale.EN: row[7], enums.Locale.TC: row[6]}
                     },
@@ -424,16 +337,16 @@ class MTRBus(Transport):
             else:
                 # destination
                 route_list[row[0]][direction][0]['dest'] = {
-                    'stop_code': row[3],
+                    'stop_id': row[3],
                     'seq': int(row[2].strip(".00")),
                     'name': {enums.Locale.EN: row[7], enums.Locale.TC: row[6]}
                 }
         return route_list
 
-    async def fetch_stop_list(self,
-                              route_no: str,
-                              direction: enums.Direction,
-                              service_type: str) -> dict:
+    async def _fetch_stop_list(self,
+                               route_no: str,
+                               direction: enums.Direction,
+                               service_type: str) -> dict:
         if (service_type != "default"):
             raise exceptions.ServiceTypeNotExist(service_type)
 
@@ -445,16 +358,13 @@ class MTRBus(Transport):
 
         if len(stops) == 0:
             raise exceptions.RouteNotExist(route_no)
-        return [{'stop_code': stop[3],
-                 'seq': int(stop[2].strip(".00")),
-                 'name': {enums.Locale.TC: stop[6], enums.Locale.EN: stop[7]}
-                 } for stop in stops]
-
-    def logo(self) -> io.BufferedReader:
-        return open(os.path.join(_DIRLOGO, "mtr_bus.bmp"), "rb")
+        return [{
+                'stop_id': stop[3],
+                'seq': int(stop[2].strip(".00")),
+                'name': {enums.Locale.TC: stop[6], enums.Locale.EN: stop[7]}
+                } for stop in stops]
 
 
-@singleton
 class MTRLightRail(Transport):
     __path_prefix__ = 'mtr_lrt'
 
@@ -468,7 +378,7 @@ class MTRLightRail(Transport):
     def company(self) -> enums.Transport:
         return enums.Transport.MTRLRT
 
-    async def fetch_route_list(self) -> dict:
+    async def _fetch_route_list(self) -> dict:
         route_list = {}
         apidata = csv.reader(await api.mtr_lrt_route_stop_list())
         next(apidata)  # ignore the header line
@@ -485,7 +395,7 @@ class MTRLightRail(Transport):
                     'route_id': f"{row[0]}_{direction}_default",
                     'service_type': "default",
                     'orig': {
-                        'stop_code': row[3],
+                        'stop_id': row[3],
                         'seq': row[6],
                         'name': {enums.Locale.EN: row[5], enums.Locale.TC: row[4]}
                     },
@@ -494,19 +404,19 @@ class MTRLightRail(Transport):
             else:
                 # destination
                 route_list[row[0]][direction][0]['dest'] = {
-                    'stop_code': row[3],
+                    'stop_id': row[3],
                     'seq': row[6],
                     'name': {enums.Locale.EN.value: row[5], enums.Locale.TC.value: row[4]}
                 }
         return route_list
 
-    async def fetch_stop_list(self,
-                              route_no: str,
-                              direction: enums.Direction,
-                              service_type: str) -> dict:
+    async def _fetch_stop_list(self,
+                               route_no: str,
+                               direction: enums.Direction,
+                               service_type: str) -> dict:
         if (service_type != "default"):
             raise exceptions.ServiceTypeNotExist(service_type)
-        if route_no not in self.routes.keys():
+        if route_no not in self.route_list().keys():
             raise exceptions.RouteNotExist(route_no)
 
         apidata = csv.reader(await api.mtr_lrt_route_stop_list())
@@ -515,16 +425,12 @@ class MTRLightRail(Transport):
 
         if len(stops) == 0:
             raise exceptions.RouteNotExist(route_no)
-        return [{'stop_code': stop[3],
+        return [{'stop_id': stop[3],
                  'seq': int(stop[6].strip('.00')),
                  'name': {enums.Locale.TC.value: stop[4], enums.Locale.EN.value: stop[5]}
                  } for stop in stops]
 
-    def logo(self) -> io.BufferedReader:
-        return open(os.path.join(_DIRLOGO, "mtr_lrt.bmp"), "rb")
 
-
-@singleton
 class MTRTrain(Transport):
     __path_prefix__ = 'mtr_train'
 
@@ -538,7 +444,7 @@ class MTRTrain(Transport):
     def company(self) -> enums.Transport:
         return enums.Transport.MTRTRAIN
 
-    async def fetch_route_list(self) -> dict:
+    async def _fetch_route_list(self) -> dict:
         route_list = {}
         apidata = csv.reader(await api.mtr_train_route_stop_list())
         next(apidata)  # ignore header line
@@ -564,7 +470,7 @@ class MTRTrain(Transport):
                     'route_id': f"{row[0]}_{direction}_default",
                     'service_type': "default",
                     'orig': {
-                        'stop_code': row[2],
+                        'stop_id': row[2],
                         'seq': int(row[6].strip(".00")),
                         'name': {enums.Locale.EN.value: row[5], enums.Locale.TC.value: row[4]}
                     },
@@ -573,19 +479,19 @@ class MTRTrain(Transport):
             else:
                 # destination
                 route_list[row[0]][direction][0]['dest'] = {
-                    'stop_code': row[2],
+                    'stop_id': row[2],
                     'seq': int(row[6].strip(".00")),
                     'name': {enums.Locale.EN.value: row[5], enums.Locale.TC.value: row[4]}
                 }
         return route_list
 
-    async def fetch_stop_list(self,
-                              route_no: str,
-                              direction: enums.Direction,
-                              service_type: str) -> dict:
+    async def _fetch_stop_list(self,
+                               route_no: str,
+                               direction: enums.Direction,
+                               service_type: str) -> dict:
         if (service_type != "default"):
             raise exceptions.ServiceTypeNotExist(service_type)
-        if route_no not in self.routes.keys():
+        if route_no not in self.route_list().keys():
             raise exceptions.RouteNotExist(route_no)
 
         apidata = csv.reader(await api.mtr_train_route_stop_list())
@@ -603,16 +509,12 @@ class MTRTrain(Transport):
 
         if len(stops) == 0:
             raise exceptions.RouteNotExist(route_no)
-        return [{'stop_code': stop[2],
+        return [{'stop_id': stop[2],
                  'seq': int(stop[-1].strip('.00')),
                  'name': {enums.Locale.TC.value: stop[4], enums.Locale.EN.value: stop[5]}
                  } for stop in stops]
 
-    def logo(self) -> io.BufferedReader:
-        return open(os.path.join(_DIRLOGO, "mtr_train.bmp"), "rb")
 
-
-@singleton
 class CityBus(Transport):
     __path_prefix__ = 'ctb'
 
@@ -620,7 +522,7 @@ class CityBus(Transport):
     def company(self) -> enums.Transport:
         return enums.Transport.CTB
 
-    async def fetch_route_list(self) -> dict:
+    async def _fetch_route_list(self) -> dict:
         async def fetch_route_details(session: aiohttp.ClientSession,
                                       route: dict) -> dict:
             """Fetch the terminal stops details (all direction) for the `route`
@@ -646,7 +548,7 @@ class CityBus(Transport):
                     'route_id': f"{route['route']}_{direction}_default",
                     'service_type': "default",
                     'orig': {
-                        'stop_code': stop_list[0]['stop'],
+                        'stop_id': stop_list[0]['stop'],
                         'seq': stop_list[0]['seq'],
                         'name': {
                             enums.Locale.EN.value: ends[0]['data'].get('name_en', "N/A"),
@@ -654,7 +556,7 @@ class CityBus(Transport):
                         }
                     },
                     'dest': {
-                        'stop_code': stop_list[-1]['stop'],
+                        'stop_id': stop_list[-1]['stop'],
                         'seq': stop_list[-1]['seq'],
                         'name': {
                             enums.Locale.EN.value: ends[-1]['data'].get('name_en', "N/A"),
@@ -672,21 +574,21 @@ class CityBus(Transport):
             return {list(route.keys())[0]: route[list(route.keys())[0]]
                     for route in await asyncio.gather(*tasks)}
 
-    async def fetch_stop_list(self,
-                              route_no: str,
-                              direction: enums.Direction,
-                              service_type: str) -> dict:
+    async def _fetch_stop_list(self,
+                               route_no: str,
+                               direction: enums.Direction,
+                               service_type: str) -> dict:
         if (service_type != "default"):
             raise exceptions.ServiceTypeNotExist(service_type)
-        if route_no not in self.routes.keys():
+        if route_no not in self.route_list().keys():
             raise exceptions.RouteNotExist(route_no)
 
         async def fetch_stop_details(session: aiohttp.ClientSession, stop: dict):
-            """Fetch `stop_code`, `seq`, `name` of the 'stop'
+            """Fetch `stop_id`, `seq`, `name` of the 'stop'
             """
             dets = (await api.bravobus_stop_details(stop['stop'], session))['data']
             return {
-                'stop_code': stop['stop'],
+                'stop_id': stop['stop'],
                 'seq': int(stop['seq']),
                 'name': {
                     enums.Locale.EN.value: dets.get('name_en', "N/A"),
@@ -705,11 +607,7 @@ class CityBus(Transport):
                 raise exceptions.RouteNotExist(route_no)
             return stop_list
 
-    def logo(self) -> io.BufferedReader:
-        return open(os.path.join(_DIRLOGO, "ctb.bmp"), "rb")
 
-
-@singleton
 class NewLantaoBus(Transport):
 
     __path_prefix__ = 'nlb'
@@ -718,7 +616,7 @@ class NewLantaoBus(Transport):
     def company(self) -> enums.Transport:
         return enums.Transport.NLB
 
-    async def fetch_route_list(self) -> dict:
+    async def _fetch_route_list(self) -> dict:
         output = {}
 
         async def fetch_route_details(route: dict, session: aiohttp.ClientSession):
@@ -729,12 +627,12 @@ class NewLantaoBus(Transport):
                 "route_no": route['routeNo'],
                 "route_id": route['routeId'],
                 "orig": {
-                    "stop_code": stops[0]['stopId'],
+                    "stop_id": stops[0]['stopId'],
                     "seq": 1,
                     "name": {"en": stops[0]['stopName_e'], "tc": stops[0]['stopName_c']}
                 },
                 "dest": {
-                    "stop_code": stops[-1]['stopId'],
+                    "stop_id": stops[-1]['stopId'],
                     "seq": len(stops),
                     "name": {"en": stops[-1]['stopName_e'], "tc": stops[-1]['stopName_c']}
                 }
@@ -785,23 +683,23 @@ class NewLantaoBus(Transport):
 
         return output
 
-    async def fetch_stop_list(self,
-                              route_no: str,
-                              direction: enums.Direction,
-                              service_type: str) -> list[dict[str, Any]]:
+    async def _fetch_stop_list(self,
+                               route_no: str,
+                               direction: enums.Direction,
+                               service_type: str) -> list[dict[str, Any]]:
         # TODO: service type checking
-        if route_no not in self.routes.keys():
+        if route_no not in self.route_list().keys():
             raise exceptions.RouteNotExist(route_no)
 
         if isinstance(direction, str):
             direction = enums.Direction(direction)
         # route ID lookup
-        route_id = self.routes[route_no] \
+        route_id = self.route_list()[route_no] \
             .service_lookup(direction, service_type) \
             .route_id
 
         return [{
-            'stop_code': stop['stopId'],
+            'stop_id': stop['stopId'],
             'seq': idx,
             'name': {
                 enums.Locale.TC.value: stop['stopName_c'],
@@ -813,3 +711,8 @@ class NewLantaoBus(Transport):
     def logo(self) -> io.BufferedReader:
         """Get the company logo in bytes"""
         raise NotImplementedError
+
+
+if __name__ == '__main__':
+    c = MTRBus('.')
+    c.route_list()

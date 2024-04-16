@@ -23,44 +23,30 @@ class EtaFactory:
 
     def __init__(self,
                  data_path: os.PathLike = None,
-                 store: bool = False,
                  threshold: int = 30) -> None:
         self.data_path = data_path
-        self.store = store
         self.threshold = threshold
 
-    def create_transport(self, company: enums.Transport) -> transport.Transport:
-        match company:
+    def create_transport(self, transport_: enums.Transport) -> transport.Transport:
+        match transport_:
             case enums.Transport.KMB:
-                return transport.KowloonMotorBus(self.data_path,
-                                                 self.store,
-                                                 self.threshold)
+                return transport.KowloonMotorBus(self.data_path, self.threshold)
             case enums.Transport.MTRBUS:
-                return transport.MTRBus(self.data_path,
-                                        self.store,
-                                        self.threshold)
+                return transport.MTRBus(self.data_path, self.threshold)
             case enums.Transport.MTRLRT:
-                return transport.MTRLightRail(self.data_path,
-                                              self.store,
-                                              self.threshold)
+                return transport.MTRLightRail(self.data_path, self.threshold)
             case enums.Transport.MTRTRAIN:
-                return transport.MTRTrain(self.data_path,
-                                          self.store,
-                                          self.threshold)
+                return transport.MTRTrain(self.data_path, self.threshold)
             case enums.Transport.CTB:
-                return transport.CityBus(self.data_path,
-                                         self.store,
-                                         self.threshold)
+                return transport.CityBus(self.data_path, self.threshold)
             case enums.Transport.NLB:
-                return transport.NewLantaoBus(self.data_path,
-                                              self.store,
-                                              self.threshold)
+                return transport.NewLantaoBus(self.data_path, self.threshold)
             case _:
-                raise ValueError(f"Unrecognized company: {company}")
+                raise ValueError(f"Unrecognized transport: {transport_}")
 
-    def create_eta_processor(self, entry: models.RouteEntry) -> eta_processor.EtaProcessor:
-        route = Route(entry, self.create_transport(entry.company))
-        match entry.company:
+    def create_eta_processor(self, query: models.RouteQuery) -> eta_processor.EtaProcessor:
+        route = Route(query, self.create_transport(query.transport))
+        match query.transport:
             case enums.Transport.KMB:
                 return eta_processor.KmbEta(route)
             case enums.Transport.MTRBUS:
@@ -74,4 +60,4 @@ class EtaFactory:
             case enums.Transport.NLB:
                 return eta_processor.NlbEta(route)
             case _:
-                raise ValueError(f"Unrecognized company: {entry.company}")
+                raise ValueError(f"Unrecognized transport: {query.transport}")

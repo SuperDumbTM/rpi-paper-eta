@@ -1,9 +1,7 @@
-# pylint: disable=unnecessary-lambda
-
+from datetime import datetime
 from typing import Optional
-from pydantic import Field
 
-from pydantic.dataclasses import dataclass
+import pydantic
 
 try:
     from . import enums
@@ -11,29 +9,24 @@ except (ImportError, ModuleNotFoundError):
     import enums
 
 
-@dataclass(slots=True)
-class RouteEntry:
+class RouteQuery(pydantic.BaseModel):
 
-    company: enums.Transport
+    transport: enums.Transport
     no: str
     """route number"""
     direction: enums.Direction
-    stop: str
+    stop_id: str
     """stop ID"""
     service_type: str
-    lang: enums.Locale
-
-    def __post_init__(self):
-        self.no = str(self.no).upper()
+    locale: enums.Locale
 
 
-@dataclass(slots=True)
-class RouteInfo:
+class RouteInfo(pydantic.BaseModel):
 
     company: enums.Transport
     route_no: str
-    inbound: list["Detail"] = Field(default_factory=list)
-    outbound: list["Detail"] = Field(default_factory=list)
+    inbound: list["Detail"] = pydantic.Field(default_factory=list)
+    outbound: list["Detail"] = pydantic.Field(default_factory=list)
 
     def bound(self, bound: enums.Direction) -> list["Detail"]:
         return (self.inbound
@@ -45,24 +38,21 @@ class RouteInfo:
                 return detail
         raise KeyError(f"Invalid service type: {service_type}")
 
-    @dataclass(slots=True, frozen=True)
-    class Stop:
-
-        stop_code: str
-        seq: int
-        name: dict[enums.Locale, str]
-
-    @dataclass(slots=True, frozen=True)
-    class Detail:
+    class Detail(pydantic.BaseModel):
 
         service_type: str
         route_id: Optional[str] = None
         orig: Optional["RouteInfo.Stop"] = None
         dest: Optional["RouteInfo.Stop"] = None
 
+    class Stop(pydantic.BaseModel):
 
-@dataclass(slots=True, frozen=True)
-class Eta:
+        stop_id: str
+        seq: int
+        name: dict[enums.Locale, str]
+
+
+class Eta(pydantic.BaseModel):
 
     destination: str
     is_arriving: bool
@@ -71,15 +61,12 @@ class Eta:
     is_scheduled: bool
     """Indicate whether the ETA is based on realtime information or based on schedule.
     """
-    eta: Optional[str] = None
-    eta_minute: Optional[int] = None
-    remark: Optional[str] = None
-    extras: "Eta.Extras" = Field(default_factory=lambda: Eta.Extras())
+    eta: Optional[datetime] = None
+    remark: str = ''
+    extras: "Eta.Extras" = pydantic.Field(default_factory=lambda: Eta.Extras())
 
-    @dataclass(slots=True, frozen=True)
-    class Extras:
+    class Extras(pydantic.BaseModel):
 
         platform: Optional[str] = None
         car_length: Optional[int] = None
         route_variant: Optional[str] = None
-        accuracy: Optional[int] = None
