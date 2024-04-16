@@ -7,7 +7,7 @@ class Locale(str, Enum):
     TC = "tc"
     EN = "en"
 
-    def description(self) -> str:
+    def text(self) -> str:
         match self:
             case Locale.TC:
                 return "繁體中文"
@@ -26,7 +26,7 @@ class Transport(str, Enum):
     NWFB = "nwfb"
     NLB = "nlb"
 
-    def description(self, language: Locale = Locale.TC) -> str:
+    def text(self, language: Locale = Locale.TC) -> str:
         if language == Locale.EN:
             match self:
                 case Transport.KMB: return "KMB"
@@ -51,7 +51,7 @@ class Direction(str, Enum):
     OUTBOUND = UPLINK = "outbound"
     INBOUND = DOWNLINK = "inbound"
 
-    def description(self, language: Locale = Locale.TC) -> str:
+    def text(self, language: Locale = Locale.TC) -> str:
         match language, self:
             case Locale.TC, Direction.OUTBOUND:
                 return "去程"
@@ -70,7 +70,7 @@ class StopType(str, Enum):
     STOP = MIDWAY = "stop"
     DEST = DESTINATION = "dest"
 
-    def description(self, language: Locale = Locale.TC) -> "StopType":
+    def text(self, language: Locale = Locale.TC) -> "StopType":
         match language, self:
             case Locale.TC, StopType.ORIG | StopType.ORIGINATION:
                 return "起點站"
