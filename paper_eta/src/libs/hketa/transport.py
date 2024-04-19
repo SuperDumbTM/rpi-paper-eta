@@ -4,7 +4,7 @@ import io
 import json
 import logging
 import os
-from abc import ABC, abstractmethod
+from abc import ABC, ABCMeta, abstractmethod
 from datetime import datetime
 from functools import cmp_to_key
 from pathlib import Path
@@ -21,7 +21,44 @@ except ImportError:
     import models
 
 
-class Transport(ABC):
+def stop_list_fname(no: str,
+                    direction: enums.Direction,
+                    service_type: str) -> str:
+    """Get the file name of the stop list file.
+    """
+    return f"{no.upper()}-{direction.value.lower()}-{service_type.lower()}.json"
+
+
+def _append_timestamp(data: dict) -> dict[str,]:
+    return {
+        'last_update': datetime.now().isoformat(timespec="seconds"),
+        'data': data
+    }
+
+
+def _put_data_file(path: os.PathLike, data) -> None:
+    """Write `data` to local file system encoded in JSON format.
+    """
+    path = Path(str(path))
+    if not path.parent.exists():
+        os.makedirs(path.parent)
+
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4)
+
+
+class _SingletonABCMeta(ABCMeta):
+
+    _instances = {}
+
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(
+                _SingletonABCMeta, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
+
+
+class Transport(ABC, metaclass=_SingletonABCMeta):
     """
         Public Transport
         ~~~~~~~~~~~~~~~~~~~~~
@@ -37,8 +74,8 @@ class Transport(ABC):
         Args:
             route_data (RouteData): RouteData instance for `Transport` retriving routes information
     """
-
     __path_prefix__: Optional[str]
+    _routes: dict[str,]
 
     @property
     @abstractmethod
@@ -54,30 +91,6 @@ class Transport(ABC):
     def stops_list_dir(self) -> Path:
         """Path to \"route\" data directory"""
         return self._root.joinpath('routes')
-
-    @staticmethod
-    def _put_data_file(path: os.PathLike, data) -> None:
-        """Write `data` to local file system.
-        """
-        path = Path(str(path))
-        if not path.parent.exists():
-            os.makedirs(path.parent)
-
-        with open(path, "w", encoding="utf-8") as f:
-            json.dump(
-                {
-                    'last_update': datetime.now().isoformat(timespec="seconds"),
-                    'data': data
-                },
-                f,
-                indent=4
-            )
-
-    @staticmethod
-    def _route_fname(no: str,
-                     direction: enums.Direction,
-                     service_type: str) -> str:
-        return f"{no.upper()}-{direction.value.lower()}-{service_type.lower()}.json"
 
     def __init__(self,
                  root: os.PathLike[str] = None,
@@ -95,15 +108,27 @@ class Transport(ABC):
 
         Create/update local cache when necessary.
         """
-        if self._is_outdated(self.route_list_path):
-            routes = asyncio.run(self._fetch_route_list())
+        if '_routes' in self.__dict__.keys() and not self._is_outdated(self._routes):
+            return self._routes['data']
 
-            logging.info("%s's route list cache is outdated or not exists, updating...",
+        try:
+            with open(self.route_list_path, 'r', encoding='UTF-8') as f:
+                self._routes = json.load(f)
+        except (FileNotFoundError, PermissionError):
+            logging.info("%s's route list cache do not exists, updating...",
                          str(self.company))
-            self._put_data_file(self.route_list_path, routes)
-        else:
-            with open(self.route_list_path, "r", encoding="utf-8") as f:
-                routes = json.load(f)['data']
+
+            self._routes = _append_timestamp(
+                asyncio.run(self._fetch_route_list()))
+            _put_data_file(self.route_list_path, self._routes)
+
+        if self._is_outdated(self._routes):
+            logging.info("%s's route list cache is outdated, updating...",
+                         str(self.company))
+
+            self._routes = _append_timestamp(
+                asyncio.run(self._fetch_route_list()))
+            _put_data_file(self.route_list_path, self._routes)
 
         return {
             route: models.RouteInfo(
@@ -145,7 +170,7 @@ class Transport(ABC):
                         )
                     ) for rt_type in direction['outbound']
                 ]
-            ) for route, direction in routes.items()
+            ) for route, direction in self._routes['data'].items()
         }
 
     def stop_list(self,
@@ -160,16 +185,18 @@ class Transport(ABC):
             raise exceptions.RouteNotExist(route_no)
 
         fpath = os.path.join(self.stops_list_dir,
-                             self._route_fname(route_no, direction, service_type))
+                             stop_list_fname(route_no, direction, service_type))
 
         if self._is_outdated(fpath):
-            stops = asyncio.run(
-                self._fetch_stop_list(route_no, direction, service_type))
-
             logging.info(
                 "%s stop list cache is outdated, updating...", route_no)
-            self._put_data_file(
-                self.stops_list_dir.joinpath(self._route_fname(route_no, direction, service_type)), stops)
+
+            stops = asyncio.run(
+                self._fetch_stop_list(route_no, direction, service_type))
+            _put_data_file(
+                self.stops_list_dir.joinpath(stop_list_fname(
+                    route_no, direction, service_type)),
+                _append_timestamp(stops))
         else:
             with open(fpath, "r", encoding="utf-8") as f:
                 stops = json.load(f)['data']
@@ -187,22 +214,20 @@ class Transport(ABC):
                                service_type: str) -> list[dict[str, Any]]:
         pass
 
-    def _is_outdated(self, fpath: os.PathLike) -> bool:
-        """Determine whether a data file is outdated.
-
-        Args:
-            fpath (str): File path
-
-        Returns:
-            bool: `true` if file not exists or outdated
+    def _is_outdated(self, target: str | dict[str, datetime]) -> bool:
+        """Determine whether the data is outdated.
         """
-        fpath = Path(str(fpath))
-        if fpath.exists():
-            with open(fpath, "r", encoding="utf-8") as f:
-                lastupd = datetime.fromisoformat(json.load(f)['last_update'])
-                return (datetime.now() - lastupd).days > self.threshold
+        if type(target) == str:
+            fpath = Path(str(target))
+            if fpath.exists():
+                with open(fpath, "r", encoding="utf-8") as f:
+                    lastupd = datetime.fromisoformat(
+                        json.load(f)['last_update'])
+            else:
+                return True
         else:
-            return True
+            lastupd = datetime.fromisoformat(target['last_update'])
+        return (datetime.now() - lastupd).days > self.threshold
 
 
 class KowloonMotorBus(Transport):
@@ -715,4 +740,6 @@ class NewLantaoBus(Transport):
 
 if __name__ == '__main__':
     c = MTRBus('.')
-    c.route_list()
+
+    print('K76' in c.route_list().keys())
+    c.stop_list('K76', enums.Direction.INBOUND, 'default')
