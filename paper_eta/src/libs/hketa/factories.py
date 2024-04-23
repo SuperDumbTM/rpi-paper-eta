@@ -15,9 +15,6 @@ class EtaFactory:
 
     data_path: os.PathLike
 
-    store: bool
-    """Indicator of storing routes data to local or not"""
-
     threshold: int
     """Expiry threshold of the local routes data file"""
 

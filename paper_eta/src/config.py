@@ -43,8 +43,8 @@ SQLALCHEMY_DATABASE_URI = os.getenv(
     'SQLALCHEMY_DATABASE_URI', "sqlite:///{}".format(DIR_STORAGE.joinpath('app.db')))
 
 # hketa
-PATH_HKETA_DATA = Path(
-    os.getenv('PATH_HKETA_DATA', DIR_STORAGE).joinpath('hketa'))
+HKETA_PATH_DATA = Path(
+    os.getenv('HKETA_PATH_DATA', DIR_STORAGE).joinpath('hketa'))
 HKETA_THRESHOLD = int(os.getenv('HKETA_THRESHOLD', 30))
 
 LOGGING_CONFIG = {

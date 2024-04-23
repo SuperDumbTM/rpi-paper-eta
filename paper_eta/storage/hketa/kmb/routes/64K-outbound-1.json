@@ -1,0 +1,469 @@
+{
+    "last_update": "2024-04-23T18:41:07",
+    "data": [
+        {
+            "stop_id": "C7ACD35D5D7C153B",
+            "seq": "1",
+            "name": {
+                "tc": "\u5143\u6717\uff08\u897f\uff09\u7e3d\u7ad9",
+                "en": "YUEN LONG (WEST) BUS TERMINUS"
+            }
+        },
+        {
+            "stop_id": "D54B0CA58FE5559D",
+            "seq": "2",
+            "name": {
+                "tc": "\u5143\u6717\u540c\u6a02\u8857 (N12)",
+                "en": "TUNG LOK STREET YUEN LONG (N12)"
+            }
+        },
+        {
+            "stop_id": "445B2A02DB891CA9",
+            "seq": "3",
+            "name": {
+                "tc": "\u5143\u6717\u8c37\u4ead\u8857 (N14)",
+                "en": "KUK TING STREET YUEN LONG (N14)"
+            }
+        },
+        {
+            "stop_id": "0C943B7308FF4DCC",
+            "seq": "4",
+            "name": {
+                "tc": "\u5f62\u9ede II",
+                "en": "YOHO MALL II"
+            }
+        },
+        {
+            "stop_id": "73CDC61EBA1C9431",
+            "seq": "5",
+            "name": {
+                "tc": "\u5f62\u9ede I",
+                "en": "YOHO MALL I"
+            }
+        },
+        {
+            "stop_id": "D9AB3B959A46E411",
+            "seq": "6",
+            "name": {
+                "tc": "\u535a\u611b\u91ab\u9662",
+                "en": "POK OI HOSPITAL"
+            }
+        },
+        {
+            "stop_id": "36DC37F6A54BA5E0",
+            "seq": "7",
+            "name": {
+                "tc": "\u6771\u6210\u91cc",
+                "en": "TUNG SHING LEI"
+            }
+        },
+        {
+            "stop_id": "F5FA7ED5D5A6860D",
+            "seq": "8",
+            "name": {
+                "tc": "\u51f9\u982d",
+                "en": "AU TAU"
+            }
+        },
+        {
+            "stop_id": "D05C7D74301D47C5",
+            "seq": "9",
+            "name": {
+                "tc": "\u4e0b\u9ad8\u57d4\u6751",
+                "en": "HA KO PO TSUEN"
+            }
+        },
+        {
+            "stop_id": "41C9D989B8B874FF",
+            "seq": "10",
+            "name": {
+                "tc": "\u9ad8\u57d4\u6751",
+                "en": "KO PO TSUEN"
+            }
+        },
+        {
+            "stop_id": "E67CDE5E499A9529",
+            "seq": "11",
+            "name": {
+                "tc": "\u8499\u990a\u5c0f\u5b78",
+                "en": "MUNG YEUNG SCHOOL"
+            }
+        },
+        {
+            "stop_id": "F11894F005F25CAB",
+            "seq": "12",
+            "name": {
+                "tc": "\u7960\u5802\u6751",
+                "en": "TSZ TONG TSUEN"
+            }
+        },
+        {
+            "stop_id": "6D76943277DC18FF",
+            "seq": "13",
+            "name": {
+                "tc": "\u6c99\u7530\u5751\u6751",
+                "en": "SHA TIN HANG TSUEN"
+            }
+        },
+        {
+            "stop_id": "E909A45B1FB3213B",
+            "seq": "14",
+            "name": {
+                "tc": "\u9326\u4e0a\u8def\u7ad9",
+                "en": "KAM SHEUNG ROAD STATION"
+            }
+        },
+        {
+            "stop_id": "13211112A23954EC",
+            "seq": "15",
+            "name": {
+                "tc": "\u6c99\u7530\u5751",
+                "en": "SHA TIN HANG"
+            }
+        },
+        {
+            "stop_id": "3502ABD7492B8C56",
+            "seq": "16",
+            "name": {
+                "tc": "\u5433\u5bb6\u6751",
+                "en": "NG KA TSUEN"
+            }
+        },
+        {
+            "stop_id": "B20A1163984772C9",
+            "seq": "17",
+            "name": {
+                "tc": "\u516b\u9109\u65b0\u99ac\u8def",
+                "en": "SAN MA LO PAT HEUNG"
+            }
+        },
+        {
+            "stop_id": "8D47F8C7AA27FCB8",
+            "seq": "18",
+            "name": {
+                "tc": "\u91d1\u9322\u570d",
+                "en": "KAM TSIN WAI"
+            }
+        },
+        {
+            "stop_id": "7AA3F7F89AD36B1B",
+            "seq": "19",
+            "name": {
+                "tc": "\u77f3\u6e56\u5858",
+                "en": "SHEK WU TONG"
+            }
+        },
+        {
+            "stop_id": "180648AA12CF6725",
+            "seq": "20",
+            "name": {
+                "tc": "\u7530\u5fc3\u6751",
+                "en": "TIN SAM TSUEN"
+            }
+        },
+        {
+            "stop_id": "7525EA3D297065CC",
+            "seq": "21",
+            "name": {
+                "tc": "\u516b\u9109\u516b\u9109\u8def",
+                "en": "PAT HEUNG ROAD PAT HEUNG"
+            }
+        },
+        {
+            "stop_id": "BC3E701090D7E56E",
+            "seq": "22",
+            "name": {
+                "tc": "\u5143\u5d17\u6751",
+                "en": "YUEN KONG TSUEN"
+            }
+        },
+        {
+            "stop_id": "8DDFE8598C7DA354",
+            "seq": "23",
+            "name": {
+                "tc": "\u516b\u9109\u6771\u908a\u8def",
+                "en": "TUNG PIN ROAD PAT HEUNG"
+            }
+        },
+        {
+            "stop_id": "8A0B04DDC3B321A4",
+            "seq": "24",
+            "name": {
+                "tc": "\u6c34\u76de\u7530",
+                "en": "SHUI TSAN TIN"
+            }
+        },
+        {
+            "stop_id": "076E1AA3258C5D0A",
+            "seq": "25",
+            "name": {
+                "tc": "\u6c34\u6d41\u7530",
+                "en": "SHUI LAU TIN"
+            }
+        },
+        {
+            "stop_id": "2FE9CA5CC344B5A3",
+            "seq": "26",
+            "name": {
+                "tc": "\u84ee\u82b1\u5730",
+                "en": "LIN FA TEI"
+            }
+        },
+        {
+            "stop_id": "AEE5D5FDC38650DB",
+            "seq": "27",
+            "name": {
+                "tc": "\u9ece\u5c4b\u6751",
+                "en": "LAI UK TSUEN"
+            }
+        },
+        {
+            "stop_id": "B1E11C753EE8DC31",
+            "seq": "28",
+            "name": {
+                "tc": "\u675c\u5c4b\u6751",
+                "en": "DAO UK TSUEN"
+            }
+        },
+        {
+            "stop_id": "B3CCAA9D93647348",
+            "seq": "29",
+            "name": {
+                "tc": "\u5f35\u5c4b\u6751",
+                "en": "CHEUNG UK TSUEN"
+            }
+        },
+        {
+            "stop_id": "2D7EF40DC9C35085",
+            "seq": "30",
+            "name": {
+                "tc": "\u4e0a\u6751\u7403\u5834",
+                "en": "SHEUNG TSUEN PLAYGROUND"
+            }
+        },
+        {
+            "stop_id": "D9D98D036444BE88",
+            "seq": "31",
+            "name": {
+                "tc": "\u4e0a\u6751\u752b",
+                "en": "SHEUNG TSUEN PO"
+            }
+        },
+        {
+            "stop_id": "0BAD689F3AEEC4C6",
+            "seq": "32",
+            "name": {
+                "tc": "\u9ec3\u7af9\u5712",
+                "en": "WONG CHUK YUEN"
+            }
+        },
+        {
+            "stop_id": "BE84FA588F92AFA9",
+            "seq": "33",
+            "name": {
+                "tc": "\u51cc\u96f2\u5bfa",
+                "en": "LING WAN TEMPLE"
+            }
+        },
+        {
+            "stop_id": "76361DD9F5A6CF6A",
+            "seq": "34",
+            "name": {
+                "tc": "\u5609\u9053\u7406\u8fb2\u5834",
+                "en": "KADOORIE FARM"
+            }
+        },
+        {
+            "stop_id": "66E828043D886A9F",
+            "seq": "35",
+            "name": {
+                "tc": "\u725b\u6b04\u7aa9",
+                "en": "NGAU LEN WO"
+            }
+        },
+        {
+            "stop_id": "5242343C03385FCC",
+            "seq": "36",
+            "name": {
+                "tc": "\u68a7\u6850\u5be8 (\u767d\u725b\u77f3)",
+                "en": "NG TUNG CHAI (PAK NGAU SHEK)"
+            }
+        },
+        {
+            "stop_id": "D56D56E9F6458361",
+            "seq": "37",
+            "name": {
+                "tc": "\u5be8\u4e6a\u8def",
+                "en": "CHAI KEK ROAD"
+            }
+        },
+        {
+            "stop_id": "3889C01BE6A7BF26",
+            "seq": "38",
+            "name": {
+                "tc": "\u5be8\u4e6a",
+                "en": "CHAI KEK"
+            }
+        },
+        {
+            "stop_id": "6FECC341F6134448",
+            "seq": "39",
+            "name": {
+                "tc": "\u9ebb\u5e03\u5c3e",
+                "en": "MA PO MEI"
+            }
+        },
+        {
+            "stop_id": "D42A82ABE8C00558",
+            "seq": "40",
+            "name": {
+                "tc": "\u6c34\u7aa9",
+                "en": "SHUI WO"
+            }
+        },
+        {
+            "stop_id": "81927FEBF3AF1AFD",
+            "seq": "41",
+            "name": {
+                "tc": "\u576a\u6717",
+                "en": "PING LONG"
+            }
+        },
+        {
+            "stop_id": "83363B1A7C100F96",
+            "seq": "42",
+            "name": {
+                "tc": "\u65b0\u5858",
+                "en": "SAN TONG"
+            }
+        },
+        {
+            "stop_id": "78A272047C590D21",
+            "seq": "43",
+            "name": {
+                "tc": "\u65b0\u6751",
+                "en": "SAN TSUEN"
+            }
+        },
+        {
+            "stop_id": "FCE4B9D70351B091",
+            "seq": "44",
+            "name": {
+                "tc": "\u937e\u5c4b\u6751",
+                "en": "CHUNG UK TSUEN"
+            }
+        },
+        {
+            "stop_id": "90A92A87C0491478",
+            "seq": "45",
+            "name": {
+                "tc": "\u653e\u99ac\u8386(\u6797\u6751\u8a31\u9858\u6a39)",
+                "en": "FONG MA PO (LAM TSUEN WISHING TREE)"
+            }
+        },
+        {
+            "stop_id": "BCC83D8C953DC504",
+            "seq": "46",
+            "name": {
+                "tc": "\u5751\u4e0b\u752b",
+                "en": "HANG HA PO"
+            }
+        },
+        {
+            "stop_id": "DC6749D20ED5C948",
+            "seq": "47",
+            "name": {
+                "tc": "\u8f03\u5bee\u4e0b",
+                "en": "KAU LIU HA"
+            }
+        },
+        {
+            "stop_id": "BE5E07865E13374E",
+            "seq": "48",
+            "name": {
+                "tc": "\u5eb7\u6a02\u5712",
+                "en": "HONG LOK YUEN"
+            }
+        },
+        {
+            "stop_id": "94236C65C84D8C17",
+            "seq": "49",
+            "name": {
+                "tc": "\u4e09\u6e21\u5751",
+                "en": "SAM TO HANG"
+            }
+        },
+        {
+            "stop_id": "4C82D99D0721ADE9",
+            "seq": "50",
+            "name": {
+                "tc": "\u5e1d\u6b23\u82d1",
+                "en": "PARC VERSAILLES"
+            }
+        },
+        {
+            "stop_id": "399EF919E10C7F33",
+            "seq": "51",
+            "name": {
+                "tc": "\u592a\u548c\u7ad9",
+                "en": "TAI WO STATION"
+            }
+        },
+        {
+            "stop_id": "56F79FB1FC157E22",
+            "seq": "52",
+            "name": {
+                "tc": "\u5927\u57d4\u653f\u5e9c\u5408\u7f72",
+                "en": "TAI PO GOVERNMENT OFFICE BUILDING"
+            }
+        },
+        {
+            "stop_id": "95B249916F323BD4",
+            "seq": "53",
+            "name": {
+                "tc": "\u5927\u57d4\u5e73\u5b89\u91cc",
+                "en": "PING ON LANE TAI PO"
+            }
+        },
+        {
+            "stop_id": "45628FA7B8D7C5D2",
+            "seq": "54",
+            "name": {
+                "tc": "\u5927\u57d4\u5b89\u7965\u8def",
+                "en": "ON CHEUNG ROAD TAI PO"
+            }
+        },
+        {
+            "stop_id": "13E458C819D90940",
+            "seq": "55",
+            "name": {
+                "tc": "\u5ee3\u798f\u9053\u8f49\u8eca\u7ad9 (Y1)",
+                "en": "KWONG FUK ROAD BBI (Y1)"
+            }
+        },
+        {
+            "stop_id": "3FD481FB9B9DC36C",
+            "seq": "56",
+            "name": {
+                "tc": "\u5927\u57d4\u904b\u982d\u89d2\u91cc",
+                "en": "WAN TAU KOK LANE TAI PO"
+            }
+        },
+        {
+            "stop_id": "46604706EE6CC765",
+            "seq": "57",
+            "name": {
+                "tc": "\u5927\u57d4\u589f\u7ad9\u5df4\u58eb\u7e3d\u7ad9",
+                "en": "TAI PO MARKET STATION BUS TERMINUS"
+            }
+        },
+        {
+            "stop_id": "7910B0EBDD33B71B",
+            "seq": "58",
+            "name": {
+                "tc": "\u5927\u57d4\u589f\u7ad9\u5df4\u58eb\u7e3d\u7ad9",
+                "en": "TAI PO MARKET STATION BUS TERMINUS"
+            }
+        }
+    ]
+}

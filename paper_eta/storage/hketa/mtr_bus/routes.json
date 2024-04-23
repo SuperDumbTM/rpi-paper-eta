@@ -1,0 +1,824 @@
+{
+    "last_update": "2024-04-23T18:35:35",
+    "data": {
+        "K12": {
+            "inbound": [
+                {
+                    "stop_id": "K12_inbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K12-D010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Eightland Garden",
+                            "tc": "\u516b\u865f\u82b1\u5712"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K12-D040",
+                        "seq": 4,
+                        "name": {
+                            "en": "Tai Po Market Station",
+                            "tc": "\u5927\u57d4\u589f\u7ad9"
+                        }
+                    }
+                }
+            ],
+            "outbound": [
+                {
+                    "stop_id": "K12_outbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K12-U010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Tai Po Market Station",
+                            "tc": "\u5927\u57d4\u589f\u7ad9"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K12-U030",
+                        "seq": 3,
+                        "name": {
+                            "en": "Eightland Garden",
+                            "tc": "\u516b\u865f\u82b1\u5712"
+                        }
+                    }
+                }
+            ]
+        },
+        "K14": {
+            "inbound": [],
+            "outbound": [
+                {
+                    "stop_id": "K14_outbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K14-D010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Tai Po Mega Mall",
+                            "tc": "\u5927\u57d4\u8d85\u7d1a\u57ce"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K14-D030",
+                        "seq": 3,
+                        "name": {
+                            "en": "Tai Po Market Station",
+                            "tc": "\u5927\u57d4\u589f\u7ad9"
+                        }
+                    }
+                }
+            ]
+        },
+        "K17": {
+            "inbound": [
+                {
+                    "stop_id": "K17_inbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K17-D010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Fu Shin",
+                            "tc": "\u5bcc\u5584"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K17-D030",
+                        "seq": 3,
+                        "name": {
+                            "en": "Tai Po Market Station",
+                            "tc": "\u5927\u57d4\u589f\u7ad9"
+                        }
+                    }
+                }
+            ],
+            "outbound": [
+                {
+                    "stop_id": "K17_outbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K17-U010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Tai Po Market Station",
+                            "tc": "\u5927\u57d4\u589f\u7ad9"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K17-U040",
+                        "seq": 4,
+                        "name": {
+                            "en": "Fu Shin",
+                            "tc": "\u5bcc\u5584"
+                        }
+                    }
+                }
+            ]
+        },
+        "K18": {
+            "inbound": [
+                {
+                    "stop_id": "K18_inbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K18-D010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Kwong Fuk",
+                            "tc": "\u5ee3\u798f"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K18-D030",
+                        "seq": 3,
+                        "name": {
+                            "en": "Tai Po Market Station",
+                            "tc": "\u5927\u57d4\u589f\u7ad9"
+                        }
+                    }
+                }
+            ],
+            "outbound": [
+                {
+                    "stop_id": "K18_outbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K18-U010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Tai Po Market Station",
+                            "tc": "\u5927\u57d4\u589f\u7ad9"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K18-U030",
+                        "seq": 3,
+                        "name": {
+                            "en": "Kwong Fuk",
+                            "tc": "\u5ee3\u798f"
+                        }
+                    }
+                }
+            ]
+        },
+        "506": {
+            "inbound": [
+                {
+                    "stop_id": "506_inbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "506-D010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Siu Lun",
+                            "tc": "\u5146\u9e9f"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "506-U011",
+                        "seq": 14,
+                        "name": {
+                            "en": "Tuen Mun Ferry Pier",
+                            "tc": "\u5c6f\u9580\u78bc\u982d"
+                        }
+                    }
+                }
+            ],
+            "outbound": [
+                {
+                    "stop_id": "506_outbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "506-U010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Tuen Mun Ferry Pier",
+                            "tc": "\u5c6f\u9580\u78bc\u982d"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "506-U120",
+                        "seq": 12,
+                        "name": {
+                            "en": "Siu Lun",
+                            "tc": "\u5146\u9e9f"
+                        }
+                    }
+                }
+            ]
+        },
+        "K51": {
+            "inbound": [
+                {
+                    "stop_id": "K51_inbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K51-D010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Tai Lam",
+                            "tc": "\u5927\u6b16"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K51-D290",
+                        "seq": 29,
+                        "name": {
+                            "en": "Fu Tai",
+                            "tc": "\u5bcc\u6cf0"
+                        }
+                    }
+                }
+            ],
+            "outbound": [
+                {
+                    "stop_id": "K51_outbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K51-U010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Fu Tai",
+                            "tc": "\u5bcc\u6cf0"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K51-U250",
+                        "seq": 25,
+                        "name": {
+                            "en": "Tai Lam",
+                            "tc": "\u5927\u6b16"
+                        }
+                    }
+                }
+            ]
+        },
+        "K51A": {
+            "inbound": [
+                {
+                    "stop_id": "K51A_inbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K51A-D010",
+                        "seq": 1,
+                        "name": {
+                            "en": "So Kwun Wat Tsuen",
+                            "tc": "\u6383\u7ba1\u7b0f\u6751"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K51A-D270",
+                        "seq": 27,
+                        "name": {
+                            "en": "Fu Tai",
+                            "tc": "\u5bcc\u6cf0"
+                        }
+                    }
+                }
+            ],
+            "outbound": [
+                {
+                    "stop_id": "K51A_outbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K51A-U010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Fu Tai",
+                            "tc": "\u5bcc\u6cf0"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K51A-U250",
+                        "seq": 25,
+                        "name": {
+                            "en": "So Kwun Wat Tsuen",
+                            "tc": "\u6383\u7ba1\u7b0f\u6751"
+                        }
+                    }
+                }
+            ]
+        },
+        "K52": {
+            "inbound": [
+                {
+                    "stop_id": "K52_inbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K52-nD010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Lung Kwu Tan",
+                            "tc": "\u9f8d\u9f13\u7058"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K52-nD300",
+                        "seq": 3,
+                        "name": {
+                            "en": "Yuet Wu Villa",
+                            "tc": "\u6085\u6e56\u5c71\u838a"
+                        }
+                    }
+                }
+            ],
+            "outbound": [
+                {
+                    "stop_id": "K52_outbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K52-nU010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Yuet Wu Villa",
+                            "tc": "\u6085\u6e56\u5c71\u838a"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K52-nU310",
+                        "seq": 3,
+                        "name": {
+                            "en": "Lung Kwu Tan",
+                            "tc": "\u9f8d\u9f13\u7058"
+                        }
+                    }
+                }
+            ]
+        },
+        "K52A": {
+            "inbound": [
+                {
+                    "stop_id": "K52A_inbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K52A-D010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Tsang Tsui (Tsang Tsui Columbarium)",
+                            "tc": "\u66fe\u5480 (\u66fe\u5480\u9748\u7070\u5b89\u7f6e\u6240)"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K52A-D190",
+                        "seq": 19,
+                        "name": {
+                            "en": "Tuen Mun Station (LR Tuen Mun Stop)",
+                            "tc": "\u5c6f\u9580\u7ad9 (\u8f15\u9435\u5c6f\u9580\u7ad9)"
+                        }
+                    }
+                }
+            ],
+            "outbound": [
+                {
+                    "stop_id": "K52A_outbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K52A-U010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Tuen Mun Station (LR Tuen Mun Stop)",
+                            "tc": "\u5c6f\u9580\u7ad9 (\u8f15\u9435\u5c6f\u9580\u7ad9)"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K52A-U180",
+                        "seq": 19,
+                        "name": {
+                            "en": "Tsang Tsui (Tsang Tsui Columbarium)",
+                            "tc": "\u66fe\u5480 (\u66fe\u5480\u9748\u7070\u5b89\u7f6e\u6240)"
+                        }
+                    }
+                }
+            ]
+        },
+        "K53": {
+            "inbound": [],
+            "outbound": [
+                {
+                    "stop_id": "K53_outbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K53-U010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Tuen Mun Station (LR Tuen Mun Stop)",
+                            "tc": "\u5c6f\u9580\u7ad9 (\u8f15\u9435\u5c6f\u9580\u7ad9)"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K53-U011",
+                        "seq": 32,
+                        "name": {
+                            "en": "Tuen Mun Station (LR Tuen Mun Stop)",
+                            "tc": "\u5c6f\u9580\u7ad9 (\u8f15\u9435\u5c6f\u9580\u7ad9)"
+                        }
+                    }
+                }
+            ]
+        },
+        "K54": {
+            "inbound": [],
+            "outbound": [
+                {
+                    "stop_id": "K54_outbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K54-U010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Wo Tin Estate",
+                            "tc": "\u548c\u7530\u90a8"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K54-D070",
+                        "seq": 14,
+                        "name": {
+                            "en": "Wo Tin Estate",
+                            "tc": "\u548c\u7530\u90a8"
+                        }
+                    }
+                }
+            ]
+        },
+        "K58": {
+            "inbound": [
+                {
+                    "stop_id": "K58_inbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K58-D010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Castle Peak Bay",
+                            "tc": "\u9752\u5c71\u7063"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K58-D210",
+                        "seq": 23,
+                        "name": {
+                            "en": "Fu Tai",
+                            "tc": "\u5bcc\u6cf0"
+                        }
+                    }
+                }
+            ],
+            "outbound": [
+                {
+                    "stop_id": "K58_outbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K58-U010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Fu Tai",
+                            "tc": "\u5bcc\u6cf0"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K58-U210",
+                        "seq": 23,
+                        "name": {
+                            "en": "Castle Peak Bay",
+                            "tc": "\u9752\u5c71\u7063"
+                        }
+                    }
+                }
+            ]
+        },
+        "K65": {
+            "inbound": [
+                {
+                    "stop_id": "K65_inbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K65-D010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Lau Fau Shan",
+                            "tc": "\u6d41\u6d6e\u5c71"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K65-D190",
+                        "seq": 19,
+                        "name": {
+                            "en": "Yuen Long Station (LR Yuen Long Stop, MTR Yuen Long Station)",
+                            "tc": "\u5143\u6717\u7ad9 (\u8f15\u9435\u5143\u6717\u7ad9, \u6e2f\u9435\u5143\u6717\u7ad9)"
+                        }
+                    }
+                }
+            ],
+            "outbound": [
+                {
+                    "stop_id": "K65_outbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K65-U010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Yuen Long Station (LR Yuen Long Stop) (MTR Yuen Long Station)",
+                            "tc": "\u5143\u6717\u7ad9 (\u8f15\u9435\u5143\u6717\u7ad9) (\u6e2f\u9435\u5143\u6717\u7ad9)"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K65-U230",
+                        "seq": 23,
+                        "name": {
+                            "en": "Lau Fau Shan",
+                            "tc": "\u6d41\u6d6e\u5c71"
+                        }
+                    }
+                }
+            ]
+        },
+        "K65A": {
+            "inbound": [
+                {
+                    "stop_id": "K65A_inbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K65A-D010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Lau Fau Shan",
+                            "tc": "\u6d41\u6d6e\u5c71"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K65A-D110",
+                        "seq": 11,
+                        "name": {
+                            "en": "Tin Shui Wai Station (LR Tin Shui Wai Stop)",
+                            "tc": "\u5929\u6c34\u570d\u7ad9 (\u8f15\u9435\u5929\u6c34\u570d\u7ad9)"
+                        }
+                    }
+                }
+            ],
+            "outbound": [
+                {
+                    "stop_id": "K65A_outbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K65A-U010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Tin Shui Wai Station (LR Tin Shui Wai Stop)",
+                            "tc": "\u5929\u6c34\u570d\u7ad9 (\u8f15\u9435\u5929\u6c34\u570d\u7ad9)"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K65A-U130",
+                        "seq": 13,
+                        "name": {
+                            "en": "Lau Fau Shan",
+                            "tc": "\u6d41\u6d6e\u5c71"
+                        }
+                    }
+                }
+            ]
+        },
+        "K66": {
+            "inbound": [
+                {
+                    "stop_id": "K66_inbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K66-D010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Tai Tong Wong Nai Tun Tsuen",
+                            "tc": "\u5927\u68e0\u9ec3\u6ce5\u58a9\u6751"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K66-D240",
+                        "seq": 24,
+                        "name": {
+                            "en": "Long Ping",
+                            "tc": "\u6717\u5c4f"
+                        }
+                    }
+                }
+            ],
+            "outbound": [
+                {
+                    "stop_id": "K66_outbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K66-U010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Long Ping",
+                            "tc": "\u6717\u5c4f"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K66-U220",
+                        "seq": 22,
+                        "name": {
+                            "en": "Tai Tong Wong Nai Tun Tsuen",
+                            "tc": "\u5927\u68e0\u9ec3\u6ce5\u58a9\u6751"
+                        }
+                    }
+                }
+            ]
+        },
+        "K68": {
+            "inbound": [],
+            "outbound": [
+                {
+                    "stop_id": "K68_outbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K68-U010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Yuen Long Industrial Estate",
+                            "tc": "\u5143\u6717\u5de5\u696d\u90a8"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K68-U011",
+                        "seq": 38,
+                        "name": {
+                            "en": "Yuen Long Industrial Estate",
+                            "tc": "\u5143\u6717\u5de5\u696d\u90a8"
+                        }
+                    }
+                }
+            ]
+        },
+        "K73": {
+            "inbound": [
+                {
+                    "stop_id": "K73_inbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K73-D010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Yuen Long West (LR Fung Nin Road Stop)",
+                            "tc": "\u5143\u6717\u897f (\u8f15\u9435\u8c50\u5e74\u8def\u7ad9)"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K73-D160",
+                        "seq": 16,
+                        "name": {
+                            "en": "Tin Heng",
+                            "tc": "\u5929\u6046"
+                        }
+                    }
+                }
+            ],
+            "outbound": [
+                {
+                    "stop_id": "K73_outbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K73-U010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Tin Heng",
+                            "tc": "\u5929\u6046"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K73-U120",
+                        "seq": 12,
+                        "name": {
+                            "en": "Yuen Long West (LR Fung Nin Road Stop)",
+                            "tc": "\u5143\u6717\u897f (\u8f15\u9435\u8c50\u5e74\u8def\u7ad9)"
+                        }
+                    }
+                }
+            ]
+        },
+        "K74": {
+            "inbound": [],
+            "outbound": [
+                {
+                    "stop_id": "K74_outbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K74-U001",
+                        "seq": 1,
+                        "name": {
+                            "en": "Tin Shui Wai Town Centre",
+                            "tc": "\u5929\u6c34\u570d\u5e02\u4e2d\u5fc3"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K74-U002",
+                        "seq": 26,
+                        "name": {
+                            "en": "Tin Shui Wai Town Centre",
+                            "tc": "\u5929\u6c34\u570d\u5e02\u4e2d\u5fc3"
+                        }
+                    }
+                }
+            ]
+        },
+        "K75A": {
+            "inbound": [],
+            "outbound": [
+                {
+                    "stop_id": "K75A_outbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K75A-U010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Tin Shui Wai Station (LR Tin Shui Wai Stop)",
+                            "tc": "\u5929\u6c34\u570d\u7ad9 (\u8f15\u9435\u5929\u6c34\u570d\u7ad9)"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K75A-U011",
+                        "seq": 15,
+                        "name": {
+                            "en": "Tin Shui Wai Station (LR Tin Shui Wai Stop)",
+                            "tc": "\u5929\u6c34\u570d\u7ad9 (\u8f15\u9435\u5929\u6c34\u570d\u7ad9)"
+                        }
+                    }
+                }
+            ]
+        },
+        "K75P": {
+            "inbound": [],
+            "outbound": [
+                {
+                    "stop_id": "K75P_outbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K75P-U010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Tin Shui",
+                            "tc": "\u5929\u745e"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K75P-U011",
+                        "seq": 23,
+                        "name": {
+                            "en": "Tin Shui",
+                            "tc": "\u5929\u745e"
+                        }
+                    }
+                }
+            ]
+        },
+        "K76": {
+            "inbound": [
+                {
+                    "stop_id": "K76_inbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K76-D010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Tin Shui Wai Station (MTR Tin Shui Wai Station)",
+                            "tc": "\u5929\u6c34\u570d\u7ad9 (\u6e2f\u9435\u5929\u6c34\u570d\u7ad9)"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K76-D040",
+                        "seq": 4,
+                        "name": {
+                            "en": "Tin Heng",
+                            "tc": "\u5929\u6046"
+                        }
+                    }
+                }
+            ],
+            "outbound": [
+                {
+                    "stop_id": "K76_outbound_default",
+                    "service_type": "default",
+                    "orig": {
+                        "stop_id": "K76-U010",
+                        "seq": 1,
+                        "name": {
+                            "en": "Tin Heng",
+                            "tc": "\u5929\u6046"
+                        }
+                    },
+                    "dest": {
+                        "stop_id": "K76-U050",
+                        "seq": 5,
+                        "name": {
+                            "en": "Tin Shui Wai Station (MTR Tin Shui Wai Station)",
+                            "tc": "\u5929\u6c34\u570d\u7ad9 (\u6e2f\u9435\u5929\u6c34\u570d\u7ad9)"
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}

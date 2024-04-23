@@ -1,0 +1,133 @@
+{
+    "last_update": "2024-04-23T18:41:30",
+    "data": [
+        {
+            "stop_id": "5242343C03385FCC",
+            "seq": "1",
+            "name": {
+                "tc": "\u68a7\u6850\u5be8 (\u767d\u725b\u77f3)",
+                "en": "NG TUNG CHAI (PAK NGAU SHEK)"
+            }
+        },
+        {
+            "stop_id": "D56D56E9F6458361",
+            "seq": "2",
+            "name": {
+                "tc": "\u5be8\u4e6a\u8def",
+                "en": "CHAI KEK ROAD"
+            }
+        },
+        {
+            "stop_id": "3889C01BE6A7BF26",
+            "seq": "3",
+            "name": {
+                "tc": "\u5be8\u4e6a",
+                "en": "CHAI KEK"
+            }
+        },
+        {
+            "stop_id": "6FECC341F6134448",
+            "seq": "4",
+            "name": {
+                "tc": "\u9ebb\u5e03\u5c3e",
+                "en": "MA PO MEI"
+            }
+        },
+        {
+            "stop_id": "D42A82ABE8C00558",
+            "seq": "5",
+            "name": {
+                "tc": "\u6c34\u7aa9",
+                "en": "SHUI WO"
+            }
+        },
+        {
+            "stop_id": "81927FEBF3AF1AFD",
+            "seq": "6",
+            "name": {
+                "tc": "\u576a\u6717",
+                "en": "PING LONG"
+            }
+        },
+        {
+            "stop_id": "83363B1A7C100F96",
+            "seq": "7",
+            "name": {
+                "tc": "\u65b0\u5858",
+                "en": "SAN TONG"
+            }
+        },
+        {
+            "stop_id": "78A272047C590D21",
+            "seq": "8",
+            "name": {
+                "tc": "\u65b0\u6751",
+                "en": "SAN TSUEN"
+            }
+        },
+        {
+            "stop_id": "FCE4B9D70351B091",
+            "seq": "9",
+            "name": {
+                "tc": "\u937e\u5c4b\u6751",
+                "en": "CHUNG UK TSUEN"
+            }
+        },
+        {
+            "stop_id": "90A92A87C0491478",
+            "seq": "10",
+            "name": {
+                "tc": "\u653e\u99ac\u8386(\u6797\u6751\u8a31\u9858\u6a39)",
+                "en": "FONG MA PO (LAM TSUEN WISHING TREE)"
+            }
+        },
+        {
+            "stop_id": "BCC83D8C953DC504",
+            "seq": "11",
+            "name": {
+                "tc": "\u5751\u4e0b\u752b",
+                "en": "HANG HA PO"
+            }
+        },
+        {
+            "stop_id": "DC6749D20ED5C948",
+            "seq": "12",
+            "name": {
+                "tc": "\u8f03\u5bee\u4e0b",
+                "en": "KAU LIU HA"
+            }
+        },
+        {
+            "stop_id": "BE5E07865E13374E",
+            "seq": "13",
+            "name": {
+                "tc": "\u5eb7\u6a02\u5712",
+                "en": "HONG LOK YUEN"
+            }
+        },
+        {
+            "stop_id": "94236C65C84D8C17",
+            "seq": "14",
+            "name": {
+                "tc": "\u4e09\u6e21\u5751",
+                "en": "SAM TO HANG"
+            }
+        },
+        {
+            "stop_id": "4C82D99D0721ADE9",
+            "seq": "15",
+            "name": {
+                "tc": "\u5e1d\u6b23\u82d1",
+                "en": "PARC VERSAILLES"
+            }
+        },
+        {
+            "stop_id": "399EF919E10C7F33",
+            "seq": "16",
+            "name": {
+                "tc": "\u592a\u548c\u7ad9",
+                "en": "TAI WO STATION"
+            }
+        }
+    ]
+}
