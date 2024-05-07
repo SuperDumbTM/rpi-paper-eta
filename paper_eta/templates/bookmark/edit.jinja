@@ -24,16 +24,16 @@
             {% include "includes/flash_error.jinja" %}
 
             <div class="form-group">
-                <label for="lang" class="form-label">{{ _('language') }}</label>
-                <select class="form-select" name="lang" required>
-                    {% for lang in langs %}
-                    {% if bookmark.lang == lang[0] %}
-                    <option value="{{ lang[0] }}" selected>
-                        {{ lang[1] }}
+                <label for="locale" class="form-label">{{ _('language') }}</label>
+                <select class="form-select" name="locale" required>
+                    {% for locale in locales %}
+                    {% if bookmark.locale == locale[0] %}
+                    <option value="{{ locale[0] }}" selected>
+                        {{ locale[1] }}
                     </option>
                     {% else %}
-                    <option value="{{ lang[0] }}">
-                        {{ lang[1] }}
+                    <option value="{{ locale[0] }}">
+                        {{ locale[1] }}
                     </option>
                     {% endif %}
                     {% endfor %}
@@ -43,17 +43,17 @@
             <hr class="mt-4 mb-3">
 
             <div class="form-group">
-                <label for="company" class="form-label">{{ _('company') }}</label>
-                <select class="form-select" name="company" required>
+                <label for="transport" class="form-label">{{ _('company') }}</label>
+                <select class="form-select" name="transport" required>
                     <option value="">-----</option>
-                    {% for company in companys %}
-                    {% if bookmark.company == company[0] %}
-                    <option value="{{ company[0] }}" selected>
-                        {{ company[1] }}
+                    {% for transport in transports %}
+                    {% if bookmark.transport == transport[0] %}
+                    <option value="{{ transport[0] }}" selected>
+                        {{ transport[1] }}
                     </option>
                     {% else %}
-                    <option value="{{ company[0] }}">
-                        {{ company[1] }}
+                    <option value="{{ transport[0] }}">
+                        {{ transport[1] }}
                     </option>
                     {% endif %}
                     {% endfor %}
@@ -61,8 +61,8 @@
             </div>
 
             <div class="form-group autocomplete">
-                <label for="route" class="form-label">{{ _('route') }}</label>
-                <input type="text" class="form-control" name="route" value="{{ bookmark.route or '' }}" required>
+                <label for="no" class="form-label">{{ _('route') }}</label>
+                <input type="text" class="form-control" name="no" value="{{ bookmark.no or '' }}" required>
 
             </div>
 
@@ -103,11 +103,11 @@
             </div>
 
             <div class="form-group">
-                <label for="stop_code" class="form-label">{{ _('stop') }}</label>
-                <select class="form-select" name="stop_code" required>
+                <label for="stop_id" class="form-label">{{ _('stop') }}</label>
+                <select class="form-select" name="stop_id" required>
                     <option value="">-----</option>
                     {% for stop in stops %}
-                    {% if bookmark.stop_code == stop[0] %}
+                    {% if bookmark.stop_id == stop[0] %}
                     <option value="{{ stop[0] }}" selected>
                         {{ stop[1] }}
                     </option>
@@ -142,9 +142,9 @@
 
     function getParams() {
         return {
-            lang: $('select[name=lang] option:selected').val(),
-            company: $('select[name=company] option:selected').val(),
-            route: $('input[name=route]').val(),
+            locale: $('select[name=locale] option:selected').val(),
+            transport: $('select[name=transport] option:selected').val(),
+            no: $('input[name=no]').val(),
             direction: $('select[name=direction] option:selected').val(),
             service_type: $('select[name=service_type] option:selected').val(),
         }
@@ -162,15 +162,15 @@
         clearSelect($("select[name=service_type]"))
 
         // trigger autocomplete option update
-        if ($('select[name=company] option:selected').val())
-            $('select[name=company]').trigger('change')
+        if ($('select[name=transport] option:selected').val())
+            $('select[name=transport]').trigger('change')
         {% else %}
         // trigger autocomplete option update
         $.get(
             '{{ url_for("api_bookmark.search", search_type="routes") }}',
             getParams(),
             function (res) {
-                $("input[name=route]").autocomplete({
+                $("input[name=no]").autocomplete({
                     maxShowItems: 6,
                     autoFocus: true,
                     source: res.data.routes.map((el) => el[0]),
@@ -190,14 +190,14 @@
         })
     })
 
-    $('select[name=company]').on('change', function (event) {
+    $('select[name=transport]').on('change', function (event) {
         // autocomplete for route name
         // https://stackoverflow.com/questions/7617373/limit-results-in-jquery-ui-autocomplete
         function clear() {
-            $('input[name=route]').val(null)
+            $('input[name=no]').val(null)
             clearSelect($("select[name=direction]"))
             clearSelect($("select[name=service_type]"))
-            clearSelect($("select[name=stop_code]"))
+            clearSelect($("select[name=stop_id]"))
         }
 
         if (!$(this).val()) {
@@ -210,7 +210,7 @@
             getParams(),
             function (res) {
                 clear()
-                $("input[name=route]").autocomplete({
+                $("input[name=no]").autocomplete({
                     maxShowItems: 6,
                     autoFocus: true,
                     source: res.data.routes.map((el) => el[0]),
@@ -219,12 +219,12 @@
         )
     });
 
-    $("input[name=route]").on("autocompleteselect", function (event, ui) {
+    $("input[name=no]").on("autocompleteselect", function (event, ui) {
         // direction option updates
         function clear() {
             clearSelect($("select[name=direction]"))
             clearSelect($("select[name=service_type]"))
-            clearSelect($("select[name=stop_code]"))
+            clearSelect($("select[name=stop_id]"))
         }
 
         if (!$(this).val()) {
@@ -234,7 +234,7 @@
 
         $.get(
             '{{ url_for("api_bookmark.search", search_type="directions") }}',
-            { ...getParams(), 'route': ui.item.value },
+            { ...getParams(), 'no': ui.item.value },
             function (res) {
                 clear()
                 res.data.directions.forEach(
@@ -246,7 +246,7 @@
         // autocomplete for service type
         function clear() {
             clearSelect($("select[name=service_type]"))
-            clearSelect($("select[name=stop_code]"))
+            clearSelect($("select[name=stop_id]"))
         }
 
         if (!$(this).val()) {
@@ -267,7 +267,7 @@
     $("select[name=service_type]").on("change", function (event) {
         // stop option updates
         function clear() {
-            clearSelect(select = $("select[name=stop_code]"))
+            clearSelect(select = $("select[name=stop_no]"))
         }
 
         if (!$(this).val()) {
@@ -282,7 +282,7 @@
                 clear()
 
                 res.data.stops.forEach(
-                    (el) => $("select[name=stop_code]").append(new Option(el[1], el[0])))
+                    (el) => $("select[name=stop_id]").append(new Option(el[1], el[0])))
             }
         )
     });

@@ -8,15 +8,15 @@ import requests
 from flask_babel import lazy_gettext
 from PIL import Image
 
-from paper_eta.src import models, site_data
-from paper_eta.src.libs import epdcon, eta_img
+from .. import extensions, models, site_data
+from ..libs import epdcon, eta_img, hketa
 
 _ctrl_mutex = threading.Lock()
 
 
 def generate_image(
     app_conf: site_data.AppConfiguration,
-    bookmarks: list[models.EtaConfig],
+    bookmarks: list[hketa.models.RouteQuery],
     generator: eta_img.generator.EtaImageGenerator
 ) -> dict[str, Image.Image]:
     """Generate a ETA image.
@@ -34,44 +34,22 @@ def generate_image(
     try:
         etas = []
         for bm in bookmarks:
-            res = requests.get(
-                app_conf.get('api_url') +
-                f'/eta/{bm.company.value}/{bm.route}',
-                params={
-                    'direction': bm.direction.value,
-                    'service_type': bm.service_type,
-                    'stop_code': bm.stop_code,
-                    'lang': bm.lang,
-                }
-            ).json()
+            etap = extensions.hketa.create_eta_processor(bm)
+            route = eta_img.Route(**bm.model_dump(),
+                                  origin=etap.route.orig_name(),
+                                  destination=etap.route.dest_name(),
+                                  stop_name=etap.route.stop_name(),
+                                  logo=etap.route.logo(),
+                                  etas=[])
 
             try:
-                logo = (BytesIO(requests.get('{0}{1}'.format(app_conf.get('api_url'),
-                                                             res['data'].pop(
-                                                                 'logo_url')
-                                                             )).content
-                                )
-                        if res['data']['logo_url'] is not None
-                        else None)
-            except Exception:
-                logo = None
+                for eta in etap.etas():
+                    route.etas.append(eta_img.Route.Eta(**eta.model_dump()))
+            except hketa.exceptions.HketaException as e:
+                route.etas = eta_img.Route.Eta(str(e))
 
-            if res['success']:
-                eta = res['data'].pop('etas')
-                etas.append(eta_img.models.Etas(**res['data'],
-                                                etas=[eta_img.models.Etas.Eta(**e)
-                                                      for e in eta],
-                                                logo=logo,
-                                                )
-                            )
-            else:
-                res['data'].pop('etas')
-                etas.append(eta_img.models.ErrorEta(**res['data'],
-                                                    code=res['code'],
-                                                    message=str(
-                    lazy_gettext(res['code'])),
-                    logo=logo,)
-                )
+            etas.append(route)
+
         images = generator.draw(etas)
     except requests.RequestException as e:
         logging.warning('Image generation failed with error: %s', str(e))

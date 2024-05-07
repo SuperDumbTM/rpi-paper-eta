@@ -1,3 +1,6 @@
+from io import BytesIO
+
+
 try:
     from . import enums, exceptions, models, transport
 except (ImportError, ModuleNotFoundError):
@@ -64,16 +67,12 @@ class Route:
             .service_lookup(self.entry.direction, self.entry.service_type) \
             .route_id
 
-    def stop_name(self) -> str:
-        """Get the stop name of the route"""
-        return self._stop_list[self.entry.stop_id].name[self.entry.locale]
-
     def stop_seq(self) -> int:
         """Get the stop sequence of the route"""
         return self._stop_list[self.entry.stop_id].seq
 
-    def stop_details(self, stop_code: str) -> models.RouteInfo.Stop:
-        return self._stop_list[stop_code]
+    def stop_details(self, stop_id: str) -> models.RouteInfo.Stop:
+        return self._stop_list[stop_id]
 
     def origin(self) -> models.RouteInfo.Stop:
         return list(self._stop_list.values())[0]
@@ -100,3 +99,16 @@ class Route:
         if self.destination().stop_id == self.entry.stop_id:
             return enums.StopType.DEST
         return enums.StopType.STOP
+
+    def stop_name(self) -> str:
+        """Get the stop name of the route"""
+        return self._stop_list[self.entry.stop_id].name[self.entry.locale]
+
+    def orig_name(self) -> str:
+        return self.origin().name[self.entry.locale]
+
+    def dest_name(self) -> str:
+        return self.destination().name[self.entry.locale]
+
+    def logo(self) -> BytesIO:
+        return self.provider.logo

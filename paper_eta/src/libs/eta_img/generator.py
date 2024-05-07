@@ -62,7 +62,7 @@ class EtaImageGenerator(ABC):
 
     @abstractmethod
     def draw(self,
-             etas: Iterable[models.Etas | models.ErrorEta],
+             etas: Iterable[models.Route],
              degree: float = 0) -> dict[str, Image.Image]:
         """Create image(s) with the ETA(s) data
         """

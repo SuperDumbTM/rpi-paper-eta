@@ -23,7 +23,7 @@ class RouteQuery(pydantic.BaseModel):
 
 class RouteInfo(pydantic.BaseModel):
 
-    company: enums.Transport
+    transport: enums.Transport
     route_no: str
     inbound: list["Detail"] = pydantic.Field(default_factory=list)
     outbound: list["Detail"] = pydantic.Field(default_factory=list)

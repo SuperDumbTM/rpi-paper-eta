@@ -20,6 +20,8 @@ except ImportError:
     import exceptions
     import models
 
+_DIR_IMG = os.path.join(os.path.dirname(__file__), 'images', 'bw_neg')
+
 
 def stop_list_fname(no: str,
                     direction: enums.Direction,
@@ -78,11 +80,6 @@ class Transport(ABC, metaclass=_SingletonABCMeta):
     _routes: dict[str,]
 
     @property
-    @abstractmethod
-    def company(self) -> enums.Transport:
-        pass
-
-    @property
     def route_list_path(self) -> Path:
         """Path to \"routes\" data file name"""
         return self._root.joinpath('routes.json')
@@ -91,6 +88,16 @@ class Transport(ABC, metaclass=_SingletonABCMeta):
     def stops_list_dir(self) -> Path:
         """Path to \"route\" data directory"""
         return self._root.joinpath('routes')
+
+    @property
+    def logo(self) -> io.BytesIO:
+        with open(os.path.join(_DIR_IMG, f'{self.transport.value}.bmp'), 'rb') as b:
+            return io.BytesIO(b.read())
+
+    @property
+    @abstractmethod
+    def transport(self) -> enums.Transport:
+        pass
 
     def __init__(self,
                  root: os.PathLike[str] = None,
@@ -108,31 +115,29 @@ class Transport(ABC, metaclass=_SingletonABCMeta):
 
         Create/update local cache when necessary.
         """
-        if '_routes' in self.__dict__.keys() and not self._is_outdated(self._routes):
-            return self._routes['data']
+        if not ('_routes' in self.__dict__.keys() and not self._is_outdated(self._routes)):
+            try:
+                with open(self.route_list_path, 'r', encoding='UTF-8') as f:
+                    self._routes = json.load(f)
+            except (FileNotFoundError, PermissionError):
+                logging.info("%s's route list cache do not exists, updating...",
+                             str(self.transport))
 
-        try:
-            with open(self.route_list_path, 'r', encoding='UTF-8') as f:
-                self._routes = json.load(f)
-        except (FileNotFoundError, PermissionError):
-            logging.info("%s's route list cache do not exists, updating...",
-                         str(self.company))
+                self._routes = _append_timestamp(
+                    asyncio.run(self._fetch_route_list()))
+                _put_data_file(self.route_list_path, self._routes)
 
-            self._routes = _append_timestamp(
-                asyncio.run(self._fetch_route_list()))
-            _put_data_file(self.route_list_path, self._routes)
+            if self._is_outdated(self._routes):
+                logging.info("%s's route list cache is outdated, updating...",
+                             str(self.transport))
 
-        if self._is_outdated(self._routes):
-            logging.info("%s's route list cache is outdated, updating...",
-                         str(self.company))
-
-            self._routes = _append_timestamp(
-                asyncio.run(self._fetch_route_list()))
-            _put_data_file(self.route_list_path, self._routes)
+                self._routes = _append_timestamp(
+                    asyncio.run(self._fetch_route_list()))
+                _put_data_file(self.route_list_path, self._routes)
 
         return {
             route: models.RouteInfo(
-                company=self.company,
+                transport=self.transport,
                 route_no=route,
                 inbound=[
                     models.RouteInfo.Detail(
@@ -240,7 +245,7 @@ class KowloonMotorBus(Transport):
     """Direction mapping to `hketa.enums.Direction`"""
 
     @property
-    def company(self) -> enums.Transport:
+    def transport(self) -> enums.Transport:
         return enums.Transport.KMB
 
     async def _fetch_route_list(self) -> dict:
@@ -333,7 +338,7 @@ class MTRBus(Transport):
     """Direction mapping to `hketa.enums.Direction`"""
 
     @property
-    def company(self) -> enums.Transport:
+    def transport(self) -> enums.Transport:
         return enums.Transport.MTRBUS
 
     async def _fetch_route_list(self) -> dict:
@@ -400,7 +405,7 @@ class MTRLightRail(Transport):
     """Direction mapping to `hketa.enums.Direction`"""
 
     @property
-    def company(self) -> enums.Transport:
+    def transport(self) -> enums.Transport:
         return enums.Transport.MTRLRT
 
     async def _fetch_route_list(self) -> dict:
@@ -466,7 +471,7 @@ class MTRTrain(Transport):
     """Direction mapping to `hketa.enums.Direction`"""
 
     @property
-    def company(self) -> enums.Transport:
+    def transport(self) -> enums.Transport:
         return enums.Transport.MTRTRAIN
 
     async def _fetch_route_list(self) -> dict:
@@ -544,7 +549,7 @@ class CityBus(Transport):
     __path_prefix__ = 'ctb'
 
     @property
-    def company(self) -> enums.Transport:
+    def transport(self) -> enums.Transport:
         return enums.Transport.CTB
 
     async def _fetch_route_list(self) -> dict:
@@ -638,7 +643,7 @@ class NewLantaoBus(Transport):
     __path_prefix__ = 'nlb'
 
     @property
-    def company(self) -> enums.Transport:
+    def transport(self) -> enums.Transport:
         return enums.Transport.NLB
 
     async def _fetch_route_list(self) -> dict:
@@ -732,10 +737,6 @@ class NewLantaoBus(Transport):
             }} for idx, stop in enumerate((await api.nlb_route_stop_list(route_id))['stops'],
                                           start=1)
         ]
-
-    def logo(self) -> io.BufferedReader:
-        """Get the company logo in bytes"""
-        raise NotImplementedError
 
 
 if __name__ == '__main__':

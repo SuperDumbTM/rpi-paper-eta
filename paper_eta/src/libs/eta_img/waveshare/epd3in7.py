@@ -26,7 +26,7 @@ class Epd3in7(EtaImageGenerator):
     def colors(self) -> tuple[str]:
         return ("black",)
 
-    def draw(self, etas: list[models.Etas | models.ErrorEta], degree: float = 0) -> dict[str, Image.Image]:
+    def draw(self, etas: list[models.Route], degree: float = 0) -> dict[str, Image.Image]:
         image = Image.new('1', (self.width, self.height), 255)
         b = ImageDraw.Draw(image)
 
@@ -51,7 +51,7 @@ class Epd3in7(EtaImageGenerator):
                          self._bk)
             b.text((coords['route']['name']['offset'][0],
                     coords['route']['name']['offset'][1] + (row_height*row)),
-                   utils.discard(route.route,
+                   utils.discard(route.no,
                                  coords['route']['name']['width'],
                                  self.fonts['route']),
                    fill=self._bk, font=self.fonts['route'])
@@ -69,8 +69,8 @@ class Epd3in7(EtaImageGenerator):
                    fill=self._bk, font=self.fonts['stop'])
 
             # error
-            if isinstance(route, models.ErrorEta):
-                errmsg = utils.wrap(route.message,
+            if isinstance(route.etas, models.Route.Error):
+                errmsg = utils.wrap(route.etas.message,
                                     coords['error']['position']['width'],
                                     coords['error']['position']['height'],
                                     self.fonts['err_txt'])
@@ -109,12 +109,14 @@ class Epd3in7(EtaImageGenerator):
                         font=self.fonts['rmk_txt'])
                 else:
                     # minute
-                    b.text((coords['eta']['min']['offset'][0],
-                            coords['eta']['min']['offset'][1] + idx_offset),
-                           text=str(eta.eta_minute), fill=self._bk, font=self.fonts['minute'])
+                    b.text((coords['eta']['min']['offset'][0], coords['eta']['min']['offset'][1] + idx_offset),
+                           text=str(int(
+                               (eta.eta - route.timestamp).total_seconds() / 60)),
+                           fill=self._bk,
+                           font=self.fonts['minute'])
                     b.text((coords['eta']['min_txt']['offset'][0],
                             coords['eta']['min_txt']['offset'][1] + idx_offset),
-                           text=self._config['texts']['minute'][route.lang],
+                           text=self._config['texts']['minute'][route.locale],
                            fill=self._bk, font=self.fonts['min_txt'])
                     # time
                     b.text((coords['eta']['time']['offset'][0],

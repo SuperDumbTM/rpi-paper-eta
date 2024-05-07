@@ -42,7 +42,7 @@ class EtaProcessor(ABC):
         self._route = route
 
     @abstractmethod
-    def etas(self) -> list[dict[str, str | int]]:
+    def etas(self) -> list[models.Eta]:
         """Return processed ETAs
 
         Returns:

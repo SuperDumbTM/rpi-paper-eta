@@ -42,7 +42,7 @@ class EtaFactory:
                 raise ValueError(f"Unrecognized transport: {transport_}")
 
     def create_eta_processor(self, query: models.RouteQuery) -> eta_processor.EtaProcessor:
-        route = Route(query, self.create_transport(query.transport))
+        route = self.create_route(query)
         match query.transport:
             case enums.Transport.KMB:
                 return eta_processor.KmbEta(route)
@@ -58,3 +58,6 @@ class EtaFactory:
                 return eta_processor.NlbEta(route)
             case _:
                 raise ValueError(f"Unrecognized transport: {query.transport}")
+
+    def create_route(self, query: models.RouteQuery) -> Route:
+        return Route(query, self.create_transport(query.transport))
