@@ -46,7 +46,7 @@ def generate_image(
                 for eta in etap.etas():
                     route.etas.append(eta_img.Route.Eta(**eta.model_dump()))
             except hketa.exceptions.HketaException as e:
-                route.etas = eta_img.Route.Eta(str(e))
+                route.etas = eta_img.Route.Error(message=str(e))
 
             etas.append(route)
 
