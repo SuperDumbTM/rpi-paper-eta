@@ -14,6 +14,13 @@ class Locale(str, Enum):
             case Locale.EN:
                 return "English"
 
+    def iso(self) -> str:
+        match self:
+            case Locale.TC:
+                return "zh_HK"
+            case Locale.EN:
+                return "en_US"
+
 
 class Transport(str, Enum):
     """Enums representing different types of transport"""

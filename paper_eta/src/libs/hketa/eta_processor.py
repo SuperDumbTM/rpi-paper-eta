@@ -84,6 +84,8 @@ class KmbEta(EtaProcessor):
             if stop["eta"] is None:
                 if stop[f'rmk_en'] == "The final bus has departed from this stop":
                     raise exceptions.EndOfService
+                elif stop[f'rmk_en'] == "":
+                    raise exceptions.EmptyEta
                 raise exceptions.ErrorReturns(stop[f'rmk_{locale}'])
 
             eta_dt = datetime.fromisoformat(stop["eta"])
