@@ -15,7 +15,6 @@ _ctrl_mutex = threading.Lock()
 
 
 def generate_image(
-    app_conf: site_data.AppConfiguration,
     bookmarks: list[hketa.models.RouteQuery],
     generator: eta_img.generator.EtaImageGenerator
 ) -> dict[str, Image.Image]:

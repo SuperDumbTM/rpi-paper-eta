@@ -68,7 +68,7 @@ def image(args):
         generator = eta_img.generator.EtaImageGeneratorFactory().get_generator(
             app_conf.get('epd_brand'), app_conf.get('epd_model')
         )(eta_img.enums.EtaFormat(args['eta_format']), args['layout'])
-        images = refresher.generate_image(app_conf, bookmarks, generator)
+        images = refresher.generate_image(bookmarks, generator)
     except KeyError:
         return jsonify({
             'success': False,
@@ -117,7 +117,7 @@ def refresh(args):
             app_conf.get('epd_brand'), app_conf.get('epd_model')
         )(eta_img.enums.EtaFormat(args['eta_format']), args['layout'])
 
-        images = refresher.generate_image(app_conf, bookmarks, generator)
+        images = refresher.generate_image(bookmarks, generator)
     except KeyError:
         return jsonify({
             'success': False,
