@@ -7,7 +7,7 @@ class HketaException(Exception):
     """Base exception of HketaException"""
 
     def __init__(self, *args: object) -> None:
-        logging.error("Error occurs: %s", self.__class__.__name__)
+        logging.debug("Error occurs: %s", self.__class__.__name__)
         super().__init__(*args)
 
     @classmethod
