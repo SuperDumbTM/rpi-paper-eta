@@ -28,4 +28,6 @@ class Route(BaseModel):
         extras: Optional[dict[str, Any]]
 
     class Error(BaseModel):
+        model_config = ConfigDict(arbitrary_types_allowed=True)
+
         message: str
