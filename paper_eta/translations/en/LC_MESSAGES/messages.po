@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-06-15 22:06+0800\n"
+"POT-Creation-Date: 2024-06-30 17:28+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -202,8 +202,11 @@ msgstr ""
 msgid "Failed to import no. %(entry)s schedule."
 msgstr "Failed to import no. %(entry)s schedule."
 
+#: paper_eta/src/libs/eta_img/waveshare/epd3in7.py:96
+msgid "arr_dep"
+msgstr "Arriving/Departing"
+
 #: paper_eta/src/libs/hketa/exceptions.py:15
-#, fuzzy
 msgid "Error Occurred"
 msgstr "Error Occured"
 

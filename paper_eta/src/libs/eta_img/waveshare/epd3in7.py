@@ -1,17 +1,17 @@
 from pathlib import Path
 
+from flask_babel import gettext
 from PIL import Image, ImageDraw
 
-
 try:
+    from .. import models, utils
     from ..generator import EtaImageGenerator
-    from .. import utils, models
 except ImportError:
     import sys
     sys.path.append(str(Path(__file__).parent.parent))
-    from eta_img.generator import EtaImageGenerator
-    import utils
     import models
+    import utils
+    from eta_img.generator import EtaImageGenerator
 
 
 class Epd3in7(EtaImageGenerator):
@@ -93,8 +93,11 @@ class Epd3in7(EtaImageGenerator):
                     coords['eta']['position']['height']*idx
 
                 if eta.is_arriving and eta.remark not in (None, ""):
+                    text = gettext(
+                        "arr_dep") if eta.is_arriving else eta.remark
+
                     offset_x, offset_y = utils.position(
-                        eta.remark,
+                        text,
                         coords['eta']['position']['width'],
                         coords['eta']['position']['height'],
                         self.fonts['err_txt'],
@@ -104,7 +107,7 @@ class Epd3in7(EtaImageGenerator):
                     b.text((coords['eta']['position']['offset'][0] + offset_x,
                             coords['eta']['position']['offset'][1] + offset_y + idx_offset),
                            utils.discard(
-                        eta.remark, coords['eta']['position']['width'], self.fonts['rmk_txt']),
+                        text, coords['eta']['position']['width'], self.fonts['rmk_txt']),
                         fill=self._bk,
                         font=self.fonts['rmk_txt'])
                 else:
