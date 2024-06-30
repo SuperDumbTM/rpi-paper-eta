@@ -14,8 +14,6 @@ except (ImportError, ModuleNotFoundError):
     import models
     from route import Route
 
-_GMT8_TZ = pytz.timezone('Asia/Hong_kong')
-
 
 def _8601str(dt: datetime) -> str:
     """Convert a `datetime` instance to ISO-8601 formatted string."""
@@ -150,7 +148,7 @@ class MtrBusEta(EtaProcessor):
                         destination=self.route.destination().name.get(self.route.entry.locale),
                         is_arriving=True,
                         is_scheduled=eta['busLocation']['longitude'] == 0,
-                        eta=_8601str(datetime.now().astimezone(_GMT8_TZ)),
+                        eta=_8601str(timestamp),
                         eta_minute=0,
                         remark=eta[f'{time_ref}TimeText'],
                     ))
@@ -205,7 +203,7 @@ class MtrLrtEta(EtaProcessor):
                         destination=destination,
                         is_arriving=True,
                         is_scheduled=False,
-                        eta=_8601str(datetime.now().astimezone(_GMT8_TZ)),
+                        eta=_8601str(timestamp),
                         eta_minute=0,
                         remark=eta_min,
                         extras=models.Eta.Extras(
