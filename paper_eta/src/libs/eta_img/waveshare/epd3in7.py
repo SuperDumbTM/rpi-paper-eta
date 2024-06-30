@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from flask_babel import gettext
+from flask_babel import gettext, force_locale
 from PIL import Image, ImageDraw
 
 try:
@@ -93,8 +93,9 @@ class Epd3in7(EtaImageGenerator):
                     coords['eta']['position']['height']*idx
 
                 if eta.is_arriving and eta.remark not in (None, ""):
-                    text = gettext(
-                        "arr_dep") if eta.is_arriving else eta.remark
+                    with force_locale(route.locale.iso()):
+                        text = gettext(
+                            "arr_dep") if eta.is_arriving else eta.remark
 
                     offset_x, offset_y = utils.position(
                         text,

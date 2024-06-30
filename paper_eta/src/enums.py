@@ -39,3 +39,10 @@ class EtaLocale(str, Enum):
 
     TC = "tc"
     EN = "en"
+
+    def iso(self) -> str:
+        match self:
+            case EtaLocale.TC:
+                return "zh_HK"
+            case EtaLocale.EN:
+                return "en_US"

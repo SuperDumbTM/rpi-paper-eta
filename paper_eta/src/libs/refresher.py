@@ -42,8 +42,7 @@ def generate_image(
                         message=e.message())
 
             etas.append(route)
-
-        images = generator.draw(etas)
+            images = generator.draw(etas)
     except requests.RequestException as e:
         logging.warning('Image generation failed with error: %s', str(e))
         images = generator.draw_error('Network Error')
