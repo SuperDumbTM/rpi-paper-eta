@@ -122,7 +122,7 @@ class MtrBusEta(EtaProcessor):
 
         etas = []
         timestamp = datetime.strptime(response["routeStatusTime"], "%Y/%m/%d %H:%M") \
-            .replace(tzinfo=pytz.timezone('Etc/GMT-8'))
+            .astimezone(pytz.timezone('Asia/Hong_kong'))
 
         for stop in response["busStop"]:
             if stop["busStopId"] != self.route.entry.stop_id:
@@ -171,7 +171,7 @@ class MtrLrtEta(EtaProcessor):
 
         etas = []
         timestamp = datetime.fromisoformat(response['system_time']) \
-            .replace(tzinfo=pytz.timezone('Etc/GMT-8'))
+            .astimezone(pytz.timezone('Asia/Hong_kong'))
         lang_code = self._locale_map[self.route.entry.locale]
 
         for platform in response['platform_list']:
@@ -241,13 +241,13 @@ class MtrTrainEta(EtaProcessor):
 
         etas = []
         timestamp = datetime.fromisoformat(response["curr_time"]) \
-            .replace(tzinfo=pytz.timezone('Etc/GMT-8'))
+            .astimezone(pytz.timezone('Asia/Hong_kong'))
 
         etadata = response['data'][f'{self.linename}-{self.route.entry.stop_id}'].get(
             self.direction, [])
         for entry in etadata:
             eta_dt = datetime.fromisoformat(entry["time"]) \
-                .replace(tzinfo=pytz.timezone('Etc/GMT-8'))
+                .astimezone(pytz.timezone('Asia/Hong_kong'))
             etas.append(models.Eta(
                 destination=(self.route.stop_details(entry['dest'])
                              .name
@@ -325,7 +325,7 @@ class NlbEta(EtaProcessor):
 
         for eta in response['estimatedArrivals']:
             eta_dt = datetime.fromisoformat(eta['estimatedArrivalTime']) \
-                .replace(tzinfo=pytz.timezone('Etc/GMT-8'))
+                .astimezone(pytz.timezone('Asia/Hong_kong'))
 
             etas.append(models.Eta(
                 destination=(
