@@ -7,6 +7,8 @@ Minimal setup required with no configuration file modification, command entering
   <img src="https://github.com/SuperDumbTM/rpi-paper-eta/assets/71750702/df5b37b3-30d3-4504-87cb-6586f41e53db" width="55%">
 
   <img src="https://github.com/SuperDumbTM/rpi-paper-eta/assets/71750702/3790c860-9d54-4c61-b3fc-4c309498e631" width="56%">
+
+  <img src="https://github.com/SuperDumbTM/rpi-paper-eta/assets/71750702/a556b64e-1cd4-4602-9b73-d3c348320d8a" width="56%">
 </p>
 
 
