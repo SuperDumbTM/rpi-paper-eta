@@ -1,17 +1,18 @@
 import asyncio
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta
+from typing import Literal, Union
 
 import pytz
 
 try:
-    from . import api, enums, exceptions, models
+    from . import api, enums
+    from .models import Eta
     from .route import Route
 except (ImportError, ModuleNotFoundError):
     import api
     import enums
-    import exceptions
-    import models
+    from models import Eta
     from route import Route
 
 
@@ -40,22 +41,40 @@ class EtaProcessor(ABC):
         self._route = route
 
     @abstractmethod
-    def etas(self) -> list[models.Eta]:
+    def etas(self) -> Eta:
         """Return processed ETAs
-
-        Returns:
-            list: sequence of ETA(s).
-
-            >>> example
-                [{
-                    'co': str,
-                    'second': int | None,
-                    'minute': int | None,
-                    'time': str (HH:MM) | None,
-                    'destination': str
-                    'remark': str
-                }]
         """
+
+    def _g_eta(self,
+               etas: Union[list[Eta.Time], Eta.Error]) -> Eta:
+        return Eta(no=self.route.entry.no,
+                   origin=self.route.orig_name(),
+                   destination=self.route.dest_name(),
+                   stop_name=self.route.stop_name(),
+                   locale=self.route.entry.locale,
+                   logo=self.route.logo(),
+                   etas=etas,
+                   timestamp=datetime.now().replace(tzinfo=pytz.timezone('Etc/GMT-8')))
+
+    def _em(self, code: Literal["api-error", "empty", "eos", "ss-effect"]) -> str:
+        return {
+            "api-error": {
+                enums.Locale.EN: "API Error",
+                enums.Locale.TC: "API 錯誤",
+            },
+            "empty": {
+                enums.Locale.EN: "No Data",
+                enums.Locale.TC: "沒有預報",
+            },
+            "eos": {
+                enums.Locale.EN: "Not in Service",
+                enums.Locale.TC: "服務時間已過",
+            },
+            "ss-effect": {
+                enums.Locale.EN: "Special Service in Effect",
+                enums.Locale.TC: "特別車務安排",
+            },
+        }[code][self.route.entry.locale]
 
 
 class KmbEta(EtaProcessor):
@@ -67,9 +86,9 @@ class KmbEta(EtaProcessor):
             api.kmb_eta(self.route.entry.no, self.route.entry.service_type))
 
         if len(response) == 0:
-            raise exceptions.APIError
+            return self._g_eta(Eta.Error(message=self._em("api-error")))
         if response.get('data') is None:
-            raise exceptions.EmptyEta
+            return self._g_eta(Eta.Error(message=self._em("empty")))
 
         etas = []
         timestamp = datetime.fromisoformat(response['generated_timestamp'])
@@ -81,13 +100,13 @@ class KmbEta(EtaProcessor):
                 continue
             if stop["eta"] is None:
                 if stop[f'rmk_en'] == "The final bus has departed from this stop":
-                    raise exceptions.EndOfService
+                    return self._g_eta(Eta.Error(message=self._em("eos")))
                 elif stop[f'rmk_en'] == "":
-                    raise exceptions.EmptyEta
-                raise exceptions.ErrorReturns(stop[f'rmk_{locale}'])
+                    return self._g_eta(Eta.Error(message=self._em("empty")))
+                return self._g_eta(Eta.Error(stop[f'rmk_{locale}']))
 
             eta_dt = datetime.fromisoformat(stop["eta"])
-            etas.append(models.Eta(
+            etas.append(Eta.Time(
                 destination=stop[f'dest_{locale}'],
                 is_arriving=(eta_dt - timestamp).total_seconds() < 30,
                 is_scheduled=stop.get('rmk_') in ('原定班次', 'Scheduled Bus'),
@@ -102,7 +121,7 @@ class KmbEta(EtaProcessor):
                 #  (e.g. N- routes may provide only 2)
                 break
 
-        return etas
+        return self._g_eta(etas)
 
 
 class MtrBusEta(EtaProcessor):
@@ -114,11 +133,11 @@ class MtrBusEta(EtaProcessor):
             api.mtr_bus_eta(self.route.name(), self._locale_map[self.route.entry.locale]))
 
         if len(response) == 0:
-            raise exceptions.APIError
+            return self._g_eta(Eta.Error(message=self._em("api-error")))
         if response["routeStatusRemarkTitle"] is not None:
             if response["routeStatusRemarkTitle"] in ("\u505c\u6b62\u670d\u52d9", "Non-service hours"):
-                raise exceptions.EndOfService
-            raise exceptions.ErrorReturns(response["routeStatusRemarkTitle"])
+                return self._g_eta(Eta.Error(message=self._em("eos")))
+            return self._g_eta(Eta.Error(message=response["routeStatusRemarkTitle"]))
 
         etas = []
         timestamp = datetime.strptime(response["routeStatusTime"], "%Y/%m/%d %H:%M") \
@@ -136,7 +155,7 @@ class MtrBusEta(EtaProcessor):
                 if (any(char.isdigit() for char in eta[f'{time_ref}TimeText'])):
                     # eta TimeText has numbers (e.g. 3 分鐘/3 Minutes)
                     eta_sec = int(eta[f'{time_ref}TimeInSecond'])
-                    etas.append(models.Eta(
+                    etas.append(Eta.Time(
                         destination=self.route.destination().name.get(self.route.entry.locale),
                         is_arriving=False,
                         is_scheduled=eta['busLocation']['longitude'] == 0,
@@ -144,7 +163,7 @@ class MtrBusEta(EtaProcessor):
                         eta_minute=eta[f'{time_ref}TimeText'].split(" ")[0],
                     ))
                 else:
-                    etas.append(models.Eta(
+                    etas.append(Eta.Time(
                         destination=self.route.destination().name.get(self.route.entry.locale),
                         is_arriving=True,
                         is_scheduled=eta['busLocation']['longitude'] == 0,
@@ -154,7 +173,7 @@ class MtrBusEta(EtaProcessor):
                     ))
             break
 
-        return etas
+        return self._g_eta(etas)
 
 
 class MtrLrtEta(EtaProcessor):
@@ -164,10 +183,10 @@ class MtrLrtEta(EtaProcessor):
     def etas(self):
         response = asyncio.run(api.mtr_lrt_eta(self.route.entry.stop_id))
         if len(response) == 0 or response.get('status', 0) == 0:
-            raise exceptions.APIError
+            return self._g_eta(Eta.Error(message=self._em("api-error")))
         if all(platform.get("end_service_status", False)
                for platform in response['platform_list']):
-            raise exceptions.EndOfService
+            return self._g_eta(Eta.Error(message=self._em("eos")))
 
         etas = []
         timestamp = datetime.fromisoformat(response['system_time']) \
@@ -186,33 +205,33 @@ class MtrLrtEta(EtaProcessor):
                 # e.g. 3 分鐘 / 即將抵達
                 eta_min = eta[f'time_{lang_code}'].split(" ")[0]
                 if eta_min.isnumeric():
-                    etas.append(models.Eta(
+                    etas.append(Eta.Time(
                         destination=destination,
                         is_arriving=False,
                         is_scheduled=False,
                         eta=_8601str(
                             timestamp + timedelta(minutes=float(eta_min))),
                         eta_minute=int(eta_min),
-                        extras=models.Eta.Extras(
-                            platform=str(platform['platform_id']),
-                            car_length=eta['train_length']
-                        )
+                        extras={
+                            "platform": str(platform['platform_id']),
+                            "car_length": eta['train_length']
+                        },
                     ))
                 else:
-                    etas.append(models.Eta(
+                    etas.append(Eta.Time(
                         destination=destination,
                         is_arriving=True,
                         is_scheduled=False,
                         eta=_8601str(timestamp),
                         eta_minute=0,
                         remark=eta_min,
-                        extras=models.Eta.Extras(
-                            platform=str(platform['platform_id']),
-                            car_length=eta['train_length']
-                        )
+                        extras={
+                            "platform": str(platform['platform_id']),
+                            "car_length": eta['train_length']
+                        }
                     ))
 
-        return etas
+        return self._g_eta(etas)
 
 
 class MtrTrainEta(EtaProcessor):
@@ -226,29 +245,31 @@ class MtrTrainEta(EtaProcessor):
 
     def etas(self):
         response = asyncio.run(
-            api.mtr_train_eta(self.linename, self.route.entry.stop_id, self.route.entry.locale))
+            api.mtr_train_eta(self.linename, self.route.entry.stop_id))
 
         if len(response) == 0:
-            raise exceptions.APIError
+            return self._g_eta(Eta.Error(message=self._em("api-error")))
         if response.get('status', 0) == 0:
             if "suspended" in response['message']:
-                raise exceptions.StationClosed(response['message'])
+                # raise exceptions.StationClosed(response['message'])
+                return self._g_eta(Eta.Error(message=response['message']))
             if response.get('url') is not None:
-                raise exceptions.AbnormalService(response['message'])
-            raise exceptions.APIError
+                return self._g_eta(Eta.Error(message=self._em("ss-effect")))
+            return self._g_eta(Eta.Error(message=self._em("api-error")))
+
         if response['data'][f'{self.linename}-{self.route.entry.stop_id}'].get(self.direction) is None:
-            raise exceptions.EmptyEta
+            return self._g_eta(Eta.Error(message=self._em("empty")))
 
         etas = []
-        timestamp = datetime.fromisoformat(response["curr_time"]) \
-            .astimezone(pytz.timezone('Asia/Hong_kong'))
+        timestamp = datetime.fromisoformat(response["curr_time"]).astimezone(
+            pytz.timezone('Asia/Hong_kong'))
 
         etadata = response['data'][f'{self.linename}-{self.route.entry.stop_id}'].get(
             self.direction, [])
         for entry in etadata:
-            eta_dt = datetime.fromisoformat(entry["time"]) \
-                .astimezone(pytz.timezone('Asia/Hong_kong'))
-            etas.append(models.Eta(
+            eta_dt = datetime.fromisoformat(entry["time"]).astimezone(
+                pytz.timezone('Asia/Hong_kong'))
+            etas.append(Eta.Time(
                 destination=(self.route.stop_details(entry['dest'])
                              .name
                              .get(self.route.entry.locale)),
@@ -256,10 +277,10 @@ class MtrTrainEta(EtaProcessor):
                 is_scheduled=False,
                 eta=_8601str(eta_dt),
                 eta_minute=int((eta_dt - timestamp).total_seconds() / 60),
-                extras=models.Eta.Extras(platform=entry['plat'])
+                extras={"platform": entry['plat']}
             ))
 
-        return etas
+        return self._g_eta(etas)
 
 
 class BravoBusEta(EtaProcessor):
@@ -271,9 +292,9 @@ class BravoBusEta(EtaProcessor):
             api.bravobus_eta(self.route.entry.transport.value, self.route.entry.stop_id, self.route.entry.no))
 
         if len(response) == 0 or response.get('data') is None:
-            raise exceptions.APIError
+            return self._g_eta(Eta.Error(message=self._em("api-error")))
         if len(response['data']) == 0:
-            raise exceptions.EmptyEta
+            return self._g_eta(Eta.Error(message=self._em("empty")))
 
         etas = []
         timestamp = datetime.fromisoformat(response['generated_timestamp'])
@@ -284,7 +305,7 @@ class BravoBusEta(EtaProcessor):
                 continue
             if eta['eta'] == "":
                 # 九巴時段
-                etas.append(models.Eta(
+                etas.append(Eta.Time(
                     destination=eta[f"dest_{lang_code}"],
                     is_arriving=False,
                     is_scheduled=True,
@@ -294,7 +315,7 @@ class BravoBusEta(EtaProcessor):
                 ))
             else:
                 eta_dt = datetime.fromisoformat(eta['eta'])
-                etas.append(models.Eta(
+                etas.append(Eta.Time(
                     destination=eta[f"dest_{lang_code}"],
                     is_arriving=(eta_dt - timestamp).total_seconds() < 60,
                     is_scheduled=False,
@@ -303,7 +324,7 @@ class BravoBusEta(EtaProcessor):
                     remark=eta[f"rmk_{lang_code}"]
                 ))
 
-        return etas
+        return self._g_eta(etas)
 
 
 class NlbEta(EtaProcessor):
@@ -316,18 +337,19 @@ class NlbEta(EtaProcessor):
 
         if len(response) == 0:
             # incorrect parameter will result in a empty json response
-            raise exceptions.APIError
+            return self._g_eta(Eta.Error(message=self._em("api-error")))
         if not response.get('estimatedArrivals', []):
-            raise exceptions.EmptyEta(response.get('message'))
+            return self._g_eta(Eta.Error(message=self._em("empty")))
 
         etas = []
-        timestamp = datetime.now().replace(tzinfo=pytz.timezone('Etc/GMT-8'))
+        timestamp = datetime.now().replace(
+            tzinfo=pytz.timezone(pytz.timezone('Etc/GMT-8')))
 
         for eta in response['estimatedArrivals']:
             eta_dt = datetime.fromisoformat(eta['estimatedArrivalTime']) \
                 .astimezone(pytz.timezone('Asia/Hong_kong'))
 
-            etas.append(models.Eta(
+            etas.append(Eta.Time(
                 destination=(
                     self.route.destination().name.get(self.route.entry.locale)),
                 is_arriving=(eta_dt - timestamp).total_seconds() < 60,
@@ -335,8 +357,7 @@ class NlbEta(EtaProcessor):
                                   and eta.get('noGPS') == '1'),
                 eta=_8601str(eta_dt),
                 eta_minute=int((eta_dt - timestamp).total_seconds() / 60),
-                extras=models.Eta.Extras(
-                    route_variant=eta.get('routeVariantName'),)
+                extras={"route_variant": eta.get('routeVariantName')}
             ))
 
-        return etas
+        return self._g_eta(etas)

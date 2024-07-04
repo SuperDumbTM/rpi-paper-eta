@@ -1,15 +1,16 @@
 from pathlib import Path
 
-from flask_babel import gettext, force_locale
+from flask_babel import force_locale, gettext
 from PIL import Image, ImageDraw
 
+from ... import hketa
+
 try:
-    from .. import models, utils
+    from .. import utils
     from ..generator import EtaImageGenerator
 except ImportError:
     import sys
     sys.path.append(str(Path(__file__).parent.parent))
-    import models
     import utils
     from eta_img.generator import EtaImageGenerator
 
@@ -26,7 +27,7 @@ class Epd3in7(EtaImageGenerator):
     def colors(self) -> tuple[str]:
         return ("black",)
 
-    def draw(self, etas: list[models.Route], degree: float = 0) -> dict[str, Image.Image]:
+    def draw(self, etas: list[hketa.models.Eta], degree: float = 0) -> dict[str, Image.Image]:
         image = Image.new('1', (self.width, self.height), 255)
         b = ImageDraw.Draw(image)
 
@@ -69,7 +70,7 @@ class Epd3in7(EtaImageGenerator):
                    fill=self._bk, font=self.fonts['stop'])
 
             # error
-            if isinstance(route.etas, models.Route.Error):
+            if isinstance(route.etas, hketa.models.Eta.Error):
                 errmsg = utils.wrap(route.etas.message,
                                     coords['error']['position']['width'],
                                     coords['error']['position']['height'],
@@ -145,9 +146,3 @@ class Epd3in7(EtaImageGenerator):
                font=self.fonts['err_txt'])
 
         return {'black': image.rotate(degree)}
-
-
-if __name__ == "__main__":
-    import enums
-    print(Epd3in7.layouts(enums.EtaFormat.MIXED))
-    print(Epd3in7.width)

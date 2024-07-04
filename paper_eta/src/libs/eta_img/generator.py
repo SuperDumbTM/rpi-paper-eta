@@ -9,11 +9,12 @@ from typing import Iterable
 
 from PIL import Image, ImageFont
 
+from .. import hketa
+
 try:
     import enums
-    import models
 except ImportError:
-    from . import enums, models
+    from . import enums
 
 
 class EtaImageGenerator(ABC):
@@ -62,7 +63,7 @@ class EtaImageGenerator(ABC):
 
     @abstractmethod
     def draw(self,
-             etas: Iterable[models.Route],
+             etas: Iterable[hketa.models.Eta],
              degree: float = 0) -> dict[str, Image.Image]:
         """Create image(s) with the ETA(s) data
         """

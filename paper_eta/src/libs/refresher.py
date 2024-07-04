@@ -27,22 +27,8 @@ def generate_image(
         for bm in bookmarks:
             with force_locale(bm.locale.iso()):
                 etap = extensions.hketa.create_eta_processor(bm)
-                route = eta_img.Route(**bm.model_dump(),
-                                      origin=etap.route.orig_name(),
-                                      destination=etap.route.dest_name(),
-                                      stop_name=etap.route.stop_name(),
-                                      logo=etap.route.logo(),
-                                      etas=[])
-                try:
-                    for eta in etap.etas():
-                        route.etas.append(
-                            eta_img.Route.Eta(**eta.model_dump()))
-                except hketa.exceptions.HketaException as e:
-                    route.etas = eta_img.Route.Error(
-                        message=e.message())
-
-            etas.append(route)
-            images = generator.draw(etas)
+                etas.append(etap.etas())
+        images = generator.draw(etas)
     except requests.RequestException as e:
         logging.warning('Image generation failed with error: %s', str(e))
         images = generator.draw_error('Network Error')

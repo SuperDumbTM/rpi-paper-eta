@@ -1,7 +1,9 @@
 from datetime import datetime
-from typing import Optional
+from io import BytesIO
+from typing import Any, Optional, Union
 
 import pydantic
+import pytz
 
 try:
     from . import enums
@@ -53,20 +55,29 @@ class RouteInfo(pydantic.BaseModel):
 
 
 class Eta(pydantic.BaseModel):
+    model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
 
+    no: str
+    origin: str
     destination: str
-    is_arriving: bool
-    """Indicate whether the vehicle in the vincity of to the stop.
-    """
-    is_scheduled: bool
-    """Indicate whether the ETA is based on realtime information or based on schedule.
-    """
-    eta: Optional[datetime] = None
-    remark: str = ''
-    extras: "Eta.Extras" = pydantic.Field(default_factory=lambda: Eta.Extras())
+    stop_name: str
+    locale: enums.Locale
+    logo: Optional[BytesIO] = None
+    etas: Union[list["Time"], "Error"]
+    timestamp: datetime = pydantic.Field(
+        default=datetime.now().replace(tzinfo=pytz.timezone('Etc/GMT-8')))
 
-    class Extras(pydantic.BaseModel):
+    class Time(pydantic.BaseModel):
+        destination: str
+        is_arriving: bool
+        """Indicate whether the vehicle in the vincity of to the stop.
+        """
+        is_scheduled: bool
+        """Indicate whether the ETA is based on realtime information or based on schedule.
+        """
+        eta: datetime
+        remark: Optional[str] = None
+        extras: Optional[dict[str, Any]] = None
 
-        platform: Optional[str] = None
-        car_length: Optional[int] = None
-        route_variant: Optional[str] = None
+    class Error(pydantic.BaseModel):
+        message: str
