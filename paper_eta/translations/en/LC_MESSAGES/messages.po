@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-06-30 17:28+0800\n"
+"POT-Creation-Date: 2024-07-05 12:13+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -136,7 +136,7 @@ msgstr "Success"
 #: paper_eta/src/controllers/apis/bookmark.py:58
 #: paper_eta/src/controllers/apis/bookmark.py:74
 #: paper_eta/src/controllers/apis/bookmark.py:193
-#: paper_eta/src/controllers/apis/config.py:49
+#: paper_eta/src/controllers/apis/config.py:46
 #: paper_eta/src/controllers/apis/schedule.py:106
 msgid "updated"
 msgstr "Updated"
@@ -187,22 +187,20 @@ msgstr "Failed to import no. %(entry)s bookmark."
 
 #: paper_eta/src/controllers/html/bookmark.py:94
 #: paper_eta/src/controllers/html/configuration.py:48
-#: paper_eta/src/controllers/html/schedule.py:95
+#: paper_eta/src/controllers/html/schedule.py:96
 msgid "import_failed"
 msgstr "Import Failed"
 
-#: paper_eta/src/controllers/html/root.py:26
-msgid "missing_api_err_msg"
-msgstr ""
-"The ETA server configurations has not been set. For the Paper ETA to work"
-" properly, please configure at \"Configuration\""
+#: paper_eta/src/controllers/html/schedule.py:28
+msgid "Please enter the display details first."
+msgstr "Please enter the display details first."
 
-#: paper_eta/src/controllers/html/schedule.py:89
+#: paper_eta/src/controllers/html/schedule.py:90
 #, python-format
 msgid "Failed to import no. %(entry)s schedule."
 msgstr "Failed to import no. %(entry)s schedule."
 
-#: paper_eta/src/libs/eta_img/waveshare/epd3in7.py:96
+#: paper_eta/src/libs/eta_img/waveshare/epd3in7.py:98
 msgid "arr_dep"
 msgstr "Arriving/Departing"
 
@@ -373,9 +371,9 @@ msgid "stop"
 msgstr "Stop"
 
 #: paper_eta/templates/bookmark/edit.jinja:124
-#: paper_eta/templates/configuration/api_server_form.jinja:35
+#: paper_eta/templates/configuration/api_server_form.jinja:29
 #: paper_eta/templates/configuration/epd_form.jinja:66
-#: paper_eta/templates/configuration/index.jinja:90
+#: paper_eta/templates/configuration/index.jinja:76
 #: paper_eta/templates/schedule/form.jinja:96
 msgid "submit"
 msgstr "Submit"
@@ -410,37 +408,30 @@ msgid "create"
 msgstr "Create"
 
 #: paper_eta/templates/bookmark/list.jinja:138
-#: paper_eta/templates/configuration/index.jinja:94
+#: paper_eta/templates/configuration/index.jinja:80
 #: paper_eta/templates/schedule/list.jinja:155
 msgid "export"
 msgstr "Export"
 
 #: paper_eta/templates/bookmark/list.jinja:145
-#: paper_eta/templates/configuration/index.jinja:99
+#: paper_eta/templates/configuration/index.jinja:85
 #: paper_eta/templates/schedule/list.jinja:162
 msgid "import"
 msgstr "Import"
 
 #: paper_eta/templates/configuration/api_server_form.jinja:14
-#: paper_eta/templates/configuration/index.jinja:74
 msgid "api_server_setting"
 msgstr "API Server Setting"
 
 #: paper_eta/templates/configuration/api_server_form.jinja:16
-#: paper_eta/templates/configuration/index.jinja:76
 msgid "api_server_setting_help"
 msgstr "Enter the details of the ETA server for fetching all the reqiured data."
 
 #: paper_eta/templates/configuration/api_server_form.jinja:20
-#: paper_eta/templates/configuration/index.jinja:82
-msgid "api_server_url"
-msgstr "API Server URL"
-
-#: paper_eta/templates/configuration/api_server_form.jinja:26
 msgid "api_server_username"
 msgstr "Username"
 
-#: paper_eta/templates/configuration/api_server_form.jinja:31
+#: paper_eta/templates/configuration/api_server_form.jinja:25
 msgid "api_server_password"
 msgstr "Password"
 
@@ -713,4 +704,14 @@ msgstr "No Repeat"
 
 #~ msgid "code"
 #~ msgstr "Model"
+
+#~ msgid "missing_api_err_msg"
+#~ msgstr ""
+#~ "The ETA server configurations has not"
+#~ " been set. For the Paper ETA to"
+#~ " work properly, please configure at "
+#~ "\"Configuration\""
+
+#~ msgid "api_server_url"
+#~ msgstr "API Server URL"
 

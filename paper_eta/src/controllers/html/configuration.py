@@ -69,8 +69,7 @@ def epaper_setting():
 def api_server_setting():
     app_conf = site_data.AppConfiguration()
     return render_template("configuration/api_server_form.jinja",
-                           form=forms.ApiServerForm(url=app_conf.get('api_url'),
-                                                    username=app_conf.get(
-                                                        'api_username'),
-                                                    password=app_conf.get('api_password'))
+                           form=forms.ApiServerForm(
+                               username=app_conf.get('api_username'),
+                               password=app_conf.get('api_password'))
                            )
