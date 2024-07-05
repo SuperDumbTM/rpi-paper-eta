@@ -1,14 +1,21 @@
 import os
 
 try:
-    from . import enums, eta_processor, models, transport
+    from .enums import Transport
+    from .eta_processor import (BravoBusEta, EtaProcessor, KmbEta, MtrBusEta,
+                                MtrLrtEta, MtrTrainEta, NlbEta)
+    from .models import RouteQuery
     from .route import Route
+    from .transport import (CityBus, KowloonMotorBus, MTRBus, MTRLightRail,
+                            MTRTrain, NewLantaoBus)
 except (ImportError, ModuleNotFoundError):
-    import enums
-    import eta_processor
-    import models
-    import transport
+    from enums import Transport
+    from eta_processor import (BravoBusEta, EtaProcessor, KmbEta, MtrBusEta,
+                               MtrLrtEta, MtrTrainEta, NlbEta)
+    from models import RouteQuery
     from route import Route
+    from transport import (CityBus, KowloonMotorBus, MTRBus, MTRLightRail,
+                           MTRTrain, NewLantaoBus)
 
 
 class EtaFactory:
@@ -24,40 +31,40 @@ class EtaFactory:
         self.data_path = data_path
         self.threshold = threshold
 
-    def create_transport(self, transport_: enums.Transport) -> transport.Transport:
+    def create_transport(self, transport_: Transport) -> Transport:
         match transport_:
-            case enums.Transport.KMB:
-                return transport.KowloonMotorBus(self.data_path, self.threshold)
-            case enums.Transport.MTRBUS:
-                return transport.MTRBus(self.data_path, self.threshold)
-            case enums.Transport.MTRLRT:
-                return transport.MTRLightRail(self.data_path, self.threshold)
-            case enums.Transport.MTRTRAIN:
-                return transport.MTRTrain(self.data_path, self.threshold)
-            case enums.Transport.CTB:
-                return transport.CityBus(self.data_path, self.threshold)
-            case enums.Transport.NLB:
-                return transport.NewLantaoBus(self.data_path, self.threshold)
+            case Transport.KMB:
+                return KowloonMotorBus(self.data_path, self.threshold)
+            case Transport.MTRBUS:
+                return MTRBus(self.data_path, self.threshold)
+            case Transport.MTRLRT:
+                return MTRLightRail(self.data_path, self.threshold)
+            case Transport.MTRTRAIN:
+                return MTRTrain(self.data_path, self.threshold)
+            case Transport.CTB:
+                return CityBus(self.data_path, self.threshold)
+            case Transport.NLB:
+                return NewLantaoBus(self.data_path, self.threshold)
             case _:
                 raise ValueError(f"Unrecognized transport: {transport_}")
 
-    def create_eta_processor(self, query: models.RouteQuery) -> eta_processor.EtaProcessor:
+    def create_eta_processor(self, query: RouteQuery) -> EtaProcessor:
         route = self.create_route(query)
         match query.transport:
-            case enums.Transport.KMB:
-                return eta_processor.KmbEta(route)
-            case enums.Transport.MTRBUS:
-                return eta_processor.MtrBusEta(route)
-            case enums.Transport.MTRLRT:
-                return eta_processor.MtrLrtEta(route)
-            case enums.Transport.MTRTRAIN:
-                return eta_processor.MtrTrainEta(route)
-            case enums.Transport.CTB | enums.Transport.NWFB:
-                return eta_processor.BravoBusEta(route)
-            case enums.Transport.NLB:
-                return eta_processor.NlbEta(route)
+            case Transport.KMB:
+                return KmbEta(route)
+            case Transport.MTRBUS:
+                return MtrBusEta(route)
+            case Transport.MTRLRT:
+                return MtrLrtEta(route)
+            case Transport.MTRTRAIN:
+                return MtrTrainEta(route)
+            case Transport.CTB | Transport.NWFB:
+                return BravoBusEta(route)
+            case Transport.NLB:
+                return NlbEta(route)
             case _:
                 raise ValueError(f"Unrecognized transport: {query.transport}")
 
-    def create_route(self, query: models.RouteQuery) -> Route:
+    def create_route(self, query: RouteQuery) -> Route:
         return Route(query, self.create_transport(query.transport))

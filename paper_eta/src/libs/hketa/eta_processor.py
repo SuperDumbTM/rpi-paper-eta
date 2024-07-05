@@ -6,12 +6,13 @@ from typing import Literal, Union
 import pytz
 
 try:
-    from . import api, enums
+    from . import api
+    from .enums import Locale, StopType
     from .models import Eta
     from .route import Route
 except (ImportError, ModuleNotFoundError):
     import api
-    import enums
+    from enums import Locale, StopType
     from models import Eta
     from route import Route
 
@@ -59,27 +60,27 @@ class EtaProcessor(ABC):
     def _em(self, code: Literal["api-error", "empty", "eos", "ss-effect"]) -> str:
         return {
             "api-error": {
-                enums.Locale.EN: "API Error",
-                enums.Locale.TC: "API 錯誤",
+                Locale.EN: "API Error",
+                Locale.TC: "API 錯誤",
             },
             "empty": {
-                enums.Locale.EN: "No Data",
-                enums.Locale.TC: "沒有預報",
+                Locale.EN: "No Data",
+                Locale.TC: "沒有預報",
             },
             "eos": {
-                enums.Locale.EN: "Not in Service",
-                enums.Locale.TC: "服務時間已過",
+                Locale.EN: "Not in Service",
+                Locale.TC: "服務時間已過",
             },
             "ss-effect": {
-                enums.Locale.EN: "Special Service in Effect",
-                enums.Locale.TC: "特別車務安排",
+                Locale.EN: "Special Service in Effect",
+                Locale.TC: "特別車務安排",
             },
         }[code][self.route.entry.locale]
 
 
 class KmbEta(EtaProcessor):
 
-    _locale_map = {enums.Locale.TC: "tc", enums.Locale.EN: "en"}
+    _locale_map = {Locale.TC: "tc", Locale.EN: "en"}
 
     def etas(self):
         response = asyncio.run(
@@ -126,7 +127,7 @@ class KmbEta(EtaProcessor):
 
 class MtrBusEta(EtaProcessor):
 
-    _locale_map = {enums.Locale.TC: "zh", enums.Locale.EN: "en"}
+    _locale_map = {Locale.TC: "zh", Locale.EN: "en"}
 
     def etas(self):
         response = asyncio.run(
@@ -149,7 +150,7 @@ class MtrBusEta(EtaProcessor):
 
             for eta in stop["bus"]:
                 time_ref = "departure" \
-                    if self.route.stop_type() == enums.StopType.ORIG \
+                    if self.route.stop_type() == StopType.ORIG \
                     else "arrival"
 
                 if (any(char.isdigit() for char in eta[f'{time_ref}TimeText'])):
@@ -178,7 +179,7 @@ class MtrBusEta(EtaProcessor):
 
 class MtrLrtEta(EtaProcessor):
 
-    _locale_map = {enums.Locale.TC: "ch", enums.Locale.EN: "en"}
+    _locale_map = {Locale.TC: "ch", Locale.EN: "en"}
 
     def etas(self):
         response = asyncio.run(api.mtr_lrt_eta(self.route.entry.stop_id))
@@ -285,7 +286,7 @@ class MtrTrainEta(EtaProcessor):
 
 class BravoBusEta(EtaProcessor):
 
-    _locale_map = {enums.Locale.TC: "tc", enums.Locale.EN: "en"}
+    _locale_map = {Locale.TC: "tc", Locale.EN: "en"}
 
     def etas(self):
         response = asyncio.run(
@@ -329,7 +330,7 @@ class BravoBusEta(EtaProcessor):
 
 class NlbEta(EtaProcessor):
 
-    _lang_map = {enums.Locale.TC: 'zh', enums.Locale.EN: 'en', }
+    _lang_map = {Locale.TC: 'zh', Locale.EN: 'en', }
 
     def etas(self):
         response = asyncio.run(
