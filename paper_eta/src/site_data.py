@@ -13,8 +13,7 @@ class AppConfiguration(abc.Mapping):
     _data: dict[str,]
     _filepath: Path
 
-    __keys__ = ['api_url', 'api_username',
-                'api_password', 'epd_brand', 'epd_model',]
+    __keys__ = ['epd_brand', 'epd_model',]
 
     def __init__(self) -> None:
         self._data = {k: None for k in self.__keys__}
