@@ -246,7 +246,9 @@ class MtrTrainEta(EtaProcessor):
 
     def etas(self):
         response = asyncio.run(
-            api.mtr_train_eta(self.linename, self.route.entry.stop_id))
+            api.mtr_train_eta(self.linename,
+                              self.route.entry.stop_id,
+                              self.route.entry.locale.value))
 
         if len(response) == 0:
             return self._g_eta(Eta.Error(message=self._em("api-error")))
@@ -343,8 +345,7 @@ class NlbEta(EtaProcessor):
             return self._g_eta(Eta.Error(message=self._em("empty")))
 
         etas = []
-        timestamp = datetime.now().replace(
-            tzinfo=pytz.timezone(pytz.timezone('Etc/GMT-8')))
+        timestamp = datetime.now().replace(tzinfo=pytz.timezone('Etc/GMT-8'))
 
         for eta in response['estimatedArrivals']:
             eta_dt = datetime.fromisoformat(eta['estimatedArrivalTime']) \
