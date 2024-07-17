@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-03-28 00:10+0800\n"
+"POT-Creation-Date: 2024-07-05 12:13+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hant_HK\n"
@@ -111,16 +111,16 @@ msgstr "預設"
 msgid "mixed"
 msgstr "混合"
 
-#: paper_eta/src/controllers/apis/bookmark.py:45
+#: paper_eta/src/controllers/apis/bookmark.py:38
 #: paper_eta/templates/error.jinja:3 paper_eta/templates/index.jinja:103
 msgid "error"
 msgstr "錯誤"
 
-#: paper_eta/src/controllers/apis/bookmark.py:51
-#: paper_eta/src/controllers/apis/bookmark.py:124
-#: paper_eta/src/controllers/apis/bookmark.py:132
-#: paper_eta/src/controllers/apis/bookmark.py:141
-#: paper_eta/src/controllers/apis/bookmark.py:152
+#: paper_eta/src/controllers/apis/bookmark.py:44
+#: paper_eta/src/controllers/apis/bookmark.py:117
+#: paper_eta/src/controllers/apis/bookmark.py:125
+#: paper_eta/src/controllers/apis/bookmark.py:134
+#: paper_eta/src/controllers/apis/bookmark.py:145
 #: paper_eta/src/controllers/apis/config.py:20
 #: paper_eta/src/controllers/apis/display.py:25
 #: paper_eta/src/controllers/apis/display.py:40
@@ -133,28 +133,28 @@ msgstr "錯誤"
 msgid "success"
 msgstr "成功"
 
-#: paper_eta/src/controllers/apis/bookmark.py:65
-#: paper_eta/src/controllers/apis/bookmark.py:81
-#: paper_eta/src/controllers/apis/bookmark.py:200
-#: paper_eta/src/controllers/apis/config.py:49
+#: paper_eta/src/controllers/apis/bookmark.py:58
+#: paper_eta/src/controllers/apis/bookmark.py:74
+#: paper_eta/src/controllers/apis/bookmark.py:193
+#: paper_eta/src/controllers/apis/config.py:46
 #: paper_eta/src/controllers/apis/schedule.py:106
 msgid "updated"
 msgstr "已更新"
 
-#: paper_eta/src/controllers/apis/bookmark.py:95
+#: paper_eta/src/controllers/apis/bookmark.py:88
 #: paper_eta/src/controllers/apis/log.py:36
 msgid "deleted"
 msgstr "已刪除"
 
-#: paper_eta/src/controllers/apis/bookmark.py:166
+#: paper_eta/src/controllers/apis/bookmark.py:159
 msgid "connection_error"
 msgstr "連接失敗"
 
-#: paper_eta/src/controllers/apis/bookmark.py:173
+#: paper_eta/src/controllers/apis/bookmark.py:166
 msgid "eta_server_error"
 msgstr "ETA 伺服器出錯"
 
-#: paper_eta/src/controllers/apis/bookmark.py:206
+#: paper_eta/src/controllers/apis/bookmark.py:199
 #: paper_eta/src/controllers/apis/schedule.py:59
 msgid "invalid_id"
 msgstr "無效 ID"
@@ -187,29 +187,68 @@ msgstr "未能匯入第%(entry)s個收藏。"
 
 #: paper_eta/src/controllers/html/bookmark.py:94
 #: paper_eta/src/controllers/html/configuration.py:48
-#: paper_eta/src/controllers/html/schedule.py:95
+#: paper_eta/src/controllers/html/schedule.py:96
 msgid "import_failed"
 msgstr "匯入失敗"
 
-#: paper_eta/src/controllers/html/root.py:26
-msgid "missing_api_err_msg"
-msgstr "尚未設定 ETA 伺服器。請到「設定」頁面設定以確保 Paper ETA 能夠正常運作。"
+#: paper_eta/src/controllers/html/schedule.py:28
+msgid "Please enter the display details first."
+msgstr "請先輸入你所使用的屏幕資料。"
 
-#: paper_eta/src/controllers/html/schedule.py:89
+#: paper_eta/src/controllers/html/schedule.py:90
 #, python-format
 msgid "Failed to import no. %(entry)s schedule."
 msgstr "未能匯入第%(entry)s個排程。"
 
-#: paper_eta/src/libs/refresher.py:72
-#, fuzzy
-msgid "code"
-msgstr "型號"
+#: paper_eta/src/libs/eta_img/waveshare/epd3in7.py:98
+msgid "arr_dep"
+msgstr "即將抵達／已離開"
 
-#: paper_eta/src/utils/eta_api.py:29
+#: paper_eta/src/libs/hketa/exceptions.py:15
+msgid "Error Occurred"
+msgstr "發生未知的錯誤。"
+
+#: paper_eta/src/libs/hketa/exceptions.py:23
+msgid "End of Service"
+msgstr "非服務時間"
+
+#: paper_eta/src/libs/hketa/exceptions.py:39
+msgid "API Error"
+msgstr "API 錯誤"
+
+#: paper_eta/src/libs/hketa/exceptions.py:47
+msgid "No Data"
+msgstr "沒有數據"
+
+#: paper_eta/src/libs/hketa/exceptions.py:55
+msgid "Station Closed"
+msgstr "車站關閉"
+
+#: paper_eta/src/libs/hketa/exceptions.py:63
+msgid "Special Service in Effect"
+msgstr "特別車務安排實施中"
+
+#: paper_eta/src/libs/hketa/exceptions.py:71
+msgid "Invalid Route"
+msgstr "路線不存在"
+
+#: paper_eta/src/libs/hketa/exceptions.py:79
+msgid "Invalid Route Number"
+msgstr "路線編號不存在"
+
+#: paper_eta/src/libs/hketa/exceptions.py:87
+msgid "Invalid Stop"
+msgstr "車站不存在"
+
+#: paper_eta/src/libs/hketa/exceptions.py:95
+msgid "Invalid Service Type"
+msgstr "班次類別不存在"
+
+#: paper_eta/src/utils/eta_api.py:20
 msgid "inbound"
 msgstr "回程"
 
-#: paper_eta/src/utils/eta_api.py:31
+#: paper_eta/src/utils/eta_api.py:22
 msgid "outbound"
 msgstr "去程"
 
@@ -301,7 +340,6 @@ msgid "language"
 msgstr "顯示語言"
 
 #: paper_eta/templates/bookmark/edit.jinja:46
-#: paper_eta/templates/bookmark/list.jinja:41
 msgid "company"
 msgstr "公司"
 
@@ -326,9 +364,9 @@ msgid "stop"
 msgstr "車站"
 
 #: paper_eta/templates/bookmark/edit.jinja:124
-#: paper_eta/templates/configuration/api_server_form.jinja:35
+#: paper_eta/templates/configuration/api_server_form.jinja:29
 #: paper_eta/templates/configuration/epd_form.jinja:66
-#: paper_eta/templates/configuration/index.jinja:90
+#: paper_eta/templates/configuration/index.jinja:76
 #: paper_eta/templates/schedule/form.jinja:96
 msgid "submit"
 msgstr "提交"
@@ -337,6 +375,10 @@ msgstr "提交"
 #: paper_eta/templates/schedule/list.jinja:42
 msgid "no."
 msgstr "No."
+
+#: paper_eta/templates/bookmark/list.jinja:41
+msgid "transport"
+msgstr "交通工具"
 
 #: paper_eta/templates/bookmark/list.jinja:47
 #: paper_eta/templates/schedule/list.jinja:48
@@ -359,37 +401,30 @@ msgid "create"
 msgstr "建立"
 
 #: paper_eta/templates/bookmark/list.jinja:138
-#: paper_eta/templates/configuration/index.jinja:94
+#: paper_eta/templates/configuration/index.jinja:80
 #: paper_eta/templates/schedule/list.jinja:155
 msgid "export"
 msgstr "匯出"
 
 #: paper_eta/templates/bookmark/list.jinja:145
-#: paper_eta/templates/configuration/index.jinja:99
+#: paper_eta/templates/configuration/index.jinja:85
 #: paper_eta/templates/schedule/list.jinja:162
 msgid "import"
 msgstr "匯入"
 
 #: paper_eta/templates/configuration/api_server_form.jinja:14
-#: paper_eta/templates/configuration/index.jinja:74
 msgid "api_server_setting"
 msgstr "API 伺服器設定"
 
 #: paper_eta/templates/configuration/api_server_form.jinja:16
-#: paper_eta/templates/configuration/index.jinja:76
 msgid "api_server_setting_help"
 msgstr "輸入 ETA 伺服器的資料，以便程式能夠取得預報數據及其他相關資料。"
 
 #: paper_eta/templates/configuration/api_server_form.jinja:20
-#: paper_eta/templates/configuration/index.jinja:82
-msgid "api_server_url"
-msgstr "伺服器網址"
-
-#: paper_eta/templates/configuration/api_server_form.jinja:26
 msgid "api_server_username"
 msgstr "登入名稱"
 
-#: paper_eta/templates/configuration/api_server_form.jinja:31
+#: paper_eta/templates/configuration/api_server_form.jinja:25
 msgid "api_server_password"
 msgstr "登入密碼"
 
@@ -578,9 +613,8 @@ msgid "not_enabled"
 msgstr "未啟用"
 
 #: paper_eta/templates/schedule/list.jinja:126
-#, fuzzy
 msgid "enable/disable"
-msgstr "啟用"
+msgstr "啟用／停用"
 
 #: paper_eta/templates/schedule/list.jinja:135
 msgid "refresh_now"
@@ -649,4 +683,13 @@ msgstr "不重覆"
 
 #~ msgid "app_configuration_help"
 #~ msgstr "設定"
+
+#~ msgid "code"
+#~ msgstr "型號"
+
+#~ msgid "missing_api_err_msg"
+#~ msgstr "尚未設定 ETA 伺服器。請到「設定」頁面設定以確保 Paper ETA 能夠正常運作。"
+
+#~ msgid "api_server_url"
+#~ msgstr "伺服器網址"
 

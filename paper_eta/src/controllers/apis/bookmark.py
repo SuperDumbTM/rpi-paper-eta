@@ -7,19 +7,19 @@ from flask import Blueprint, abort, current_app, jsonify, request
 from flask_babel import lazy_gettext
 from webargs import flaskparser
 
-from ....src import enums, site_data
-from ... import utils, models, db
+from ... import db, enums, extensions, models, site_data, utils
+from ...libs import hketa
 
 bp = Blueprint('api_bookmark', __name__, url_prefix="/api")
 
 _bookmark_validation_rules = {
-    'company': webargs.fields.String(
+    'transport': webargs.fields.String(
         required=True, validate=webargs.validate.OneOf([c for c in enums.EtaCompany])),
-    'route': webargs.fields.String(required=True),
+    'no': webargs.fields.String(required=True),
     'direction': webargs.fields.String(required=True),
     'service_type': webargs.fields.String(required=True),
-    'stop_code': webargs.fields.String(required=True),
-    'lang': webargs.fields.String(
+    'stop_id': webargs.fields.String(required=True),
+    'locale': webargs.fields.String(
         required=True, validate=webargs.validate.OneOf([l for l in enums.EtaLocale]))
 }
 
@@ -32,15 +32,8 @@ def get_all(args):
     bookmarks = []
     for bm in models.Bookmark.query.order_by(models.Bookmark.ordering).all():
         try:
-            stop_name = requests.get(
-                f"{site_data.AppConfiguration().get('api_url')}"
-                f"/stop/{bm.company.value}/{bm.route}",
-                {
-                    'direction': bm.direction,
-                    'service_type': bm.service_type,
-                    'stop_code': bm.stop_code
-                }
-            ).json()['data']['stop']['name'][bm.lang]
+            stop_name = extensions.hketa.create_route(
+                hketa.models.RouteQuery(**bm.as_dict())).stop_name()
         except Exception:
             stop_name = lazy_gettext('error')
 
@@ -103,11 +96,11 @@ def delete(id: str):
 def search(search_type: Literal["routes", "directions", "service_types", "stops"]):
     args = flaskparser.parser.parse(
         {
-            'company': webargs.fields.String(
+            'transport': webargs.fields.String(
                 required=True, validate=webargs.validate.OneOf([c for c in enums.EtaCompany])),
-            'lang': webargs.fields.String(
+            'locale': webargs.fields.String(
                 required=True, validate=webargs.validate.OneOf([c for c in enums.EtaLocale])),
-            'route': webargs.fields.String(
+            'no': webargs.fields.String(
                 required=search_type in ('directions', 'service_types', 'stops')),
             'direction': webargs.fields.String(
                 required=search_type in ('service_types', 'stops')),
@@ -123,7 +116,7 @@ def search(search_type: Literal["routes", "directions", "service_types", "stops"
                 'success': True,
                 'message': '{}.'.format(lazy_gettext("success")),
                 'data': {
-                    'routes': utils.eta_api.route_choices(args['company'])
+                    'routes': utils.eta_api.route_choices(args['transport'])
                 }
             })
         elif search_type == "directions":
@@ -131,8 +124,8 @@ def search(search_type: Literal["routes", "directions", "service_types", "stops"
                 'success': True,
                 'message': '{}.'.format(lazy_gettext("success")),
                 'data': {
-                    'directions': utils.eta_api.direction_choices(args['company'],
-                                                                  args['route'])
+                    'directions': utils.eta_api.direction_choices(args['transport'],
+                                                                  args['no'])
                 }
             })
         elif search_type == "service_types":
@@ -140,10 +133,10 @@ def search(search_type: Literal["routes", "directions", "service_types", "stops"
                 'success': True,
                 'message': '{}.'.format(lazy_gettext("success")),
                 'data': {
-                    'service_types': utils.eta_api.type_choices(args['company'],
-                                                                args['route'],
+                    'service_types': utils.eta_api.type_choices(args['transport'],
+                                                                args['no'],
                                                                 args['direction'],
-                                                                args['lang'])
+                                                                args['locale'])
                 }
             })
         elif search_type == "stops":
@@ -151,11 +144,11 @@ def search(search_type: Literal["routes", "directions", "service_types", "stops"
                 'success': True,
                 'message': '{}.'.format(lazy_gettext("success")),
                 'data': {
-                    'stops': utils.eta_api.stop_choices(args['company'],
-                                                        args['route'],
+                    'stops': utils.eta_api.stop_choices(args['transport'],
+                                                        args['no'],
                                                         args['direction'],
                                                         args['service_type'],
-                                                        args['lang'])
+                                                        args['locale'])
                 }
             })
         else:

@@ -25,8 +25,9 @@ def create():
     app_conf = site_data.AppConfiguration()
 
     if not app_conf.get('epd_brand') or not app_conf.get('epd_model'):
-        # TODO: handles no epd setting
-        return redirect()
+        flash(lazy_gettext("Please enter the display details first."),
+              enums.FlashCategory.error)
+        return redirect(url_for('configuration.index'))
 
     # the template needs zip and list
     # https://stackoverflow.com/questions/62029141/cant-use-zip-from-jinja2

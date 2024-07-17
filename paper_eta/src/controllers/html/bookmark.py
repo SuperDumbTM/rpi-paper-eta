@@ -22,10 +22,10 @@ def index():
 @bp.route('/bookmark/create')
 def create():
     return render_template("bookmark/edit.jinja",
-                           companys=[(c.value, lazy_gettext(c.value))
-                                     for c in enums.EtaCompany],
-                           langs=[(l.value, lazy_gettext(l.value))
-                                  for l in enums.EtaLocale],
+                           transports=[(c.value, lazy_gettext(c.value))
+                                       for c in enums.EtaCompany],
+                           locales=[(l.value, lazy_gettext(l.value))
+                                    for l in enums.EtaLocale],
                            bookmark=models.Bookmark(),
                            form_action=url_for(
                                "api_bookmark.create"),
@@ -38,22 +38,22 @@ def edit(id: str):
     directions = service_types = stops = []
     try:
         directions = utils.eta_api.direction_choices(
-            bookmark.company.value, bookmark.route)
+            bookmark.transport.value, bookmark.no)
         service_types = utils.eta_api.type_choices(
-            bookmark.company.value, bookmark.route, bookmark.direction.value, bookmark.lang)
+            bookmark.transport.value, bookmark.no, bookmark.direction.value, bookmark.locale)
         stops = utils.eta_api.stop_choices(
-            bookmark.company.value, bookmark.route, bookmark.direction.value, bookmark.service_type, bookmark.lang)
+            bookmark.transport.value, bookmark.no, bookmark.direction.value, bookmark.service_type, bookmark.locale)
     except requests.exceptions.ConnectionError:
         flash("API server error.", enums.FlashCategory.error)
 
     return render_template("bookmark/edit.jinja",
-                           companys=[(c.value, lazy_gettext(c.value))
-                                     for c in enums.EtaCompany],
+                           transports=[(c.value, lazy_gettext(c.value))
+                                       for c in enums.EtaCompany],
                            directions=directions,
                            service_types=service_types,
                            stops=stops,
-                           langs=[(l.value, lazy_gettext(l.value))
-                                  for l in enums.EtaLocale],
+                           locales=[(l.value, lazy_gettext(l.value))
+                                    for l in enums.EtaLocale],
                            bookmark=bookmark,
                            form_action=url_for(
                                "api_bookmark.update", id=id),

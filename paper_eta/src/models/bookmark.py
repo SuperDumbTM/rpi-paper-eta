@@ -11,12 +11,12 @@ class Bookmark(BaseModel):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     # autoincrement by `generate_ordering`
     ordering: Mapped[int] = mapped_column(unique=True)
-    company: Mapped[enums.EtaCompany]
-    route: Mapped[str]
+    transport: Mapped[enums.EtaCompany]
+    no: Mapped[str]
     direction: Mapped[enums.RouteDirection]
     service_type: Mapped[str]
-    stop_code: Mapped[str]
-    lang: Mapped[enums.EtaLocale]
+    stop_id: Mapped[str]
+    locale: Mapped[enums.EtaLocale]
 
 
 @event.listens_for(Bookmark, 'before_insert')

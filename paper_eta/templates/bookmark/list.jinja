@@ -38,7 +38,7 @@
                 <thead>
                     <tr>
                         <th class="not-mobile">{{ _('no.') }}</th>
-                        <th>{{ _('company') }}</th>
+                        <th>{{ _('transport') }}</th>
                         <th>{{ _('route') }}</th>
                         <th>{{ _('direction') }}</th>
                         <th class="not-mobile">{{ _('service_type') }}</th>
@@ -77,12 +77,12 @@
                     return meta.row + 1;
                 }
             },
-            { data: 'company' },
-            { data: 'route' },
+            { data: 'transport' },
+            { data: 'no' },
             { data: 'direction' },
             { data: 'service_type' },
             { data: 'stop_name' },
-            { data: 'lang' },
+            { data: 'locale' },
             {
                 data: null,
                 render: function (data, type, row, meta) {

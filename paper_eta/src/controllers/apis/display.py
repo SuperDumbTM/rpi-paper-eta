@@ -7,7 +7,7 @@ from flask import Blueprint, current_app, jsonify
 from flask_babel import lazy_gettext
 
 from ....src import models, site_data
-from ...libs import epd_log, epdcon, eta_img, refresher
+from ...libs import epd_log, epdcon, eta_img, hketa, refresher
 
 bp = Blueprint('api_display',
                __name__,
@@ -59,7 +59,7 @@ def image(args):
             'message': '{}.'.format(lazy_gettext('configuration_required')),
         }), 400
 
-    bookmarks = [models.EtaConfig(**bm.as_dict())
+    bookmarks = [hketa.models.RouteQuery(**bm.as_dict())
                  for bm in models.Bookmark.query
                  .order_by(models.Bookmark.ordering)
                  .all()
@@ -68,7 +68,7 @@ def image(args):
         generator = eta_img.generator.EtaImageGeneratorFactory().get_generator(
             app_conf.get('epd_brand'), app_conf.get('epd_model')
         )(eta_img.enums.EtaFormat(args['eta_format']), args['layout'])
-        images = refresher.generate_image(app_conf, bookmarks, generator)
+        images = refresher.generate_image(bookmarks, generator)
     except KeyError:
         return jsonify({
             'success': False,
@@ -107,7 +107,7 @@ def refresh(args):
 
     # TODO: module name clash
     # ---------- generate ETA images ----------
-    bookmarks = [models.EtaConfig(**bm.as_dict())
+    bookmarks = [hketa.models.RouteQuery(**bm.as_dict())
                  for bm in models.Bookmark.query
                  .order_by(models.Bookmark.ordering)
                  .all()]
@@ -117,7 +117,7 @@ def refresh(args):
             app_conf.get('epd_brand'), app_conf.get('epd_model')
         )(eta_img.enums.EtaFormat(args['eta_format']), args['layout'])
 
-        images = refresher.generate_image(app_conf, bookmarks, generator)
+        images = refresher.generate_image(bookmarks, generator)
     except KeyError:
         return jsonify({
             'success': False,

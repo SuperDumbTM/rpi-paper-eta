@@ -5,73 +5,29 @@ from io import BytesIO
 from pathlib import Path
 
 import requests
-from flask_babel import lazy_gettext
+from flask_babel import lazy_gettext, force_locale
 from PIL import Image
 
-from paper_eta.src import models, site_data
-from paper_eta.src.libs import epdcon, eta_img
+from .. import extensions, models, site_data
+from ..libs import epdcon, eta_img, hketa
 
 _ctrl_mutex = threading.Lock()
 
 
 def generate_image(
-    app_conf: site_data.AppConfiguration,
-    bookmarks: list[models.EtaConfig],
+    bookmarks: list[hketa.models.RouteQuery],
     generator: eta_img.generator.EtaImageGenerator
 ) -> dict[str, Image.Image]:
     """Generate a ETA image.
 
-    To correctly display the text, call this function with `flask.request`context.
-
-    Args:
-        app_config (models.Configuration): _description_
-        bookmarks (list[models.EtaConfig]): _description_
-        generator (eta_img.eta_image.EtaImageGenerator): _description_
-
-    Returns:
-        _type_: _description_
+    To correctly display the text, call this function with `flask.request` context.
     """
     try:
         etas = []
         for bm in bookmarks:
-            res = requests.get(
-                app_conf.get('api_url') +
-                f'/eta/{bm.company.value}/{bm.route}',
-                params={
-                    'direction': bm.direction.value,
-                    'service_type': bm.service_type,
-                    'stop_code': bm.stop_code,
-                    'lang': bm.lang,
-                }
-            ).json()
-
-            try:
-                logo = (BytesIO(requests.get('{0}{1}'.format(app_conf.get('api_url'),
-                                                             res['data'].pop(
-                                                                 'logo_url')
-                                                             )).content
-                                )
-                        if res['data']['logo_url'] is not None
-                        else None)
-            except Exception:
-                logo = None
-
-            if res['success']:
-                eta = res['data'].pop('etas')
-                etas.append(eta_img.models.Etas(**res['data'],
-                                                etas=[eta_img.models.Etas.Eta(**e)
-                                                      for e in eta],
-                                                logo=logo,
-                                                )
-                            )
-            else:
-                res['data'].pop('etas')
-                etas.append(eta_img.models.ErrorEta(**res['data'],
-                                                    code=res['code'],
-                                                    message=str(
-                    lazy_gettext(res['code'])),
-                    logo=logo,)
-                )
+            with force_locale(bm.locale.iso()):
+                etap = extensions.hketa.create_eta_processor(bm)
+                etas.append(etap.etas())
         images = generator.draw(etas)
     except requests.RequestException as e:
         logging.warning('Image generation failed with error: %s', str(e))

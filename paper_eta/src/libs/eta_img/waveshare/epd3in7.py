@@ -1,17 +1,18 @@
 from pathlib import Path
 
+from flask_babel import force_locale, gettext
 from PIL import Image, ImageDraw
 
+from ... import hketa
 
 try:
+    from .. import utils
     from ..generator import EtaImageGenerator
-    from .. import utils, models
 except ImportError:
     import sys
     sys.path.append(str(Path(__file__).parent.parent))
-    from eta_img.generator import EtaImageGenerator
     import utils
-    import models
+    from eta_img.generator import EtaImageGenerator
 
 
 class Epd3in7(EtaImageGenerator):
@@ -26,7 +27,7 @@ class Epd3in7(EtaImageGenerator):
     def colors(self) -> tuple[str]:
         return ("black",)
 
-    def draw(self, etas: list[models.Etas | models.ErrorEta], degree: float = 0) -> dict[str, Image.Image]:
+    def draw(self, etas: list[hketa.models.Eta], degree: float = 0) -> dict[str, Image.Image]:
         image = Image.new('1', (self.width, self.height), 255)
         b = ImageDraw.Draw(image)
 
@@ -51,7 +52,7 @@ class Epd3in7(EtaImageGenerator):
                          self._bk)
             b.text((coords['route']['name']['offset'][0],
                     coords['route']['name']['offset'][1] + (row_height*row)),
-                   utils.discard(route.route,
+                   utils.discard(route.no,
                                  coords['route']['name']['width'],
                                  self.fonts['route']),
                    fill=self._bk, font=self.fonts['route'])
@@ -69,8 +70,8 @@ class Epd3in7(EtaImageGenerator):
                    fill=self._bk, font=self.fonts['stop'])
 
             # error
-            if isinstance(route, models.ErrorEta):
-                errmsg = utils.wrap(route.message,
+            if isinstance(route.etas, hketa.models.Eta.Error):
+                errmsg = utils.wrap(route.etas.message,
                                     coords['error']['position']['width'],
                                     coords['error']['position']['height'],
                                     self.fonts['err_txt'])
@@ -93,8 +94,12 @@ class Epd3in7(EtaImageGenerator):
                     coords['eta']['position']['height']*idx
 
                 if eta.is_arriving and eta.remark not in (None, ""):
+                    with force_locale(route.locale.iso()):
+                        text = gettext(
+                            "arr_dep") if eta.is_arriving else eta.remark
+
                     offset_x, offset_y = utils.position(
-                        eta.remark,
+                        text,
                         coords['eta']['position']['width'],
                         coords['eta']['position']['height'],
                         self.fonts['err_txt'],
@@ -104,17 +109,19 @@ class Epd3in7(EtaImageGenerator):
                     b.text((coords['eta']['position']['offset'][0] + offset_x,
                             coords['eta']['position']['offset'][1] + offset_y + idx_offset),
                            utils.discard(
-                        eta.remark, coords['eta']['position']['width'], self.fonts['rmk_txt']),
+                        text, coords['eta']['position']['width'], self.fonts['rmk_txt']),
                         fill=self._bk,
                         font=self.fonts['rmk_txt'])
                 else:
                     # minute
-                    b.text((coords['eta']['min']['offset'][0],
-                            coords['eta']['min']['offset'][1] + idx_offset),
-                           text=str(eta.eta_minute), fill=self._bk, font=self.fonts['minute'])
+                    b.text((coords['eta']['min']['offset'][0], coords['eta']['min']['offset'][1] + idx_offset),
+                           text=str(int(
+                               (eta.eta - route.timestamp).total_seconds() / 60)),
+                           fill=self._bk,
+                           font=self.fonts['minute'])
                     b.text((coords['eta']['min_txt']['offset'][0],
                             coords['eta']['min_txt']['offset'][1] + idx_offset),
-                           text=self._config['texts']['minute'][route.lang],
+                           text=self._config['texts']['minute'][route.locale],
                            fill=self._bk, font=self.fonts['min_txt'])
                     # time
                     b.text((coords['eta']['time']['offset'][0],
@@ -139,9 +146,3 @@ class Epd3in7(EtaImageGenerator):
                font=self.fonts['err_txt'])
 
         return {'black': image.rotate(degree)}
-
-
-if __name__ == "__main__":
-    import enums
-    print(Epd3in7.layouts(enums.EtaFormat.MIXED))
-    print(Epd3in7.width)

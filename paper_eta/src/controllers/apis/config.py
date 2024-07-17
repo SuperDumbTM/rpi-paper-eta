@@ -26,9 +26,6 @@ def get():
 
 @bp.route("/config", methods=["POST", "PUT"])
 @webargs.flaskparser.use_args({
-    'api_url': webargs.fields.Url(),
-    # 'api_username': webargs.fields.String(),
-    # 'api_password': webargs.fields.String(),
     'epd_brand': webargs.fields.String(
         validate=lambda v: v in eta_img.generator.EtaImageGeneratorFactory.brands()),
     'epd_model': webargs.fields.String()

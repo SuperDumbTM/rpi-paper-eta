@@ -70,20 +70,6 @@
                 </select>
             </div>
 
-            <div class="mt-5 mb-2">
-                <h5>{{ _('api_server_setting') }}</h5>
-                <small class="form-text text-mute">
-                    {{ _('api_server_setting_help') | safe }}
-                </small>
-            </div>
-            <hr>
-
-            <div class="form-group">
-                <label class="form-label">{{ _('api_server_url') }}</label>
-                <input type="url" class="form-control" name="api_url" placeholder="https://example.com"
-                    value="{{ app_conf.api_url }}" required>
-            </div>
-
             <div class="row mt-4">
                 <div class="col-6">
                     <input class="btn btn-primary btn-customized" id="submit" name="submit" type="submit"

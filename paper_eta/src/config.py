@@ -21,7 +21,7 @@ PATH_SITE_CONF = Path(
 
 # app settings
 ENV = os.getenv('ENV', 'development')
-DEBUG = ENV == 'development'
+DEBUG = (ENV == 'development')
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 if not SECRET_KEY:
@@ -41,6 +41,11 @@ BABEL_DEFAULT_TIMEZO = os.getenv('BABEL_DEFAULT_TIMEZO', 'Asia/Hong_kong')
 # sqlalchemy
 SQLALCHEMY_DATABASE_URI = os.getenv(
     'SQLALCHEMY_DATABASE_URI', "sqlite:///{}".format(DIR_STORAGE.joinpath('app.db')))
+
+# hketa
+HKETA_PATH_DATA = Path(
+    os.getenv('HKETA_PATH_DATA', DIR_STORAGE).joinpath('hketa'))
+HKETA_THRESHOLD = int(os.getenv('HKETA_THRESHOLD', 30))
 
 LOGGING_CONFIG = {
     'version': 1,
