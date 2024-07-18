@@ -1,0 +1,14 @@
+{% for log in refresh_logs[:5] %}
+<tr class="{{ 'table-danger' if log.error else '' }}">
+    <td>{{ log.timestamp.strftime('%H:%M:%S') }}</td>
+    <td>{{ log.eta_format.value | title }}</td>
+    <td>{{ log.layout }}</td>
+    <td>{{ bool_to_icon(log.is_partial) }}</td>
+    <td class="not-mobile">{{ log.error or '' }}</td>
+</tr>
+{% endfor %}
+{% if refresh_logs | length == 0 %}
+<tr>
+    <td colspan="5" class="text-center">{{ _('no_record') }}</td>
+</tr>
+{% endif %}

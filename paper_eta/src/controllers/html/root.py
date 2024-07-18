@@ -1,13 +1,12 @@
 import base64
 import io
 
-from flask import (Blueprint, current_app, flash, make_response, redirect,
-                   render_template, request, url_for)
-from flask_babel import lazy_gettext
+from flask import (Blueprint, make_response, redirect, render_template,
+                   request, url_for)
 from PIL import Image
 
-from paper_eta.src import enums, site_data
-from paper_eta.src.libs import refresher, epd_log
+from paper_eta.src import site_data
+from paper_eta.src.libs import epd_log
 
 bp = Blueprint('root', __name__, url_prefix="/")
 
@@ -24,11 +23,6 @@ def index():
     app_conf = site_data.AppConfiguration()
     return render_template("index.jinja",
                            refresh_logs=tuple(epd_log.epdlog.get()),
-                           images={
-                               k: _img_2_b64(v)
-                               for k, v in refresher.cached_images(
-                                   current_app.config['DIR_SCREEN_DUMP']).items()
-                           },
                            app_conf=app_conf)
 
 

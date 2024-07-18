@@ -57,29 +57,7 @@
                         {{ _('screen_content_help') }}
                     </p>
 
-                    <div class="row">
-                        {% for name, image in images.items() %}
-                        <div class="col-md-3 col-12 my-sm-0 my-1">
-                            <div class="card" style="width: 18rem; margin: auto;">
-                                <img class="m-2" src="data:image/bmp;base64, {{ image }}">
-
-                                <hr style="margin: unset;">
-
-                                <div class="card-body">
-                                    <span class="card-text">
-                                        {{ name | title }}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-
-                    {% if images | length == 0%}
-                    <p class="text-danger">
-                        {{ _('no_data') }}
-                    </p>
-                    {% endif %}
+                    <div class="row" hx-get="{{ url_for('display.screen_dumps') }}" hx-trigger="load, every 60s"></div>
                 </div>
             </div>
         </div>
@@ -93,7 +71,8 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table">
+                        <table class="table" hx-get="{{ url_for('display.histories') }}" hx-trigger="load, every 60s"
+                            hx-target="tbody" hx-swap="innerHTML">
                             <thead>
                                 <tr>
                                     <th scope="col">{{ _('time') }}</th>
@@ -104,20 +83,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for log in refresh_logs[:5] %}
-                                <tr class="{{ 'table-danger' if log.error else '' }}">
-                                    <td>{{ log.timestamp.strftime('%H:%M:%S') }}</td>
-                                    <td>{{ log.eta_format.value | title }}</td>
-                                    <td>{{ log.layout }}</td>
-                                    <td>{{ bool_to_icon(log.is_partial) }}</td>
-                                    <td class="not-mobile">{{ log.error or '' }}</td>
-                                </tr>
-                                {% endfor %}
-                                {% if refresh_logs | length == 0 %}
-                                <tr>
-                                    <td colspan="5" class="text-center">{{ _('no_record') }}</td>
-                                </tr>
-                                {% endif %}
                             </tbody>
                         </table>
                     </div>

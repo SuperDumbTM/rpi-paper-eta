@@ -1,0 +1,21 @@
+{% for name, image in images.items() %}
+<div class="col-md-3 col-12 my-sm-0 my-1">
+    <div class="card" style="width: 18rem; margin: auto;">
+        <img class="m-2" src="data:image/bmp;base64, {{ image }}">
+
+        <hr style="margin: unset;">
+
+        <div class="card-body">
+            <span class="card-text">
+                {{ name | title }}
+            </span>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+{% if images | length == 0%}
+<p class="text-danger">
+    {{ _('no_data') }}
+</p>
+{% endif %}

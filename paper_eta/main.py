@@ -29,6 +29,7 @@ def create_app() -> Flask:
     # blueprints registration
     app.register_blueprint(controllers.html.bookmark.bp)
     app.register_blueprint(controllers.html.configuration.bp)
+    app.register_blueprint(controllers.html.display.bp)
     app.register_blueprint(controllers.html.schedule.bp)
     app.register_blueprint(controllers.html.root.bp)
     app.register_blueprint(controllers.html.log.bp)

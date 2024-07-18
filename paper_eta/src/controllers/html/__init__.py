@@ -1,9 +1,10 @@
-from . import bookmark, configuration, log, root, schedule
+from . import bookmark, configuration, display, log, root, schedule
 
 __all__ = [
     bookmark,
     configuration,
+    display,
     schedule,
     root,
-    log
+    log,
 ]
