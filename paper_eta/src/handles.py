@@ -16,6 +16,7 @@ def _need_json_response():
 
 @bp.app_errorhandler(marshmallow.ValidationError)
 def handle_validation_error(e: marshmallow.ValidationError):
+    print(e)
     if _need_json_response():
         location = list(e.messages_dict.keys())[0]
         return jsonify({

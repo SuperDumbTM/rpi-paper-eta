@@ -4,7 +4,7 @@ from flask import (Blueprint, Response, flash, redirect, render_template,
                    request, url_for)
 from flask_babel import lazy_gettext
 
-from paper_eta.src import enums, forms, site_data
+from paper_eta.src import db, enums, forms, models, site_data
 from paper_eta.src.libs import eta_img
 
 bp = Blueprint('configuration',
@@ -12,19 +12,48 @@ bp = Blueprint('configuration',
                url_prefix="/configuration")
 
 
-@bp.route('/')
+@bp.route('/', methods=["GET", "POST"])
 def index():
     app_conf = site_data.AppConfiguration()
-    if app_conf.get('epd_brand'):
-        models = [m.__name__
-                  for m in eta_img.generator.EtaImageGeneratorFactory.models(app_conf.get('epd_brand'))]
-    else:
-        models = []
+    form = forms.EpaperSettingForm(epd_models=app_conf.get('epd_models'),
+                                   epd_brand=app_conf.get('epd_brand'),)
 
-    return render_template("configuration/index.jinja",
-                           brands=eta_img.generator.EtaImageGeneratorFactory.brands(),
-                           models=models,
-                           app_conf=app_conf)
+    if form.validate_on_submit():
+        if (app_conf.get('epd_brand') != form.epd_brand
+                or app_conf.get('epd_model') != form.epd_model):
+            # changing brand or model will invalidate the schedule
+            models.Schedule.query.update({models.Schedule.enabled: False})
+            db.session.commit()
+
+        try:
+            app_conf.updates({k: v for k, v in form.data.items()
+                             if k not in ("csrf_token", "submit")})
+            return redirect(request.referrer)
+        except KeyError:
+            return redirect(request.referrer)
+    else:
+        if app_conf.get('epd_brand'):
+            form.epd_model.choices = [(m.__name__, m.__name__) for m in
+                                      eta_img.generator.EtaImageGeneratorFactory.models(
+                                          app_conf.get('epd_brand'))
+                                      ]
+
+        return render_template("configuration/index.jinja",
+                               form=form,
+                               brands=eta_img.generator.EtaImageGeneratorFactory.brands())
+
+
+@bp.route('/epd-models/<brand>')
+def epd_models(brand: str):
+    app_conf = site_data.AppConfiguration()
+    try:
+        return render_template("configuration/partials/model_options.jinja",
+                               current=app_conf.get('epd_model'),
+                               models=[m.__name__
+                                       for m in eta_img.generator.EtaImageGeneratorFactory.models(brand)])
+    except KeyError:
+        return render_template("configuration/partials/model_options.jinja",
+                               models=[])
 
 
 @bp.route('/export')
@@ -47,29 +76,3 @@ def import_():
     except TypeError:
         flash(lazy_gettext('import_failed'), enums.FlashCategory.error)
     return redirect(url_for('configuration.index'))
-
-
-@bp.route('/epd')
-def epaper_setting():
-    app_conf = site_data.AppConfiguration()
-
-    if app_conf.get('epd_brand'):
-        models = [m.__name__ for m in eta_img.generator.EtaImageGeneratorFactory.models(
-            app_conf.get('epd_model'))]
-    else:
-        models = []
-    return render_template("configuration/epd_form.jinja",
-                           brands=eta_img.generator.EtaImageGeneratorFactory.brands(),
-                           models=models,
-                           form=forms.EpaperForm(epd_brand=app_conf.get('epd_brand'),
-                                                 epd_model=app_conf.get('epd_model')))
-
-
-@bp.route('/api-server')
-def api_server_setting():
-    app_conf = site_data.AppConfiguration()
-    return render_template("configuration/api_server_form.jinja",
-                           form=forms.ApiServerForm(
-                               username=app_conf.get('api_username'),
-                               password=app_conf.get('api_password'))
-                           )

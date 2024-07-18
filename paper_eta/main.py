@@ -1,3 +1,4 @@
+import urllib.parse
 from logging.config import dictConfig
 from pathlib import Path
 
@@ -50,7 +51,11 @@ def create_app() -> Flask:
     app.jinja_env.globals.update(
         bool_to_icon=lambda b: '<i class="bi bi-check2"></i>' if b else '<i class="bi bi-x"></i>',
         get_locale=utils.i18n.get_locale,
+        form_valid_class=lambda f: ' is-invalid' if f.errors else ''
     )
+    app.jinja_env.filters.update({
+        'unquote': urllib.parse.unquote,
+    })
 
     with app.app_context():
         extensions.db.create_all()
