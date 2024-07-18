@@ -190,6 +190,7 @@ class MtrLrtEta(EtaProcessor):
             return self._g_eta(Eta.Error(message=self._em("eos")))
 
         etas = []
+        cnt_stopped = 0
         timestamp = datetime.fromisoformat(response['system_time']) \
             .astimezone(pytz.timezone('Asia/Hong_kong'))
         lang_code = self._locale_map[self.route.entry.locale]
@@ -199,8 +200,13 @@ class MtrLrtEta(EtaProcessor):
             for eta in platform.get("route_list", []):
                 # 751P have no destination and eta
                 destination = eta.get(f'dest_{lang_code}')
-                if (eta['route_no'] != self.route.entry.no
-                        or destination != self.route.destination().name.get(self.route.entry.locale)):
+
+                if eta['route_no'] != self.route.entry.no:
+                    continue
+                if eta.get("stop") == 1:
+                    cnt_stopped += 1
+                    continue
+                if destination != self.route.destination().name.get(self.route.entry.locale):
                     continue
 
                 # e.g. 3 分鐘 / 即將抵達
@@ -232,7 +238,16 @@ class MtrLrtEta(EtaProcessor):
                         }
                     ))
 
-        return self._g_eta(etas)
+        if len(etas) > 0:
+            return self._g_eta(etas)
+        if "red_alert_status" in response.keys():
+            return self._g_eta(
+                Eta.Error(
+                    message=response[f"red_alert_message_{self._locale_map[self.route.entry.locale]}"]))
+        # if ((len(response['platform_list']) == 1 and cnt_stopped == 1)
+        #         or cnt_stopped >= 2):
+        if cnt_stopped > 0:
+            return self._g_eta(Eta.Error(message=self._em("eos")))
 
 
 class MtrTrainEta(EtaProcessor):
