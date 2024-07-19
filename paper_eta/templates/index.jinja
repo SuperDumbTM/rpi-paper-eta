@@ -57,7 +57,13 @@
                         {{ _('screen_content_help') }}
                     </p>
 
-                    <div class="row" hx-get="{{ url_for('display.screen_dumps') }}" hx-trigger="load, every 60s"></div>
+                    <div class="row" hx-get="{{ url_for('display.screen_dumps') }}" hx-trigger="load, every 60s"
+                        hx-indicator=".htmx-spinner"></div>
+                    <div class="row text-center">
+                        <div class="col-12">
+                            <span class="htmx-spinner my-5"></span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
