@@ -139,7 +139,7 @@ Please refer to the instruction from your display manufacturer.
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-### Project Screen Shots
+### Web Management Interface
 
   - Route Bookmarking
   <img src="https://github.com/SuperDumbTM/rpi-paper-eta/assets/71750702/3790c860-9d54-4c61-b3fc-4c309498e631" width="65%">
