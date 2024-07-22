@@ -23,12 +23,12 @@
 
 .text-theme {
     --bs-text-opacity: 1;
-    color: rgba(var(--theme-color-rgb),var(--bs-text-opacity)) !important;
+    color: rgba(var(--theme-color-rgb), var(--bs-text-opacity)) !important;
 }
 
 .text-theme-2 {
     --bs-text-opacity: 1;
-    color: rgba(var(--theme-2-color-rgb),var(--bs-text-opacity)) !important;
+    color: rgba(var(--theme-2-color-rgb), var(--bs-text-opacity)) !important;
 }
 
 /* ----- callout ----- */
@@ -60,4 +60,51 @@
 .callout-success {
     border: 1px solid var(--bs-success);
     border-left-width: .25rem;
+}
+
+/* ----- spinner ----- */
+.loader-circle {
+    width: 48px;
+    height: 48px;
+    border: 5px solid #EEE;
+    border-bottom-color: #FF3D00;
+    border-radius: 50%;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loader-ellipsis {
+    width: 60px;
+    aspect-ratio: 4;
+    --_g: no-repeat radial-gradient(circle closest-side, #000 90%, #0000);
+    background:
+        var(--_g) 0% 50%,
+        var(--_g) 50% 50%,
+        var(--_g) 100% 50%;
+    background-size: calc(100%/3) 100%;
+    animation: l7 1s infinite linear;
+}
+
+@keyframes l7 {
+    33% {
+        background-size: calc(100%/3) 0%, calc(100%/3) 100%, calc(100%/3) 100%
+    }
+
+    50% {
+        background-size: calc(100%/3) 100%, calc(100%/3) 0%, calc(100%/3) 100%
+    }
+
+    66% {
+        background-size: calc(100%/3) 100%, calc(100%/3) 100%, calc(100%/3) 0%
+    }
 }

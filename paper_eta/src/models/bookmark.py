@@ -10,7 +10,7 @@ class Bookmark(BaseModel):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     # autoincrement by `generate_ordering`
-    ordering: Mapped[int] = mapped_column(unique=True)
+    ordering: Mapped[int]  # = mapped_column(unique=True)
     transport: Mapped[enums.EtaCompany]
     no: Mapped[str]
     direction: Mapped[enums.RouteDirection]

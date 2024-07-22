@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-07-05 12:13+0800\n"
+"POT-Creation-Date: 2024-07-22 10:05+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -18,24 +18,78 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.14.0\n"
 
-#: paper_eta/src/handles.py:23 paper_eta/src/handles.py:30
+#: paper_eta/src/forms.py:9 paper_eta/templates/index.jinja:33
+msgid "brand"
+msgstr "Brand"
+
+#: paper_eta/src/forms.py:12 paper_eta/src/forms.py:20
+#: paper_eta/src/forms.py:54 paper_eta/src/forms.py:60
+#: paper_eta/src/forms.py:66
+#: paper_eta/templates/configuration/partials/model_options.jinja:8
+msgid "please_select"
+msgstr "Please select"
+
+#: paper_eta/src/forms.py:18 paper_eta/templates/index.jinja:39
+msgid "model"
+msgstr "Model"
+
+#: paper_eta/src/forms.py:25 paper_eta/src/forms.py:70
+#: paper_eta/templates/schedule/form.jinja:96
+msgid "submit"
+msgstr "Submit"
+
+#: copy.jinja:65 paper_eta/src/forms.py:38
+#: paper_eta/templates/bookmark/index.jinja:81
+#: paper_eta/templates/bookmark/list
+msgid "language"
+msgstr "Language"
+
+#: paper_eta/src/forms.py:44
+msgid "company"
+msgstr "Company"
+
+#: copy.jinja:61 paper_eta/src/forms.py:50
+#: paper_eta/templates/bookmark/index.jinja:77
+#: paper_eta/templates/bookmark/list
+msgid "route"
+msgstr "Route"
+
+#: copy.jinja:62 paper_eta/src/forms.py:52
+#: paper_eta/templates/bookmark/index.jinja:78
+#: paper_eta/templates/bookmark/list
+msgid "direction"
+msgstr "Direction"
+
+#: copy.jinja:63 paper_eta/src/forms.py:58
+#: paper_eta/templates/bookmark/index.jinja:79
+#: paper_eta/templates/bookmark/list
+msgid "service_type"
+msgstr "Service Type"
+
+#: copy.jinja:64 paper_eta/src/forms.py:64
+#: paper_eta/templates/bookmark/index.jinja:80
+#: paper_eta/templates/bookmark/list
+msgid "stop"
+msgstr "Stop"
+
+#: paper_eta/src/handles.py:24 paper_eta/src/handles.py:31
 msgid "validation_failed"
 msgstr "Validation Failed"
 
-#: paper_eta/src/handles.py:48 paper_eta/src/handles.py:55
+#: paper_eta/src/handles.py:49 paper_eta/src/handles.py:56
 msgid "Internal validation failed."
 msgstr "Internal validation failed."
 
-#: paper_eta/src/handles.py:63
+#: paper_eta/src/handles.py:64
 msgid "The requested resource was not found on the server."
 msgstr "The requested URL was not found on the server."
 
-#: paper_eta/src/handles.py:67
+#: paper_eta/src/handles.py:68
 msgid "The requested URL was not found on the server."
 msgstr "The requested URL was not found on the server."
 
-#: paper_eta/src/handles.py:87 paper_eta/src/handles.py:95
-#: paper_eta/templates/layout.jinja:82
+#: paper_eta/src/handles.py:88 paper_eta/src/handles.py:96
+#: paper_eta/templates/layout.jinja:85
 msgid "unexpected_error_occured"
 msgstr "Unexpected Error Occured."
 
@@ -112,7 +166,8 @@ msgid "mixed"
 msgstr "Mixed"
 
 #: paper_eta/src/controllers/apis/bookmark.py:38
-#: paper_eta/templates/error.jinja:3 paper_eta/templates/index.jinja:103
+#: paper_eta/src/controllers/html/bookmark.py:30
+#: paper_eta/templates/error.jinja:3 paper_eta/templates/index.jinja:88
 msgid "error"
 msgstr "Error"
 
@@ -180,13 +235,13 @@ msgstr "Failed to refresh the screen."
 msgid "created"
 msgstr "Created"
 
-#: paper_eta/src/controllers/html/bookmark.py:89
+#: paper_eta/src/controllers/html/bookmark.py:152
 #, python-format
 msgid "Failed to import no. %(entry)s bookmark."
 msgstr "Failed to import no. %(entry)s bookmark."
 
-#: paper_eta/src/controllers/html/bookmark.py:94
-#: paper_eta/src/controllers/html/configuration.py:48
+#: paper_eta/src/controllers/html/bookmark.py:157
+#: paper_eta/src/controllers/html/configuration.py:77
 #: paper_eta/src/controllers/html/schedule.py:96
 msgid "import_failed"
 msgstr "Import Failed"
@@ -268,18 +323,6 @@ msgstr "E-Paper"
 msgid "setting"
 msgstr "Setting"
 
-#: paper_eta/templates/configuration/epd_form.jinja:31
-#: paper_eta/templates/configuration/index.jinja:38
-#: paper_eta/templates/index.jinja:33
-msgid "brand"
-msgstr "Brand"
-
-#: paper_eta/templates/configuration/epd_form.jinja:49
-#: paper_eta/templates/configuration/index.jinja:56
-#: paper_eta/templates/index.jinja:39
-msgid "model"
-msgstr "Model"
-
 #: paper_eta/templates/index.jinja:53
 msgid "screen_content"
 msgstr "Screen Content"
@@ -291,49 +334,41 @@ msgstr ""
 "will be more than one image and each of them representing contents in a "
 "particular color."
 
-#: paper_eta/templates/index.jinja:80
-msgid "no_data"
-msgstr "No Data"
-
-#: paper_eta/templates/index.jinja:92
+#: paper_eta/templates/index.jinja:76
 msgid "refresh_history"
 msgstr "Refresh History"
 
-#: paper_eta/templates/index.jinja:99
+#: paper_eta/templates/index.jinja:84
 msgid "time"
 msgstr "Time"
 
-#: paper_eta/templates/index.jinja:100
+#: paper_eta/templates/index.jinja:85
 #: paper_eta/templates/schedule/form.jinja:48
 #: paper_eta/templates/schedule/form.jinja:272
 #: paper_eta/templates/schedule/list.jinja:43
 msgid "eta_format"
 msgstr "ETA Format"
 
-#: paper_eta/templates/index.jinja:101
+#: paper_eta/templates/index.jinja:86
 #: paper_eta/templates/schedule/form.jinja:65
 #: paper_eta/templates/schedule/list.jinja:44
 msgid "layout"
 msgstr "Layout"
 
-#: paper_eta/templates/index.jinja:102
+#: paper_eta/templates/index.jinja:87
 #: paper_eta/templates/schedule/list.jinja:47
 msgid "is_partial"
 msgstr "Is Partial"
 
-#: paper_eta/templates/index.jinja:118
-msgid "no_record"
-msgstr "No Record"
-
-#: paper_eta/templates/layout.jinja:49 paper_eta/templates/layout.jinja:74
+#: paper_eta/templates/layout.jinja:53
 msgid "loading"
 msgstr "Loading"
 
-#: paper_eta/templates/bookmark/edit.jinja:18
+#: paper_eta/templates/bookmark/edit.jinja:19
 msgid "new_bookmark"
 msgstr "New Bookmark"
 
-#: paper_eta/templates/bookmark/edit.jinja:20
+#: paper_eta/templates/bookmark/edit.jinja:21
 msgid "new_bookmark_help"
 msgstr ""
 "Create a new ETA bookmark that will be displayed on to the screen. Please"
@@ -341,113 +376,66 @@ msgstr ""
 "number of bookmark exceeded the designed amount by the layout, the "
 "bookmark will be displayed."
 
-#: paper_eta/templates/bookmark/edit.jinja:27
-#: paper_eta/templates/bookmark/list.jinja:46
-msgid "language"
-msgstr "Language"
-
-#: paper_eta/templates/bookmark/edit.jinja:46
-msgid "company"
-msgstr "Company"
-
-#: paper_eta/templates/bookmark/edit.jinja:64
-#: paper_eta/templates/bookmark/list.jinja:42
-msgid "route"
-msgstr "Route"
-
-#: paper_eta/templates/bookmark/edit.jinja:70
-#: paper_eta/templates/bookmark/list.jinja:43
-msgid "direction"
-msgstr "Direction"
-
-#: paper_eta/templates/bookmark/edit.jinja:88
-#: paper_eta/templates/bookmark/list.jinja:44
-msgid "service_type"
-msgstr "Service Type"
-
-#: paper_eta/templates/bookmark/edit.jinja:106
-#: paper_eta/templates/bookmark/list.jinja:45
-msgid "stop"
-msgstr "Stop"
-
-#: paper_eta/templates/bookmark/edit.jinja:124
-#: paper_eta/templates/configuration/api_server_form.jinja:29
-#: paper_eta/templates/configuration/epd_form.jinja:66
-#: paper_eta/templates/configuration/index.jinja:76
-#: paper_eta/templates/schedule/form.jinja:96
-msgid "submit"
-msgstr "Submit"
-
-#: paper_eta/templates/bookmark/list.jinja:40
-#: paper_eta/templates/schedule/list.jinja:42
-msgid "no."
-msgstr "No."
-
-#: paper_eta/templates/bookmark/list.jinja:41
-msgid "transport"
-msgstr "Transport"
-
-#: paper_eta/templates/bookmark/list.jinja:47
-#: paper_eta/templates/schedule/list.jinja:48
-msgid "action"
-msgstr "Action"
-
-#: paper_eta/templates/bookmark/list.jinja:113
-#: paper_eta/templates/schedule/list.jinja:111
-msgid "delete"
-msgstr "Delete"
-
-#: paper_eta/templates/bookmark/list.jinja:119
-#: paper_eta/templates/schedule/list.jinja:118
-msgid "edit"
-msgstr "Edit"
-
-#: paper_eta/templates/bookmark/list.jinja:131
+#: paper_eta/templates/bookmark/index.jinja:45
 #: paper_eta/templates/schedule/list.jinja:148
 msgid "create"
 msgstr "Create"
 
-#: paper_eta/templates/bookmark/list.jinja:138
-#: paper_eta/templates/configuration/index.jinja:80
-#: paper_eta/templates/schedule/list.jinja:155
-msgid "export"
-msgstr "Export"
-
-#: paper_eta/templates/bookmark/list.jinja:145
-#: paper_eta/templates/configuration/index.jinja:85
+#: paper_eta/templates/bookmark/index.jinja:54
+#: paper_eta/templates/configuration/index.jinja:42
 #: paper_eta/templates/schedule/list.jinja:162
 msgid "import"
 msgstr "Import"
 
-#: paper_eta/templates/configuration/api_server_form.jinja:14
-msgid "api_server_setting"
-msgstr "API Server Setting"
+#: paper_eta/templates/bookmark/index.jinja:59
+#: paper_eta/templates/configuration/index.jinja:33
+#: paper_eta/templates/schedule/list.jinja:155
+msgid "export"
+msgstr "Export"
 
-#: paper_eta/templates/configuration/api_server_form.jinja:16
-msgid "api_server_setting_help"
-msgstr "Enter the details of the ETA server for fetching all the reqiured data."
+#: copy.jinja:59 paper_eta/templates/bookmark/index.jinja:75
+#: paper_eta/templates/bookmark/list paper_eta/templates/schedule/list.jinja:42
+msgid "no."
+msgstr "No."
 
-#: paper_eta/templates/configuration/api_server_form.jinja:20
-msgid "api_server_username"
-msgstr "Username"
+#: copy.jinja:60 paper_eta/templates/bookmark/index.jinja:76
+#: paper_eta/templates/bookmark/list
+msgid "transport"
+msgstr "Transport"
 
-#: paper_eta/templates/configuration/api_server_form.jinja:25
-msgid "api_server_password"
-msgstr "Password"
+#: copy.jinja:66 paper_eta/templates/bookmark/index.jinja:82
+#: paper_eta/templates/bookmark/list paper_eta/templates/schedule/list.jinja:48
+msgid "action"
+msgstr "Action"
 
-#: paper_eta/templates/configuration/epd_form.jinja:25
-#: paper_eta/templates/configuration/index.jinja:30
+#: copy.jinja:132 paper_eta/templates/bookmark/list
+#: paper_eta/templates/bookmark/partials/rows.jinja:13
+#: paper_eta/templates/schedule/list.jinja:111
+msgid "delete"
+msgstr "Delete"
+
+#: copy.jinja:138 paper_eta/templates/bookmark/list
+#: paper_eta/templates/bookmark/partials/rows.jinja:18
+#: paper_eta/templates/schedule/list.jinja:118
+msgid "edit"
+msgstr "Edit"
+
+#: paper_eta/templates/bookmark/partials/rows.jinja:26
+#: paper_eta/templates/display/partials/histories.jinja:12
+msgid "no_record"
+msgstr "No Record"
+
+#: paper_eta/templates/configuration/index.jinja:26
 msgid "display_setting"
 msgstr "Display Setting"
 
-#: paper_eta/templates/configuration/epd_form.jinja:27
-#: paper_eta/templates/configuration/index.jinja:32
+#: paper_eta/templates/configuration/index.jinja:28
 msgid "display_setting_help"
 msgstr "Select the installed e-paper display's detailes."
 
-#: paper_eta/templates/configuration/index.jinja:24
-msgid "app_configuration"
-msgstr "Configuration"
+#: paper_eta/templates/display/partials/screen_dumps.jinja:19
+msgid "no_data"
+msgstr "No Data"
 
 #: paper_eta/templates/includes/navbar.jinja:15
 msgid "nav_home"
@@ -714,4 +702,19 @@ msgstr "No Repeat"
 
 #~ msgid "api_server_url"
 #~ msgstr "API Server URL"
+
+#~ msgid "api_server_setting"
+#~ msgstr "API Server Setting"
+
+#~ msgid "api_server_setting_help"
+#~ msgstr "Enter the details of the ETA server for fetching all the reqiured data."
+
+#~ msgid "api_server_username"
+#~ msgstr "Username"
+
+#~ msgid "api_server_password"
+#~ msgstr "Password"
+
+#~ msgid "app_configuration"
+#~ msgstr "Configuration"
 

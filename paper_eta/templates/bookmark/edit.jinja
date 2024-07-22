@@ -3,17 +3,20 @@
 {% extends "layout.jinja" %}
 
 {% block link %}
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
 {% endblock link %}
 
 {% block nav %}
 {% include "includes/navbar.jinja" %}
 {% endblock nav %}
 
+
 {% block content %}
+
 <div class="row align-items-center" style="height: 100vh;">
     <div class="mx-auto col-10 col-md-8 col-lg-6">
-        <form action="{{ form_action }}" method="{{ 'PUT' if editing else 'POST' }}" autocomplete="off">
+        <form action="{{ form_action }}" method="{{ 'POST' if editing else 'POST' }}" autocomplete="off">
+            {{ form.csrf_token }}
 
             <h1>{{ _('new_bookmark') }}</h1>
             <small class="form-text text-mute">
@@ -23,105 +26,77 @@
             {% include "includes/flash_success.jinja" %}
             {% include "includes/flash_error.jinja" %}
 
-            <div class="form-group">
-                <label for="locale" class="form-label">{{ _('language') }}</label>
-                <select class="form-select" name="locale" required>
-                    {% for locale in locales %}
-                    {% if bookmark.locale == locale[0] %}
-                    <option value="{{ locale[0] }}" selected>
-                        {{ locale[1] }}
-                    </option>
-                    {% else %}
-                    <option value="{{ locale[0] }}">
-                        {{ locale[1] }}
-                    </option>
-                    {% endif %}
-                    {% endfor %}
-                </select>
+            <div class="row g-3">
+                <div class="col-5">
+                    <div class="form-group">
+                        {{ form.locale.label(class="form-label") }}
+                        {{ form.locale(class="form-select" + form_valid_class(form.locale)) }}
+                        <div class="invalid-feedback">
+                            {% for error in form.locale.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-7">
+                    <div class="form-group">
+                        {{ form.transport.label(class="form-label") }}
+                        {{ form.transport(class="form-select" + form_valid_class(form.transport), **{
+                        "hx-ext": "path-params",
+                        "hx-get": url_for("bookmark.routes", transport="{transport}") | unquote,
+                        "hx-trigger": "change" if editing else "load, change",
+                        "hx-target": "#nos",
+                        "hx-on::before-request": "showLoading()",
+                        "hx-on::after-request": "setTimeout(hideLoading, 250)",
+                        }) }}
+                        <div class="invalid-feedback">
+                            {% for error in form.transport.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <hr class="mt-4 mb-3">
 
-            <div class="form-group">
-                <label for="transport" class="form-label">{{ _('company') }}</label>
-                <select class="form-select" name="transport" required>
-                    <option value="">-----</option>
-                    {% for transport in transports %}
-                    {% if bookmark.transport == transport[0] %}
-                    <option value="{{ transport[0] }}" selected>
-                        {{ transport[1] }}
-                    </option>
-                    {% else %}
-                    <option value="{{ transport[0] }}">
-                        {{ transport[1] }}
-                    </option>
-                    {% endif %}
-                    {% endfor %}
-                </select>
+            <div id="nos">
+                {% if edit %}
+                {# height placeholder to avoid position shift #}
+                <div class="row align-items-center justify-content-center" style="height: 102px;">
+                    <div class="loader-ellipsis"></div>
+                </div>
+                {% else %}
+                {% include "bookmark/partials/no_input.jinja" %}
+                {% endif %}
             </div>
 
-            <div class="form-group autocomplete">
-                <label for="no" class="form-label">{{ _('route') }}</label>
-                <input type="text" class="form-control" name="no" value="{{ bookmark.no or '' }}" required>
-
+            <div id="options" hx-ext="path-params"
+                hx-include="select[name=locale], select[name=transport], input[name=no]">
+                {% if edit %}
+                {# height placeholder to avoid position shift #}
+                <div class="d-none d-sm-block">
+                    <div style="height: 168px;">
+                        <div class="row align-items-center justify-content-center" style="height: 102px;">
+                            <div class="loader-ellipsis"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-block d-sm-none">
+                    <div style="height: 266px;">
+                        <div class="row align-items-center justify-content-center" style="height: 102px;">
+                            <div class="loader-ellipsis"></div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                {% include "bookmark/partials/options.jinja" %}
+                {% endif %}
             </div>
 
-            <div class="form-group">
-                <label for="direction" class="form-label">{{ _('direction') }}</label>
-                <select class="form-select" name="direction" required>
-                    <option value="">-----</option>
-                    {% for direction in directions %}
-                    {% if bookmark.direction == direction[0] %}
-                    <option value="{{ direction[0] }}" selected>
-                        {{ direction[1] }}
-                    </option>
-                    {% else %}
-                    <option value="{{ direction[0] }}">
-                        {{ direction[1] }}
-                    </option>
-                    {% endif %}
-                    {% endfor %}
-                </select>
+            <div class="form-group text-end pt-3">
+                {{ form.submit(class="btn btn-primary btn-customized") }}
             </div>
-
-            <div class="form-group">
-                <label for="service_type" class="form-label">{{ _('service_type') }}</label>
-                <select class="form-select" name="service_type" required>
-                    <option value="">-----</option>
-                    {% for service_type in service_types %}
-                    {% if bookmark.service_type == service_type[0] %}
-                    <option value="{{ service_type[0] }}" selected>
-                        {{ service_type[1] }}
-                    </option>
-                    {% else %}
-                    <option value="{{ service_type[0] }}">
-                        {{ service_type[1] }}
-                    </option>
-                    {% endif %}
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="stop_id" class="form-label">{{ _('stop') }}</label>
-                <select class="form-select" name="stop_id" required>
-                    <option value="">-----</option>
-                    {% for stop in stops %}
-                    {% if bookmark.stop_id == stop[0] %}
-                    <option value="{{ stop[0] }}" selected>
-                        {{ stop[1] }}
-                    </option>
-                    {% else %}
-                    <option value="{{ stop[0] }}">
-                        {{ stop[1] }}
-                    </option>
-                    {% endif %}
-                    {% endfor %}
-                </select>
-            </div>
-
-            <input class="btn btn-primary btn-customized mt-4" id="submit" name="submit" type="submit"
-                value="{{ _('submit') }}">
 
         </form>
     </div>
@@ -129,163 +104,28 @@
 {% endblock content %}
 
 {% block script %}
-<script src="//code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 
-<script src="{{ url_for('static', filename='scripts/jquery.ui.autocomplete.scroll.js') }}"></script>
 <script>
 
-    function clearSelect(dom, default_opt = true) {
-        dom.find('option').remove().end()
-        if (default_opt)
-            dom.append(new Option("-----", ""))
-    }
+    var choices;
 
-    function getParams() {
-        return {
-            locale: $('select[name=locale] option:selected').val(),
-            transport: $('select[name=transport] option:selected').val(),
-            no: $('input[name=no]').val(),
-            direction: $('select[name=direction] option:selected').val(),
-            service_type: $('select[name=service_type] option:selected').val(),
+    {% if editing %}
+    choices = new Choices('select[name=no]', {
+        allowHTML: false, // suppress warn msg
+        maxItemCount: 1
+    });
+    {% else %}
+    document.addEventListener("htmx:afterOnLoad", function (event) {
+        if (event.target.id == "transport") {
+            choices = new Choices('select[name=no]', {
+                allowHTML: false, // suppress warn msg
+                maxItemCount: 1
+            });
         }
-    }
-
-    $(document).ready(function () {
-        $.ajaxSetup({
-            beforeSend: () => $.busyLoadFull("show"),
-            complete: () => $.busyLoadFull("hide"),
-        })
-
-        {% if not editing %}
-        $("form")[0].reset()
-        clearSelect($("select[name=direction]"))
-        clearSelect($("select[name=service_type]"))
-
-        // trigger autocomplete option update
-        if ($('select[name=transport] option:selected').val())
-            $('select[name=transport]').trigger('change')
-        {% else %}
-        // trigger autocomplete option update
-        $.get(
-            '{{ url_for("api_bookmark.search", search_type="routes") }}',
-            getParams(),
-            function (res) {
-                $("input[name=no]").autocomplete({
-                    maxShowItems: 6,
-                    autoFocus: true,
-                    source: res.data.routes.map((el) => el[0]),
-                });
-            }
-        )
-        {% endif %}
-
-        autoJsonFrom($('form'), {
-            success: function (res) {
-                if (res.success) {
-                    window.location.href = "{{ url_for('bookmark.index') }}"
-                } else {
-                    alertify.error(res.message)
-                }
-            }
-        })
     })
+    {% endif %}
 
-    $('select[name=transport]').on('change', function (event) {
-        // autocomplete for route name
-        // https://stackoverflow.com/questions/7617373/limit-results-in-jquery-ui-autocomplete
-        function clear() {
-            $('input[name=no]').val(null)
-            clearSelect($("select[name=direction]"))
-            clearSelect($("select[name=service_type]"))
-            clearSelect($("select[name=stop_id]"))
-        }
-
-        if (!$(this).val()) {
-            clear()
-            return
-        }
-
-        $.get(
-            '{{ url_for("api_bookmark.search", search_type="routes") }}',
-            getParams(),
-            function (res) {
-                clear()
-                $("input[name=no]").autocomplete({
-                    maxShowItems: 6,
-                    autoFocus: true,
-                    source: res.data.routes.map((el) => el[0]),
-                });
-            }
-        )
-    });
-
-    $("input[name=no]").on("autocompleteselect", function (event, ui) {
-        // direction option updates
-        function clear() {
-            clearSelect($("select[name=direction]"))
-            clearSelect($("select[name=service_type]"))
-            clearSelect($("select[name=stop_id]"))
-        }
-
-        if (!$(this).val()) {
-            clear()
-            return
-        }
-
-        $.get(
-            '{{ url_for("api_bookmark.search", search_type="directions") }}',
-            { ...getParams(), 'no': ui.item.value },
-            function (res) {
-                clear()
-                res.data.directions.forEach(
-                    (el) => $("select[name=direction]").append(new Option(el[1], el[0])))
-            })
-    });
-
-    $('select[name=direction]').on('change', function (event) {
-        // autocomplete for service type
-        function clear() {
-            clearSelect($("select[name=service_type]"))
-            clearSelect($("select[name=stop_id]"))
-        }
-
-        if (!$(this).val()) {
-            clear()
-            return
-        }
-
-        $.get(
-            '{{ url_for("api_bookmark.search", search_type="service_types") }}',
-            getParams(),
-            function (res) {
-                clear()
-                res.data.service_types.forEach(
-                    (el) => $("select[name=service_type]").append(new Option(el[1], el[0])))
-            })
-    });
-
-    $("select[name=service_type]").on("change", function (event) {
-        // stop option updates
-        function clear() {
-            clearSelect(select = $("select[name=stop_no]"))
-        }
-
-        if (!$(this).val()) {
-            clear()
-            return
-        }
-
-        $.get(
-            '{{ url_for("api_bookmark.search", search_type="stops") }}',
-            getParams(),
-            function (res) {
-                clear()
-
-                res.data.stops.forEach(
-                    (el) => $("select[name=stop_id]").append(new Option(el[1], el[0])))
-            }
-        )
-    });
 
 </script>
 {% endblock script %}

@@ -34,11 +34,9 @@ def create_app() -> Flask:
     app.register_blueprint(controllers.html.root.bp)
     app.register_blueprint(controllers.html.log.bp)
 
-    app.register_blueprint(controllers.apis.config.bp)
     app.register_blueprint(controllers.apis.display.bp)
     app.register_blueprint(controllers.apis.schedule.bp)
     app.register_blueprint(controllers.apis.log.bp)
-    app.register_blueprint(controllers.apis.bookmark.bp)
 
     # cli registration
     app.cli.add_command(cli.i18n_cli)

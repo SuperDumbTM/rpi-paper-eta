@@ -1,0 +1,16 @@
+<div class="form-group">
+    {{ form.no.label(class="form-label") }}
+    {{ form.no(class="form-select" + form_valid_class(form.no), **{
+    "hx-ext": "path-params",
+    "hx-get": url_for("bookmark.options", transport='{transport}', no='{no}') | unquote,
+    "hx-trigger": "change" if editing else "load, change delay:800ms",
+    "hx-target": "#options",
+    "hx-include": "select[name=locale], select[name=transport]",
+    "hx-vals": '{"pos": "no"}',
+    }) }}
+    <div class="invalid-feedback">
+        {% for error in form.no.errors %}
+        <span>{{ error }}</span>
+        {% endfor %}
+    </div>
+</div>

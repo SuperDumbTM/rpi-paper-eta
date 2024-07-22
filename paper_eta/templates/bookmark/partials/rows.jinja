@@ -1,0 +1,27 @@
+{% for bm in bookmarks %}
+<tr>
+    <input type="hidden" name="ids[]" value="{{ bm.id }}">
+    <td>{{ loop.index }}</td>
+    <td>{{ _(bm["transport"]) }}</td>
+    <td>{{ bm["no"] }}</td>
+    <td>{{ _(bm["direction"]) }}</td>
+    <td>{{ bm["service_type"] }}</td>
+    <td>{{ bm["stop_name"] }}</td>
+    <td>{{ _(bm["locale"]) }}</td>
+    <td>
+        <button type="button" class="dt-action btn btn-danger btn-sm"
+            hx-delete="{{ url_for('bookmark.delete', id=bm['id']) }}" title="{{ _('delete') }}">
+            <i class="bi bi-trash"></i>
+        </button>
+        <a type="button" class="dt-action btn btn-success btn-sm" href="{{ url_for('bookmark.edit', id=bm['id']) }}"
+            title="{{ _('edit') }}">
+            <i class="bi bi-pencil-square"></i>
+        </a>
+    </td>
+</tr>
+{% endfor %}
+{% if bookmarks | length == 0 %}
+<tr>
+    <td colspan="100%" class="text-center">{{ _('no_record') }}</td>
+</tr>
+{% endif %}

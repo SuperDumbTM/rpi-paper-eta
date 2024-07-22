@@ -36,7 +36,7 @@
                 <div style="display: inline-block;" x-data>
                     <form method="POST" action="{{ url_for('configuration.import_') }}" enctype="multipart/form-data"
                         x-ref="importForm">
-                        <input type="file" name="file" style="display: none;" @upload.window="$el.click()"
+                        <input type="file" name="file" class="d-none" @upload.window="$el.click()"
                             @change="$event.target.form.submit()">
                         <button type="button" class="btn btn-sm btn-secondary mx-1" @click="$dispatch('upload')">
                             {{ _('import') }}
@@ -55,7 +55,6 @@
                 "hx-ext": "path-params",
                 "hx-get": url_for('configuration.epd_models', brand='{epd_brand}') | unquote,
                 "hx-target": "select[name=epd_model]",
-                "hx-swap": "innerHTML",
                 "hx-trigger": "load, change"
                 }) }}
                 <div class="invalid-feedback">
@@ -68,6 +67,10 @@
             <div class="form-group">
                 {{ form.epd_model.label(class="form-label") }}
                 {{ form.epd_model(class="form-select" + form_valid_class(form.epd_model)) }}
+
+                <div>
+                {{ form.epd_model.errors.__class__ }}
+                </div>    
                 <div class="invalid-feedback">
                     {% for error in form.epd_model.errors %}
                     <span>{{ error }}</span>
@@ -75,7 +78,7 @@
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group text-end pt-3">
                 {{ form.submit(class="btn btn-primary btn-customized") }}
             </div>
         </form>
