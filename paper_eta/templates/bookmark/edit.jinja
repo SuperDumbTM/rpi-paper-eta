@@ -10,6 +10,22 @@
 {% include "includes/navbar.jinja" %}
 {% endblock nav %}
 
+{% block style %}
+<style>
+    .hx-load-outer .hx-indicator {
+        display: none;
+    }
+
+    .hx-load-outer.htmx-request .hx-indicator {
+        display: block;
+    }
+
+    .hx-load-outer.htmx-request .hx-swap-target {
+        display: none;
+    }
+</style>
+{% endblock style %}
+
 
 {% block content %}
 
@@ -42,12 +58,12 @@
                     <div class="form-group">
                         {{ form.transport.label(class="form-label") }}
                         {{ form.transport(class="form-select" + form_valid_class(form.transport), **{
+                        "x-init": "$nextTick(() => {$el.dispatchEvent(new Event('change'))})",
                         "hx-ext": "path-params",
                         "hx-get": url_for("bookmark.routes", transport="{transport}") | unquote,
-                        "hx-trigger": "change" if editing else "load, change",
-                        "hx-target": "#nos",
-                        "hx-on::before-request": "showLoading()",
-                        "hx-on::after-request": "setTimeout(hideLoading, 250)",
+                        "hx-trigger": "change",
+                        "hx-target": "#nos .hx-swap-target",
+                        "hx-indicator": "#nos.hx-load-outer, #options.hx-load-outer"
                         }) }}
                         <div class="invalid-feedback">
                             {% for error in form.transport.errors %}
@@ -60,38 +76,36 @@
 
             <hr class="mt-4 mb-3">
 
-            <div id="nos">
-                {% if edit %}
-                {# height placeholder to avoid position shift #}
-                <div class="row align-items-center justify-content-center" style="height: 102px;">
-                    <div class="loader-ellipsis"></div>
+            <div id="nos" class="hx-load-outer">
+                <div class="hx-indicator">
+                    {# height placeholder to avoid position shift #}
+                    <div class="row align-items-center justify-content-center" style="height: 102px;">
+                        <div class="loader-ellipsis"></div>
+                    </div>
                 </div>
-                {% else %}
-                {% include "bookmark/partials/no_input.jinja" %}
-                {% endif %}
+                <div class="hx-swap-target">
+                    {% include "bookmark/partials/no_input.jinja" %}
+                </div>
             </div>
 
-            <div id="options" hx-ext="path-params"
-                hx-include="select[name=locale], select[name=transport], input[name=no]">
-                {% if edit %}
-                {# height placeholder to avoid position shift #}
-                <div class="d-none d-sm-block">
-                    <div style="height: 168px;">
-                        <div class="row align-items-center justify-content-center" style="height: 102px;">
+            <div id="options" class="hx-load-outer">
+                <div class="hx-indicator">
+                    {# height placeholder to avoid position shift #}
+                    <div class="d-none d-sm-block">
+                        <div class="row align-items-center justify-content-center" style="height: 169px;">
+                            <div class="loader-ellipsis"></div>
+                        </div>
+                    </div>
+                    <div class="d-block d-sm-none">
+                        <div class="row align-items-center justify-content-center" style="height: 275px;">
                             <div class="loader-ellipsis"></div>
                         </div>
                     </div>
                 </div>
-                <div class="d-block d-sm-none">
-                    <div style="height: 266px;">
-                        <div class="row align-items-center justify-content-center" style="height: 102px;">
-                            <div class="loader-ellipsis"></div>
-                        </div>
-                    </div>
+                <div class="hx-swap-target" hx-ext="path-params"
+                    hx-include="select[name=locale], select[name=transport], input[name=no]">
+                    {% include "bookmark/partials/options.jinja" %}
                 </div>
-                {% else %}
-                {% include "bookmark/partials/options.jinja" %}
-                {% endif %}
             </div>
 
             <div class="form-group text-end pt-3">

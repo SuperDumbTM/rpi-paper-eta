@@ -65,36 +65,6 @@ def delete(id: str):
             })
 
 
-@bp.route("/bookmark/order", methods=["PUT"])
-def swap_():
-    # targets: list[models.Bookmark] = models.Bookmark.query \
-    #     .filter(models.Bookmark.id.in_(args.values())) \
-    #     .all()
-
-    # if len(targets) == 2:
-    #     # BUG: possible inconsistent with high traffic
-    #     src_order, dest_order = targets[0].ordering, targets[1].ordering
-    #     targets[0].ordering, targets[1].ordering = sys.maxsize, sys.maxsize - 1
-    #     db.session.add_all(targets)
-    #     db.session.commit()
-    #     targets[0].ordering,  targets[1].ordering = dest_order, src_order
-    #     db.session.add_all(targets)
-    #     db.session.commit()
-
-    #     return jsonify({
-    #         'success': True,
-    #         'message': '{}.'.format(lazy_gettext("updated")),
-    #         'data': None
-    #     })
-    # else:
-    #     return jsonify({
-    #         'success': False,
-    #         'message': '{}.'.format(lazy_gettext("invalid_id")),
-    #         'data': None
-    #     }), 400
-    ...
-
-
 @bp.route('/bookmark/create', methods=["GET", "POST"])
 def create():
     form = forms.BookmarkForm()
@@ -108,8 +78,7 @@ def create():
 
     return render_template("bookmark/edit.jinja",
                            form=form,
-                           form_action=url_for(
-                               "bookmark.create"),
+                           form_action=url_for("bookmark.create"),
                            editing=False)
 
 
@@ -148,8 +117,7 @@ def edit(id: str):
                            form=form,
                            transports=[(c.value, lazy_gettext(c.value))
                                        for c in enums.EtaCompany],
-                           form_action=url_for(
-                               "bookmark.edit", id=id),
+                           form_action=url_for("bookmark.edit", id=id),
                            editing=True,)
 
 

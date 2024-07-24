@@ -5,7 +5,7 @@
             {{ form.direction(class="form-select" + form_valid_class(form.direction), **{
             "hx-get": url_for("bookmark.options", transport='{transport}') | unquote,
             "hx-include": "select[name=transport], select[name=no], select[name=locale]",
-            "hx-target": "#options",
+            "hx-target": "closest .hx-swap-target",
             "hx-vals": "{\"pos\": \"direction\"}"
             }) }}
             <div class="invalid-feedback">
