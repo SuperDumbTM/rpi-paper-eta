@@ -1,4 +1,6 @@
+import json
 import urllib.parse
+from datetime import datetime
 from logging.config import dictConfig
 from pathlib import Path
 
@@ -35,7 +37,6 @@ def create_app() -> Flask:
     app.register_blueprint(controllers.html.log.bp)
 
     app.register_blueprint(controllers.apis.display.bp)
-    app.register_blueprint(controllers.apis.schedule.bp)
     app.register_blueprint(controllers.apis.log.bp)
 
     # cli registration
@@ -50,10 +51,14 @@ def create_app() -> Flask:
     app.jinja_env.globals.update(
         bool_to_icon=lambda b: '<i class="bi bi-check2"></i>' if b else '<i class="bi bi-x"></i>',
         get_locale=utils.i18n.get_locale,
-        form_valid_class=lambda f: ' is-invalid' if f.errors else ''
+        form_valid_class=lambda f: ' is-invalid' if f.errors else '',
+        today=lambda: datetime.now().date(),
+        time=lambda: datetime.now().strftime("%H:%M:%S"),
+        now=lambda: datetime.now().isoformat(sep=" ", timespec="seconds"),
     )
     app.jinja_env.filters.update({
         'unquote': urllib.parse.unquote,
+        'tojson': json.dumps
     })
 
     with app.app_context():

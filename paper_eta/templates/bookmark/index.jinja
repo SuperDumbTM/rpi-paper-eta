@@ -2,12 +2,6 @@
 
 {% extends "layout.jinja" %}
 
-{% block link %}
-<link rel="stylesheet" href="//cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
-<link rel="stylesheet" href="//cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
-<link rel="stylesheet" href="//cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
-{% endblock link %}
-
 {% block nav %}
 {% include "includes/navbar.jinja" %}
 {% endblock nav %}
@@ -80,7 +74,7 @@
                                 <th>{{ _('service_type') }}</th>
                                 <th>{{ _('stop') }}</th>
                                 <th>{{ _('language') }}</th>
-                                <th>{{ _('action') }}</th>
+                                <th style="min-width: 90px;">{{ _('action') }}</th>
                             </tr>
                         </thead>
                         <tbody hx-put="" hx-trigger="end" hx-include="closest form">

@@ -2,24 +2,37 @@
 
 <div class="tab-pane {{ 'active' if is_activate else '' }}" id="{{ name }}">
     <div class="form-group row">
-        <label class="col-2 col-form-label">{{ _('cron_mode') }}</label>
-        <div class="col-10">
-            <select class="form-control cron-mode">
-                <option value="step" selected>{{ _('cron_mode_range') }}</option>
-                <option value="choice">{{ _('cron_mode_choice') }}</option>
-            </select>
+        <label class="col-4 col-form-label">{{ _('cron_mode') }}</label>
+        <div class="col-8">
+            <div class="form-group">
+                <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="radio" name="mode_{{ name }}" value="range"
+                            x-model.fill="{{ name }}.mode">
+                        {{ _('cron_mode_range') }}
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="radio" name="mode_{{ name }}" value="choice"
+                            x-model="{{ name }}.mode">
+                        {{ _('cron_mode_choice') }}
+                    </label>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <hr>
 
-    <div class="cron-selector cron-step-selector">
+    <div x-show="{{ name }}.mode == 'range'">
         <div class="row">
             <div class="col">
                 <div class="form-group row">
-                    <label class="col-2 col-form-label">{{ _('cron_from') }}</label>
-                    <div class="col-10">
-                        <select class="form-control cron-step-from">
+                    <label class="col-4 col-form-label">{{ _('cron_from') }}</label>
+                    <div class="col-8">
+                        <select class="form-control" x-model.fill="{{ name }}.range.from">
                             <option value="*" selected>*</option>
                             {% for val, text in options %}
                             <option value="{{ val }}">{{ text }}</option>
@@ -29,12 +42,18 @@
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-2 col-form-label">{{ _('cron_to') }}</label>
-                    <div class="col-10">
-                        <select class="form-control cron-step-to" disabled>
-                            <option value="*" selected>*</option>
-                            {% for val, text in options %}
-                            <option value="{{ val }}">{{ text }}</option>
+                    <label class="col-4 col-form-label">{{ _('cron_to') }}</label>
+                    <div class="col-8">
+                        <select class="form-control" x-model.fill="{{ name }}.range.to"
+                            x-bind:disabled="{{ name }}.range.from == '*'">
+
+                            {#
+                            Options of this select will be updated based on the input of range.from,
+                            reverse to avoid defaulting to the smallest option upon "un-disabled".
+                            #}
+                            {% for val, text in options|reverse %}
+                            <option value="{{ val }}" x-show="{{ val }} > parseInt({{ name }}.range.from)">{{ text }}
+                            </option>
                             {% endfor %}
                         </select>
                     </div>
@@ -46,12 +65,12 @@
 
         <div class="col">
             <div class="form-group row">
-                <label class="col-2 col-form-label">{{ _('cron_every') }}</label>
-                <div class="col-10">
-                    <select class="form-control cron-step-repeat">
+                <label class="col-4 col-form-label">{{ _('cron_every') }}</label>
+                <div class="col-8">
+                    <select class="form-control" x-model.fill="{{ name }}.range.every">
                         <option value="" selected>{{ _('cron_no_repeat') }}</option>
-                        {% for val, text in options %}
-                        <option value="{{ val }}">{{ text }}</option>
+                        {% for i in range(options|length) %}
+                        <option value="{{ i + 1 }}">{{ i + 1 }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -59,18 +78,17 @@
         </div>
     </div>
 
-    <div class="cron-selector cron-choice-selector" style="display: none;">
+    <div x-show="{{ name }}.mode == 'choice'">
         {% for val, text in options %}
         <div class="form-check form-check-inline">
             <label class="form-check-label">
-                <input class="form-check-input" type="checkbox" value="{{ val }}">
+                <input class="form-check-input" type="checkbox" value="{{ val }}" x-model="{{ name }}.choice">
                 {% if text == 0 or text|int != 0 %}
-                    {# 0 will be eval. as False in the second condition #}
-                    {{ '{:0>2d}'.format(text) }}
+                {# 0 will be eval. as False in the second condition #}
+                {{ '{:0>2d}'.format(text) }}
                 {% else %}
-                    {{ text }}
+                {{ text }}
                 {% endif %}
-                
             </label>
         </div>
         {% endfor %}

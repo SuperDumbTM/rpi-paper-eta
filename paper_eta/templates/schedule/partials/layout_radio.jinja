@@ -1,0 +1,30 @@
+{% for layout in layouts %}
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title" style="line-height: unset;">
+            <div class="form-check">
+                <label class="form-check-label">
+                    {{ layout["name"] }}
+                    <input class="form-check-input" type="radio" name="layout" value="{{ layout['name'] }}" x-model="layout.{{ eta_format }}" required>
+                </label>
+
+                <div class="float-end">
+                    <button type="button" class="btn btn-sm btn-outline-success preview-btn" @click="showPreview()"
+                        data-layout="{{ layout['name'] }}" data-eta_format="{{ eta_format }}">
+                        {{ _('layout_preview') }}
+                    </button>
+                </div>
+            </div>
+        </h5>
+
+        <hr>
+
+        <p class="card-text">
+            {{ layout["description"]["en"] }}
+        </p>
+        <p class="card-text">
+            {{ layout["description"]["zh_Hant_HK"] }}
+        </p>
+    </div>
+</div>
+{% endfor %}

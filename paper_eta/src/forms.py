@@ -7,20 +7,20 @@ from paper_eta.src.libs import eta_img, hketa
 
 class EpaperSettingForm(FlaskForm):
     epd_brand = wtforms.SelectField(lazy_gettext('brand'),
+                                    [
+                                        wtforms.validators.DataRequired(),
+                                        wtforms.validators.NoneOf(["None"])],
                                     # "-" for HTMX to request /epd-models/<brand> successfully,
                                     # so that the options can be swapped out to the "empty option".
                                     choices=[("-", lazy_gettext('please_select'))] + [
-                                        (b, b.title()) for b in eta_img.generator.EtaImageGeneratorFactory.brands()],
-                                    validators=[
-                                        wtforms.validators.DataRequired(),
-                                        wtforms.validators.NoneOf(["None"])])
+                                        (b, b.title()) for b in eta_img.generator.EtaImageGeneratorFactory.brands()])
 
     epd_model = wtforms.SelectField(lazy_gettext('model'),
+                                    [
+                                        wtforms.validators.DataRequired()],
                                     choices=[
                                         ("", lazy_gettext('please_select'))],
-                                    validate_choice=True,
-                                    validators=[
-                                        wtforms.validators.DataRequired()])
+                                    validate_choice=True)
 
     submit = wtforms.SubmitField(lazy_gettext('submit'))
 
@@ -67,5 +67,28 @@ class BookmarkForm(FlaskForm):
                                       ("", lazy_gettext('please_select'))],
                                   validate_choice=False
                                   )
+
+    submit = wtforms.SubmitField(lazy_gettext('submit'))
+
+
+class ScheduleForm(FlaskForm):
+    schedule = wtforms.StringField(lazy_gettext("schedule"),
+                                   render_kw={
+                                       "placeholder": "Cron Expression"},
+                                   validators=[wtforms.validators.DataRequired()])
+
+    eta_format = wtforms.SelectField(lazy_gettext("eta_format"),
+                                     [wtforms.validators.DataRequired()],
+                                     choices=[(l.value, lazy_gettext(l.value))
+                                              for l in eta_img.enums.EtaFormat
+                                              ],
+                                     )
+
+    layout = wtforms.RadioField(lazy_gettext("layout"),
+                                validate_choice=False)
+
+    is_partial = wtforms.BooleanField(lazy_gettext("partial_refresh"))
+
+    enabled = wtforms.BooleanField(lazy_gettext("enable"))
 
     submit = wtforms.SubmitField(lazy_gettext('submit'))

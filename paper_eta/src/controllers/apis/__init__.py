@@ -1,10 +1,9 @@
 from webargs.flaskparser import parser
 
-from . import display, log, schedule
+from . import display, log
 
 __all__ = [
     display,
-    schedule,
     log,
 ]
 

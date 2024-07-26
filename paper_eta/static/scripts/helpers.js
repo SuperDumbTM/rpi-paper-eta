@@ -1,9 +1,9 @@
 function showLoading() {
-    $("#loading-overlay").show()
+    document.getElementById('loading-overlay').style.display = 'block';
 }
 
 function hideLoading() {
-    $("#loading-overlay").hide()
+    document.getElementById('loading-overlay').style.display = 'none';
 }
 
 function formToJson(form) {
@@ -24,6 +24,10 @@ function formToJson(form) {
     return indexed_array;
 }
 
+function isNumeric(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
 function titleCase(str) {
     // reference: https://stackoverflow.com/a/40111894/17789727
     return str.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
@@ -39,7 +43,7 @@ function isJSON(str) {
 }
 
 function autoJsonFrom(form, settings = {}) {
-    form.submit(function(e) {
+    form.submit(function (e) {
         e.preventDefault()
 
         $.ajax({
@@ -52,7 +56,7 @@ function autoJsonFrom(form, settings = {}) {
                 if (error) {
                     alertify.error(error)
                 }
-                
+
                 if (isJSON(xhr.responseText)) {
                     let = json = $.parseJSON(xhr.responseText)
                     if (json.message) {
