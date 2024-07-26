@@ -121,8 +121,8 @@
         ajax: {
             url: "{{ url_for('api_log.get') }}",
             dataSrc: "data.logs",
-            beforeSend: () => $.busyLoadFull("show"),
-            complete: () => $.busyLoadFull("hide")
+            beforeSend: () => showLoading(),
+            complete: () => hideLoading()
         },
         order: [[0, 'desc']],
         pageLength: 25,

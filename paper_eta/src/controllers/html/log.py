@@ -1,15 +1,29 @@
+from itertools import islice
 import os
+import re
 import time
-from typing import Generator
+from typing import Generator, Mapping
 
-from flask import Blueprint, Response, current_app, render_template, send_file
+from flask import Blueprint, Response, current_app, render_template, request, send_file
+from multidict import MultiDict
 
 bp = Blueprint('log', __name__, url_prefix="/log")
 
 
 @bp.route("/")
-def logs():
-    return render_template("log/log_table.jinja")
+def index():
+    logs = []
+    log_pattern = re.compile(
+        r"\[(?P<timestamp>.*?)\]\[(?P<level>[A-Z]*?)\]\[(?P<module>.*?)\]:\s(?P<message>.*)")
+
+    logs = []
+    with open(current_app.config['PATH_LOG_FILE'], 'r', encoding='utf-8') as f:
+        for line in f:
+            match = log_pattern.match(line)
+            if not match:
+                continue
+            logs.append(match.groupdict())
+    return render_template("log/index.jinja", logs=logs[::-1])
 
 
 @bp.route('/file')
