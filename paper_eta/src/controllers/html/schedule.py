@@ -17,10 +17,10 @@ from ...libs import eta_img
 bp = Blueprint('schedule',
                __name__,
                template_folder="../../../templates",
-               url_prefix="/")
+               url_prefix="/schedules")
 
 
-@bp.route('/schedules')
+@bp.route('/')
 def index():
     if request.headers.get('HX-Request'):
         schedules = []
@@ -67,7 +67,7 @@ def create():
                            )
 
 
-@bp.route('/schedule/create/edit/<id>', methods=["GET", "POST"])
+@bp.route('/create/edit/<id>', methods=["GET", "POST"])
 def edit(id: str):
     form = forms.ScheduleForm()
     sch = models.Schedule.query.get_or_404(id)
@@ -93,7 +93,7 @@ def edit(id: str):
                            )
 
 
-@bp.route('/schdeule/status/<id>', methods=["PUT"])
+@bp.route('/status/<id>', methods=["PUT"])
 def update_status(id: str):
     try:
         schedule = models.Schedule.query.get(id)
@@ -116,7 +116,7 @@ def update_status(id: str):
             })
 
 
-@bp.route('/schedule/<string:id>', methods=["DELETE"])
+@bp.route('/<string:id>', methods=["DELETE"])
 def delete(id: str):
     try:
         schedule = models.Schedule.query.get(id)
@@ -139,7 +139,7 @@ def delete(id: str):
             })
 
 
-@bp.route("/schedule/layouts/<eta_format>")
+@bp.route("/layouts/<eta_format>")
 def layouts(eta_format: str):
     app_conf = site_data.AppConfiguration()
     if not app_conf.get('epd_brand') or not app_conf.get('epd_model'):
@@ -173,7 +173,7 @@ def layouts(eta_format: str):
                         })})
 
 
-@ bp.route('/schedule/export')
+@ bp.route('/export')
 def export():
     return Response(
         json.dumps(
@@ -185,7 +185,7 @@ def export():
         headers={'Content-disposition': 'attachment; filename=schedules.json'})
 
 
-@ bp.route('/schedule/import', methods=['POST'])
+@ bp.route('/import', methods=['POST'])
 def import_():
     fields = ({c.name for c in models.Schedule.__table__.c} -
               {'id', 'enabled', 'created_at', 'updated_at'})  # accepted fields for table inputs

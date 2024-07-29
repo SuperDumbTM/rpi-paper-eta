@@ -7,7 +7,7 @@ from typing import Generator, Mapping
 from flask import Blueprint, Response, current_app, render_template, request, send_file
 from multidict import MultiDict
 
-bp = Blueprint('log', __name__, url_prefix="/log")
+bp = Blueprint('log', __name__, url_prefix="/logs")
 
 
 @bp.route("/")

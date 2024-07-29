@@ -13,10 +13,10 @@ from ....src import db, enums, models, utils
 
 bp = Blueprint('bookmark',
                __name__,
-               url_prefix="/")
+               url_prefix="/bookmarks")
 
 
-@bp.route('/bookmarks', methods=["GET", "PUT"])
+@bp.route('/', methods=["GET", "PUT"])
 def index():
     if request.headers.get('HX-Request'):
         if request.method == "PUT":
@@ -42,7 +42,7 @@ def index():
     return render_template("bookmark/index.jinja")
 
 
-@bp.route("/bookmark/<id>", methods=["DELETE"])
+@bp.route("/<id>", methods=["DELETE"])
 def delete(id: str):
     try:
         bookmark = models.Bookmark.query.get(id)
@@ -65,7 +65,7 @@ def delete(id: str):
             })
 
 
-@bp.route('/bookmark/create', methods=["GET", "POST"])
+@bp.route('/create', methods=["GET", "POST"])
 def create():
     form = forms.BookmarkForm()
 
@@ -82,7 +82,7 @@ def create():
                            editing=False)
 
 
-@ bp.route('/bookmark/edit/<id>', methods=["GET", "POST"])
+@ bp.route('/edit/<id>', methods=["GET", "POST"])
 def edit(id: str):
     form = forms.BookmarkForm()
     bm: models.Bookmark = models.Bookmark.query.get_or_404(id)
@@ -121,7 +121,7 @@ def edit(id: str):
                            editing=True,)
 
 
-@bp.route('/bookmark/<transport>/routes')
+@bp.route('/<transport>/routes')
 def routes(transport: str):
     form = forms.BookmarkForm()
 
@@ -131,7 +131,7 @@ def routes(transport: str):
     return render_template("bookmark/partials/no_input.jinja", form=form)
 
 
-@bp.route('/bookmark/<transport>/options')
+@bp.route('/<transport>/options')
 def options(transport: str):
     form = forms.BookmarkForm()
     locale = request.args.get("locale", "en")
@@ -159,7 +159,7 @@ def options(transport: str):
     return render_template("bookmark/partials/options.jinja", form=form)
 
 
-@bp.route('/bookmark/export')
+@bp.route('/export')
 def export():
     return Response(
         json.dumps(
@@ -170,7 +170,7 @@ def export():
         headers={'Content-disposition': 'attachment; filename=bookmarks.json'})
 
 
-@bp.route('/bookmark/import', methods=['POST'])
+@bp.route('/import', methods=['POST'])
 def import_():
     fields = ({c.name for c in models.Bookmark.__table__.c} -
               {'id', 'created_at', 'updated_at'})  # accepted fields for table inputs
