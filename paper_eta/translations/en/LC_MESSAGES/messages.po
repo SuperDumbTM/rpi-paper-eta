@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-07-28 03:07+0800\n"
+"POT-Creation-Date: 2024-07-29 13:12+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -387,6 +387,7 @@ msgstr "Edit"
 
 #: paper_eta/templates/bookmark/partials/rows.jinja:25
 #: paper_eta/templates/display/partials/histories.jinja:12
+#: paper_eta/templates/log/index.jinja:142
 #: paper_eta/templates/schedule/partials/rows.jinja:36
 msgid "no_record"
 msgstr "No Record"
@@ -402,6 +403,16 @@ msgstr "Select the installed e-paper display's detailes."
 #: paper_eta/templates/display/partials/screen_dumps.jinja:19
 msgid "no_data"
 msgstr "No Data"
+
+#: paper_eta/templates/display/partials/screen_dumps.jinja:24
+#: paper_eta/templates/schedule/partials/rows.jinja:41
+msgid "last-update"
+msgstr "Last Update"
+
+#: paper_eta/templates/display/partials/screen_dumps.jinja:24
+#: paper_eta/templates/schedule/partials/rows.jinja:41
+msgid ":"
+msgstr ":"
 
 #: paper_eta/templates/includes/navbar.jinja:15
 msgid "nav_home"
@@ -423,53 +434,63 @@ msgstr "Schedule"
 msgid "nav_log"
 msgstr "Log"
 
-#: paper_eta/templates/log/index.jinja:36
-#: paper_eta/templates/log/index.jinja:120
+#: paper_eta/templates/log/index.jinja:28
+#: paper_eta/templates/log/index.jinja:123
 #: paper_eta/templates/log/log_table.jinja:18
 #: paper_eta/templates/log/log_table.jinja:74
 #: paper_eta/templates/log/partials/table.jinja:30
 msgid "log_level"
 msgstr "Level"
 
-#: paper_eta/templates/log/index.jinja:73
+#: paper_eta/templates/log/index.jinja:63
 #: paper_eta/templates/log/log_table.jinja:55
 msgid "log_access_related"
 msgstr "Access Related Logs"
 
-#: paper_eta/templates/log/index.jinja:80
+#: paper_eta/templates/log/index.jinja:70
 #: paper_eta/templates/log/log_table.jinja:62
 msgid "log_access_related_help"
 msgstr "Whether the HTTP request-related logs should be included or not."
 
-#: paper_eta/templates/log/index.jinja:100
+#: paper_eta/templates/log/index.jinja:75
+msgid "paginate_per_page"
+msgstr "Entry Per Page"
+
+#: paper_eta/templates/log/index.jinja:101
 msgid "previous_page"
 msgstr "Previous"
 
-#: paper_eta/templates/log/index.jinja:106
+#: paper_eta/templates/log/index.jinja:109
 msgid "next_page"
 msgstr "Next"
 
-#: paper_eta/templates/log/index.jinja:119
+#: paper_eta/templates/log/index.jinja:122
 #: paper_eta/templates/log/log_table.jinja:73
 #: paper_eta/templates/log/partials/table.jinja:29
 msgid "log_timestamp"
 msgstr "Timestamp"
 
-#: paper_eta/templates/log/index.jinja:121
+#: paper_eta/templates/log/index.jinja:124
 #: paper_eta/templates/log/log_table.jinja:75
 #: paper_eta/templates/log/partials/table.jinja:31
 msgid "log_module"
 msgstr "Module"
 
-#: paper_eta/templates/log/index.jinja:122
+#: paper_eta/templates/log/index.jinja:125
 #: paper_eta/templates/log/log_table.jinja:76
 #: paper_eta/templates/log/partials/table.jinja:32
 msgid "log_message"
 msgstr "Message"
 
-#: paper_eta/templates/log/index.jinja:174
+#: paper_eta/templates/log/index.jinja:158
+msgid "jump_to"
+msgstr "Jump To"
+
+#: paper_eta/templates/log/index.jinja:195
 msgid "pagination_info_"
-msgstr "Showing {from} to {to} of {total} entry ({total_page} page)."
+msgstr ""
+"Showing {from} to {to} of {total_filtered} entries (filtered from {total}"
+" entries)."
 
 #: paper_eta/templates/log/log_table.jinja:160
 msgid "refresh"
@@ -624,14 +645,6 @@ msgstr "Enable/Disable"
 #: paper_eta/templates/schedule/partials/rows.jinja:28
 msgid "refresh_now"
 msgstr "Refresh Now"
-
-#: paper_eta/templates/schedule/partials/rows.jinja:41
-msgid "last-update"
-msgstr "Last Update"
-
-#: paper_eta/templates/schedule/partials/rows.jinja:41
-msgid ":"
-msgstr ":"
 
 #~ msgid "not_available"
 #~ msgstr "Not Available"

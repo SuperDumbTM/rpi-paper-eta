@@ -2,14 +2,14 @@
 
 {% block style %}
 <style>
-    tr > *:nth-child(1),
-    tr > *:nth-child(3) {
+    tr>*:nth-child(1),
+    tr>*:nth-child(3) {
         display: none;
     }
 
     @media (min-width: 768px) {
 
-        tr > *:nth-child(3) {
+        tr>*:nth-child(3) {
             display: table-cell;
         }
     }
@@ -24,54 +24,63 @@
 <div class="container-xxl" x-data="pagination">
     <div class="row p-2">
         <form id="filter" @change="page = 1">
-            <div class="col-12">
-                <div class="form-group">
-                    <label class="col-sm-2 col-12 col-form-label">{{ _('log_level') }}</label>
+            <div class="form-group">
+                <label class="col-sm-2 col-12 col-form-label">{{ _('log_level') }}</label>
 
-                    <div class="form-check form-check-inline">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" value="DEBUG" x-model="filters.level">
-                            Debug
-                        </label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" value="INFO" x-model="filters.level">
-                            Info
-                        </label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" value="WARN" x-model="filters.level">
-                            Warning
-                        </label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" value="ERROR" x-model="filters.level">
-                            Error
-                        </label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" value="CRITICAL" x-model="filters.level">
-                            Critical
-                        </label>
-                    </div>
+                <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" value="DEBUG" x-model="filters.level">
+                        Debug
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" value="INFO" x-model="filters.level">
+                        Info
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" value="WARN" x-model="filters.level">
+                        Warning
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" value="ERROR" x-model="filters.level">
+                        Error
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" value="CRITICAL" x-model="filters.level">
+                        Critical
+                    </label>
                 </div>
             </div>
 
-            <div class="col-12">
-                <div class="form-group search-filter">
-                    <label class="col-sm-2 col-6 col-form-label">{{ _('log_access_related') }}</label>
+            <div class="form-group">
+                <label class="col-sm-2 col-6 col-form-label">{{ _('log_access_related') }}</label>
 
-                    <div class="form-check form-check-inline form-switch">
-                        <input class="form-check-input" type="checkbox" name="access_log" x-model="filters.accessLog">
-                        <label class="form-check-label">&nbsp;</label>
-                    </div>
-                    <div class="form-text text-mute">
-                        {{ _('log_access_related_help') }}
-                    </div>
+                <div class="form-check form-check-inline form-switch">
+                    <input class="form-check-input" type="checkbox" name="access_log" x-model="filters.accessLog">
+                    <label class="form-check-label">&nbsp;</label>
+                </div>
+                <div class="form-text text-mute">
+                    {{ _('log_access_related_help') }}
+                </div>
+            </div>
+
+            <div class="row my-2">
+                <label class="col-sm-2 col-form-label">{{ _('paginate_per_page') }}</label>
+                <div class="col-sm-10">
+                    <select class="col-9 form-select" x-model="limit">
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="30">30</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
                 </div>
             </div>
         </form>
@@ -138,6 +147,17 @@
                 </table>
             </div>
         </div>
+
+        <div class="col-12 mb-3" x-show="lastPage > 1">
+            <div class="ms-auto form-floating" style="width: 8rem;">
+                <select class="form-select" x-model="page">
+                    <template x-for="p in [...Array(lastPage).keys()]">
+                        <option :value="p + 1" x-text="p + 1"></option>
+                    </template>
+                </select>
+                <label>{{ _('jump_to') }}</label>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock content %}
@@ -175,8 +195,8 @@
                 return "{{ _('pagination_info_') }}"
                     .replace("{from}", this.limit * (this.page - 1) + 1)
                     .replace("{to}", this.limit * (this.page - 1) + this.logs.length)
-                    .replace("{total}", this.filtered.length)
-                    .replace("{total_page}", this.lastPage);
+                    .replace("{total_filtered}", this.filtered.length)
+                    .replace("{total}", this.length);
             },
         }));
     });

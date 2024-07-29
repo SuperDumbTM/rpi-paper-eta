@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-07-28 03:07+0800\n"
+"POT-Creation-Date: 2024-07-29 13:12+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hant_HK\n"
@@ -380,6 +380,7 @@ msgstr "編輯"
 
 #: paper_eta/templates/bookmark/partials/rows.jinja:25
 #: paper_eta/templates/display/partials/histories.jinja:12
+#: paper_eta/templates/log/index.jinja:142
 #: paper_eta/templates/schedule/partials/rows.jinja:36
 msgid "no_record"
 msgstr "沒有紀錄"
@@ -395,6 +396,16 @@ msgstr "選擇正在使用的電子紙屏幕。"
 #: paper_eta/templates/display/partials/screen_dumps.jinja:19
 msgid "no_data"
 msgstr "沒有數據"
+
+#: paper_eta/templates/display/partials/screen_dumps.jinja:24
+#: paper_eta/templates/schedule/partials/rows.jinja:41
+msgid "last-update"
+msgstr "更新時間"
+
+#: paper_eta/templates/display/partials/screen_dumps.jinja:24
+#: paper_eta/templates/schedule/partials/rows.jinja:41
+msgid ":"
+msgstr "："
 
 #: paper_eta/templates/includes/navbar.jinja:15
 msgid "nav_home"
@@ -416,53 +427,61 @@ msgstr "排程"
 msgid "nav_log"
 msgstr "程式記錄"
 
-#: paper_eta/templates/log/index.jinja:36
-#: paper_eta/templates/log/index.jinja:120
+#: paper_eta/templates/log/index.jinja:28
+#: paper_eta/templates/log/index.jinja:123
 #: paper_eta/templates/log/log_table.jinja:18
 #: paper_eta/templates/log/log_table.jinja:74
 #: paper_eta/templates/log/partials/table.jinja:30
 msgid "log_level"
 msgstr "類別"
 
-#: paper_eta/templates/log/index.jinja:73
+#: paper_eta/templates/log/index.jinja:63
 #: paper_eta/templates/log/log_table.jinja:55
 msgid "log_access_related"
 msgstr "網站連接"
 
-#: paper_eta/templates/log/index.jinja:80
+#: paper_eta/templates/log/index.jinja:70
 #: paper_eta/templates/log/log_table.jinja:62
 msgid "log_access_related_help"
 msgstr "是否顯示與網站連接相關的記錄。"
 
-#: paper_eta/templates/log/index.jinja:100
+#: paper_eta/templates/log/index.jinja:75
+msgid "paginate_per_page"
+msgstr "每頁顯示"
+
+#: paper_eta/templates/log/index.jinja:101
 msgid "previous_page"
 msgstr "上一頁"
 
-#: paper_eta/templates/log/index.jinja:106
+#: paper_eta/templates/log/index.jinja:109
 msgid "next_page"
 msgstr "下一頁"
 
-#: paper_eta/templates/log/index.jinja:119
+#: paper_eta/templates/log/index.jinja:122
 #: paper_eta/templates/log/log_table.jinja:73
 #: paper_eta/templates/log/partials/table.jinja:29
 msgid "log_timestamp"
 msgstr "時間"
 
-#: paper_eta/templates/log/index.jinja:121
+#: paper_eta/templates/log/index.jinja:124
 #: paper_eta/templates/log/log_table.jinja:75
 #: paper_eta/templates/log/partials/table.jinja:31
 msgid "log_module"
 msgstr "位置"
 
-#: paper_eta/templates/log/index.jinja:122
+#: paper_eta/templates/log/index.jinja:125
 #: paper_eta/templates/log/log_table.jinja:76
 #: paper_eta/templates/log/partials/table.jinja:32
 msgid "log_message"
 msgstr "訊息"
 
-#: paper_eta/templates/log/index.jinja:174
+#: paper_eta/templates/log/index.jinja:158
+msgid "jump_to"
+msgstr "跳至"
+
+#: paper_eta/templates/log/index.jinja:195
 msgid "pagination_info_"
-msgstr "第{from}至{to}個項目。共{total}項（{total_page}頁）。"
+msgstr "第{from}至{to}個項目。共{total_filtered}項（從{total}個項目中過濾）。"
 
 #: paper_eta/templates/log/log_table.jinja:160
 msgid "refresh"
@@ -612,14 +631,6 @@ msgstr "啟用／停用"
 #: paper_eta/templates/schedule/partials/rows.jinja:28
 msgid "refresh_now"
 msgstr "更新屏幕"
-
-#: paper_eta/templates/schedule/partials/rows.jinja:41
-msgid "last-update"
-msgstr "更新時間"
-
-#: paper_eta/templates/schedule/partials/rows.jinja:41
-msgid ":"
-msgstr "："
 
 #~ msgid "not_available"
 #~ msgstr "不適用"
