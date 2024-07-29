@@ -19,3 +19,7 @@
     {{ _('no_data') }}
 </p>
 {% endif %}
+
+<span class="text-end text-muted" style="font-size: 0.9rem;">
+    {{ _("last-update") ~ _(":") ~ time() }}
+</span>

@@ -2,21 +2,14 @@
 
 {% block style %}
 <style>
-    tr>*:nth-child(1),
-    tr>*:nth-child(3) {
+    tr > *:nth-child(1),
+    tr > *:nth-child(3) {
         display: none;
     }
 
     @media (min-width: 768px) {
 
-        tr>*:nth-child(3) {
-            display: table-cell;
-        }
-    }
-
-    @media (min-width: 576px) {
-
-        tr>*:nth-child(1) {
+        tr > *:nth-child(3) {
             display: table-cell;
         }
     }
@@ -88,12 +81,12 @@
     <div class="row p-2">
         <div class="col-12">
             <div class="row align-items-center">
-                <div class="col-7">
+                <div class="col-12 col-sm-7">
                     <span class="text-muted" x-text="info"></span>
                 </div>
-                <div class="col-5">
+                <div class="col-12 col-sm-5">
                     <nav class="mt-3 mx-1">
-                        <ul class="pagination justify-content-end">
+                        <ul class="pagination justify-content-center justify-content-sm-end">
                             <li class="page-item" :class="(page == 1 || lastPage <= 1) ? 'disabled' : ''">
                                 <a class="page-link user-select-none" @click="page--"
                                     style="color: var(--theme-color);">{{ _("previous_page") }}</a>
@@ -132,6 +125,13 @@
                                 </td>
                                 <td x-text="log.module"></td>
                                 <td x-text="log.message"></td>
+                            </tr>
+                        </template>
+                        <template x-if="logs.length == 0">
+                            <tr style="height: 40px;">
+                                <td colspan="100%" class="d-table-cell text-center align-middle">
+                                    {{ _('no_record') }}
+                                </td>
                             </tr>
                         </template>
                     </tbody>
