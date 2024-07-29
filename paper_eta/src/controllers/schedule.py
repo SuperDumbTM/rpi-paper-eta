@@ -45,7 +45,7 @@ def create():
     app_conf = site_data.AppConfiguration()
     if not app_conf.get('epd_brand') or not app_conf.get('epd_model'):
         flash(lazy_gettext("Please enter the display details first."),
-              enums.FlashCategory.error)
+              "error")
         return redirect(url_for('configuration.index'))
 
     form = forms.ScheduleForm()
@@ -236,10 +236,10 @@ def import_():
                     session.rollback()
 
                     flash(lazy_gettext('Failed to import no. %(entry)s schedule.', entry=i),
-                          enums.FlashCategory.error)
+                          "error")
                     logging.exception('Encountering missing field(s) or invalid '
                                       'values during refresh schedule import.')
         db.session.commit()
     except (UnicodeDecodeError, json.decoder.JSONDecodeError):
-        flash(lazy_gettext('import_failed'), enums.FlashCategory.error)
+        flash(lazy_gettext('import_failed'), "error")
     return redirect(url_for('schedule.index'))

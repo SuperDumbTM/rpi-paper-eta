@@ -1,7 +1,9 @@
 from sqlalchemy import event, func
 from sqlalchemy.orm import Mapped, mapped_column
 
-from ...src import enums, extensions
+from paper_eta.src.libs.hketa import enums
+
+from ...src import extensions
 from ._base import BaseModel
 
 
@@ -11,12 +13,12 @@ class Bookmark(BaseModel):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     # autoincrement by `generate_ordering`
     ordering: Mapped[int]  # = mapped_column(unique=True)
-    transport: Mapped[enums.EtaCompany]
+    transport: Mapped[enums.Transport]
     no: Mapped[str]
-    direction: Mapped[enums.RouteDirection]
+    direction: Mapped[enums.Direction]
     service_type: Mapped[str]
     stop_id: Mapped[str]
-    locale: Mapped[enums.EtaLocale]
+    locale: Mapped[enums.Locale]
 
 
 @event.listens_for(Bookmark, 'before_insert')

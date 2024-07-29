@@ -6,10 +6,8 @@ from flask import (Blueprint, Response, flash, redirect, render_template,
                    request, url_for)
 from flask_babel import gettext, lazy_gettext
 
-from paper_eta.src import extensions, forms
-from paper_eta.src.libs import hketa
-
-from ...src import db, enums, models, utils
+from ...src import db, extensions, forms, models, utils
+from ..libs import hketa
 
 bp = Blueprint('bookmark',
                __name__,
@@ -109,7 +107,7 @@ def edit(id: str):
     return render_template("bookmark/edit.jinja",
                            form=form,
                            transports=[(c.value, lazy_gettext(c.value))
-                                       for c in enums.EtaCompany],
+                                       for c in hketa.enums.Transport],
                            form_action=url_for("bookmark.edit", id=id),
                            editing=True,)
 
@@ -197,9 +195,9 @@ def import_():
                     session.rollback()
 
                     flash(lazy_gettext('Failed to import no. %(entry)s bookmark.', entry=i),
-                          enums.FlashCategory.error)
+                          "error")
                     logging.exception('Encountering missing field(s) or invalid '
                                       'values during refresh bookmark import.')
     except (UnicodeDecodeError, json.decoder.JSONDecodeError):
-        flash(lazy_gettext('import_failed'), enums.FlashCategory.error)
+        flash(lazy_gettext('import_failed'), "error")
     return redirect(url_for('bookmark.index'))

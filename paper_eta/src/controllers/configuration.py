@@ -74,5 +74,5 @@ def import_():
         if file:
             app_conf.updates(json.load(file))
     except TypeError:
-        flash(lazy_gettext('import_failed'), enums.FlashCategory.error)
+        flash(lazy_gettext('import_failed'), "error")
     return redirect(url_for('configuration.index'))
