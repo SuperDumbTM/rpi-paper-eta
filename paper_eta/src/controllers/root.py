@@ -5,8 +5,8 @@ from flask import (Blueprint, make_response, redirect, render_template,
                    request, url_for)
 from PIL import Image
 
-from paper_eta.src import site_data
-from paper_eta.src.libs import epd_log
+from ...src import site_data
+from ...src.libs import epd_log
 
 bp = Blueprint('root', __name__, url_prefix="/")
 

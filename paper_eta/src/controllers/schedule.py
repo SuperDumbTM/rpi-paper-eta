@@ -1,7 +1,6 @@
 import json
 import logging
 from datetime import datetime
-from http import HTTPStatus
 
 import croniter
 import sqlalchemy.exc
@@ -11,8 +10,8 @@ from flask_babel import gettext, lazy_gettext
 
 from paper_eta.src import forms
 
-from ....src import db, enums, models, site_data
-from ...libs import eta_img
+from ...src import db, enums, models, site_data
+from ..libs import eta_img
 
 bp = Blueprint('schedule',
                __name__,

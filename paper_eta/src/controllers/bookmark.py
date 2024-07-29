@@ -9,7 +9,7 @@ from flask_babel import lazy_gettext
 from paper_eta.src import extensions, forms
 from paper_eta.src.libs import hketa
 
-from ....src import db, enums, models, utils
+from ...src import db, enums, models, utils
 
 bp = Blueprint('bookmark',
                __name__,

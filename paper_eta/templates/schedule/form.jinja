@@ -231,7 +231,7 @@
         container.innerHTML = "";
 
         showLoading();
-        fetch(`{{ url_for('api_display.image') }}?${new URLSearchParams({
+        fetch(`{{ url_for('display.image') }}?${new URLSearchParams({
             layout: event.target.dataset.layout,
             eta_format: event.target.dataset.eta_format
         })}`, { method: "GET", })

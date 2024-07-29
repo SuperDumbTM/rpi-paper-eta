@@ -35,7 +35,7 @@ class Schedule(BaseModel):
         extensions.scheduler.add_job(job_id,  # invoking str() here makes the formatter unhappy
                                      requests.get,
                                      kwargs={
-                                         'url': 'http://localhost:8192/api/display/refresh',
+                                         'url': 'http://localhost:8192/display/refresh',
                                          'params': {
                                              'eta_format': eta_img.enums.EtaFormat(self.eta_format),
                                              'layout': self.layout,

@@ -3,46 +3,42 @@ import logging
 from io import BytesIO
 
 import webargs
-from flask import Blueprint, current_app, jsonify
+from flask import Blueprint, current_app, jsonify, render_template
 from flask_babel import lazy_gettext
+from PIL import Image
 
-from ....src import models, site_data
-from ...libs import epd_log, epdcon, eta_img, hketa, refresher
+from ...src import models, site_data
+from ..libs import epd_log, epdcon, eta_img, hketa, refresher
 
-bp = Blueprint('api_display',
-               __name__,
-               template_folder="../../templates",
-               url_prefix="/api/display")
+bp = Blueprint('display', __name__, url_prefix="/display")
 
 
-@bp.route("/models")
-@webargs.flaskparser.use_args({
-    'epd_brand': webargs.fields.String(required=True)
-}, location='query')
-def get_models(args):
-    return jsonify({
-        'success': True,
-        'message': '{}.'.format(lazy_gettext("success")),
-        'data': {
-            "models": [b.__name__ for b in eta_img.generator.EtaImageGeneratorFactory.models(args['epd_brand'])]
-        }
-    })
+def _img_2_b64(img: Image.Image) -> str:
+    """Convert a PIL image to base64 encoded string."""
+    b = BytesIO()
+    img.save(b, 'bmp')
+    return base64.b64encode(b.getvalue()).decode('utf-8')
 
 
-@bp.route("/layouts")
-@webargs.flaskparser.use_args({
-    'epd_brand': webargs.fields.String(required=True),
-    'epd_model': webargs.fields.String(required=True)
-}, location='query')
-def get_layouts(args):
-    return jsonify({
-        'success': True,
-        'message': '{}.'.format(lazy_gettext("success")),
-        'data': {
-            "layouts": eta_img.generator.EtaImageGeneratorFactory.get_generator(
-                args['epd_brand'], args['epd_model']).layouts()
-        }
-    })
+@bp.route("/screen-dumps")
+def screen_dumps():
+    return render_template("display/partials/screen_dumps.jinja",
+                           images={
+                               k: _img_2_b64(v)
+                               for k, v in refresher.cached_images(
+                                   current_app.config['DIR_SCREEN_DUMP']).items()
+                           },)
+
+
+@bp.route("/histories")
+def histories():
+    return render_template("display/partials/histories.jinja",
+                           refresh_logs=tuple(epd_log.epdlog.get()),)
+
+
+# ---------------------------------------------
+#                       API
+# ---------------------------------------------
 
 
 @bp.route("/image")

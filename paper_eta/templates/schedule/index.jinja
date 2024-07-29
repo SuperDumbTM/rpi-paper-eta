@@ -95,7 +95,7 @@
 
     function refreshDisplay(eta_format, layout, is_partial) {
         showLoading();
-        return fetch(`{{ url_for('api_display.refresh')}}?${new URLSearchParams({
+        return fetch(`{{ url_for('display.refresh')}}?${new URLSearchParams({
             eta_format: eta_format,
             layout: layout,
             is_partial: is_partial

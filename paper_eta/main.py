@@ -29,14 +29,12 @@ def create_app() -> Flask:
     extensions.hketa.threshold = app.config['HKETA_THRESHOLD']
 
     # blueprints registration
-    app.register_blueprint(controllers.html.bookmark.bp)
-    app.register_blueprint(controllers.html.configuration.bp)
-    app.register_blueprint(controllers.html.display.bp)
-    app.register_blueprint(controllers.html.schedule.bp)
-    app.register_blueprint(controllers.html.root.bp)
-    app.register_blueprint(controllers.html.log.bp)
-
-    app.register_blueprint(controllers.apis.display.bp)
+    app.register_blueprint(controllers.bookmark.bp)
+    app.register_blueprint(controllers.configuration.bp)
+    app.register_blueprint(controllers.display.bp)
+    app.register_blueprint(controllers.schedule.bp)
+    app.register_blueprint(controllers.root.bp)
+    app.register_blueprint(controllers.log.bp)
 
     # cli registration
     app.cli.add_command(cli.i18n_cli)

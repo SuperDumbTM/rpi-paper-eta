@@ -1,6 +1,10 @@
-from . import apis, html
+from . import bookmark, configuration, display, log, root, schedule
 
 __all__ = [
-    apis,
-    html
+    bookmark,
+    configuration,
+    display,
+    schedule,
+    root,
+    log,
 ]
