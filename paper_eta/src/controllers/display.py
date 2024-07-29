@@ -2,7 +2,7 @@ import base64
 import logging
 from io import BytesIO
 
-import webargs
+import webargs.flaskparser
 from flask import Blueprint, current_app, jsonify, render_template
 from flask_babel import lazy_gettext
 from PIL import Image
