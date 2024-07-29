@@ -6,7 +6,7 @@ from pathlib import Path
 
 from flask import Flask
 
-from .src import cli, controllers, extensions, handles, models, utils
+from .src import cli, controllers, database, extensions, handles, utils
 
 
 def create_app() -> Flask:
@@ -60,7 +60,7 @@ def create_app() -> Flask:
 
     with app.app_context():
         extensions.db.create_all()
-        for s in models.Schedule.query.all():
+        for s in database.Schedule.query.all():
             if s.enabled:
                 s.add_job()
     return app

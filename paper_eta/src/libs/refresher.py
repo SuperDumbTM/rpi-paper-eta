@@ -1,14 +1,13 @@
 import logging
 import os
 import threading
-from io import BytesIO
 from pathlib import Path
 
 import requests
-from flask_babel import lazy_gettext, force_locale
+from flask_babel import force_locale
 from PIL import Image
 
-from .. import extensions, models, site_data
+from .. import extensions
 from ..libs import epdcon, eta_img, hketa
 
 _ctrl_mutex = threading.Lock()

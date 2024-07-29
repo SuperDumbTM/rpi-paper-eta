@@ -4,7 +4,7 @@ import webargs.flaskparser
 from flask import Blueprint, current_app, jsonify, request
 from flask_babel import lazy_gettext
 
-from ...src import models, site_data
+from ...src import database, site_data
 from ..libs import epd_log, epdcon, eta_img, hketa, refresher
 
 bp = Blueprint('display', __name__, url_prefix="/display")
@@ -45,7 +45,7 @@ def refresh(args):
     # TODO: module name clash
     # ---------- generate ETA images ----------
     bookmarks = [hketa.models.RouteQuery(**bm.as_dict())
-                 for bm in models.Bookmark.query.order_by(models.Bookmark.ordering).all()]
+                 for bm in database.Bookmark.query.order_by(database.Bookmark.ordering).all()]
     try:
         generator = eta_img.generator.EtaImageGeneratorFactory().get_generator(
             app_conf.get('epd_brand'), app_conf.get('epd_model')

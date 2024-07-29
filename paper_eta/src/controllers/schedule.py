@@ -8,7 +8,7 @@ from flask import (Blueprint, Response, flash, redirect, render_template,
                    request, url_for)
 from flask_babel import gettext, lazy_gettext
 
-from ...src import db, enums, forms, models, site_data, utils
+from ...src import database, db, forms, site_data, utils
 from ..libs import eta_img, hketa, refresher
 
 bp = Blueprint('schedule',
@@ -21,8 +21,8 @@ bp = Blueprint('schedule',
 def index():
     if request.headers.get('HX-Request'):
         schedules = []
-        for schedule in models.Schedule.query.all():
-            schedule: models.Schedule
+        for schedule in database.Schedule.query.all():
+            schedule: database.Schedule
 
             cron = croniter.croniter(
                 schedule.schedule, start_time=datetime.now())
@@ -51,8 +51,8 @@ def create():
     form = forms.ScheduleForm()
 
     if form.validate_on_submit():
-        db.session.add(models.Schedule(**{k: v for k, v in form.data.items()
-                                          if k not in ("csrf_token", "submit")}))
+        db.session.add(database.Schedule(**{k: v for k, v in form.data.items()
+                                            if k not in ("csrf_token", "submit")}))
         db.session.commit()
         return redirect(url_for("schedule.index"))
 
@@ -67,7 +67,7 @@ def create():
 @bp.route('/create/edit/<id>', methods=["GET", "POST"])
 def edit(id: str):
     form = forms.ScheduleForm()
-    sch = models.Schedule.query.get_or_404(id)
+    sch = database.Schedule.query.get_or_404(id)
 
     if form.validate_on_submit():
         for k, v in form.data.items():
@@ -93,7 +93,7 @@ def edit(id: str):
 @bp.route('/status/<id>', methods=["PUT"])
 def toggle_status(id: str):
     try:
-        schedule = models.Schedule.query.get(id)
+        schedule = database.Schedule.query.get(id)
         setattr(schedule, "enabled", not schedule.enabled)
         db.session.commit()
         return Response(
@@ -116,7 +116,7 @@ def toggle_status(id: str):
 @bp.route('/<string:id>', methods=["DELETE"])
 def delete(id: str):
     try:
-        schedule = models.Schedule.query.get(id)
+        schedule = database.Schedule.query.get(id)
         db.session.delete(schedule)
         db.session.commit()
         return Response(
@@ -189,7 +189,7 @@ def preview(eta_format: str, layout: str):
         })})
 
     bookmarks = [hketa.models.RouteQuery(**bm.as_dict())
-                 for bm in models.Bookmark.query.order_by(models.Bookmark.ordering).all()]
+                 for bm in database.Bookmark.query.order_by(database.Bookmark.ordering).all()]
     try:
         generator = eta_img.generator.EtaImageGeneratorFactory().get_generator(
             app_conf["epd_brand"], app_conf["epd_model"]
@@ -213,7 +213,7 @@ def export():
     return Response(
         json.dumps(
             tuple(map(lambda s: s.as_dict(exclude=['id', 'enabled']),
-                      models.Schedule.query.all())
+                      database.Schedule.query.all())
                   ),
             indent=4),
         mimetype='application/json',
@@ -222,7 +222,7 @@ def export():
 
 @ bp.route('/import', methods=['POST'])
 def import_():
-    fields = ({c.name for c in models.Schedule.__table__.c} -
+    fields = ({c.name for c in database.Schedule.__table__.c} -
               {'id', 'enabled', 'created_at', 'updated_at'})  # accepted fields for table inputs
     try:
         for i, schedule in enumerate(json.load(request.files['schedules'].stream)):
@@ -230,7 +230,7 @@ def import_():
             with db.session.begin_nested() as session:
                 try:
                     db.session.add(
-                        models.Schedule(**{**{k: schedule[k] for k in fields}, 'enabled': False}))
+                        database.Schedule(**{**{k: schedule[k] for k in fields}, 'enabled': False}))
                     db.session.flush()
                 except (KeyError, TypeError, sqlalchemy.exc.StatementError):
                     session.rollback()

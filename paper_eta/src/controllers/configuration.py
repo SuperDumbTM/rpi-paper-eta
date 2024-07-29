@@ -4,7 +4,7 @@ from flask import (Blueprint, Response, flash, redirect, render_template,
                    request, url_for)
 from flask_babel import lazy_gettext
 
-from ...src import db, enums, forms, models, site_data
+from ...src import database, db, forms, site_data
 from ..libs import eta_img
 
 bp = Blueprint('configuration',
@@ -22,7 +22,7 @@ def index():
         if (app_conf.get('epd_brand') != form.epd_brand
                 or app_conf.get('epd_model') != form.epd_model):
             # changing brand or model will invalidate the schedule
-            models.Schedule.query.update({models.Schedule.enabled: False})
+            database.Schedule.query.update({database.Schedule.enabled: False})
             db.session.commit()
 
         try:

@@ -6,7 +6,7 @@ from flask import (Blueprint, Response, flash, redirect, render_template,
                    request, url_for)
 from flask_babel import gettext, lazy_gettext
 
-from ...src import db, extensions, forms, models, utils
+from ...src import database, db, extensions, forms, utils
 from ..libs import hketa
 
 bp = Blueprint('bookmark',
@@ -18,7 +18,7 @@ bp = Blueprint('bookmark',
 def index():
     if request.headers.get('HX-Request'):
         bookmarks = []
-        for bm in models.Bookmark.query.order_by(models.Bookmark.ordering).all():
+        for bm in database.Bookmark.query.order_by(database.Bookmark.ordering).all():
             try:
                 stop_name = extensions.hketa.create_route(
                     hketa.models.RouteQuery(**bm.as_dict())).stop_name()
@@ -36,7 +36,7 @@ def index():
 @bp.route("/<id>", methods=["DELETE"])
 def delete(id: str):
     try:
-        bookmark = models.Bookmark.query.get(id)
+        bookmark = database.Bookmark.query.get(id)
         db.session.delete(bookmark)
         db.session.commit()
         return Response(
@@ -61,8 +61,8 @@ def create():
     form = forms.BookmarkForm()
 
     if form.validate_on_submit():
-        db.session.add(models.Bookmark(**{k: v for k, v in form.data.items()
-                                          if k not in ("csrf_token", "submit")}))
+        db.session.add(database.Bookmark(**{k: v for k, v in form.data.items()
+                                            if k not in ("csrf_token", "submit")}))
         db.session.commit()
 
         return redirect(url_for("bookmark.index"))
@@ -76,7 +76,7 @@ def create():
 @ bp.route('/edit/<id>', methods=["GET", "POST"])
 def edit(id: str):
     form = forms.BookmarkForm()
-    bm: models.Bookmark = models.Bookmark.query.get_or_404(id)
+    bm: database.Bookmark = database.Bookmark.query.get_or_404(id)
 
     if form.validate_on_submit():
         for k, v in form.data.items():
@@ -114,7 +114,7 @@ def edit(id: str):
 
 @bp.route('/', methods=["PUT"])
 def reorder():
-    bms = models.Bookmark.query.all()
+    bms = database.Bookmark.query.all()
     for bm in bms:
         bm.ordering = request.form.getlist("ids[]").index(str(bm.id))
     db.session.add_all(bms)
@@ -173,7 +173,7 @@ def export():
     return Response(
         json.dumps(
             tuple(map(lambda b: b.as_dict(exclude=['id']),
-                      models.Bookmark.query.order_by(models.Bookmark.ordering).all())),
+                      database.Bookmark.query.order_by(database.Bookmark.ordering).all())),
             indent=4),
         mimetype='application/json',
         headers={'Content-disposition': 'attachment; filename=bookmarks.json'})
@@ -181,7 +181,7 @@ def export():
 
 @bp.route('/import', methods=['POST'])
 def import_():
-    fields = ({c.name for c in models.Bookmark.__table__.c} -
+    fields = ({c.name for c in database.Bookmark.__table__.c} -
               {'id', 'created_at', 'updated_at'})  # accepted fields for table inputs
     try:
         for i, bookmark in enumerate(json.load(request.files['bookmarks'].stream)):
@@ -189,7 +189,7 @@ def import_():
             with db.session.begin_nested() as session:
                 try:
                     db.session.add(
-                        models.Bookmark(**{k: bookmark.get(k) for k in fields}))
+                        database.Bookmark(**{k: bookmark.get(k) for k in fields}))
                     db.session.flush()
                 except (KeyError, TypeError, sqlalchemy.exc.StatementError):
                     session.rollback()
