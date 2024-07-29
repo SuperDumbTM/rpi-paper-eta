@@ -9,6 +9,7 @@
 
     @media (min-width: 768px) {
 
+        tr>*:nth-child(1),
         tr>*:nth-child(3) {
             display: table-cell;
         }
@@ -179,7 +180,7 @@
                 return allLogs.filter((l) => {
                     if (!Object.values(this.filters.level).includes(l.level))
                         return false
-                    if (!this.filters.accessLog && !accessKW.some(kw => l.message.includes(kw)))
+                    if (!this.filters.accessLog && accessKW.some(kw => l.module.includes(kw)))
                         return false
                     return true
                 })

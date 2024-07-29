@@ -77,7 +77,7 @@
                                 <th style="min-width: 90px;">{{ _('action') }}</th>
                             </tr>
                         </thead>
-                        <tbody hx-put="" hx-trigger="end" hx-include="closest form">
+                        <tbody hx-put="{{ url_for('bookmark.reorder') }}" hx-trigger="end" hx-include="closest form">
                         </tbody>
                     </table>
                 </div>

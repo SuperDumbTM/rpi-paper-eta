@@ -500,9 +500,8 @@ msgid "previous"
 msgstr ""
 
 #: paper_eta/templates/log/partials/table.jinja:20
-#, fuzzy
 msgid "next"
-msgstr "匯出"
+msgstr "下一頁"
 
 #: paper_eta/templates/schedule/form.jinja:28
 msgid "new_schedule"

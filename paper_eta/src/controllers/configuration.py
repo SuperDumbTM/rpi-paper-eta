@@ -35,7 +35,7 @@ def index():
         if app_conf.get('epd_brand'):
             form.epd_model.choices = [(m.__name__, m.__name__) for m in
                                       eta_img.generator.EtaImageGeneratorFactory.models(
-                                          app_conf.get('epd_brand'))
+                                          app_conf["epd_brand"])
                                       ]
 
         return render_template("configuration/index.jinja",

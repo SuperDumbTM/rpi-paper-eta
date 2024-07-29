@@ -1,21 +1,12 @@
-import base64
-import io
+from flask import (Blueprint, current_app, jsonify, make_response, redirect,
+                   render_template, request, url_for)
+from flask_babel import lazy_gettext
 
-from flask import (Blueprint, make_response, redirect, render_template,
-                   request, url_for)
-from PIL import Image
-
-from ...src import site_data
+from ...src import site_data, utils
 from ...src.libs import epd_log
+from ..libs import epd_log, refresher
 
 bp = Blueprint('root', __name__, url_prefix="/")
-
-
-def _img_2_b64(img: Image.Image) -> str:
-    """Convert a PIL image to base64 encoded string."""
-    b = io.BytesIO()
-    img.save(b, 'bmp')
-    return base64.b64encode(b.getvalue()).decode('utf-8')
 
 
 @bp.route("/")
@@ -32,3 +23,19 @@ def change_language(lang: str):
         redirect(request.referrer or url_for('root.home')))
     response.set_cookie('locale', lang)
     return response
+
+
+@bp.route("/screen-dumps")
+def screen_dumps():
+    return render_template("root/partials/screen_dumps.jinja",
+                           images={
+                               k: utils.img2b64(v)
+                               for k, v in refresher.cached_images(
+                                   current_app.config['DIR_SCREEN_DUMP']).items()
+                           },)
+
+
+@bp.route("/histories")
+def histories():
+    return render_template("root/partials/histories.jinja",
+                           refresh_logs=tuple(epd_log.epdlog.get()),)

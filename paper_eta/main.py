@@ -21,7 +21,7 @@ def create_app() -> Flask:
     dictConfig(app.config['LOGGING_CONFIG'])
 
     # extensions initisation
-    extensions.babel.init_app(app, locale_selector=utils.i18n.get_locale)
+    extensions.babel.init_app(app, locale_selector=utils.get_locale)
     extensions.scheduler.init_app(app)
     extensions.scheduler.start()
     extensions.db.init_app(app)
@@ -47,7 +47,7 @@ def create_app() -> Flask:
     # jinja helper functions
     app.jinja_env.globals.update(
         bool_to_icon=lambda b: '<i class="bi bi-check2"></i>' if b else '<i class="bi bi-x"></i>',
-        get_locale=utils.i18n.get_locale,
+        get_locale=utils.get_locale,
         form_valid_class=lambda f: ' is-invalid' if f.errors else '',
         today=lambda: datetime.now().date(),
         time=lambda: datetime.now().strftime("%H:%M:%S"),

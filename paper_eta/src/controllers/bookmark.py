@@ -4,7 +4,7 @@ import logging
 import sqlalchemy.exc
 from flask import (Blueprint, Response, flash, redirect, render_template,
                    request, url_for)
-from flask_babel import lazy_gettext
+from flask_babel import gettext, lazy_gettext
 
 from paper_eta.src import extensions, forms
 from paper_eta.src.libs import hketa
@@ -16,16 +16,9 @@ bp = Blueprint('bookmark',
                url_prefix="/bookmarks")
 
 
-@bp.route('/', methods=["GET", "PUT"])
+@bp.route('/')
 def index():
     if request.headers.get('HX-Request'):
-        if request.method == "PUT":
-            bms = models.Bookmark.query.all()
-            for bm in bms:
-                bm.ordering = request.form.getlist("ids[]").index(str(bm.id))
-            db.session.add_all(bms)
-            db.session.commit()
-
         bookmarks = []
         for bm in models.Bookmark.query.order_by(models.Bookmark.ordering).all():
             try:
@@ -57,12 +50,12 @@ def delete(id: str):
                 })}
         )
     except sqlalchemy.exc.SQLAlchemyError:
-        return Response(
-            "",
-            headers={
-                "HX-Reswap": "outterHTML",
-                "HX-Retarget": ""
-            })
+        return Response("", status=422, headers={"HX-Trigger": json.dumps({
+            "toast": {
+                "level": "error",
+                "message": gettext("invalid_id")
+            }
+        })})
 
 
 @bp.route('/create', methods=["GET", "POST"])
@@ -96,19 +89,19 @@ def edit(id: str):
 
     form.transport.data = bm.transport.value
 
-    form.no.choices = utils.eta_api.route_choices(bm.transport.value)
+    form.no.choices = utils.route_choices(bm.transport.value)
     form.no.data = bm.no
 
-    form.direction.choices = utils.eta_api.direction_choices(
+    form.direction.choices = utils.direction_choices(
         bm.transport.value, bm.no)
     form.direction.data = bm.direction.value
 
-    form.service_type.choices = utils.eta_api.type_choices(
+    form.service_type.choices = utils.type_choices(
         bm.transport.value, bm.no, bm.direction.value, bm.locale.value
     )
     form.service_type.data = bm.service_type
 
-    form.stop_id.choices = utils.eta_api.stop_choices(
+    form.stop_id.choices = utils.stop_choices(
         bm.transport.value, bm.no, bm.direction.value, bm.service_type, bm.locale.value
     )
     form.stop_id.data = bm.stop_id
@@ -121,11 +114,29 @@ def edit(id: str):
                            editing=True,)
 
 
+@bp.route('/', methods=["PUT"])
+def reorder():
+    bms = models.Bookmark.query.all()
+    for bm in bms:
+        bm.ordering = request.form.getlist("ids[]").index(str(bm.id))
+    db.session.add_all(bms)
+    db.session.commit()
+
+    return Response(
+        headers={
+            "HX-Location": json.dumps({
+                "path": url_for("bookmark.index"),
+                "target": "tbody",
+                "swap": "innerHTML"
+            })}
+    )
+
+
 @bp.route('/<transport>/routes')
 def routes(transport: str):
     form = forms.BookmarkForm()
 
-    form.no.choices = utils.eta_api.route_choices(transport)
+    form.no.choices = utils.route_choices(transport)
     form.no.data = form.no.choices[0][0]
 
     return render_template("bookmark/partials/no_input.jinja", form=form)
@@ -139,18 +150,18 @@ def options(transport: str):
     if "pos" not in request.args or request.args.get("no", "") == "":
         pass
     else:
-        form.direction.choices = utils.eta_api.direction_choices(
+        form.direction.choices = utils.direction_choices(
             transport, request.args["no"])
         form.direction.data = request.args.get(
             "direction", form.direction.choices[0][0])
 
-        form.service_type.choices = utils.eta_api.type_choices(
+        form.service_type.choices = utils.type_choices(
             transport, request.args["no"], form.direction.data, locale
         )
         form.service_type.data = request.args.get(
             "service_type", form.service_type.choices[0][0])
 
-        form.stop_id.choices = utils.eta_api.stop_choices(
+        form.stop_id.choices = utils.stop_choices(
             transport, request.args["no"], form.direction.data, form.service_type.data, locale
         )
         form.stop_id.data = request.args.get(

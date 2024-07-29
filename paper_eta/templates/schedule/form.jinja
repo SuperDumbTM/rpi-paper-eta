@@ -15,6 +15,14 @@
         padding: 20px;
         height: 400px;
     }
+
+    .hx-indicator {
+        display: none;
+    }
+
+    .hx-indicator.htmx-request {
+        display: block;
+    }
 </style>
 {% endblock style %}
 
@@ -179,7 +187,15 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
-            <div class="modal-body"></div>
+            <div class="modal-body">
+                <div id="outter-preview"></div>
+
+                <div class="hx-indicator">
+                    <div class="row align-items-center justify-content-center" style="height: 275px;">
+                        <div class="loader-ellipsis"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -225,44 +241,6 @@
             layout: {{ formats }}.map((v) => ({ v: "" })),
         }));
     });
-
-    function showPreview() {
-        let container = document.querySelector("#preview-md .modal-body");
-        container.innerHTML = "";
-
-        showLoading();
-        fetch(`{{ url_for('display.image') }}?${new URLSearchParams({
-            layout: event.target.dataset.layout,
-            eta_format: event.target.dataset.eta_format
-        })}`, { method: "GET", })
-            .then((res) => res.json())
-            .then((json) => {
-                hideLoading();
-                if (!json.success) {
-                    alertify.error(json.message);
-                    return;
-                }
-
-                Object.entries(json.data.images).forEach(function (entry) {
-                    const [key, value] = entry;
-                    container.insertAdjacentHTML("beforeend", `
-                            <div class="card my-1" style="width: 18rem; margin: auto;">
-                                <img class="m-2" src="data:image/bmp;base64, ${value}">
-
-                                <hr>
-
-                                <div class="card-body">
-                                    <span class="card-text">
-                                        ${key}
-                                    </span>
-                                </div>
-                            </div>
-                        `)
-                })
-
-                new bootstrap.Modal(document.getElementById('preview-md')).show();
-            });
-    }
 
     function from2cron(data) {
         let cron = [];

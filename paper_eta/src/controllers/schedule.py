@@ -8,10 +8,8 @@ from flask import (Blueprint, Response, flash, redirect, render_template,
                    request, url_for)
 from flask_babel import gettext, lazy_gettext
 
-from paper_eta.src import forms
-
-from ...src import db, enums, models, site_data
-from ..libs import eta_img
+from ...src import db, enums, forms, models, site_data, utils
+from ..libs import eta_img, hketa, refresher
 
 bp = Blueprint('schedule',
                __name__,
@@ -93,7 +91,7 @@ def edit(id: str):
 
 
 @bp.route('/status/<id>', methods=["PUT"])
-def update_status(id: str):
+def toggle_status(id: str):
     try:
         schedule = models.Schedule.query.get(id)
         setattr(schedule, "enabled", not schedule.enabled)
@@ -107,12 +105,12 @@ def update_status(id: str):
                 })}
         )
     except sqlalchemy.exc.SQLAlchemyError:
-        return Response(
-            "",
-            headers={
-                "HX-Reswap": "outterHTML",
-                "HX-Retarget": ""
-            })
+        return Response("", status=422, headers={"HX-Trigger": json.dumps({
+            "toast": {
+                "level": "error",
+                "message": gettext("invalid_id")
+            }
+        })})
 
 
 @bp.route('/<string:id>', methods=["DELETE"])
@@ -130,12 +128,12 @@ def delete(id: str):
                 })}
         )
     except sqlalchemy.exc.SQLAlchemyError:
-        return Response(
-            "",
-            headers={
-                "HX-Reswap": "outterHTML",
-                "HX-Retarget": ""
-            })
+        return Response("", status=422, headers={"HX-Trigger": json.dumps({
+            "toast": {
+                "level": "error",
+                "message": gettext("invalid_id")
+            }
+        })})
 
 
 @bp.route("/layouts/<eta_format>")
@@ -170,6 +168,44 @@ def layouts(eta_format: str):
                                 "message": gettext("Layout does not exists.")
                             }
                         })})
+
+
+@bp.route("/preview/<eta_format>/<layout>")
+def preview(eta_format: str, layout: str):
+    if eta_format not in (t for t in eta_img.enums.EtaFormat):
+        return Response("", status=422, headers={"HX-Trigger": json.dumps({
+            "toast": {
+                "level": "error",
+                "message": gettext("incorrect_parameter") + gettext(".")
+            }
+        })})
+    if (not (app_conf := site_data.AppConfiguration()).get('epd_brand')
+            or not app_conf.get('epd_model')):
+        return Response("", status=422, headers={"HX-Trigger": json.dumps({
+            "toast": {
+                "level": "error",
+                "message": gettext("Please enter the display details first.")
+            }
+        })})
+
+    bookmarks = [hketa.models.RouteQuery(**bm.as_dict())
+                 for bm in models.Bookmark.query.order_by(models.Bookmark.ordering).all()]
+    try:
+        generator = eta_img.generator.EtaImageGeneratorFactory().get_generator(
+            app_conf["epd_brand"], app_conf["epd_model"]
+        )(eta_img.enums.EtaFormat(eta_format), layout)
+        images = refresher.generate_image(bookmarks, generator)
+    except KeyError:
+        return Response("", status=422, headers={"HX-Trigger": json.dumps({
+            "toast": {
+                "level": "error",
+                "message": gettext("Layout does not exists.")
+            }
+        })})
+
+    return render_template("schedule/partials/layout_preview.jinja", images={
+        c: utils.img2b64(img) for c, img in images.items()
+    })
 
 
 @ bp.route('/export')

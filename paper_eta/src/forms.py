@@ -20,7 +20,7 @@ class EpaperSettingForm(FlaskForm):
                                         wtforms.validators.DataRequired()],
                                     choices=[
                                         ("", lazy_gettext('please_select'))],
-                                    validate_choice=True)
+                                    validate_choice=False)
 
     submit = wtforms.SubmitField(lazy_gettext('submit'))
 

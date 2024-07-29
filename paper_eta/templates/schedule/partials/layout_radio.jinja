@@ -5,12 +5,15 @@
             <div class="form-check">
                 <label class="form-check-label">
                     {{ layout["name"] }}
-                    <input class="form-check-input" type="radio" name="layout" value="{{ layout['name'] }}" x-model="layout.{{ eta_format }}" required>
+                    <input class="form-check-input" type="radio" name="layout" value="{{ layout['name'] }}"
+                        x-model="layout.{{ eta_format }}" required>
                 </label>
 
                 <div class="float-end">
-                    <button type="button" class="btn btn-sm btn-outline-success preview-btn" @click="showPreview()"
-                        data-layout="{{ layout['name'] }}" data-eta_format="{{ eta_format }}">
+                    <button type="button" class="btn btn-sm btn-outline-success preview-btn" data-bs-toggle="modal"
+                        data-bs-target="#preview-md"
+                        hx-get="{{ url_for('schedule.preview', eta_format=eta_format, layout=layout['name']) }}"
+                        hx-target="#preview-md #outter-preview" hx-indicator=".hx-indicator" hx-on::before-request="document.getElementById('outter-preview').innerHTML = ''">
                         {{ _('layout_preview') }}
                     </button>
                 </div>
