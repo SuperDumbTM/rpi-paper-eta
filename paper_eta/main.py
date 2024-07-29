@@ -37,7 +37,6 @@ def create_app() -> Flask:
     app.register_blueprint(controllers.html.log.bp)
 
     app.register_blueprint(controllers.apis.display.bp)
-    app.register_blueprint(controllers.apis.log.bp)
 
     # cli registration
     app.cli.add_command(cli.i18n_cli)
