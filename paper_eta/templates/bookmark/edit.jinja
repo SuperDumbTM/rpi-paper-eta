@@ -121,12 +121,6 @@
 
     var choices;
 
-    {% if editing %}
-    choices = new Choices('select[name=no]', {
-        allowHTML: false, // suppress warn msg
-        maxItemCount: 1
-    });
-    {% else %}
     document.addEventListener("htmx:afterOnLoad", function (event) {
         if (event.target.id == "transport") {
             choices = new Choices('select[name=no]', {
@@ -135,7 +129,6 @@
             });
         }
     })
-    {% endif %}
 
 
 </script>
