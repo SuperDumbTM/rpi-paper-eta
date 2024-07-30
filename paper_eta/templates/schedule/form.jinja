@@ -2,6 +2,7 @@
 {% from "schedule/macros/cron_selector.jinja" import cron_selector %}
 
 {% extends "layout.jinja" %}
+{% block title %}{{ _('nav_schedule') }}{% endblock title %}
 
 {% block nav %}
 {% include "includes/navbar.jinja" %}
