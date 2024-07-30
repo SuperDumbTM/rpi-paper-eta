@@ -1,11 +1,14 @@
 {% from "macros/render_field.jinja" import render_field %}
 
+
 {% extends "layout.jinja" %}
 {% block title %}{{ _('nav_bookmark') }}{% endblock title %}
+
 
 {% block nav %}
 {% include "includes/navbar.jinja" %}
 {% endblock nav %}
+
 
 {% block style %}
 <style>
@@ -25,6 +28,7 @@
     }
 </style>
 {% endblock style %}
+
 
 {% block content %}
 <div class="container-xxl">
@@ -87,6 +91,7 @@
     </div>
 </div>
 {% endblock content %}
+
 
 {% block script %}
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>

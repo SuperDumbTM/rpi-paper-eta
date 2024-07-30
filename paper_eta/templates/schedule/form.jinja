@@ -1,12 +1,15 @@
 {% from "macros/render_field.jinja" import render_field %}
 {% from "schedule/macros/cron_selector.jinja" import cron_selector %}
 
+
 {% extends "layout.jinja" %}
 {% block title %}{{ _('nav_schedule') }}{% endblock title %}
+
 
 {% block nav %}
 {% include "includes/navbar.jinja" %}
 {% endblock nav %}
+
 
 {% block style %}
 <style>
@@ -26,6 +29,7 @@
     }
 </style>
 {% endblock style %}
+
 
 {% block content %}
 <div class="row align-items-center" style="height: 100vh;">
@@ -106,6 +110,7 @@
     </div>
 </div>
 {% endblock content %}
+
 
 {% block footer %}
 <!-- Modal -->
@@ -197,8 +202,8 @@
         </div>
     </div>
 </div>
-
 {% endblock footer %}
+
 
 {% block script %}
 <script src="https://unpkg.com/cronstrue@latest/dist/cronstrue.min.js"></script>

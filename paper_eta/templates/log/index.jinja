@@ -1,6 +1,7 @@
 {% extends "layout.jinja" %}
 {% block title %}{{ _('nav_log') }}{% endblock title %}
 
+
 {% block style %}
 <style>
     tr>*:nth-child(1),
@@ -18,9 +19,11 @@
 </style>
 {% endblock style %}
 
+
 {% block nav %}
 {% include "includes/navbar.jinja" %}
 {% endblock nav %}
+
 
 {% block content %}
 <div class="container-xxl" x-data="pagination">
@@ -163,6 +166,7 @@
     </div>
 </div>
 {% endblock content %}
+
 
 {% block script %}
 <script>

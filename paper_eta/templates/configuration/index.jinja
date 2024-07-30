@@ -1,7 +1,9 @@
 {% from "macros/render_field.jinja" import render_field %}
 
+
 {% extends "layout.jinja" %}
 {% block title %}{{ _('nav_configuration') }}{% endblock title %}
+
 
 {% block style %}
 <style>
@@ -14,9 +16,11 @@
 </style>
 {% endblock style %}
 
+
 {% block nav %}
 {% include "includes/navbar.jinja" %}
 {% endblock nav %}
+
 
 {% block content %}
 <div class="row align-items-center" style="height: 100vh;">

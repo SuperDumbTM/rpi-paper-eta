@@ -1,5 +1,6 @@
 {% from "macros/render_field.jinja" import render_field %}
 
+
 {% extends "layout.jinja" %}
 {% block title %}{{ _('nav_bookmark') }}{% endblock title %}
 
@@ -8,9 +9,11 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
 {% endblock link %}
 
+
 {% block nav %}
 {% include "includes/navbar.jinja" %}
 {% endblock nav %}
+
 
 {% block style %}
 <style>
@@ -115,6 +118,7 @@
     </div>
 </div>
 {% endblock content %}
+
 
 {% block script %}
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
