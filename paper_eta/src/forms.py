@@ -2,7 +2,7 @@ import wtforms
 from flask_wtf import FlaskForm
 from flask_babel import lazy_gettext
 
-from paper_eta.src.libs import eta_img, hketa
+from paper_eta.src.libs import imgen, hketa
 
 
 class EpaperSettingForm(FlaskForm):
@@ -13,7 +13,7 @@ class EpaperSettingForm(FlaskForm):
                                     # "-" for HTMX to request /epd-models/<brand> successfully,
                                     # so that the options can be swapped out to the "empty option".
                                     choices=[("-", lazy_gettext('please_select'))] + [
-                                        (b, b.title()) for b in eta_img.generator.EtaImageGeneratorFactory.brands()])  # pylint: disable=line-too-long
+                                        (b, b.title()) for b in imgen.brands()])  # pylint: disable=line-too-long
 
     epd_model = wtforms.SelectField(lazy_gettext('model'),
                                     [
@@ -28,8 +28,7 @@ class EpaperSettingForm(FlaskForm):
         if not self.epd_brand.validate(self):
             return
 
-        choices = map(lambda c: c.__name__,
-                      eta_img.generator.EtaImageGeneratorFactory.models(self.epd_brand.data))
+        choices = map(lambda c: c.__name__, imgen.models(self.epd_brand.data))
         if field.data not in choices:
             raise wtforms.ValidationError("Not a valid choice.")
 
@@ -37,14 +36,12 @@ class EpaperSettingForm(FlaskForm):
 class BookmarkForm(FlaskForm):
     locale = wtforms.SelectField(lazy_gettext("language"),
                                  choices=[(l.value, lazy_gettext(l.value))
-                                          for l in hketa.enums.Locale
-                                          ]
+                                          for l in hketa.Locale]
                                  )
 
     transport = wtforms.SelectField(lazy_gettext("company"),
                                     choices=[(l.value, lazy_gettext(l.value))
-                                             for l in hketa.enums.Transport
-                                             ]
+                                             for l in hketa.Transport]
                                     )
 
     no = wtforms.SelectField(lazy_gettext("route"),
@@ -80,7 +77,7 @@ class ScheduleForm(FlaskForm):
     eta_format = wtforms.SelectField(lazy_gettext("eta_format"),
                                      [wtforms.validators.DataRequired()],
                                      choices=[(l.value, lazy_gettext(l.value))
-                                              for l in eta_img.enums.EtaFormat
+                                              for l in imgen.enums.EtaFormat
                                               ],
                                      )
 

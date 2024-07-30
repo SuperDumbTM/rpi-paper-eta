@@ -21,7 +21,7 @@ def index():
         for bm in database.Bookmark.query.order_by(database.Bookmark.ordering).all():
             try:
                 stop_name = extensions.hketa.create_route(
-                    hketa.models.RouteQuery(**bm.as_dict())).stop_name()
+                    hketa.RouteQuery(**bm.as_dict())).stop_name()
             except Exception:  # pylint: disable=broad-exception-caught
                 stop_name = lazy_gettext('error')
             bookmarks.append(bm.as_dict() | {'stop_name': stop_name})
@@ -107,7 +107,7 @@ def edit(id_: str):
     return render_template("bookmark/edit.jinja",
                            form=form,
                            transports=[(c.value, lazy_gettext(c.value))
-                                       for c in hketa.enums.Transport],
+                                       for c in hketa.Transport],
                            form_action=url_for("bookmark.edit", id_=id_),
                            editing=True,)
 

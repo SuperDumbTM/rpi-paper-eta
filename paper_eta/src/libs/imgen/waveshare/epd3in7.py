@@ -1,18 +1,9 @@
-from pathlib import Path
-
 from flask_babel import force_locale, gettext
 from PIL import Image, ImageDraw
 
-from ... import hketa
-
-try:
-    from .. import utils
-    from ..generator import EtaImageGenerator
-except ImportError:
-    import sys
-    sys.path.append(str(Path(__file__).parent.parent))
-    import utils
-    from eta_img.generator import EtaImageGenerator
+from .. import _utils
+from ..generator import EtaImageGenerator
+from ...hketa import Eta
 
 
 class Epd3in7(EtaImageGenerator):
@@ -27,7 +18,7 @@ class Epd3in7(EtaImageGenerator):
     def colors(self) -> tuple[str]:
         return ("black",)
 
-    def draw(self, etas: list[hketa.models.Eta], degree: float = 0) -> dict[str, Image.Image]:
+    def draw(self, etas, degree=0):
         image = Image.new('1', (self.width, self.height), 255)
         b = ImageDraw.Draw(image)
 
@@ -52,35 +43,35 @@ class Epd3in7(EtaImageGenerator):
                          self._bk)
             b.text((coords['route']['name']['offset'][0],
                     coords['route']['name']['offset'][1] + (row_height*row)),
-                   utils.discard(route.no,
-                                 coords['route']['name']['width'],
-                                 self.fonts['route']),
+                   _utils.discard(route.no,
+                                  coords['route']['name']['width'],
+                                  self.fonts['route']),
                    fill=self._bk, font=self.fonts['route'])
             b.text((coords['route']['dest']['offset'][0],
                     coords['route']['dest']['offset'][1] + (row_height*row)),
-                   utils.discard(route.destination,
-                                 coords['route']
-                                 ['dest']['width'], self.fonts['stop']),
+                   _utils.discard(route.destination,
+                                  coords['route']
+                                  ['dest']['width'], self.fonts['stop']),
                    fill=self._bk, font=self.fonts['stop'])
             b.text((coords['route']['stop']['offset'][0],
                     coords['route']['stop']['offset'][1] + (row_height*row)),
-                   utils.discard(f"@{route.stop_name}",
-                                 coords['route']['stop']['width'],
-                                 self.fonts['stop']),
+                   _utils.discard(f"@{route.stop_name}",
+                                  coords['route']['stop']['width'],
+                                  self.fonts['stop']),
                    fill=self._bk, font=self.fonts['stop'])
 
             # error
-            if isinstance(route.etas, hketa.models.Eta.Error):
-                errmsg = utils.wrap(route.etas.message,
-                                    coords['error']['position']['width'],
-                                    coords['error']['position']['height'],
-                                    self.fonts['err_txt'])
+            if isinstance(route.etas, Eta.Error):
+                errmsg = _utils.wrap(route.etas.message,
+                                     coords['error']['position']['width'],
+                                     coords['error']['position']['height'],
+                                     self.fonts['err_txt'])
 
-                offset_x, offset_y = utils.position(errmsg,
-                                                    coords['error']['position']['width'],
-                                                    coords['error']['position']['height'],
-                                                    self.fonts['err_txt'],
-                                                    align='c')
+                offset_x, offset_y = _utils.position(errmsg,
+                                                     coords['error']['position']['width'],
+                                                     coords['error']['position']['height'],
+                                                     self.fonts['err_txt'],
+                                                     align='c')
                 b.text((coords['error']['position']['offset'][0] + offset_x,
                         coords['error']['position']['offset'][1] + row_height*row + offset_y),
                        text=errmsg, fill=self._bk, font=self.fonts['err_txt'])
@@ -98,7 +89,7 @@ class Epd3in7(EtaImageGenerator):
                         text = gettext(
                             "arr_dep") if eta.is_arriving else eta.remark
 
-                    offset_x, offset_y = utils.position(
+                    offset_x, offset_y = _utils.position(
                         text,
                         coords['eta']['position']['width'],
                         coords['eta']['position']['height'],
@@ -108,7 +99,7 @@ class Epd3in7(EtaImageGenerator):
                     # display the remark
                     b.text((coords['eta']['position']['offset'][0] + offset_x,
                             coords['eta']['position']['offset'][1] + offset_y + idx_offset),
-                           utils.discard(
+                           _utils.discard(
                         text, coords['eta']['position']['width'], self.fonts['rmk_txt']),
                         fill=self._bk,
                         font=self.fonts['rmk_txt'])
@@ -133,7 +124,7 @@ class Epd3in7(EtaImageGenerator):
         image = Image.new('1', (self.width, self.height), 255)
         b = ImageDraw.Draw(image)
 
-        offset_x, offset_y = utils.position(
+        offset_x, offset_y = _utils.position(
             message,
             self.width,
             self.height,
@@ -141,7 +132,7 @@ class Epd3in7(EtaImageGenerator):
             align='c')
 
         b.text((0 + offset_x, 0 + offset_y),
-               utils.discard(message, self.width, self.fonts['err_txt']),
+               _utils.discard(message, self.width, self.fonts['err_txt']),
                fill=self._bk,
                font=self.fonts['err_txt'])
 

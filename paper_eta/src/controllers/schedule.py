@@ -9,7 +9,7 @@ from flask import (Blueprint, Response, flash, redirect, render_template,
 from flask_babel import gettext, lazy_gettext
 
 from ...src import database, db, forms, site_data, utils
-from ..libs import eta_img, hketa, refresher
+from ..libs import imgen, hketa, refresher
 
 bp = Blueprint('schedule',
                __name__,
@@ -151,8 +151,8 @@ def layouts(eta_format: str):
                         })})
 
     try:
-        layouts = eta_img.generator.EtaImageGeneratorFactory\
-            .get_generator(app_conf.get('epd_brand'), app_conf.get('epd_model'))\
+        layouts = imgen\
+            .get(app_conf.get('epd_brand'), app_conf.get('epd_model'))\
             .layouts()[eta_format]
 
         return render_template("/schedule/partials/layout_radio.jinja",
@@ -172,7 +172,7 @@ def layouts(eta_format: str):
 
 @bp.route("/preview/<eta_format>/<layout>")
 def preview(eta_format: str, layout: str):
-    if eta_format not in (t for t in eta_img.enums.EtaFormat):
+    if eta_format not in (t for t in imgen.EtaFormat):
         return Response("", status=422, headers={"HX-Trigger": json.dumps({
             "toast": {
                 "level": "error",
@@ -188,12 +188,11 @@ def preview(eta_format: str, layout: str):
             }
         })})
 
-    bookmarks = [hketa.models.RouteQuery(**bm.as_dict())
+    bookmarks = [hketa.RouteQuery(**bm.as_dict())
                  for bm in database.Bookmark.query.order_by(database.Bookmark.ordering).all()]
     try:
-        generator = eta_img.generator.EtaImageGeneratorFactory().get_generator(
-            app_conf["epd_brand"], app_conf["epd_model"]
-        )(eta_img.enums.EtaFormat(eta_format), layout)
+        generator = imgen.get(app_conf["epd_brand"], app_conf["epd_model"]
+                              )(imgen.EtaFormat(eta_format), layout)
         images = refresher.generate_image(bookmarks, generator)
     except KeyError:
         return Response("", status=422, headers={"HX-Trigger": json.dumps({

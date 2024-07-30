@@ -4,7 +4,7 @@ from flask import Blueprint, current_app, jsonify, request
 from flask_babel import gettext
 
 from ...src import database, site_data
-from ..libs import epd_log, epdcon, eta_img, hketa, refresher
+from ..libs import epd_log, epdcon, imgen, hketa, refresher
 
 bp = Blueprint('display', __name__, url_prefix="/display")
 
@@ -21,7 +21,7 @@ def refresh(args):
             'message': f"{gettext('missing_parameter')}{gettext('.')}",
             'data': None,
         }), 422
-    if request.args["eta_format"] not in (t for t in eta_img.enums.EtaFormat):
+    if request.args["eta_format"] not in (t for t in imgen.EtaFormat):
         return jsonify({
             'success': False,
             'message': f"{gettext('incorrect_parameter')}{gettext('.')}",
@@ -37,12 +37,11 @@ def refresh(args):
 
     # TODO: module name clash
     # ---------- generate ETA images ----------
-    bookmarks = [hketa.models.RouteQuery(**bm.as_dict())
+    bookmarks = [hketa.RouteQuery(**bm.as_dict())
                  for bm in database.Bookmark.query.order_by(database.Bookmark.ordering).all()]
     try:
-        generator = eta_img.generator.EtaImageGeneratorFactory().get_generator(
-            app_conf.get('epd_brand'), app_conf.get('epd_model')
-        )(eta_img.enums.EtaFormat(args['eta_format']), args['layout'])
+        generator = imgen.get(app_conf.get('epd_brand'), app_conf.get('epd_model')
+                              )(imgen.EtaFormat(args['eta_format']), args['layout'])
         images = refresher.generate_image(bookmarks, generator)
     except KeyError:
         return jsonify({

@@ -5,7 +5,7 @@ from flask import (Blueprint, Response, flash, redirect, render_template,
 from flask_babel import lazy_gettext
 
 from ...src import database, db, forms, site_data
-from ..libs import eta_img
+from ..libs import imgen
 
 bp = Blueprint('configuration',
                __name__,
@@ -34,13 +34,11 @@ def index():
     else:
         if app_conf.get('epd_brand'):
             form.epd_model.choices = [(m.__name__, m.__name__) for m in
-                                      eta_img.generator.EtaImageGeneratorFactory.models(
-                                          app_conf["epd_brand"])
-                                      ]
+                                      imgen.models(app_conf["epd_brand"])]
 
         return render_template("configuration/index.jinja",
                                form=form,
-                               brands=eta_img.generator.EtaImageGeneratorFactory.brands())  # pylint: disable=line-too-long
+                               brands=imgen.brands())
 
 
 @bp.route('/epd-models/<brand>')
@@ -49,8 +47,7 @@ def epd_models(brand: str):
     try:
         return render_template("configuration/partials/model_options.jinja",
                                current=app_conf.get('epd_model'),
-                               models=[m.__name__
-                                       for m in eta_img.generator.EtaImageGeneratorFactory.models(brand)])  # pylint: disable=line-too-long
+                               models=[m.__name__ for m in imgen.models(brand)])
     except KeyError:
         return render_template("configuration/partials/model_options.jinja",
                                models=[])

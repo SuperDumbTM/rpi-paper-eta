@@ -11,7 +11,7 @@ from sqlalchemy import event, func, inspect
 from sqlalchemy.orm import Mapped, mapped_column, validates
 
 from . import extensions
-from .libs import eta_img, hketa
+from .libs import imgen, hketa
 
 
 class BaseModel(extensions.db.Model):
@@ -40,12 +40,12 @@ class Bookmark(BaseModel):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     # autoincrement by `generate_ordering`
     ordering: Mapped[int]  # = mapped_column(unique=True)
-    transport: Mapped[hketa.enums.Transport]
+    transport: Mapped[hketa.Transport]
     no: Mapped[str]
-    direction: Mapped[hketa.enums.Direction]
+    direction: Mapped[hketa.Direction]
     service_type: Mapped[str]
     stop_id: Mapped[str]
-    locale: Mapped[hketa.enums.Locale]
+    locale: Mapped[hketa.Locale]
 
 
 @event.listens_for(Bookmark, 'before_insert')
@@ -89,7 +89,7 @@ class Schedule(BaseModel):
                                      kwargs={
                                          'url': 'http://localhost:8192/display/refresh',
                                          'params': {
-                                             'eta_format': eta_img.enums.EtaFormat(self.eta_format),
+                                             'eta_format': imgen.enums.EtaFormat(self.eta_format),
                                              'layout': self.layout,
                                              'is_partial': self.is_partial
                                          },

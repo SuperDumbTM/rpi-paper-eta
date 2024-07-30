@@ -8,14 +8,14 @@ from flask_babel import force_locale
 from PIL import Image
 
 from .. import extensions
-from ..libs import epdcon, eta_img, hketa
+from ..libs import epdcon, imgen, hketa
 
 _ctrl_mutex = threading.Lock()
 
 
 def generate_image(
-    bookmarks: list[hketa.models.RouteQuery],
-    generator: eta_img.generator.EtaImageGenerator
+    bookmarks: list[hketa.RouteQuery],
+    generator: imgen.EtaImageGenerator
 ) -> dict[str, Image.Image]:
     """Generate a ETA image.
 
@@ -31,7 +31,7 @@ def generate_image(
     except requests.RequestException as e:
         logging.warning('Image generation failed with error: %s', str(e))
         images = generator.draw_error('Network Error')
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-exception-caught
         logging.exception('Image generation failed with error: %s', str(e))
         images = generator.draw_error('Unexpected Error')
     return images

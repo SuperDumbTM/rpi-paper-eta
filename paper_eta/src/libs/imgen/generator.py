@@ -1,38 +1,31 @@
-import collections
 import json
 import logging
 import os
 import sys
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Iterable
+from typing import Iterable, Mapping
 
 from PIL import Image, ImageFont
 
-from .. import hketa
-
-try:
-    import enums
-except ImportError:
-    from . import enums
+from ..hketa.models import Eta
+from .enums import EtaFormat
 
 
 class EtaImageGenerator(ABC):
 
-    eta_format: enums.EtaFormat
-    # _data: dict[str, dict]
-    fonts: "FontLoader"
+    format: EtaFormat
+    fonts: "_FontLoader"
 
     @property
     @abstractmethod
     def colors(self) -> Iterable[str]:
         """Color name that the generator will using in generating the image"""
-        pass
 
     @classmethod
-    def layouts(cls) -> dict[enums.EtaFormat, list[dict[str, str]]]:
+    def layouts(cls) -> dict[EtaFormat, list[dict[str, str]]]:
         layouts = {}
-        for mode in enums.EtaFormat:
+        for mode in EtaFormat:
             layouts[mode] = [{
                 'name': layout['details']['name'],
                 'description': layout['details']['description']
@@ -49,21 +42,21 @@ class EtaImageGenerator(ABC):
         ) as f:
             return json.load(f)
 
-    def __init__(self, eta_format: enums.EtaFormat, layout_name: str) -> None:
-        self.eta_format = eta_format
+    def __init__(self, eta_format: EtaFormat, layout_name: str) -> None:
+        self.format = eta_format
         self.layout_name = layout_name
 
         for layout in self.layout_data()[eta_format.value]['layouts']:
             if layout['details']['name'] == layout_name:
                 self._config = layout
-                self.fonts = FontLoader(layout['fonts'])
+                self.fonts = _FontLoader(layout['fonts'])
                 break
         else:
             raise KeyError(layout_name)
 
     @abstractmethod
     def draw(self,
-             etas: Iterable[hketa.models.Eta],
+             etas: Iterable[Eta],
              degree: float = 0) -> dict[str, Image.Image]:
         """Create image(s) with the ETA(s) data
         """
@@ -73,18 +66,18 @@ class EtaImageGenerator(ABC):
         pass
 
     def write_images(self, directory: os.PathLike, images: dict[str, Image.Image]):
-        logging.info(f"saving display output to file(s)")
+        logging.info("saving display output to file(s)")
 
         if not os.path.exists(directory):
-            logging.warn(f"{directory} do not exist, creating...")
+            logging.warning("%s do not exist, creating...", directory)
             os.makedirs(directory)
 
         for color, image in images.items():
             image.save(os.path.join(directory, f"{color}.bmp"))
-            logging.debug(f"{color}.bmp created")
+            logging.debug("%s.bmp created", color)
 
     def read_images(self, directory: os.PathLike) -> dict[str, Image.Image]:
-        logging.info(f"reading display output(s) from file(s)")
+        logging.info("reading display output(s) from file(s)")
 
         images = {}
         for color in self.colors:
@@ -92,7 +85,7 @@ class EtaImageGenerator(ABC):
         return images
 
 
-class FontLoader(collections.abc.Mapping):
+class _FontLoader(Mapping):
 
     _cache: dict[str, dict[int, ImageFont.FreeTypeFont]]
     _data: dict[str, ImageFont.FreeTypeFont]
@@ -110,38 +103,12 @@ class FontLoader(collections.abc.Mapping):
             )
             self._data[key] = self._cache[config['font']][config['size']]
 
-    def __getitem__(self, key: str) -> ImageFont.FreeTypeFont:
+    def __getitem__(self, key: str):
         return self._data[key]
 
-    def __iter__(self) -> ImageFont.FreeTypeFont:
+    def __iter__(self):
         for item in self._data.items():
             yield item
 
-    def __len__(self) -> int:
+    def __len__(self):
         return len(self._data)
-
-
-class EtaImageGeneratorFactory:
-
-    @classmethod
-    def brands(cls) -> Iterable[str]:
-        return ("waveshare",)
-
-    @classmethod
-    def models(cls, brand: str) -> Iterable[type[EtaImageGenerator]]:
-        try:
-            import waveshare
-        except ImportError:
-            from . import waveshare
-
-        match brand.lower():
-            case "waveshare":
-                return waveshare.image_cls
-        raise KeyError(brand)
-
-    @classmethod
-    def get_generator(cls, brand: str, model: str) -> type[EtaImageGenerator]:
-        for generator in cls.models(brand):
-            if model == generator.__name__:
-                return generator
-        raise KeyError(model)
