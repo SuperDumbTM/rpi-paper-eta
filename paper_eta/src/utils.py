@@ -36,7 +36,8 @@ def type_choices(transport: str,
     return [
         (
             t.service_type,
-            f"{t.service_type} ({t.orig.name[hketa.Locale(locale)]} -> {t.dest.name[hketa.Locale(locale)]})"
+            f"{t.service_type} "
+            f"({t.orig.name[hketa.Locale(locale)]} -> {t.dest.name[hketa.Locale(locale)]})"
         )
         for t in transp.route_list()[no].bound(hketa.Direction(direction))
     ]

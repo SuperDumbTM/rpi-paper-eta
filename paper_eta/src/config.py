@@ -1,3 +1,5 @@
+# pylint: disable=invalid-envvar-default
+
 import os
 from pathlib import Path
 import random
@@ -21,7 +23,7 @@ PATH_SITE_CONF = Path(
 
 # app settings
 ENV = os.getenv('ENV', 'development')
-DEBUG = (ENV == 'development')
+DEBUG = ENV == 'development'
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 if not SECRET_KEY:
@@ -40,7 +42,7 @@ BABEL_DEFAULT_TIMEZO = os.getenv('BABEL_DEFAULT_TIMEZO', 'Asia/Hong_kong')
 
 # sqlalchemy
 SQLALCHEMY_DATABASE_URI = os.getenv(
-    'SQLALCHEMY_DATABASE_URI', "sqlite:///{}".format(DIR_STORAGE.joinpath('app.db')))
+    'SQLALCHEMY_DATABASE_URI', f"sqlite:///{DIR_STORAGE.joinpath('app.db')}")
 
 # hketa
 HKETA_PATH_DATA = Path(

@@ -64,10 +64,10 @@ def create():
                            )
 
 
-@bp.route('/create/edit/<id>', methods=["GET", "POST"])
-def edit(id: str):
+@bp.route('/create/edit/<id_>', methods=["GET", "POST"])
+def edit(id_: str):
     form = forms.ScheduleForm()
-    sch = database.Schedule.query.get_or_404(id)
+    sch = database.Schedule.query.get_or_404(id_)
 
     if form.validate_on_submit():
         for k, v in form.data.items():
@@ -90,10 +90,10 @@ def edit(id: str):
                            )
 
 
-@bp.route('/status/<id>', methods=["PUT"])
-def toggle_status(id: str):
+@bp.route('/status/<id_>', methods=["PUT"])
+def toggle_status(id_: str):
     try:
-        schedule = database.Schedule.query.get(id)
+        schedule = database.Schedule.query.get(id_)
         setattr(schedule, "enabled", not schedule.enabled)
         db.session.commit()
         return Response(
@@ -113,10 +113,10 @@ def toggle_status(id: str):
         })})
 
 
-@bp.route('/<string:id>', methods=["DELETE"])
-def delete(id: str):
+@bp.route('/<id_>', methods=["DELETE"])
+def delete(id_: str):
     try:
-        schedule = database.Schedule.query.get(id)
+        schedule = database.Schedule.query.get(id_)
         db.session.delete(schedule)
         db.session.commit()
         return Response(

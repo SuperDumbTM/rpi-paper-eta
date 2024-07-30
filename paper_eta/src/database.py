@@ -1,3 +1,5 @@
+# pylint: disable=too-few-public-methods
+
 import logging
 from datetime import datetime
 from typing import Iterable
@@ -107,7 +109,7 @@ class Schedule(BaseModel):
 
     @validates("schedule")
     def validate_schedule(self, key, schedule: "Schedule"):
-        if (not croniter.croniter.is_valid(schedule)):
+        if not croniter.croniter.is_valid(schedule):
             raise SyntaxError('Invalid cron expression')
         return schedule
 
@@ -129,15 +131,15 @@ def remove_refresh_job(mapper, connection, target: Schedule):
 
 
 @event.listens_for(Schedule, 'before_update')
-def update_refresh_job(mapper, connection, target: Schedule):
+def update_refresh_job_before(mapper, connection, target: Schedule):
     target.remove_job()  # BUG: updating disabled jobs must cause JobLookupError
 
 
 @event.listens_for(Schedule, 'after_update')
-def update_refresh_job(mapper, connection, target: Schedule):
+def update_refresh_job_after(mapper, connection, target: Schedule):
     old_values: dict = inspect(target).committed_state
 
-    if old_values.get('enabled') is True and target.enabled == False:
+    if old_values.get('enabled') is True and target.enabled:
         # is disabling
         target.remove_job()
     if target.enabled:

@@ -40,7 +40,7 @@ def index():
 
         return render_template("configuration/index.jinja",
                                form=form,
-                               brands=eta_img.generator.EtaImageGeneratorFactory.brands())
+                               brands=eta_img.generator.EtaImageGeneratorFactory.brands())  # pylint: disable=line-too-long
 
 
 @bp.route('/epd-models/<brand>')
@@ -50,7 +50,7 @@ def epd_models(brand: str):
         return render_template("configuration/partials/model_options.jinja",
                                current=app_conf.get('epd_model'),
                                models=[m.__name__
-                                       for m in eta_img.generator.EtaImageGeneratorFactory.models(brand)])
+                                       for m in eta_img.generator.EtaImageGeneratorFactory.models(brand)])  # pylint: disable=line-too-long
     except KeyError:
         return render_template("configuration/partials/model_options.jinja",
                                models=[])

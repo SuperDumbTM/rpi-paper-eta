@@ -9,10 +9,10 @@
     <td>{{ _(bm["locale"]) }}</td>
     <td>
         <button type="button" class="dt-action btn btn-danger btn-sm"
-            hx-delete="{{ url_for('bookmark.delete', id=bm['id']) }}" title="{{ _('delete') }}">
+            hx-delete="{{ url_for('bookmark.delete', id_=bm['id']) }}" title="{{ _('delete') }}">
             <i class="bi bi-trash"></i>
         </button>
-        <a type="button" class="dt-action btn btn-success btn-sm" href="{{ url_for('bookmark.edit', id=bm['id']) }}"
+        <a type="button" class="dt-action btn btn-success btn-sm" href="{{ url_for('bookmark.edit', id_=bm['id']) }}"
             title="{{ _('edit') }}">
             <i class="bi bi-pencil-square"></i>
         </a>

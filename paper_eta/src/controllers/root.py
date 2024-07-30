@@ -1,6 +1,5 @@
-from flask import (Blueprint, current_app, jsonify, make_response, redirect,
+from flask import (Blueprint, current_app, make_response, redirect,
                    render_template, request, url_for)
-from flask_babel import lazy_gettext
 
 from ...src import site_data, utils
 from ...src.libs import epd_log

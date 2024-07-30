@@ -13,7 +13,7 @@ class EpaperSettingForm(FlaskForm):
                                     # "-" for HTMX to request /epd-models/<brand> successfully,
                                     # so that the options can be swapped out to the "empty option".
                                     choices=[("-", lazy_gettext('please_select'))] + [
-                                        (b, b.title()) for b in eta_img.generator.EtaImageGeneratorFactory.brands()])
+                                        (b, b.title()) for b in eta_img.generator.EtaImageGeneratorFactory.brands()])  # pylint: disable=line-too-long
 
     epd_model = wtforms.SelectField(lazy_gettext('model'),
                                     [

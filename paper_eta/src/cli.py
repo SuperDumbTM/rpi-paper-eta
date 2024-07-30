@@ -1,4 +1,3 @@
-import os
 import subprocess
 from pathlib import Path
 
@@ -20,7 +19,7 @@ def babel_extract():
                     'lazy_gettext',
                     '-o',
                     'messages.pot',
-                    '.'])
+                    '.'], check=True)
 
 
 @i18n_cli.command('update')
@@ -32,7 +31,7 @@ def babel_update():
         'messages.pot',
         '-d',
         current_app.config.get('BABEL_TRANSLATION_DIRECTORIES')
-    ])
+    ], check=True)
 
 
 @i18n_cli.command('compile')
@@ -42,7 +41,7 @@ def babel_compile():
         'compile',
         '-d',
         current_app.config.get('BABEL_TRANSLATION_DIRECTORIES')
-    ])
+    ], check=True)
 
 
 @clean_cli.command('pycache')
@@ -55,7 +54,7 @@ def clean_pyc():
 
 @clean_cli.command('log')
 def clean_log():
-    if (not current_app.config.get('PATH_LOG_FILE').exists()):
+    if not current_app.config.get('PATH_LOG_FILE').exists():
         return
-    with open(current_app.config.get('PATH_LOG_FILE'), 'w') as f:
+    with open(current_app.config.get('PATH_LOG_FILE'), 'w', encoding='utf-8'):
         return

@@ -16,5 +16,6 @@
       "editor.formatOnSave": true
     },
     "python.analysis.importFormat": "relative",
-    "autoDocstring.docstringFormat": "google"
+    "autoDocstring.docstringFormat": "google",
+    "pylint.importStrategy": "fromEnvironment",
   }

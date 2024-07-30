@@ -22,7 +22,7 @@ def index():
             try:
                 stop_name = extensions.hketa.create_route(
                     hketa.models.RouteQuery(**bm.as_dict())).stop_name()
-            except Exception:
+            except Exception:  # pylint: disable=broad-exception-caught
                 stop_name = lazy_gettext('error')
             bookmarks.append(bm.as_dict() | {'stop_name': stop_name})
         return Response(
@@ -33,10 +33,10 @@ def index():
     return render_template("bookmark/index.jinja")
 
 
-@bp.route("/<id>", methods=["DELETE"])
-def delete(id: str):
+@bp.route("/<id_>", methods=["DELETE"])
+def delete(id_: str):
     try:
-        bookmark = database.Bookmark.query.get(id)
+        bookmark = database.Bookmark.query.get(id_)
         db.session.delete(bookmark)
         db.session.commit()
         return Response(
@@ -73,10 +73,10 @@ def create():
                            editing=False)
 
 
-@ bp.route('/edit/<id>', methods=["GET", "POST"])
-def edit(id: str):
+@ bp.route('/edit/<id_>', methods=["GET", "POST"])
+def edit(id_: str):
     form = forms.BookmarkForm()
-    bm: database.Bookmark = database.Bookmark.query.get_or_404(id)
+    bm: database.Bookmark = database.Bookmark.query.get_or_404(id_)
 
     if form.validate_on_submit():
         for k, v in form.data.items():
@@ -108,7 +108,7 @@ def edit(id: str):
                            form=form,
                            transports=[(c.value, lazy_gettext(c.value))
                                        for c in hketa.enums.Transport],
-                           form_action=url_for("bookmark.edit", id=id),
+                           form_action=url_for("bookmark.edit", id_=id_),
                            editing=True,)
 
 

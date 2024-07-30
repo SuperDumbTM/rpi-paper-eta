@@ -2,7 +2,7 @@ import logging
 
 import webargs.flaskparser
 from flask import Blueprint, current_app, jsonify, request
-from flask_babel import lazy_gettext
+from flask_babel import gettext
 
 from ...src import database, site_data
 from ..libs import epd_log, epdcon, eta_img, hketa, refresher
@@ -17,28 +17,28 @@ bp = Blueprint('display', __name__, url_prefix="/display")
 @bp.route("/refresh")
 @webargs.flaskparser.use_args({
     'eta_format': webargs.fields.String(
-        required=True, validate=webargs.validate.OneOf([t for t in eta_img.enums.EtaFormat])),
+        required=True, validate=webargs.validate.OneOf(tuple(eta_img.enums.EtaFormat))),
     'layout': webargs.fields.String(required=True),
     'is_partial': webargs.fields.Boolean(required=True)
 }, location="query")
 def refresh(args):
-    if (any(p not in request.args for p in ["eta_format", "layout", "is_partial"])):
+    if any(p not in request.args for p in ["eta_format", "layout", "is_partial"]):
         return jsonify({
             'success': False,
-            'message': "{}{}".format(lazy_gettext('missing_parameter'), lazy_gettext('.')),
+            'message': f"{gettext('missing_parameter')}{gettext('.')}",
             'data': None,
         }), 422
-    if (request.args["eta_format"] not in (t for t in eta_img.enums.EtaFormat)):
+    if request.args["eta_format"] not in (t for t in eta_img.enums.EtaFormat):
         return jsonify({
             'success': False,
-            'message': "{}{}".format(lazy_gettext('incorrect_parameter'), lazy_gettext('.')),
+            'message': f"{gettext('incorrect_parameter')}{gettext('.')}",
             'data': None,
         }), 422
     if (not (app_conf := site_data.AppConfiguration()).get('epd_brand')
             or not app_conf.get('epd_model')):
         return jsonify({
             'success': False,
-            'message': "{}{}".format(lazy_gettext('configuration_required'), lazy_gettext('.')),
+            'message': f"{gettext('configuration_required')}{gettext('.')}",
             'data': None,
         }), 422
 
@@ -54,14 +54,14 @@ def refresh(args):
     except KeyError:
         return jsonify({
             'success': False,
-            'message': '{}'.format(lazy_gettext('Layout does not exists.')),
+            'message': gettext('Layout does not exists.'),
             'data': None
         }), 422
 
     # ---------- initialise the e-paper controller ----------
     try:
         controller = epdcon.get(app_conf["epd_brand"],
-                                app_conf.get["epd_model"],
+                                app_conf["epd_model"],
                                 is_partial=bool(request.args['is_partial']))
     except (OSError, RuntimeError) as e:
         logging.exception("Cannot initialise the e-paper controller.")
@@ -69,7 +69,7 @@ def refresh(args):
 
         return jsonify({
             'success': False,
-            'message': '{}'.format(lazy_gettext('Failed to refresh the screen.')),
+            'message': gettext('Failed to refresh the screen.'),
             'data': None
         }), 503
 
@@ -80,10 +80,10 @@ def refresh(args):
                                  controller,
                                  False,
                                  True)
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-exception-caught
         epd_log.epdlog.put(epd_log.Log(**args, error=e))
 
-        if type(e) is RuntimeError:
+        if isinstance(e, RuntimeError):
             logging.exception("Failed to refresh the screen.")
         else:
             logging.exception(
@@ -91,16 +91,16 @@ def refresh(args):
 
         return jsonify({
             'success': False,
-            'message': '{}'.format(lazy_gettext('Failed to refresh the screen.')),
+            'message': gettext('Failed to refresh the screen.'),
             'data': None
         }), 503
-    else:
-        epd_log.epdlog.put(epd_log.Log(**args))
-        generator.write_images(current_app.config['DIR_SCREEN_DUMP'], images)
+
+    epd_log.epdlog.put(epd_log.Log(**args))
+    generator.write_images(current_app.config['DIR_SCREEN_DUMP'], images)
 
     return jsonify({
         'success': True,
-        'message': '{}.'.format(lazy_gettext('success')),
+        'message': f"{gettext('success')}{gettext('.')}",
         'data': None
     })
 
@@ -111,7 +111,7 @@ def clear_screen():
             or not app_conf.get('epd_model')):
         return jsonify({
             'success': False,
-            'message': "{}{}".format(lazy_gettext('configuration_required'), lazy_gettext('.')),
+            'message': f"{gettext('configuration_required')}{gettext('.')}",
             'data': None,
         }), 422
 
@@ -120,10 +120,15 @@ def clear_screen():
                                 app_conf.get('epd_model'),
                                 is_partial=False)
         refresher.clear_screen(controller)
-    except (OSError, RuntimeError) as e:
+        return jsonify({
+            'success': True,
+            'message': f"{gettext('success')}{gettext('.')}",
+            'data': None,
+        })
+    except (OSError, RuntimeError):
         logging.exception("Cannot initialise the e-paper controller.")
         return jsonify({
             'success': False,
-            'message': '{}'.format(lazy_gettext('Failed to refresh the screen.')),
+            'message': gettext('Failed to refresh the screen.'),
             'data': None
         }), 503
