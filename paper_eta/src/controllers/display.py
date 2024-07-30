@@ -1,6 +1,5 @@
 import logging
 
-import webargs.flaskparser
 from flask import Blueprint, current_app, jsonify, request
 from flask_babel import gettext
 
@@ -15,12 +14,6 @@ bp = Blueprint('display', __name__, url_prefix="/display")
 
 
 @bp.route("/refresh")
-@webargs.flaskparser.use_args({
-    'eta_format': webargs.fields.String(
-        required=True, validate=webargs.validate.OneOf(tuple(eta_img.enums.EtaFormat))),
-    'layout': webargs.fields.String(required=True),
-    'is_partial': webargs.fields.Boolean(required=True)
-}, location="query")
 def refresh(args):
     if any(p not in request.args for p in ["eta_format", "layout", "is_partial"]):
         return jsonify({
