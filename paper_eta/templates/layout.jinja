@@ -13,6 +13,9 @@
     </title>
 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="//cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 
     {% block link %}{% endblock %}
 
@@ -58,17 +61,11 @@
     integrity="sha384-QWGpdj554B4ETpJJC9z+ZHJcA/i59TyjxEPXiiUgN2WmTyV5OEZWCD6gQhgkdpB/"
     crossorigin="anonymous"></script>
 <script src="//unpkg.com/htmx-ext-path-params@2.0.0/path-params.js"></script>
-
-<script src="//cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-    crossorigin="anonymous"></script>
-<script src="//code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
-<script src="//cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 
-<script src="{{ url_for('static', filename='scripts/helpers.js') }}"></script>
+<script src="{{ url_for('static', filename='scripts/utils.js') }}"></script>
 <script>
-    $(document).ready(function () {
+    document.addEventListener("DOMContentLoaded", function () {
         // alertify setup
         alertify.set('notifier', 'position', 'top-right')
         document.addEventListener("toast", (event) => {
