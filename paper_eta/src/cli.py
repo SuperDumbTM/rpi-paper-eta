@@ -1,10 +1,10 @@
 import subprocess
 from pathlib import Path
 
-from flask.cli import AppGroup
 from flask import current_app
+from flask.cli import AppGroup
 
-clean_cli = AppGroup('clean', short_help="Remove cache or config files.")
+rm_cli = AppGroup('rm', short_help="Remove cache or config files.")
 db_cli = AppGroup('db', short_help="Database utilities.")
 i18n_cli = AppGroup('i18n', short_help="Translation (Babel) utilities.")
 
@@ -44,7 +44,7 @@ def babel_compile():
     ], check=True)
 
 
-@clean_cli.command('pycache')
+@rm_cli.command('pycache')
 def clean_pyc():
     for pyf in Path('.').rglob('*.py[co]'):
         pyf.unlink()
@@ -52,9 +52,11 @@ def clean_pyc():
         pyf.rmdir()
 
 
-@clean_cli.command('log')
+@rm_cli.command('log')
 def clean_log():
-    if not current_app.config.get('PATH_LOG_FILE').exists():
-        return
-    with open(current_app.config.get('PATH_LOG_FILE'), 'w', encoding='utf-8'):
-        return
+    for fname in current_app.config.get('DIR_LOG').glob("*"):
+        try:
+            Path(fname).unlink()
+        except PermissionError:
+            with open(Path(fname), 'w', encoding='utf-8'):
+                continue

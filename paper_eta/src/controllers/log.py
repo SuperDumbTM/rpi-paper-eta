@@ -15,7 +15,7 @@ def index():
         r"\[(?P<timestamp>.*?)\]\[(?P<level>[A-Z]*?)\]\[(?P<module>.*?)\]:\s(?P<message>.*)")
 
     logs = []
-    with open(current_app.config['PATH_LOG_FILE'], 'r', encoding='utf-8') as f:
+    with open(current_app.config['_PATH_LOG_FILE'], 'r', encoding='utf-8') as f:
         for line in f:
             match = log_pattern.match(line)
             if not match:
@@ -27,7 +27,7 @@ def index():
 @bp.route('/file')
 def download():
     # reference: https://stackoverflow.com/a/55284313/17789727
-    return send_file(current_app.config['PATH_LOG_FILE'], mimetype='text/plain', as_attachment=True)
+    return send_file(current_app.config['_PATH_LOG_FILE'], mimetype='text/plain', as_attachment=True)
 
 
 @bp.route('/stream')
@@ -45,6 +45,6 @@ def log_stream():
                 yield line
 
     # https://towardsdatascience.com/how-to-add-on-screen-logging-to-your-flask-application-and-deploy-it-on-aws-elastic-beanstalk-aa55907730f
-    return Response(_log_stream(current_app.config['PATH_LOG_FILE']),
+    return Response(_log_stream(current_app.config['_PATH_LOG_FILE']),
                     mimetype='text/plain',
                     content_type='text/event-stream')

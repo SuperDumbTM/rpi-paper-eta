@@ -38,7 +38,7 @@ def create_app() -> Flask:
 
     # cli registration
     app.cli.add_command(cli.i18n_cli)
-    app.cli.add_command(cli.clean_cli)
+    app.cli.add_command(cli.rm_cli)
     app.cli.add_command(cli.db_cli)
 
     # exception handler registration

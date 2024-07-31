@@ -1,10 +1,11 @@
 # pylint: disable=invalid-envvar-default
 
 import os
-from pathlib import Path
 import random
 import shutil
 import string
+from pathlib import Path
+
 import dotenv
 
 __APP_ROOT = Path(__file__).parents[1]
@@ -16,10 +17,13 @@ dotenv.load_dotenv(__PATH_ENV)
 DIR_STORAGE = Path(os.getenv('DIR_STORAGE', __APP_ROOT.joinpath('storage')))
 DIR_SCREEN_DUMP = Path(
     os.getenv('DIR_SCREEN_DUMP', DIR_STORAGE.joinpath('screen_dumps')))
-PATH_LOG_FILE = Path(
-    os.getenv('PATH_LOG_FILE', DIR_STORAGE).joinpath('app.log'))
+DIR_LOG = Path(os.getenv('DIR_LOG', DIR_STORAGE.joinpath('logs')))
+_PATH_LOG_FILE = DIR_LOG.joinpath('app.log')
 PATH_SITE_CONF = Path(
     os.getenv('PATH_SITE_CONF', DIR_STORAGE).joinpath('config.json'))
+
+if not DIR_LOG.exists():
+    os.makedirs(DIR_LOG, exist_ok=True)
 
 # app settings
 ENV = os.getenv('ENV', 'development')
@@ -80,7 +84,7 @@ LOGGING_CONFIG = {
             "class": "logging.handlers.RotatingFileHandler",
             "maxBytes": 524288,
             "backupCount": 1,
-            "filename": PATH_LOG_FILE,
+            "filename": _PATH_LOG_FILE,
             'encoding': 'utf-8',
             "formatter": "detailed",
         },
