@@ -40,7 +40,7 @@ class BookmarkForm(FlaskForm):
 
     transport = wtforms.SelectField(lazy_gettext("company"),
                                     choices=[(l.value, lazy_gettext(l.value))
-                                             for l in hketa.Transport]
+                                             for l in hketa.Transport_]
                                     )
 
     no = wtforms.SelectField(lazy_gettext("route"),

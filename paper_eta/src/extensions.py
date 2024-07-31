@@ -10,4 +10,4 @@ scheduler = APScheduler()
 
 babel = Babel()
 
-hketa = hketa.factories.EtaFactory()
+hketa = hketa.EtaFactory()

@@ -6,7 +6,7 @@ from pathlib import Path
 
 from flask import Flask
 
-from .src import cli, controllers, database, extensions, handles, utils
+from paper_eta.src import cli, controllers, database, extensions, handles, utils
 
 
 def create_app() -> Flask:

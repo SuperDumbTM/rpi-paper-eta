@@ -40,7 +40,7 @@ class Bookmark(BaseModel):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     # autoincrement by `generate_ordering`
     ordering: Mapped[int]  # = mapped_column(unique=True)
-    transport: Mapped[hketa.Transport]
+    transport: Mapped[hketa.Transport_]
     no: Mapped[str]
     direction: Mapped[hketa.Direction]
     service_type: Mapped[str]
