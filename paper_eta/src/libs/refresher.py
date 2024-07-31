@@ -4,11 +4,10 @@ import threading
 from pathlib import Path
 
 import requests
-from flask_babel import force_locale
 from PIL import Image
 
 from .. import extensions
-from ..libs import epdcon, imgen, hketa
+from ..libs import epdcon, hketa, imgen
 
 _ctrl_mutex = threading.Lock()
 
@@ -24,9 +23,8 @@ def generate_image(
     try:
         etas = []
         for bm in bookmarks:
-            with force_locale(bm.locale.iso()):
-                etap = extensions.hketa.create_eta_processor(bm)
-                etas.append(etap.etas())
+            etap = extensions.hketa.create_eta_processor(bm)
+            etas.append(etap.etas())
         images = generator.draw(etas)
     except requests.RequestException as e:
         logging.warning('Image generation failed with error: %s', str(e))

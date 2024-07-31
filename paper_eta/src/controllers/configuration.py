@@ -15,15 +15,15 @@ bp = Blueprint('configuration',
 @bp.route('/', methods=["GET", "POST"])
 def index():
     app_conf = site_data.AppConfiguration()
-    form = forms.EpaperSettingForm(epd_models=app_conf.get('epd_models'),
-                                   epd_brand=app_conf.get('epd_brand'),)
+    form = forms.EpaperSettingForm(**{k: v for k, v in app_conf.items()})
 
     if form.validate_on_submit():
         if (app_conf.get('epd_brand') != form.epd_brand.data
                 or app_conf.get('epd_model') != form.epd_model.data):
             # changing brand or model will invalidate the schedule
             database.Schedule.query.update({database.Schedule.enabled: False})
-            db.session.commit()
+        database.Bookmark.query.update({"locale": form.eta_locale.data})
+        db.session.commit()
 
         try:
             app_conf.updates({k: v for k, v in form.data.items()
@@ -31,14 +31,14 @@ def index():
             return redirect(request.referrer)
         except KeyError:
             return redirect(request.referrer)
-    else:
-        if app_conf.get('epd_brand'):
-            form.epd_model.choices = [(m, m) for m in
-                                      imgen.models(app_conf["epd_brand"])]
 
-        return render_template("configuration/index.jinja",
-                               form=form,
-                               brands=imgen.brands())
+    if app_conf.get('epd_brand'):
+        form.epd_model.choices = [(m, m) for m in
+                                  imgen.models(app_conf["epd_brand"])]
+
+    return render_template("configuration/index.jinja",
+                           form=form,
+                           brands=imgen.brands())
 
 
 @bp.route('/epd-models/<brand>')

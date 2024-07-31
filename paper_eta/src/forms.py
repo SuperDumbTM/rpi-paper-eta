@@ -7,8 +7,7 @@ from paper_eta.src.libs import hketa, imgen
 
 class EpaperSettingForm(FlaskForm):
     epd_brand = wtforms.SelectField(lazy_gettext('brand'),
-                                    [
-                                        wtforms.validators.DataRequired(),
+                                    [wtforms.validators.DataRequired(),
                                         wtforms.validators.NoneOf(["None"])],
                                     # "-" for HTMX to request /epd-models/<brand> successfully,
                                     # so that the options can be swapped out to the "empty option".
@@ -22,6 +21,11 @@ class EpaperSettingForm(FlaskForm):
                                         ("", lazy_gettext('please_select'))],
                                     validate_choice=False)
 
+    eta_locale = wtforms.SelectField(lazy_gettext('language'),
+                                     [wtforms.validators.DataRequired()],
+                                     choices=[(l.value, l.text())
+                                              for l in hketa.Locale],)
+
     submit = wtforms.SubmitField(lazy_gettext('submit'))
 
     def validate_epd_model(self, field: wtforms.Field):
@@ -33,10 +37,6 @@ class EpaperSettingForm(FlaskForm):
 
 
 class BookmarkForm(FlaskForm):
-    locale = wtforms.SelectField(lazy_gettext("language"),
-                                 choices=[(l.value, lazy_gettext(l.value))
-                                          for l in hketa.Locale]
-                                 )
 
     transport = wtforms.SelectField(lazy_gettext("company"),
                                     choices=[(l.value, lazy_gettext(l.value))

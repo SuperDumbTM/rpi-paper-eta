@@ -6,7 +6,6 @@
     <td>{{ _(bm["direction"]) }}</td>
     <td>{{ bm["service_type"] }}</td>
     <td>{{ bm["stop_name"] }}</td>
-    <td>{{ _(bm["locale"]) }}</td>
     <td>
         <button type="button" class="dt-action btn btn-danger btn-sm"
             hx-delete="{{ url_for('bookmark.delete', id_=bm['id']) }}" title="{{ _('delete') }}">

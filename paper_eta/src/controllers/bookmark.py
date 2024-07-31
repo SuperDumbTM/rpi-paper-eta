@@ -6,7 +6,7 @@ from flask import (Blueprint, Response, flash, redirect, render_template,
                    request, url_for)
 from flask_babel import gettext, lazy_gettext
 
-from paper_eta.src import database, db, extensions, forms, utils
+from paper_eta.src import database, db, extensions, forms, site_data, utils
 from paper_eta.src.libs import hketa
 
 bp = Blueprint('bookmark',
@@ -61,8 +61,11 @@ def create():
     form = forms.BookmarkForm()
 
     if form.validate_on_submit():
+        app_conf = site_data.AppConfiguration()
         db.session.add(database.Bookmark(**{k: v for k, v in form.data.items()
-                                            if k not in ("csrf_token", "submit")}))
+                                            if k not in ("csrf_token", "submit")} | {
+                                                database.Bookmark.locale: app_conf["eta_locale"]}
+                                         ))
         db.session.commit()
 
         return redirect(url_for("bookmark.index"))
@@ -143,7 +146,10 @@ def routes(transport: str):
 @bp.route('/<transport>/options')
 def options(transport: str):
     form = forms.BookmarkForm()
-    locale = request.args.get("locale", "en")
+    locale = site_data.AppConfiguration().get("eta_locale",
+                                              (hketa.Locale.TC.value
+                                               if utils.get_locale() == "zh_Hant_HK"
+                                               else hketa.Locale.EN.value))
 
     if "pos" not in request.args or request.args.get("no", "") == "":
         pass
@@ -189,7 +195,9 @@ def import_():
             with db.session.begin_nested() as session:
                 try:
                     db.session.add(
-                        database.Bookmark(**{k: bookmark.get(k) for k in fields}))
+                        database.Bookmark(**{k: bookmark.get(k) for k in fields} | {
+                            database.Bookmark.locale: site_data.AppConfiguration().get("eta_locale", "en")
+                        }))
                     db.session.flush()
                 except (KeyError, TypeError, sqlalchemy.exc.StatementError):
                     session.rollback()

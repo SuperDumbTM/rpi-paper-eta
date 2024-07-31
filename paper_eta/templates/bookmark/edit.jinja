@@ -44,37 +44,24 @@
                 {{ _('new_bookmark_help') | safe }}
             </small>
 
-            <div class="row g-3">
-                <div class="col-5">
-                    <div class="form-group">
-                        {{ form.locale.label(class="form-label") }}
-                        {{ form.locale(class="form-select" + form_valid_class(form.locale)) }}
-                        <div class="invalid-feedback">
-                            {% for error in form.locale.errors %}
-                            <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-7">
-                    <div class="form-group">
-                        {{ form.transport.label(class="form-label") }}
-                        {{ form.transport(class="form-select" + form_valid_class(form.transport), **{
-                        "x-init": "$nextTick(() => {$el.dispatchEvent(new Event('change'))})",
-                        "hx-ext": "path-params",
-                        "hx-get": url_for("bookmark.routes", transport="{transport}") | unquote,
-                        "hx-trigger": "change",
-                        "hx-target": "#nos .hx-swap-target",
-                        "hx-indicator": "#nos.hx-load-outer, #options.hx-load-outer"
-                        }) }}
-                        <div class="invalid-feedback">
-                            {% for error in form.transport.errors %}
-                            <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
+
+            <div class="form-group">
+                {{ form.transport.label(class="form-label") }}
+                {{ form.transport(class="form-select" + form_valid_class(form.transport), **{
+                "x-init": "$nextTick(() => {$el.dispatchEvent(new Event('change'))})",
+                "hx-ext": "path-params",
+                "hx-get": url_for("bookmark.routes", transport="{transport}") | unquote,
+                "hx-trigger": "change",
+                "hx-target": "#nos .hx-swap-target",
+                "hx-indicator": "#nos.hx-load-outer, #options.hx-load-outer"
+                }) }}
+                <div class="invalid-feedback">
+                    {% for error in form.transport.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
                 </div>
             </div>
+
 
             <hr class="mt-4 mb-3">
 
