@@ -27,8 +27,7 @@ def refresh(args):
             'message': f"{gettext('parameter_not_in_choice')}{gettext('.')}",
             'data': None,
         }), 422
-    if (not (app_conf := site_data.AppConfiguration()).get('epd_brand')
-            or not app_conf.get('epd_model')):
+    if not (app_conf := site_data.AppConfiguration()).configurated():
         return jsonify({
             'success': False,
             'message': f"{gettext('configuration_required')}{gettext('.')}",
@@ -99,8 +98,7 @@ def refresh(args):
 
 @bp.route("/clear")
 def clear_screen():
-    if (not (app_conf := site_data.AppConfiguration()).get('epd_brand')
-            or not app_conf.get('epd_model')):
+    if not (app_conf := site_data.AppConfiguration()).configurated():
         return jsonify({
             'success': False,
             'message': f"{gettext('configuration_required')}{gettext('.')}",
@@ -108,8 +106,8 @@ def clear_screen():
         }), 422
 
     try:
-        controller = epdcon.get(app_conf.get('epd_brand'),
-                                app_conf.get('epd_model'),
+        controller = epdcon.get(app_conf['epd_brand'],
+                                app_conf['epd_model'],
                                 is_partial=False)
         refresher.clear_screen(controller)
         return jsonify({

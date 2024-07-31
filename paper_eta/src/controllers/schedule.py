@@ -42,10 +42,8 @@ def index():
 
 @ bp.route('/create', methods=["GET", "POST"])
 def create():
-    app_conf = site_data.AppConfiguration()
-    if not app_conf.get('epd_brand') or not app_conf.get('epd_model'):
-        flash(lazy_gettext("Please enter the display details first."),
-              "error")
+    if not site_data.AppConfiguration().configurated():
+        flash(lazy_gettext("Please enter the display details first."), "error")
         return redirect(url_for('configuration.index'))
 
     form = forms.ScheduleForm()
@@ -138,8 +136,7 @@ def delete(id_: str):
 
 @bp.route("/layouts/<eta_format>")
 def layouts(eta_format: str):
-    app_conf = site_data.AppConfiguration()
-    if not app_conf.get('epd_brand') or not app_conf.get('epd_model'):
+    if not (app_conf := site_data.AppConfiguration()).configurated():
         return Response(render_template("/schedule/partials/layout_radio.jinja",
                                         layouts=[],
                                         eta_format=eta_format),
@@ -151,8 +148,7 @@ def layouts(eta_format: str):
                         })})
 
     try:
-        layouts = imgen\
-            .get(app_conf.get('epd_brand'), app_conf.get('epd_model'))\
+        layouts = imgen.get(app_conf['epd_brand'], app_conf['epd_mode'])\
             .layouts()[eta_format]
 
         return render_template("/schedule/partials/layout_radio.jinja",
@@ -179,8 +175,7 @@ def preview(eta_format: str, layout: str):
                 "message": f"{gettext('parameter_not_in_choice')}{gettext('.')}"
             }
         })})
-    if (not (app_conf := site_data.AppConfiguration()).get('epd_brand')
-            or not app_conf.get('epd_model')):
+    if not (app_conf := site_data.AppConfiguration()).configurated():
         return Response("", status=422, headers={"HX-Trigger": json.dumps({
             "toast": {
                 "level": "error",
