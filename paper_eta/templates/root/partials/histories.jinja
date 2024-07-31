@@ -4,7 +4,7 @@
     <td>{{ log.eta_format.value | title }}</td>
     <td>{{ log.layout }}</td>
     <td>{{ bool_to_icon(log.is_partial) }}</td>
-    <td class="not-mobile">{{ log.error or '' }}</td>
+    <td>{{ log.error or '' }}</td>
 </tr>
 {% endfor %}
 {% if refresh_logs | length == 0 %}

@@ -110,7 +110,7 @@ def edit(id_: str):
     return render_template("bookmark/edit.jinja",
                            form=form,
                            transports=[(c.value, lazy_gettext(c.value))
-                                       for c in hketa.Transport],
+                                       for c in hketa.Company],
                            form_action=url_for("bookmark.edit", id_=id_),
                            editing=True,)
 
