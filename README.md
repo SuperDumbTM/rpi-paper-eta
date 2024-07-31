@@ -160,7 +160,7 @@ The details is as follow:
 | BABEL_DEFAULT_TIMEZO    	| A local code for the default time zone of the CMS (only used for   translation-related needs). 	|
 | DIR_STORAGE             	| The directory name for the CMS to store the data (cache, logs, temporary   files) into.        	|
 | DIR_SCREEN_DUMP         	| The directory name for the CMS to store the screen dump images.                                	|
-| PATH_LOG_FILE           	| The full path (including the filename) to the log file for the CMS to   store logs.            	|
+| DIR_LOG                  	| The directory name for the CMS to store logs.                                                 	|
 | SECRET_KEY              	| The key for the CMS to sing for security related needs such as session   cookie                	|
 | SQLALCHEMY_DATABASE_URI 	| URL of a database (SQLite).                                                                    	|
 

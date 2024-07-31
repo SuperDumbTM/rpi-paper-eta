@@ -1,0 +1,122 @@
+{% from "macros/render_field.jinja" import render_field %}
+
+
+{% extends "layout.jinja" %}
+{% block title %}{{ _('nav_schedule') }}{% endblock title %}
+
+
+{% block link %}
+{% endblock link %}
+
+
+{% block style %}
+<style>
+    tr>*:nth-child(1),
+    tr>*:nth-child(5) {
+        display: none;
+    }
+
+    @media (min-width: 576px) {
+
+        tr>*:nth-child(1),
+        tr>*:nth-child(5) {
+            display: table-cell;
+        }
+    }
+</style>
+{% endblock style %}
+
+
+{% block nav %}
+{% include "includes/navbar.jinja" %}
+{% endblock nav %}
+
+
+{% block content %}
+<div class="container-xxl">
+
+    <div class="row m-2">
+        {% include "includes/flash.jinja" %}
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="btn-group flex-wrap">
+                <a href="{{ url_for('schedule.create') }}" class="btn btn-secondary btn-sm btn-success mx-1">
+                    {{ _('create') }}
+                </a>
+
+                <div x-data>
+                    <form method="POST" action="{{ url_for('schedule.import_') }}" enctype="multipart/form-data">
+                        <input type="file" name="schedules" class="d-none" @upload.window="$el.click()"
+                            @change="$event.target.form.submit()">
+                        <button type="button" class="btn btn-secondary btn-sm btn-info mx-1"
+                            @click="$dispatch('upload')">
+                            {{ _('import') }}
+                        </button>
+                    </form>
+                </div>
+                <a href="{{ url_for('schedule.export') }}" class="btn btn-secondary btn-sm mx-1">
+                    {{ _('export') }}
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row py-1 px-2">
+        <div class="col">
+            <div class="table-responsive">
+                <table class="table table-striped" hx-get="" hx-trigger="load, every 1m" hx-target="tbody"
+                    style="min-width: 400px;">
+                    <thead>
+                        <tr>
+                            <th>{{ _('no.') }}</th>
+                            <th style="min-width: 48px;">{{ _('eta_format') }}</th>
+                            <th>{{ _('layout') }}</th>
+                            <th style="min-width: 80px;">{{ _('schedule') }}</th>
+                            <th style="min-width: 177px;">{{ _('next_execution') }}</th>
+                            <th style="min-width: 48px;">{{ _('is_partial') }}</th>
+                            <th style="min-width: 190px;">{{ _('action') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row py-1 px-2">
+        <div class="col text-end">
+            <span id="last-update-time">
+                {# To be swapped by rows.jinja (by swap-oob) #}
+            </span>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block script %}
+<script>
+
+    function refreshDisplay(eta_format, layout, is_partial) {
+        showLoading();
+        return fetch(`{{ url_for('display.refresh')}}?${new URLSearchParams({
+            eta_format: eta_format,
+            layout: layout,
+            is_partial: is_partial
+        }).toString()}`)
+            .then((res) => {
+                hideLoading();
+                return res.json();
+            })
+            .then((json) => {
+                if (!json.success) {
+                    alertify.error(json.message);
+                }
+            });
+
+    }
+
+</script>
+{% endblock script %}

@@ -1,0 +1,221 @@
+{% extends "layout.jinja" %}
+{% block title %}{{ _('nav_log') }}{% endblock title %}
+
+
+{% block style %}
+<style>
+    tr>*:nth-child(1),
+    tr>*:nth-child(3) {
+        display: none;
+    }
+
+    @media (min-width: 768px) {
+
+        tr>*:nth-child(1),
+        tr>*:nth-child(3) {
+            display: table-cell;
+        }
+    }
+</style>
+{% endblock style %}
+
+
+{% block nav %}
+{% include "includes/navbar.jinja" %}
+{% endblock nav %}
+
+
+{% block content %}
+<div class="container-xxl" x-data="pagination">
+    <div class="row p-2">
+        <form id="filter" @change="page = 1">
+            <div class="form-group">
+                <label class="col-sm-2 col-12 col-form-label">{{ _('log_level') }}</label>
+
+                <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" value="DEBUG" x-model="filters.level">
+                        Debug
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" value="INFO" x-model="filters.level">
+                        Info
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" value="WARN" x-model="filters.level">
+                        Warning
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" value="ERROR" x-model="filters.level">
+                        Error
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" value="CRITICAL" x-model="filters.level">
+                        Critical
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 col-6 col-form-label">{{ _('log_access_related') }}</label>
+
+                <div class="form-check form-check-inline form-switch">
+                    <input class="form-check-input" type="checkbox" name="access_log" x-model="filters.accessLog">
+                    <label class="form-check-label">&nbsp;</label>
+                </div>
+                <div class="form-text text-mute">
+                    {{ _('log_access_related_help') }}
+                </div>
+            </div>
+
+            <div class="row my-2">
+                <label class="col-sm-2 col-form-label">{{ _('paginate_per_page') }}</label>
+                <div class="col-sm-10">
+                    <select class="col-9 form-select" x-model="limit">
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="30">30</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    <hr>
+
+    <div class="row p-2">
+        <div class="col-12">
+            <div class="row align-items-center">
+                <div class="col-12 col-sm-7">
+                    <span class="text-muted" x-text="info"></span>
+                </div>
+                <div class="col-12 col-sm-5">
+                    <nav class="mt-3 mx-1">
+                        <ul class="pagination justify-content-center justify-content-sm-end">
+                            <li class="page-item" :class="(page == 1 || lastPage <= 1) ? 'disabled' : ''">
+                                <a class="page-link user-select-none" @click="page--"
+                                    style="color: var(--theme-color);">{{ _("previous_page") }}</a>
+                            </li>
+                            <li class="page-item active">
+                                <a class="page-link user-select-none text-center" x-text="page"
+                                    style="background-color: var(--theme-2-color); border-color: lightgrey; min-width: 2.8rem;"></a>
+                            </li>
+                            <li class="page-item" :class="(page == lastPage || lastPage <= 1) ? 'disabled' : ''">
+                                <a class="page-link user-select-none" @click="page++"
+                                    style="color: var(--theme-color);">{{ _("next_page") }}</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table table-sm table-striped" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th style="min-width: 11rem;">{{ _('log_timestamp') }}</th>
+                            <th>{{ _('log_level') }}</th>
+                            <th>{{ _('log_module') }}</th>
+                            <th>{{ _('log_message') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template x-for="log in logs">
+                            <tr>
+                                <td x-text="log.timestamp"></td>
+                                <td class="text-center">
+                                    <span :class="getBadgeClasses(log.level)" x-text="log.level"></span>
+                                </td>
+                                <td x-text="log.module"></td>
+                                <td x-text="log.message"></td>
+                            </tr>
+                        </template>
+                        <template x-if="logs.length == 0">
+                            <tr style="height: 40px;">
+                                <td colspan="100%" class="d-table-cell text-center align-middle">
+                                    {{ _('no_record') }}
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-12 mb-3" x-show="lastPage > 1">
+            <div class="ms-auto form-floating" style="width: 8rem;">
+                <select class="form-select" x-model="page">
+                    <template x-for="p in [...Array(lastPage).keys()]">
+                        <option :value="p + 1" x-text="p + 1"></option>
+                    </template>
+                </select>
+                <label>{{ _('jump_to') }}</label>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block script %}
+<script>
+    const allLogs = {{ logs }}
+    const accessKW = ['werkzeug', 'gunicorn', 'uwsgi', 'gevent', 'waitress', 'eventlet']
+
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('pagination', () => ({
+            get length() { return allLogs.length },
+            limit: 15,
+            page: 1,
+            get lastPage() { return Math.ceil(this.filtered.length / this.limit) },
+            get from() { return (this.page - 1) * this.limit },
+            get to() { return this.page * this.limit },
+            get filtered() {
+                return allLogs.filter((l) => {
+                    if (!Object.values(this.filters.level).includes(l.level))
+                        return false
+                    if (!this.filters.accessLog && accessKW.some(kw => l.module.includes(kw)))
+                        return false
+                    return true
+                })
+            },
+            get logs() {
+                return this.filtered.slice((this.page - 1) * this.limit, this.page * this.limit)
+            },
+            filters: {
+                level: ["WARN", "ERROR", "CRITICAL"],
+                accessLog: false,
+            },
+            get info() {
+                return "{{ _('pagination_info') }}"
+                    .replace("{from}", this.limit * (this.page - 1) + 1)
+                    .replace("{to}", this.limit * (this.page - 1) + this.logs.length)
+                    .replace("{total_filtered}", this.filtered.length)
+                    .replace("{total}", this.length);
+            },
+        }));
+    });
+
+    function getBadgeClasses(level) {
+        const mapping = {
+            DEBUG: 'badge bg-secondary',
+            INFO: 'badge bg-success',
+            WARNING: 'badge bg-warning',
+            ERROR: 'badge bg-danger',
+            CRITICAL: 'badge border border-2 border-danger rounded text-danger'
+        }
+        return mapping[level]
+    }
+</script>
+{% endblock script %}

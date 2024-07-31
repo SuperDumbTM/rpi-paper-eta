@@ -1,0 +1,39 @@
+<div class="row g-3">
+    <div class="col-12 col-md-4">
+        <div class="form-group">
+            {{ form.direction.label(class="form-label") }}
+            {{ form.direction(class="form-select" + form_valid_class(form.direction), **{
+            "hx-get": url_for("bookmark.options", transport='{transport}') | unquote,
+            "hx-include": "select[name=transport], select[name=no], select[name=locale]",
+            "hx-target": "closest .hx-swap-target",
+            "hx-vals": "{\"pos\": \"direction\"}"
+            }) }}
+            <div class="invalid-feedback">
+                {% for error in form.direction.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-8">
+        <div class="form-group">
+            {{ form.service_type.label(class="form-label") }}
+            {{ form.service_type(class="form-select" + form_valid_class(form.service_type), readonly=True) }}
+            <div class="invalid-feedback">
+                {% for error in form.service_type.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
+    {{ form.stop_id.label(class="form-label") }}
+    {{ form.stop_id(class="form-select" + form_valid_class(form.stop_id)) }}
+    <div class="invalid-feedback">
+        {% for error in form.stop_id.errors %}
+        <span>{{ error }}</span>
+        {% endfor %}
+    </div>
+</div>

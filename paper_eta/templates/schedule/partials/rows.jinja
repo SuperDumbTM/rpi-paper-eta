@@ -1,0 +1,42 @@
+{% for sch in schedules %}
+<tr x-data>
+    <td>{{ loop.index }}</td>
+    <td>{{ _(sch["eta_format"]) }}</td>
+    <td>{{ sch["layout"] }}</td>
+    <td>{{ _(sch["schedule"]) }}</td>
+    <td>{{ sch["next_execution"] }}</td>
+    <td>{{ bool_to_icon(sch["is_partial"]) }}</td>
+    <td>
+        <button type="button" class="dt-action btn btn-danger btn-sm"
+            hx-delete="{{ url_for('schedule.delete', id_=sch['id']) }}" title="{{ _('delete') }}">
+            <i class="bi bi-trash"></i>
+        </button>
+        <a type="button" class="dt-action btn btn-success btn-sm" href="{{ url_for('schedule.edit', id_=sch['id']) }}"
+            title="{{ _('edit') }}">
+            <i class="bi bi-pencil-square"></i>
+        </a>
+        <button type="button" class="dt-action btn btn-sm btn-light" hx-put="{{
+            url_for('schedule.toggle_status', id_=sch['id'] ) }}" title="{{ _('enable/disable') }}">
+            {% if sch["enabled"] %}
+            <i class="bi bi-pause"></i>
+            {% else %}
+            <i class="bi bi-play-fill"></i>
+            {% endif %}
+        </button>
+        <button type="button" class="dt-action btn btn-sm btn-outline-warning"
+            @click="refreshDisplay('{{ sch['eta_format'] }}', '{{ sch['layout'] }}', {{ sch['is_partial']|lower }})"
+            title="{{ _('refresh_now') }}">
+            <i class="bi bi-arrow-clockwise"></i>
+        </button>
+    </td>
+</tr>
+{% endfor %}
+{% if schedules | length == 0 %}
+<tr>
+    <td colspan="100%" class="d-table-cell text-center">{{ _('no_record') }}</td>
+</tr>
+{% endif %}
+
+<span id="last-update-time" hx-swap-oob="true" style="font-size: 0.9rem;">
+    {{ _("last-update") ~ _(":") ~ time() }}
+</span>

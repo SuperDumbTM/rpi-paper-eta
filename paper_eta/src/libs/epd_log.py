@@ -3,23 +3,19 @@ from datetime import datetime
 from typing import Generator, Optional
 
 import pydantic
-from flask_babel import lazy_gettext
 
-from . import eta_img
+from . import imgen
 
 
 class Log(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
 
-    eta_format: eta_img.enums.EtaFormat
+    eta_format: imgen.enums.EtaFormat
     layout: str
     is_partial: bool
     timestamp: datetime = pydantic.Field(default_factory=datetime.now)
     remark: str = ""
     error: Optional[BaseException] = None
-
-    def model_dump_i18n(self) -> dict:
-        return self.model_dump() | {'eta_format': lazy_gettext(self.eta_format.value)}
 
 
 class EpdLog:

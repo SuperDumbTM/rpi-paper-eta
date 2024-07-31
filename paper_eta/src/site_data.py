@@ -1,28 +1,26 @@
 import json
-from collections import abc
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any, Iterator, Mapping
 
 from flask import current_app
 
 
-class AppConfiguration(abc.Mapping):
+class AppConfiguration(Mapping):
     """A Singleton class that mangage all the general configuration including 
         e-paper and API server settings.
     """
     _data: dict[str,]
     _filepath: Path
 
-    __keys__ = ['epd_brand', 'epd_model',]
+    __keys__ = ['epd_brand', 'epd_model', 'eta_locale']
 
     def __init__(self) -> None:
-        self._data = {k: None for k in self.__keys__}
+        self._data = {}
         with current_app.app_context():
             self._filepath = current_app.config['PATH_SITE_CONF']
 
         if not self._filepath.exists():
             self._filepath.parent.mkdir(mode=711, parents=True, exist_ok=True)
-            self._persist()
         else:
             self._load()
 
@@ -48,6 +46,9 @@ class AppConfiguration(abc.Mapping):
 
         self._data.update(mapping)
         self._persist()
+
+    def configurated(self) -> bool:
+        return len(self._data) != 0 and all(self.get(k) is not None for k in self.__keys__)
 
     def _load(self) -> None:
         with open(self._filepath, "r", encoding="utf-8") as f:

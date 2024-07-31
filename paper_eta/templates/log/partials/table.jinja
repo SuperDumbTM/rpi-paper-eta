@@ -1,0 +1,50 @@
+{% set badge_map = {
+"DEBUG": 'badge bg-secondary',
+"INFO": 'badge bg-success',
+"WARNING": 'badge bg-warning',
+"ERROR": 'badge bg-danger',
+"CRITICAL": 'badge border border-2 border-danger rounded text-danger'
+} %}
+
+<nav class="mt-3 mx-1">
+    <ul class="pagination justify-content-end">
+        <li class="page-item {{ 'disabled' if page == 1 else '' }}">
+            <button class="page-link" hx-get="{{ url_for('log.logs') }}" hx-target=".table-wrapper" hx-include="#filter"
+                hx-vals='{"page": "{{ page - 1 }}"}'>{{ _("previous_page") }}</button>
+        </li>
+        <li class="page-item">
+            <span class="page-link">{{ page }}</span>
+        </li>
+        <li class="page-item">
+            <button class="page-link" hx-get="{{ url_for('log.logs') }}" hx-target=".table-wrapper" hx-include="#filter"
+                hx-vals='{"page": "{{ page + 1 }}"}'>{{ _("next_page") }}</button>
+        </li>
+    </ul>
+</nav>
+
+<div class="table-responsive">
+    <table class="table table-sm table-striped" style="width: 100%;">
+        <thead>
+            <tr>
+                <th style="min-width: 11rem;">{{ _('log_timestamp') }}</th>
+                <th>{{ _('log_level') }}</th>
+                <th>{{ _('log_module') }}</th>
+                <th>{{ _('log_message') }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+            <tr>
+                <td>{{ log["timestamp"] }}</td>
+                <td class="text-center">
+                    <span class="{{ badge_map[log['level']] }}">
+                        {{ log["level"] }}
+                    </span>
+                </td>
+                <td>{{ log["module"] }}</td>
+                <td>{{ log["message"] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

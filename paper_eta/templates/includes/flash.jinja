@@ -1,0 +1,70 @@
+{% with messages = get_flashed_messages(category_filter=["info"]) %}
+{% if messages | count == 1 %}
+<div class="alert alert-info">
+    {{ messages[0] }}
+</div>
+{% endif %}
+{% if messages | count > 1 %}
+<div class="alert alert-info">
+    <ul style="margin: 0px;">
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+{% endwith %}
+
+
+{% with messages = get_flashed_messages(category_filter=["success"]) %}
+{% if messages | count == 1 %}
+<div class="alert alert-success">
+    {{ messages[0] }}
+</div>
+{% endif %}
+{% if messages | count > 1 %}
+<div class="alert alert-success">
+    <ul style="margin: 0px;">
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+{% endwith %}
+
+
+{% with messages = get_flashed_messages(category_filter=["warning"]) %}
+{% if messages | count == 1 %}
+<div class="alert alert-warning">
+    {{ messages[0] }}
+</div>
+{% endif %}
+{% if messages | count > 1 %}
+<div class="alert alert-warning">
+    <ul style="margin: 0px;">
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+{% endwith %}
+
+
+{% with messages = get_flashed_messages(category_filter=["error"]) %}
+{% if messages | count == 1 %}
+<div class="alert alert-danger">
+    {{ messages[0] }}
+</div>
+{% endif %}
+{% if messages | count > 1 %}
+<div class="alert alert-danger">
+    <ul style="margin: 0px;">
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+{% endwith %}
