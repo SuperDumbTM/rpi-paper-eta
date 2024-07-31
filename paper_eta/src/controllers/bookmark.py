@@ -6,8 +6,8 @@ from flask import (Blueprint, Response, flash, redirect, render_template,
                    request, url_for)
 from flask_babel import gettext, lazy_gettext
 
-from ...src import database, db, extensions, forms, utils
-from ..libs import hketa
+from paper_eta.src import database, db, extensions, forms, utils
+from paper_eta.src.libs import hketa
 
 bp = Blueprint('bookmark',
                __name__,

@@ -3,8 +3,8 @@ import logging
 from flask import Blueprint, current_app, jsonify, request
 from flask_babel import gettext
 
-from ...src import database, site_data
-from ..libs import epd_log, epdcon, imgen, hketa, refresher
+from paper_eta.src import database, site_data
+from paper_eta.src.libs import epd_log, epdcon, hketa, imgen, refresher
 
 bp = Blueprint('display', __name__, url_prefix="/display")
 

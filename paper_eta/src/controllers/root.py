@@ -1,9 +1,8 @@
 from flask import (Blueprint, current_app, make_response, redirect,
                    render_template, request, url_for)
 
-from ...src import site_data, utils
-from ...src.libs import epd_log
-from ..libs import epd_log, refresher
+from paper_eta.src import site_data, utils
+from paper_eta.src.libs import epd_log, refresher
 
 bp = Blueprint('root', __name__, url_prefix="/")
 

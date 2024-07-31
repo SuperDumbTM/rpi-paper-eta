@@ -10,8 +10,8 @@ import requests
 from sqlalchemy import event, func, inspect
 from sqlalchemy.orm import Mapped, mapped_column, validates
 
-from . import extensions
-from .libs import imgen, hketa
+from paper_eta.src import extensions
+from paper_eta.src.libs import hketa, imgen
 
 
 class BaseModel(extensions.db.Model):

@@ -8,8 +8,8 @@ from flask import (Blueprint, Response, flash, redirect, render_template,
                    request, url_for)
 from flask_babel import gettext, lazy_gettext
 
-from ...src import database, db, forms, site_data, utils
-from ..libs import imgen, hketa, refresher
+from paper_eta.src import database, db, forms, site_data, utils
+from paper_eta.src.libs import hketa, imgen, refresher
 
 bp = Blueprint('schedule',
                __name__,
