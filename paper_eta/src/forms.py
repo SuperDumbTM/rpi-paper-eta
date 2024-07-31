@@ -1,8 +1,8 @@
 import wtforms
-from flask_wtf import FlaskForm
 from flask_babel import lazy_gettext
+from flask_wtf import FlaskForm
 
-from paper_eta.src.libs import imgen, hketa
+from paper_eta.src.libs import hketa, imgen
 
 
 class EpaperSettingForm(FlaskForm):
@@ -28,8 +28,7 @@ class EpaperSettingForm(FlaskForm):
         if not self.epd_brand.validate(self):
             return
 
-        choices = map(lambda c: c.__name__, imgen.models(self.epd_brand.data))
-        if field.data not in choices:
+        if field.data not in imgen.models(self.epd_brand.data):
             raise wtforms.ValidationError("Not a valid choice.")
 
 

@@ -33,7 +33,7 @@ def index():
             return redirect(request.referrer)
     else:
         if app_conf.get('epd_brand'):
-            form.epd_model.choices = [(m.__name__, m.__name__) for m in
+            form.epd_model.choices = [(m, m) for m in
                                       imgen.models(app_conf["epd_brand"])]
 
         return render_template("configuration/index.jinja",
@@ -47,7 +47,7 @@ def epd_models(brand: str):
     try:
         return render_template("configuration/partials/model_options.jinja",
                                current=app_conf.get('epd_model'),
-                               models=[m.__name__ for m in imgen.models(brand)])
+                               models=tuple(imgen.models(brand)))
     except KeyError:
         return render_template("configuration/partials/model_options.jinja",
                                models=[])
