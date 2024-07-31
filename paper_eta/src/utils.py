@@ -11,13 +11,13 @@ from paper_eta.src.libs import hketa
 
 
 def route_choices(transport: str) -> list[tuple[str]]:
-    transp = extensions.hketa.create_transport(hketa.Transport(transport))
+    transp = extensions.hketa.create_transport(hketa.Company(transport))
     return [(no, no) for no in transp.route_list().keys()]
 
 
 def direction_choices(transport: str,
                       no: str) -> list[tuple[str]]:
-    transp = extensions.hketa.create_transport(hketa.Transport(transport))
+    transp = extensions.hketa.create_transport(hketa.Company(transport))
 
     directions = []
     if transp.route_list()[no].inbound:
@@ -33,7 +33,7 @@ def type_choices(transport: str,
                  no: str,
                  direction: str,
                  locale: Literal['en', 'tc'] = 'en') -> list[tuple[str]]:
-    transp = extensions.hketa.create_transport(hketa.Transport(transport))
+    transp = extensions.hketa.create_transport(hketa.Company(transport))
 
     return [
         (
@@ -50,7 +50,7 @@ def stop_choices(transport: str,
                  direction: str,
                  service_type: str,
                  locale: Literal['en', 'tc'] = 'en') -> list[tuple[str]]:
-    transp = extensions.hketa.create_transport(hketa.Transport(transport))
+    transp = extensions.hketa.create_transport(hketa.Company(transport))
     return [(stop.stop_id, f"{stop.seq:02}. {stop.name[hketa.Locale(locale)]}")
             for stop in transp.stop_list(no, hketa.Direction(direction), service_type)]
 
