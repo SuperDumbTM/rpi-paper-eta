@@ -21,9 +21,11 @@ def direction_choices(transport: str,
 
     directions = []
     if transp.route_list()[no].inbound:
-        directions.append(("inbound", lazy_gettext("inbound")))
+        directions.append(
+            (hketa.Direction.INBOUND.value, lazy_gettext("inbound")))
     if transp.route_list()[no].outbound:
-        directions.append(("outbound", lazy_gettext("outbound")))
+        directions.append(
+            (hketa.Direction.OUTBOUND.value, lazy_gettext("outbound")))
     return directions
 
 

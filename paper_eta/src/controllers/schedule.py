@@ -43,8 +43,8 @@ def index():
 @ bp.route('/create', methods=["GET", "POST"])
 def create():
     if not site_data.AppConfiguration().configurated():
-        flash(lazy_gettext("missing_app_config."), "error")
-        return redirect(url_for('configuration.index'))
+        flash(lazy_gettext("missing_app_config"), "error")
+        return redirect(url_for('schedule.index'))
 
     form = forms.ScheduleForm()
 

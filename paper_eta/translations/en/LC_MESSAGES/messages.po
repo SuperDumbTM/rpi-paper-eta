@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-07-31 12:40+0800\n"
+"POT-Creation-Date: 2024-07-31 12:49+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -160,11 +160,11 @@ msgstr "Default"
 msgid "mixed"
 msgstr "Mixed"
 
-#: paper_eta/src/utils.py:24
+#: paper_eta/src/utils.py:25
 msgid "inbound"
 msgstr "Inbound"
 
-#: paper_eta/src/utils.py:26
+#: paper_eta/src/utils.py:28
 msgid "outbound"
 msgstr "Outbound"
 
@@ -207,6 +207,7 @@ msgstr "Input(s) is not an valid choice"
 #: paper_eta/src/controllers/display.py:33
 #: paper_eta/src/controllers/display.py:104
 #: paper_eta/src/controllers/root.py:14
+#: paper_eta/src/controllers/schedule.py:46
 #: paper_eta/src/controllers/schedule.py:146
 #: paper_eta/src/controllers/schedule.py:182
 msgid "missing_app_config"
@@ -233,13 +234,6 @@ msgstr "Success"
 #: paper_eta/src/controllers/schedule.py:33
 msgid "not_enabled"
 msgstr "Not Enabled"
-
-#: paper_eta/src/controllers/schedule.py:46
-#, fuzzy
-msgid "missing_app_config."
-msgstr ""
-"This app is not configutated. Please go to the \"setting\" page to do the"
-" configuration."
 
 #: paper_eta/src/controllers/schedule.py:232
 #, python-format
@@ -751,4 +745,10 @@ msgstr "Refresh Now"
 
 #~ msgid "next"
 #~ msgstr "Next"
+
+#~ msgid "missing_app_config."
+#~ msgstr ""
+#~ "This app is not configutated. Please "
+#~ "go to the \"setting\" page to do"
+#~ " the configuration."
 

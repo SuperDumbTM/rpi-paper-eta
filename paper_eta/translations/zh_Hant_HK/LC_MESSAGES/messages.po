@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-07-31 12:40+0800\n"
+"POT-Creation-Date: 2024-07-31 12:49+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hant_HK\n"
@@ -160,11 +160,11 @@ msgstr "預設"
 msgid "mixed"
 msgstr "混合"
 
-#: paper_eta/src/utils.py:24
+#: paper_eta/src/utils.py:25
 msgid "inbound"
 msgstr "回程"
 
-#: paper_eta/src/utils.py:26
+#: paper_eta/src/utils.py:28
 msgid "outbound"
 msgstr "去程"
 
@@ -207,6 +207,7 @@ msgstr "輸入不在選項中"
 #: paper_eta/src/controllers/display.py:33
 #: paper_eta/src/controllers/display.py:104
 #: paper_eta/src/controllers/root.py:14
+#: paper_eta/src/controllers/schedule.py:46
 #: paper_eta/src/controllers/schedule.py:146
 #: paper_eta/src/controllers/schedule.py:182
 msgid "missing_app_config"
@@ -231,11 +232,6 @@ msgstr "成功"
 #: paper_eta/src/controllers/schedule.py:33
 msgid "not_enabled"
 msgstr "未啟用"
-
-#: paper_eta/src/controllers/schedule.py:46
-#, fuzzy
-msgid "missing_app_config."
-msgstr "尚未設定本應用程式。請到「設定」頁面進行設定以確保 Paper ETA 能夠正常運作。"
 
 #: paper_eta/src/controllers/schedule.py:232
 #, python-format
@@ -723,4 +719,7 @@ msgstr "更新屏幕"
 
 #~ msgid "next"
 #~ msgstr "下一頁"
+
+#~ msgid "missing_app_config."
+#~ msgstr "尚未設定本應用程式。請到「設定」頁面進行設定以確保 Paper ETA 能夠正常運作。"
 

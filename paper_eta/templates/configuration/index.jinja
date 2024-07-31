@@ -26,6 +26,12 @@
 <div class="row align-items-center" style="height: 100vh;">
     <div class="mx-auto col-10 col-md-8 col-lg-6">
 
+        <div class="row">
+            <div class="col-12">
+                {% include "includes/flash.jinja" %}
+            </div>
+        </div>
+
         <div class="row mt-4">
             <div class="col-12 col-xl-8">
                 <h1>{{ _('display_setting') }}</h1>
@@ -74,8 +80,8 @@
                 {{ form.epd_model(class="form-select" + form_valid_class(form.epd_model)) }}
 
                 <div>
-                {{ form.epd_model.errors.__class__ }}
-                </div>    
+                    {{ form.epd_model.errors.__class__ }}
+                </div>
                 <div class="invalid-feedback">
                     {% for error in form.epd_model.errors %}
                     <span>{{ error }}</span>
@@ -88,8 +94,8 @@
                 {{ form.eta_locale(class="form-select" + form_valid_class(form.eta_locale)) }}
 
                 <div>
-                {{ form.eta_locale.errors.__class__ }}
-                </div>    
+                    {{ form.eta_locale.errors.__class__ }}
+                </div>
                 <div class="invalid-feedback">
                     {% for error in form.eta_locale.errors %}
                     <span>{{ error }}</span>
