@@ -1,15 +1,15 @@
 from io import BytesIO
 
 try:
-    from .enums import Locale, StopType, Transport
+    from .enums import Locale, StopType, Company
     from .exceptions import StopNotExist
     from .models import RouteInfo, RouteQuery
-    from .transport import MTRTrain, Transport_
+    from .transport import MTRTrain, Transport
 except (ImportError, ModuleNotFoundError):
-    from enums import Locale, StopType, Transport
+    from enums import Locale, StopType, Company
     from exceptions import StopNotExist
     from models import RouteInfo, RouteQuery
-    from transport import MTRTrain, Transport_
+    from transport import MTRTrain, Transport
 
 # MTR do not provide complete route name, need manual translation
 MTR_TRAIN_NAMES = {
@@ -40,10 +40,10 @@ class Route:
     """
 
     entry: RouteQuery
-    provider: Transport_
+    provider: Transport
     _stop_list: dict[str, RouteInfo.Stop]
 
-    def __init__(self, entry: RouteQuery, transport_: Transport_) -> None:
+    def __init__(self, entry: RouteQuery, transport_: Transport) -> None:
         self.entry = entry
         self.provider = transport_
         self._stop_list = {
@@ -84,7 +84,7 @@ class Route:
 
         # NOTE: in/outbound of circular routes are NOT its destination
         # NOTE: 705, 706 return "天水圍循環綫"/'TSW Circular' instead of its destination
-        if self.entry.transport == Transport.MTRLRT and self.entry.no in ("705", "706"):
+        if self.entry.transport == Company.MTRLRT and self.entry.no in ("705", "706"):
             return RouteInfo.Stop(stop_id=stop.stop_id,
                                   seq=stop.seq,
                                   name={

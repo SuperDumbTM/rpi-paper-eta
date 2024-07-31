@@ -13,7 +13,7 @@ except (ImportError, ModuleNotFoundError):
 
 class RouteQuery(pydantic.BaseModel):
 
-    transport: enums.Transport
+    transport: enums.Company
     no: str
     """route number"""
     direction: enums.Direction
@@ -25,7 +25,7 @@ class RouteQuery(pydantic.BaseModel):
 
 class RouteInfo(pydantic.BaseModel):
 
-    transport: enums.Transport
+    transport: enums.Company
     route_no: str
     inbound: list["Detail"] = pydantic.Field(default_factory=list)
     outbound: list["Detail"] = pydantic.Field(default_factory=list)

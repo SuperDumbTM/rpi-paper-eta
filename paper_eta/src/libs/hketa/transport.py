@@ -14,12 +14,12 @@ import aiohttp
 
 try:
     from . import api
-    from .enums import Direction, Locale, Transport
+    from .enums import Direction, Locale, Company
     from .exceptions import RouteError, RouteNotExist, ServiceTypeNotExist
     from .models import RouteInfo
 except (ImportError, ModuleNotFoundError):
     import api
-    from enums import Direction, Locale, Transport
+    from enums import Direction, Locale, Company
     from exceptions import RouteError, RouteNotExist, ServiceTypeNotExist
     from models import RouteInfo
 
@@ -63,7 +63,7 @@ class _SingletonABCMeta(ABCMeta):
         return cls._instances[cls]
 
 
-class Transport_(ABC, metaclass=_SingletonABCMeta):
+class Transport(ABC, metaclass=_SingletonABCMeta):
     """
         Public Transport
         ~~~~~~~~~~~~~~~~~~~~~
@@ -99,7 +99,7 @@ class Transport_(ABC, metaclass=_SingletonABCMeta):
 
     @property
     @abstractmethod
-    def transport(self) -> Transport:
+    def transport(self) -> Company:
         pass
 
     def __init__(self,
@@ -238,7 +238,7 @@ class Transport_(ABC, metaclass=_SingletonABCMeta):
         return (datetime.now() - lastupd).days > self.threshold
 
 
-class KowloonMotorBus(Transport_):
+class KowloonMotorBus(Transport):
     __path_prefix__ = "kmb"
 
     _bound_map = {
@@ -248,8 +248,8 @@ class KowloonMotorBus(Transport_):
     """Direction mapping to `hketa.Direction`"""
 
     @property
-    def transport(self) -> Transport_:
-        return Transport.KMB
+    def transport(self) -> Company:
+        return Company.KMB
 
     async def _fetch_route_list(self) -> dict:
         async def fetch_route_details(session: aiohttp.ClientSession,
@@ -331,7 +331,7 @@ class KowloonMotorBus(Transport_):
         return stops
 
 
-class MTRBus(Transport_):
+class MTRBus(Transport):
     __path_prefix__ = "mtr_bus"
 
     _bound_map = {
@@ -341,8 +341,8 @@ class MTRBus(Transport_):
     """Direction mapping to `hketa.Direction`"""
 
     @property
-    def transport(self) -> Transport_:
-        return Transport.MTRBUS
+    def transport(self) -> Company:
+        return Company.MTRBUS
 
     async def _fetch_route_list(self) -> dict:
         route_list = {}
@@ -398,7 +398,7 @@ class MTRBus(Transport_):
                 } for stop in stops]
 
 
-class MTRLightRail(Transport_):
+class MTRLightRail(Transport):
     __path_prefix__ = 'mtr_lrt'
 
     _bound_map = {
@@ -408,8 +408,8 @@ class MTRLightRail(Transport_):
     """Direction mapping to `hketa.Direction`"""
 
     @property
-    def transport(self) -> Transport_:
-        return Transport.MTRLRT
+    def transport(self) -> Company:
+        return Company.MTRLRT
 
     async def _fetch_route_list(self) -> dict:
         route_list = {}
@@ -464,7 +464,7 @@ class MTRLightRail(Transport_):
                  } for stop in stops]
 
 
-class MTRTrain(Transport_):
+class MTRTrain(Transport):
     __path_prefix__ = 'mtr_train'
 
     _bound_map = {
@@ -474,8 +474,8 @@ class MTRTrain(Transport_):
     """Direction mapping to `hketa.Direction`"""
 
     @property
-    def transport(self) -> Transport_:
-        return Transport.MTRTRAIN
+    def transport(self) -> Company:
+        return Company.MTRTRAIN
 
     async def _fetch_route_list(self) -> dict:
         route_list = {}
@@ -548,12 +548,12 @@ class MTRTrain(Transport_):
                  } for stop in stops]
 
 
-class CityBus(Transport_):
+class CityBus(Transport):
     __path_prefix__ = 'ctb'
 
     @property
-    def transport(self) -> Transport_:
-        return Transport.CTB
+    def transport(self) -> Company:
+        return Company.CTB
 
     async def _fetch_route_list(self) -> dict:
         async def fetch_route_details(session: aiohttp.ClientSession,
@@ -641,13 +641,13 @@ class CityBus(Transport_):
             return stop_list
 
 
-class NewLantaoBus(Transport_):
+class NewLantaoBus(Transport):
 
     __path_prefix__ = 'nlb'
 
     @property
-    def transport(self) -> Transport_:
-        return Transport.NLB
+    def transport(self) -> Company:
+        return Company.NLB
 
     async def _fetch_route_list(self) -> dict:
         output = {}

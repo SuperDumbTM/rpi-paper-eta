@@ -1,7 +1,7 @@
 import os
 
 try:
-    from .enums import Transport
+    from .enums import Company
     from .eta_processor import (BravoBusEta, EtaProcessor, KmbEta, MtrBusEta,
                                 MtrLrtEta, MtrTrainEta, NlbEta)
     from .models import RouteQuery
@@ -9,7 +9,7 @@ try:
     from .transport import (CityBus, KowloonMotorBus, MTRBus, MTRLightRail,
                             MTRTrain, NewLantaoBus)
 except (ImportError, ModuleNotFoundError):
-    from enums import Transport
+    from enums import Company
     from eta_processor import (BravoBusEta, EtaProcessor, KmbEta, MtrBusEta,
                                MtrLrtEta, MtrTrainEta, NlbEta)
     from models import RouteQuery
@@ -31,19 +31,19 @@ class EtaFactory:
         self.data_path = data_path
         self.threshold = threshold
 
-    def create_transport(self, transport_: Transport) -> Transport:
+    def create_transport(self, transport_: Company) -> Company:
         match transport_:
-            case Transport.KMB:
+            case Company.KMB:
                 return KowloonMotorBus(self.data_path, self.threshold)
-            case Transport.MTRBUS:
+            case Company.MTRBUS:
                 return MTRBus(self.data_path, self.threshold)
-            case Transport.MTRLRT:
+            case Company.MTRLRT:
                 return MTRLightRail(self.data_path, self.threshold)
-            case Transport.MTRTRAIN:
+            case Company.MTRTRAIN:
                 return MTRTrain(self.data_path, self.threshold)
-            case Transport.CTB:
+            case Company.CTB:
                 return CityBus(self.data_path, self.threshold)
-            case Transport.NLB:
+            case Company.NLB:
                 return NewLantaoBus(self.data_path, self.threshold)
             case _:
                 raise ValueError(f"Unrecognized transport: {transport_}")
@@ -51,17 +51,17 @@ class EtaFactory:
     def create_eta_processor(self, query: RouteQuery) -> EtaProcessor:
         route = self.create_route(query)
         match query.transport:
-            case Transport.KMB:
+            case Company.KMB:
                 return KmbEta(route)
-            case Transport.MTRBUS:
+            case Company.MTRBUS:
                 return MtrBusEta(route)
-            case Transport.MTRLRT:
+            case Company.MTRLRT:
                 return MtrLrtEta(route)
-            case Transport.MTRTRAIN:
+            case Company.MTRTRAIN:
                 return MtrTrainEta(route)
-            case Transport.CTB | Transport.NWFB:
+            case Company.CTB | Company.NWFB:
                 return BravoBusEta(route)
-            case Transport.NLB:
+            case Company.NLB:
                 return NlbEta(route)
             case _:
                 raise ValueError(f"Unrecognized transport: {query.transport}")
