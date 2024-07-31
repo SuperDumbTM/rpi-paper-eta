@@ -176,7 +176,7 @@ def preview(eta_format: str, layout: str):
         return Response("", status=422, headers={"HX-Trigger": json.dumps({
             "toast": {
                 "level": "error",
-                "message": gettext("incorrect_parameter") + gettext(".")
+                "message": f"{gettext('parameter_not_in_choice')}{gettext('.')}"
             }
         })})
     if (not (app_conf := site_data.AppConfiguration()).get('epd_brand')

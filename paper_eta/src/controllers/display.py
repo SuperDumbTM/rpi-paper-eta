@@ -24,7 +24,7 @@ def refresh(args):
     if request.args["eta_format"] not in (t for t in imgen.EtaFormat):
         return jsonify({
             'success': False,
-            'message': f"{gettext('incorrect_parameter')}{gettext('.')}",
+            'message': f"{gettext('parameter_not_in_choice')}{gettext('.')}",
             'data': None,
         }), 422
     if (not (app_conf := site_data.AppConfiguration()).get('epd_brand')
