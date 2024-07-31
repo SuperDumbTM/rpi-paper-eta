@@ -60,15 +60,12 @@
         </div>
     </div>
 
-    <div id="errors">
-    </div>
-
     <div class="row p-2">
         <div class="col">
             <form>
                 <div class="table-responsive">
-                    <table class="table table-striped" hx-get="" hx-trigger="load"
-                        hx-target="tbody" hx-on::after-request="makeSortable()" style="min-width: 400px;">
+                    <table class="table table-striped" hx-get="" hx-trigger="load delay:1ms" hx-target="tbody"
+                        hx-on::before-request="showLoading(150)" hx-on::after-request="makeSortable(); hideLoading();" style="min-width: 400px;">
                         <thead>
                             <tr>
                                 <th>{{ _('no.') }}</th>
@@ -80,7 +77,8 @@
                                 <th style="min-width: 90px;">{{ _('action') }}</th>
                             </tr>
                         </thead>
-                        <tbody hx-put="{{ url_for('bookmark.reorder') }}" hx-trigger="end" hx-include="closest form">
+                        <tbody hx-put="{{ url_for('bookmark.reorder') }}" hx-trigger="end" hx-include="closest form"
+                            hx-on::before-request="showLoading()" hx-on::after-request="hideLoading()">
                         </tbody>
                     </table>
                 </div>

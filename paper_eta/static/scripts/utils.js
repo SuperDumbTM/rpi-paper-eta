@@ -1,8 +1,13 @@
-function showLoading() {
-    document.getElementById('loading-overlay').style.display = 'block';
+let _loadingTimerId;
+
+function showLoading(delay = 0) {
+    _loadingTimerId = setTimeout(() => {
+        document.getElementById('loading-overlay').style.display = 'block';
+    }, delay);
 }
 
 function hideLoading() {
+    clearTimeout(_loadingTimerId);
     document.getElementById('loading-overlay').style.display = 'none';
 }
 

@@ -66,7 +66,8 @@
     <div class="row py-1 px-2">
         <div class="col">
             <div class="table-responsive">
-                <table class="table table-striped" hx-get="" hx-trigger="load, every 1m" hx-target="tbody"
+                <table class="table table-striped" hx-get="" hx-trigger="load delay:1ms, every 1m" hx-target="tbody"
+                    hx-on::before-request="showLoading(150)" hx-on::after-request="hideLoading()"
                     style="min-width: 400px;">
                     <thead>
                         <tr>
