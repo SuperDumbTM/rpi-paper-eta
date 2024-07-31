@@ -162,7 +162,6 @@ The details is as follow:
 | DIR_SCREEN_DUMP         	| The directory name for the CMS to store the screen dump images.                                	|
 | DIR_LOG                  	| The directory name for the CMS to store logs.                                                 	|
 | SECRET_KEY              	| The key for the CMS to sing for security related needs such as session   cookie                	|
-| SQLALCHEMY_DATABASE_URI 	| URL of a database (SQLite).                                                                    	|
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

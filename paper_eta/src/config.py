@@ -45,8 +45,7 @@ BABEL_DEFAULT_LOCALE = os.getenv('BABEL_DEFAULT_LOCALE', 'en')
 BABEL_DEFAULT_TIMEZO = os.getenv('BABEL_DEFAULT_TIMEZO', 'Asia/Hong_kong')
 
 # sqlalchemy
-SQLALCHEMY_DATABASE_URI = os.getenv(
-    'SQLALCHEMY_DATABASE_URI', f"sqlite:///{DIR_STORAGE.joinpath('app.db')}")
+SQLALCHEMY_DATABASE_URI = f"sqlite:///{DIR_STORAGE.joinpath('app.db')}"
 
 # apscheduler
 SCHEDULER_JOBSTORES = {
