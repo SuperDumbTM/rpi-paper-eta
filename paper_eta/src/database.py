@@ -6,12 +6,12 @@ from typing import Iterable
 
 import apscheduler.jobstores.base
 import croniter
-import requests
+from flask import current_app
 from sqlalchemy import event, func, inspect
 from sqlalchemy.orm import Mapped, mapped_column, validates
 
-from paper_eta.src import extensions
-from paper_eta.src.libs import hketa, imgen
+from paper_eta.src import extensions, site_data
+from paper_eta.src.libs import hketa, imgen, refresher
 
 
 class BaseModel(extensions.db.Model):
@@ -85,14 +85,16 @@ class Schedule(BaseModel):
 
         # BUG: hardcoded URL
         extensions.scheduler.add_job(job_id,  # invoking str() here makes the formatter unhappy
-                                     requests.get,
+                                     refresher.refresh,
                                      kwargs={
-                                         'url': 'http://localhost:8192/display/refresh',
-                                         'params': {
-                                             'eta_format': imgen.enums.EtaFormat(self.eta_format),
-                                             'layout': self.layout,
-                                             'is_partial': self.is_partial
-                                         },
+                                         'epd_brand': site_data.AppConfiguration()['epd_brand'],
+                                         'epd_model': site_data.AppConfiguration()['epd_model'],
+                                         'eta_format': imgen.enums.EtaFormat(self.eta_format),
+                                         'layout': self.layout,
+                                         'is_partial': self.is_partial,
+                                         'screen_dump_dir': current_app.config['DIR_SCREEN_DUMP'],
+                                         'bookmarks': [hketa.RouteQuery(**bm.as_dict())
+                                                       for bm in Bookmark.query.order_by(Bookmark.ordering).all()]
                                      },
                                      trigger='cron',
                                      minute=cron[0],
