@@ -64,7 +64,7 @@ def create():
         app_conf = site_data.AppConfiguration()
         db.session.add(database.Bookmark(**{k: v for k, v in form.data.items()
                                             if k not in ("csrf_token", "submit")} | {
-                                                database.Bookmark.locale: app_conf["eta_locale"]}
+                                                "locale": app_conf["eta_locale"]}
                                          ))
         db.session.commit()
 
@@ -196,7 +196,7 @@ def import_():
                 try:
                     db.session.add(
                         database.Bookmark(**{k: bookmark.get(k) for k in fields} | {
-                            database.Bookmark.locale: site_data.AppConfiguration().get("eta_locale", "en")
+                            "locale": site_data.AppConfiguration().get("eta_locale", "en")
                         }))
                     db.session.flush()
                 except (KeyError, TypeError, sqlalchemy.exc.StatementError):
