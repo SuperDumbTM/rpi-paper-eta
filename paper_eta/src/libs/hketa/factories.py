@@ -7,7 +7,7 @@ try:
     from .models import RouteQuery
     from .route import Route
     from .transport import (CityBus, KowloonMotorBus, MTRBus, MTRLightRail,
-                            MTRTrain, NewLantaoBus)
+                            MTRTrain, NewLantaoBus, Transport)
 except (ImportError, ModuleNotFoundError):
     from enums import Company
     from eta_processor import (BravoBusEta, EtaProcessor, KmbEta, MtrBusEta,
@@ -15,7 +15,7 @@ except (ImportError, ModuleNotFoundError):
     from models import RouteQuery
     from route import Route
     from transport import (CityBus, KowloonMotorBus, MTRBus, MTRLightRail,
-                           MTRTrain, NewLantaoBus)
+                           MTRTrain, NewLantaoBus, Transport)
 
 
 class EtaFactory:
@@ -31,7 +31,7 @@ class EtaFactory:
         self.data_path = data_path
         self.threshold = threshold
 
-    def create_transport(self, transport_: Company) -> Company:
+    def create_transport(self, transport_: Company) -> Transport:
         match transport_:
             case Company.KMB:
                 return KowloonMotorBus(self.data_path, self.threshold)
