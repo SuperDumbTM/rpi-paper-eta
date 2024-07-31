@@ -1,5 +1,4 @@
 # pylint: disable=invalid-envvar-default
-
 import os
 import random
 import shutil
@@ -7,6 +6,7 @@ import string
 from pathlib import Path
 
 import dotenv
+from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 
 __APP_ROOT = Path(__file__).parents[1]
 __PATH_ENV = __APP_ROOT.parent.joinpath('.env')
@@ -47,6 +47,11 @@ BABEL_DEFAULT_TIMEZO = os.getenv('BABEL_DEFAULT_TIMEZO', 'Asia/Hong_kong')
 # sqlalchemy
 SQLALCHEMY_DATABASE_URI = os.getenv(
     'SQLALCHEMY_DATABASE_URI', f"sqlite:///{DIR_STORAGE.joinpath('app.db')}")
+
+# apscheduler
+SCHEDULER_JOBSTORES = {
+    "default": SQLAlchemyJobStore(url=f"sqlite:///{DIR_STORAGE.joinpath('jobs.db')}")
+}
 
 # hketa
 HKETA_PATH_DATA = Path(
