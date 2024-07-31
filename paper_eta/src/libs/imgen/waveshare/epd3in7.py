@@ -1,9 +1,8 @@
-from flask_babel import force_locale, gettext
 from PIL import Image, ImageDraw
 
+from ... import hketa
 from .. import _utils
 from ..generator import EtaImageGenerator
-from ...hketa import Eta
 
 
 class Epd3in7(EtaImageGenerator):
@@ -61,7 +60,7 @@ class Epd3in7(EtaImageGenerator):
                    fill=self._bk, font=self.fonts['stop'])
 
             # error
-            if isinstance(route.etas, Eta.Error):
+            if isinstance(route.etas, hketa.Eta.Error):
                 errmsg = _utils.wrap(route.etas.message,
                                      coords['error']['position']['width'],
                                      coords['error']['position']['height'],
@@ -85,9 +84,10 @@ class Epd3in7(EtaImageGenerator):
                     coords['eta']['position']['height']*idx
 
                 if eta.is_arriving and eta.remark not in (None, ""):
-                    with force_locale(route.locale.iso()):
-                        text = gettext(
-                            "arr_dep") if eta.is_arriving else eta.remark
+                    if eta.is_arriving:
+                        text = "即將抵達／離開" if route.locale == hketa.Locale.TC else "Arriving/Departing"
+                    else:
+                        text = eta.remark
 
                     offset_x, offset_y = _utils.position(
                         text,
