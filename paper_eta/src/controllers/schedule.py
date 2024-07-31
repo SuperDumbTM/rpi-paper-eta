@@ -43,7 +43,7 @@ def index():
 @ bp.route('/create', methods=["GET", "POST"])
 def create():
     if not site_data.AppConfiguration().configurated():
-        flash(lazy_gettext("Please enter the display details first."), "error")
+        flash(lazy_gettext("missing_app_config."), "error")
         return redirect(url_for('configuration.index'))
 
     form = forms.ScheduleForm()
@@ -143,7 +143,7 @@ def layouts(eta_format: str):
                         headers={"HX-Trigger": json.dumps({
                             "toast": {
                                 "level": "error",
-                                "message": gettext("Please enter the display details first.")
+                                "message": gettext("missing_app_config")
                             }
                         })})
 
@@ -179,7 +179,7 @@ def preview(eta_format: str, layout: str):
         return Response("", status=422, headers={"HX-Trigger": json.dumps({
             "toast": {
                 "level": "error",
-                "message": gettext("Please enter the display details first.")
+                "message": gettext("missing_app_config")
             }
         })})
 

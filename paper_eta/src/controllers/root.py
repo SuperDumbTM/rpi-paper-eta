@@ -1,5 +1,6 @@
-from flask import (Blueprint, current_app, make_response, redirect,
+from flask import (Blueprint, current_app, flash, make_response, redirect,
                    render_template, request, url_for)
+from flask_babel import lazy_gettext
 
 from paper_eta.src import site_data, utils
 from paper_eta.src.libs import epd_log, refresher
@@ -9,7 +10,8 @@ bp = Blueprint('root', __name__, url_prefix="/")
 
 @bp.route("/")
 def index():
-    app_conf = site_data.AppConfiguration()
+    if not (app_conf := site_data.AppConfiguration()).configurated():
+        flash(lazy_gettext("missing_app_config"), "info")
     return render_template("index.jinja",
                            refresh_logs=tuple(epd_log.epdlog.get()),
                            app_conf=app_conf)

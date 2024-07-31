@@ -10,14 +10,14 @@
     <ul class="pagination justify-content-end">
         <li class="page-item {{ 'disabled' if page == 1 else '' }}">
             <button class="page-link" hx-get="{{ url_for('log.logs') }}" hx-target=".table-wrapper" hx-include="#filter"
-                hx-vals='{"page": "{{ page - 1 }}"}'>{{ _("previous") }}</button>
+                hx-vals='{"page": "{{ page - 1 }}"}'>{{ _("previous_page") }}</button>
         </li>
         <li class="page-item">
             <span class="page-link">{{ page }}</span>
         </li>
         <li class="page-item">
             <button class="page-link" hx-get="{{ url_for('log.logs') }}" hx-target=".table-wrapper" hx-include="#filter"
-                hx-vals='{"page": "{{ page + 1 }}"}'>{{ _("next") }}</button>
+                hx-vals='{"page": "{{ page + 1 }}"}'>{{ _("next_page") }}</button>
         </li>
     </ul>
 </nav>

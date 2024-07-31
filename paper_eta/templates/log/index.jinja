@@ -198,7 +198,7 @@
                 accessLog: false,
             },
             get info() {
-                return "{{ _('pagination_info_') }}"
+                return "{{ _('pagination_info') }}"
                     .replace("{from}", this.limit * (this.page - 1) + 1)
                     .replace("{to}", this.limit * (this.page - 1) + this.logs.length)
                     .replace("{total_filtered}", this.filtered.length)

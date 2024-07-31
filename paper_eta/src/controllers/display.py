@@ -18,19 +18,19 @@ def refresh(args):
     if any(p not in request.args for p in ["eta_format", "layout", "is_partial"]):
         return jsonify({
             'success': False,
-            'message': f"{gettext('missing_parameter')}{gettext('.')}",
+            'message': gettext("missing_parameter") + gettext("."),
             'data': None,
         }), 422
     if request.args["eta_format"] not in (t for t in imgen.EtaFormat):
         return jsonify({
             'success': False,
-            'message': f"{gettext('parameter_not_in_choice')}{gettext('.')}",
+            'message': gettext("parameter_not_in_choice") + gettext("."),
             'data': None,
         }), 422
     if not (app_conf := site_data.AppConfiguration()).configurated():
         return jsonify({
             'success': False,
-            'message': f"{gettext('configuration_required')}{gettext('.')}",
+            'message': gettext('missing_app_config'),
             'data': None,
         }), 422
 
@@ -101,7 +101,7 @@ def clear_screen():
     if not (app_conf := site_data.AppConfiguration()).configurated():
         return jsonify({
             'success': False,
-            'message': f"{gettext('configuration_required')}{gettext('.')}",
+            'message': gettext('missing_app_config'),
             'data': None,
         }), 422
 
@@ -112,7 +112,7 @@ def clear_screen():
         refresher.clear_screen(controller)
         return jsonify({
             'success': True,
-            'message': f"{gettext('success')}{gettext('.')}",
+            'message': gettext('success') + gettext('.'),
             'data': None,
         })
     except (OSError, RuntimeError):
