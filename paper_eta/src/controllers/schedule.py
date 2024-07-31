@@ -148,7 +148,7 @@ def layouts(eta_format: str):
                         })})
 
     try:
-        layouts = imgen.get(app_conf['epd_brand'], app_conf['epd_mode'])\
+        layouts = imgen.get(app_conf['epd_brand'], app_conf['epd_model'])\
             .layouts()[eta_format]
 
         return render_template("/schedule/partials/layout_radio.jinja",

@@ -14,7 +14,7 @@ bp = Blueprint('display', __name__, url_prefix="/display")
 
 
 @bp.route("/refresh")
-def refresh(args):
+def refresh():
     if any(p not in request.args for p in ["eta_format", "layout", "is_partial"]):
         return jsonify({
             'success': False,
@@ -40,7 +40,7 @@ def refresh(args):
                  for bm in database.Bookmark.query.order_by(database.Bookmark.ordering).all()]
     try:
         generator = imgen.get(app_conf.get('epd_brand'), app_conf.get('epd_model')
-                              )(imgen.EtaFormat(args['eta_format']), args['layout'])
+                              )(imgen.EtaFormat(request.args['eta_format']), request.args['layout'])
         images = refresher.generate_image(bookmarks, generator)
     except KeyError:
         return jsonify({
@@ -56,7 +56,7 @@ def refresh(args):
                                 is_partial=bool(request.args['is_partial']))
     except (OSError, RuntimeError) as e:
         logging.exception("Cannot initialise the e-paper controller.")
-        epd_log.epdlog.put(epd_log.Log(**args, error=e))
+        epd_log.epdlog.put(epd_log.Log(**request.args, error=e))
 
         return jsonify({
             'success': False,
@@ -72,7 +72,7 @@ def refresh(args):
                                  False,
                                  True)
     except Exception as e:  # pylint: disable=broad-exception-caught
-        epd_log.epdlog.put(epd_log.Log(**args, error=e))
+        epd_log.epdlog.put(epd_log.Log(**request.args, error=e))
 
         if isinstance(e, RuntimeError):
             logging.exception("Failed to refresh the screen.")
@@ -86,7 +86,7 @@ def refresh(args):
             'data': None
         }), 503
 
-    epd_log.epdlog.put(epd_log.Log(**args))
+    epd_log.epdlog.put(epd_log.Log(**request.args))
     generator.write_images(current_app.config['DIR_SCREEN_DUMP'], images)
 
     return jsonify({
