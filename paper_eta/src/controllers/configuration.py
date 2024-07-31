@@ -19,8 +19,8 @@ def index():
                                    epd_brand=app_conf.get('epd_brand'),)
 
     if form.validate_on_submit():
-        if (app_conf.get('epd_brand') != form.epd_brand
-                or app_conf.get('epd_model') != form.epd_model):
+        if (app_conf.get('epd_brand') != form.epd_brand.data
+                or app_conf.get('epd_model') != form.epd_model.data):
             # changing brand or model will invalidate the schedule
             database.Schedule.query.update({database.Schedule.enabled: False})
             db.session.commit()
