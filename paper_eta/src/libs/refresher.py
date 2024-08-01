@@ -2,16 +2,12 @@ import logging
 import os
 import threading
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 import requests
 from PIL import Image
 
-from .. import extensions
+from .. import database, extensions
 from ..libs import epd_log, epdcon, hketa, imgen
-
-if TYPE_CHECKING:
-    from .. import database
 
 _ctrl_mutex = threading.Lock()
 
@@ -21,8 +17,8 @@ def refresh(epd_brand: str,
             eta_format: str,
             layout: str,
             is_partial: bool,
-            screen_dump_dir: Path,
-            bookmarks: list["database.Bookmark"]):
+            is_dry_run: bool,
+            screen_dump_dir: Path):
     args_snap = locals()
 
     if eta_format not in (t for t in imgen.EtaFormat):
@@ -38,32 +34,40 @@ def refresh(epd_brand: str,
         logging.error(
             "Failed to refresh the screen due to invalid layout: %s", layout)
         return
-    images = generate_image(bookmarks, generator)
 
-    # ---------- initialise the e-paper controller ----------
-    try:
-        controller = epdcon.get(epd_brand, epd_model, is_partial=is_partial)
-    except (OSError, RuntimeError) as e:
-        logging.exception("Cannot initialise the e-paper controller.")
-        epd_log.epdlog.put(epd_log.Log(**args_snap, error=e))
-        return
+    # reference: https://stackoverflow.com/a/73618460
+    with extensions.scheduler.app.app_context():
+        images = generate_image([hketa.RouteQuery(**bm.as_dict())
+                                 for bm in database.Bookmark.query.order_by(database.Bookmark.ordering).all()],
+                                generator)
 
-    # ---------- refresh the e-paper screen ----------
-    try:
-        display_images(cached_images(screen_dump_dir),
-                       images,
-                       controller,
-                       False,
-                       True)
-    except Exception as e:  # pylint: disable=broad-exception-caught
-        epd_log.epdlog.put(epd_log.Log(**args_snap, error=e))
+    if not is_dry_run:
+        # ---------- initialise the e-paper controller ----------
+        try:
+            controller = epdcon.get(
+                epd_brand, epd_model, is_partial=is_partial)
+        except (OSError, RuntimeError) as e:
+            logging.exception("Cannot initialise the e-paper controller.")
+            epd_log.epdlog.put(epd_log.Log(**args_snap, error=e))
+            return
 
-        if isinstance(e, RuntimeError):
-            logging.warning("Failed to refresh the screen due to %s.", str(e))
-        else:
-            logging.exception(
-                "An unexpected error occurred during display refreshing.")
-        return
+        # ---------- refresh the e-paper screen ----------
+        try:
+            display_images(cached_images(screen_dump_dir),
+                           images,
+                           controller,
+                           False,
+                           True)
+        except Exception as e:  # pylint: disable=broad-exception-caught
+            epd_log.epdlog.put(epd_log.Log(**args_snap, error=e))
+
+            if isinstance(e, RuntimeError):
+                logging.warning(
+                    "Failed to refresh the screen due to %s.", str(e))
+            else:
+                logging.exception(
+                    "An unexpected error occurred during display refreshing.")
+            return
 
     epd_log.epdlog.put(epd_log.Log(**args_snap))
     generator.write_images(screen_dump_dir, images)

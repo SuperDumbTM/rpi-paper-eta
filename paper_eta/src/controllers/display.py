@@ -104,7 +104,7 @@ def clear_screen():
             'message': gettext('missing_app_config'),
             'data': None,
         }), 422
-    
+
     if app_conf['dry_run']:
         return
 

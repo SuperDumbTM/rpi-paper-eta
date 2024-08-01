@@ -92,9 +92,8 @@ class Schedule(BaseModel):
                                          'eta_format': imgen.enums.EtaFormat(self.eta_format),
                                          'layout': self.layout,
                                          'is_partial': self.is_partial,
+                                         'is_dry_run': site_data.AppConfiguration()['dry_run'],
                                          'screen_dump_dir': current_app.config['DIR_SCREEN_DUMP'],
-                                         'bookmarks': [hketa.RouteQuery(**bm.as_dict())
-                                                       for bm in Bookmark.query.order_by(Bookmark.ordering).all()]
                                      },
                                      trigger='cron',
                                      minute=cron[0],
