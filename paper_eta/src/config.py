@@ -25,9 +25,9 @@ PATH_SITE_CONF = Path(
 if not DIR_STORAGE.exists():
     os.makedirs(DIR_STORAGE)
 if not DIR_LOG.exists():
-    os.mkdir(DIR_LOG, exist_ok=True)
+    os.mkdir(DIR_LOG)
 if not DIR_SCREEN_DUMP.exists():
-    os.mkdir(DIR_SCREEN_DUMP, exist_ok=True)
+    os.mkdir(DIR_SCREEN_DUMP)
 
 # app settings
 ENV = os.getenv('ENV', 'development')
