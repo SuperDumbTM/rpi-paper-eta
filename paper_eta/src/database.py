@@ -132,7 +132,8 @@ def remove_refresh_job(mapper, connection, target: Schedule):
 
 @event.listens_for(Schedule, 'before_update')
 def update_refresh_job_before(mapper, connection, target: Schedule):
-    target.remove_job()  # BUG: updating disabled jobs must cause JobLookupError
+    if target.enabled:
+        target.remove_job()
 
 
 @event.listens_for(Schedule, 'after_update')
