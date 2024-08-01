@@ -4,7 +4,7 @@ from datetime import datetime
 
 import croniter
 import sqlalchemy.exc
-from flask import (Blueprint, Response, flash, redirect, render_template,
+from flask import (Blueprint, Response, current_app, flash, redirect, render_template,
                    request, url_for)
 from flask_babel import gettext, lazy_gettext
 
@@ -203,6 +203,41 @@ def preview(eta_format: str, layout: str):
     return render_template("schedule/partials/layout_preview.jinja", images={
         c: utils.img2b64(img) for c, img in images.items()
     })
+
+
+@bp.route("/refresh/<id_>")
+def refresh(id_: str):
+    schedule = database.Schedule.query.get_or_404(id_)
+
+    if not (app_conf := site_data.AppConfiguration()).configurated():
+        return Response("", status=422, headers={"HX-Trigger": json.dumps({
+            "toast": {
+                "level": "error",
+                "message": gettext("missing_app_config")
+            }
+        })})
+
+    try:
+        refresher.refresh(app_conf['epd_brand'],
+                          app_conf['epd_model'],
+                          schedule.eta_format,
+                          schedule.layout,
+                          schedule.is_partial,
+                          app_conf['dry_run'],
+                          current_app.config['DIR_SCREEN_DUMP'])
+    except Exception:  # pylint: disable=broad-exception-caught
+        return Response("", status=500, headers={"HX-Trigger": json.dumps({
+            "toast": {
+                "level": "error",
+                "message": gettext("Failed to refresh the screen.")
+            }
+        })})
+    return Response("", status=200, headers={"HX-Trigger": json.dumps({
+        "toast": {
+            "level": "success",
+            "message": gettext("success")
+        }
+    })})
 
 
 @ bp.route('/export')

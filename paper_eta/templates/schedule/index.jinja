@@ -95,29 +95,3 @@
     </div>
 </div>
 {% endblock content %}
-
-
-{% block script %}
-<script>
-
-    function refreshDisplay(eta_format, layout, is_partial) {
-        showLoading();
-        return fetch(`{{ url_for('display.refresh')}}?${new URLSearchParams({
-            eta_format: eta_format,
-            layout: layout,
-            is_partial: is_partial
-        }).toString()}`)
-            .then((res) => {
-                hideLoading();
-                return res.json();
-            })
-            .then((json) => {
-                if (!json.success) {
-                    alertify.error(json.message);
-                }
-            });
-
-    }
-
-</script>
-{% endblock script %}
