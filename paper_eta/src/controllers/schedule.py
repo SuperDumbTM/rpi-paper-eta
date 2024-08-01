@@ -62,7 +62,7 @@ def create():
                            )
 
 
-@bp.route('/create/edit/<id_>', methods=["GET", "POST"])
+@bp.route('/edit/<id_>', methods=["GET", "POST"])
 def edit(id_: str):
     form = forms.ScheduleForm()
     sch = database.Schedule.query.get_or_404(id_)
