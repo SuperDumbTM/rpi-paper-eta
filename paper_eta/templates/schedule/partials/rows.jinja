@@ -1,5 +1,5 @@
 {% for sch in schedules %}
-<tr x-data>
+<tr class="{{ '' if sch['enabled'] else 'disabled'}}" x-data>
     <td>{{ loop.index }}</td>
     <td>{{ _(sch["eta_format"]) }}</td>
     <td>{{ sch["layout"] }}</td>
