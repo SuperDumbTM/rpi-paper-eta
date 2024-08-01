@@ -6,9 +6,12 @@ function showLoading(delay = 0) {
     }, delay);
 }
 
-function hideLoading() {
+function hideLoading(delay = 0) {
     clearTimeout(_loadingTimerId);
-    document.getElementById('loading-overlay').style.display = 'none';
+
+    setTimeout(() => {
+        document.getElementById('loading-overlay').style.display = 'none';
+    }, delay);
 }
 
 function formToJson(form) {
