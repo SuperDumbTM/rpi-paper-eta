@@ -26,6 +26,10 @@ class EpaperSettingForm(FlaskForm):
                                      choices=[(l.value, l.text())
                                               for l in hketa.Locale],)
 
+    dry_run = wtforms.BooleanField(lazy_gettext('dry_run'),
+                                   [wtforms.validators.DataRequired()],
+                                   description=lazy_gettext('dry_run_help'))
+
     submit = wtforms.SubmitField(lazy_gettext('submit'))
 
     def validate_epd_model(self, field: wtforms.Field):

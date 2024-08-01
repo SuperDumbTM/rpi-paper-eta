@@ -34,7 +34,6 @@ def refresh():
             'data': None,
         }), 422
 
-    # TODO: module name clash
     # ---------- generate ETA images ----------
     bookmarks = [hketa.RouteQuery(**bm.as_dict())
                  for bm in database.Bookmark.query.order_by(database.Bookmark.ordering).all()]
@@ -50,41 +49,42 @@ def refresh():
         }), 422
 
     # ---------- initialise the e-paper controller ----------
-    try:
-        controller = epdcon.get(app_conf["epd_brand"],
-                                app_conf["epd_model"],
-                                is_partial=request.args['is_partial'].lower() == "true")
-    except (OSError, RuntimeError) as e:
-        logging.exception("Cannot initialise the e-paper controller.")
-        epd_log.epdlog.put(epd_log.Log(**request.args, error=e))
+    if not app_conf["dry_run"]:
+        try:
+            controller = epdcon.get(app_conf["epd_brand"],
+                                    app_conf["epd_model"],
+                                    is_partial=request.args['is_partial'].lower() == "true")
+        except (OSError, RuntimeError) as e:
+            logging.exception("Cannot initialise the e-paper controller.")
+            epd_log.epdlog.put(epd_log.Log(**request.args, error=e))
 
-        return jsonify({
-            'success': False,
-            'message': gettext('Failed to refresh the screen.'),
-            'data': None
-        }), 503
+            return jsonify({
+                'success': False,
+                'message': gettext('Failed to refresh the screen.'),
+                'data': None
+            }), 503
 
-    # ---------- refresh the e-paper screen ----------
-    try:
-        refresher.display_images(refresher.cached_images(current_app.config['DIR_SCREEN_DUMP']),
-                                 images,
-                                 controller,
-                                 False,
-                                 True)
-    except Exception as e:  # pylint: disable=broad-exception-caught
-        epd_log.epdlog.put(epd_log.Log(**request.args, error=e))
+        # ---------- refresh the e-paper screen ----------
+        try:
+            refresher.display_images(refresher.cached_images(current_app.config['DIR_SCREEN_DUMP']),
+                                     images,
+                                     controller,
+                                     False,
+                                     True)
+        except Exception as e:  # pylint: disable=broad-exception-caught
+            epd_log.epdlog.put(epd_log.Log(**request.args, error=e))
 
-        if isinstance(e, RuntimeError):
-            logging.exception("Failed to refresh the screen.")
-        else:
-            logging.exception(
-                "An unexpected error occurred during display refreshing.")
+            if isinstance(e, RuntimeError):
+                logging.exception("Failed to refresh the screen.")
+            else:
+                logging.exception(
+                    "An unexpected error occurred during display refreshing.")
 
-        return jsonify({
-            'success': False,
-            'message': gettext('Failed to refresh the screen.'),
-            'data': None
-        }), 503
+            return jsonify({
+                'success': False,
+                'message': gettext('Failed to refresh the screen.'),
+                'data': None
+            }), 503
 
     epd_log.epdlog.put(epd_log.Log(**request.args))
     generator.write_images(current_app.config['DIR_SCREEN_DUMP'], images)
@@ -104,6 +104,9 @@ def clear_screen():
             'message': gettext('missing_app_config'),
             'data': None,
         }), 422
+    
+    if app_conf['dry_run']:
+        return
 
     try:
         controller = epdcon.get(app_conf['epd_brand'],

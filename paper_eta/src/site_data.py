@@ -12,7 +12,7 @@ class AppConfiguration(Mapping):
     _data: dict[str,]
     _filepath: Path
 
-    __keys__ = ['epd_brand', 'epd_model', 'eta_locale']
+    __keys__ = ['epd_brand', 'epd_model', 'eta_locale', 'dry_run']
 
     def __init__(self) -> None:
         self._data = {}

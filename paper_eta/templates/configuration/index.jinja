@@ -103,6 +103,27 @@
                 </div>
             </div>
 
+            <div class="form-group">
+                <div class="form-check form-switch">
+                    {{ form.dry_run.label(class="form-check-label") }}
+                    {{ form.dry_run(class="form-check-input" + form_valid_class(form.dry_run)) }}
+
+                </div>
+
+                <div class="form-text">
+                    {{ form.dry_run.description }}
+                </div>
+
+                <div>
+                    {{ form.dry_run.errors.__class__ }}
+                </div>
+                <div class="invalid-feedback">
+                    {% for error in form.dry_run.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
             <div class="form-group text-end pt-3">
                 {{ form.submit(class="btn btn-primary btn-customized") }}
             </div>
