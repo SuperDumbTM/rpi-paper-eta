@@ -53,7 +53,7 @@ def refresh():
     try:
         controller = epdcon.get(app_conf["epd_brand"],
                                 app_conf["epd_model"],
-                                is_partial=bool(request.args['is_partial']))
+                                is_partial=request.args['is_partial'].lower() == "true")
     except (OSError, RuntimeError) as e:
         logging.exception("Cannot initialise the e-paper controller.")
         epd_log.epdlog.put(epd_log.Log(**request.args, error=e))
