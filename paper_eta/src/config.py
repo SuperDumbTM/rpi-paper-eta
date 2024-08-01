@@ -22,8 +22,12 @@ _PATH_LOG_FILE = DIR_LOG.joinpath('app.log')
 PATH_SITE_CONF = Path(
     os.getenv('PATH_SITE_CONF', DIR_STORAGE).joinpath('config.json'))
 
+if not DIR_STORAGE.exists():
+    os.makedirs(DIR_STORAGE)
 if not DIR_LOG.exists():
-    os.makedirs(DIR_LOG, exist_ok=True)
+    os.mkdir(DIR_LOG, exist_ok=True)
+if not DIR_SCREEN_DUMP.exists():
+    os.mkdir(DIR_SCREEN_DUMP, exist_ok=True)
 
 # app settings
 ENV = os.getenv('ENV', 'development')
