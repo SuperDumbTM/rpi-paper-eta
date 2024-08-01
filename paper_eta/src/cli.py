@@ -60,3 +60,8 @@ def clean_log():
         except PermissionError:
             with open(Path(fname), 'w', encoding='utf-8'):
                 continue
+
+
+@rm_cli.command('config')
+def clean_config():
+    current_app.config.get('PATH_SITE_CONF').unlink(missing_ok=True)

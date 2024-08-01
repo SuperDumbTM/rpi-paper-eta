@@ -60,7 +60,12 @@ def create_app() -> Flask:
 
     with app.app_context():
         extensions.db.create_all()
-        for s in database.Schedule.query.all():
-            if s.enabled:
-                s.add_job()
+        for s in extensions.db.session.query(database.Schedule).all():
+            try:
+                if s.enabled:
+                    s.add_job()
+            except KeyError:
+                # app configuration not exists
+                s.enabled = False
+        extensions.db.session.commit()
     return app
