@@ -26,6 +26,10 @@
             display: table-cell;
         }
     }
+
+    .table tr.disabled td {
+        color: var(--bs-gray-500);
+    }
 </style>
 {% endblock style %}
 
@@ -77,8 +81,7 @@
                                 <th style="min-width: 90px;">{{ _('action') }}</th>
                             </tr>
                         </thead>
-                        <tbody hx-put="{{ url_for('bookmark.reorder') }}" hx-trigger="end" hx-include="closest form"
-                            hx-on::before-request="showLoading()" hx-on::after-request="hideLoading()">
+                        <tbody hx-put="{{ url_for('bookmark.reorder') }}" hx-trigger="end" hx-include="closest form">
                         </tbody>
                     </table>
                 </div>

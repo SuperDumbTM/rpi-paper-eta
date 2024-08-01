@@ -46,6 +46,7 @@ class Bookmark(BaseModel):
     service_type: Mapped[str]
     stop_id: Mapped[str]
     locale: Mapped[hketa.Locale]
+    enabled: Mapped[bool] = mapped_column(default=True)
 
 
 @event.listens_for(Bookmark, 'before_insert')

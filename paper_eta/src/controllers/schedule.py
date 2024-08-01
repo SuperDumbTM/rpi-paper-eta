@@ -184,7 +184,10 @@ def preview(eta_format: str, layout: str):
         })})
 
     bookmarks = [hketa.RouteQuery(**bm.as_dict())
-                 for bm in database.Bookmark.query.order_by(database.Bookmark.ordering).all()]
+                 for bm in database.Bookmark.query
+                 .filter(database.Bookmark.enabled)
+                 .order_by(database.Bookmark.ordering)
+                 .all()]
     try:
         generator = imgen.get(app_conf["epd_brand"], app_conf["epd_model"]
                               )(imgen.EtaFormat(eta_format), layout)

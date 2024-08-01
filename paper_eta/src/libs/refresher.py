@@ -38,7 +38,10 @@ def refresh(epd_brand: str,
     # reference: https://stackoverflow.com/a/73618460
     with extensions.scheduler.app.app_context():
         images = generate_image([hketa.RouteQuery(**bm.as_dict())
-                                 for bm in database.Bookmark.query.order_by(database.Bookmark.ordering).all()],
+                                 for bm in database.Bookmark.query
+                                 .filter(database.Bookmark.enabled)
+                                 .order_by(database.Bookmark.ordering)
+                                 .all()],
                                 generator)
 
     if not is_dry_run:

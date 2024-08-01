@@ -115,6 +115,29 @@ def edit(id_: str):
                            editing=True,)
 
 
+@bp.route('/status/<id_>', methods=["PUT"])
+def toggle_status(id_: str):
+    try:
+        bookmark = database.Bookmark.query.get(id_)
+        setattr(bookmark, "enabled", not bookmark.enabled)
+        db.session.commit()
+        return Response(
+            headers={
+                "HX-Location": json.dumps({
+                    "path": url_for("bookmark.index"),
+                    "target": "tbody",
+                    "swap": "innerHTML"
+                })}
+        )
+    except sqlalchemy.exc.SQLAlchemyError:
+        return Response("", status=422, headers={"HX-Trigger": json.dumps({
+            "toast": {
+                "level": "error",
+                "message": gettext("invalid_id")
+            }
+        })})
+
+
 @bp.route('/', methods=["PUT"])
 def reorder():
     bms = database.Bookmark.query.all()
