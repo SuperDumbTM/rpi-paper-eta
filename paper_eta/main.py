@@ -51,10 +51,15 @@ def create_app() -> Flask:
         today=lambda: datetime.now().date(),
         time=lambda: datetime.now().strftime("%H:%M:%S"),
         now=lambda: datetime.now().isoformat(sep=" ", timespec="seconds"),
+        isalpha=lambda s: s.isalpha(),
+        isascii=lambda s: s.isascii(),
+        isalnum=lambda s: s.isalnum(),
+        isdigit=lambda s: s.isdigit(),
+
     )
     app.jinja_env.filters.update({
         'unquote': urllib.parse.unquote,
-        'tojson': json.dumps
+        'tojson': json.dumps,
     })
 
     with app.app_context():

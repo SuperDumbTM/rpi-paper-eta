@@ -39,3 +39,23 @@ def screen_dumps():
 def histories():
     return render_template("root/partials/histories.jinja",
                            refresh_logs=tuple(epd_log.epdlog.get()),)
+
+
+@bp.route("/hti")
+def test():
+    from paper_eta.src.libs import hketa
+    from paper_eta.src import database, extensions
+
+    bookmarks = [hketa.RouteQuery(**bm.as_dict())
+                 for bm in database.Bookmark.query
+                 .filter(database.Bookmark.enabled)
+                 .order_by(database.Bookmark.ordering)
+                 .all()]
+
+    etas = []
+    for bm in bookmarks:
+        etap = extensions.hketa.create_eta_processor(bm)
+        etas.append(etap.etas())
+    return render_template("epaper/waveshare/epd3in7/6_row_3_eta.jinja",
+                           etas=etas,
+                           display="mixed")

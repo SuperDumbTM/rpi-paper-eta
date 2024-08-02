@@ -1,0 +1,81 @@
+{% extends "epaper/layout.jinja" %}
+
+
+{% block font %}
+{% include "epaper/fonts/noto-sans-tc.jinja" %}
+{% include "epaper/fonts/sirin-stencil.jinja" %}
+{% endblock font %}
+
+{% block style %}
+<style>
+    .text-2xl {
+        font-size: 1.625rem !important;
+    }
+</style>
+{% endblock style %}
+
+
+
+{% block canva %}
+<div class="border" style="height: 480px; width: 280px">
+    {% for i in range(6) %}
+    <div class="grid grid-cols-12 gap-1 border-b" style="height: 80px;">
+        {% if etas | length > i %}
+        <div class="col-span-6">
+            <div class="flex flex-none w-full items-center" style="height: 35px;">
+                <img class="flex" src="{{ url_for('static', filename='/images/logos/bw/'~'ctb'~'.bmp') }}" height="35"
+                    width="35">
+                <span class="flex ml-1 truncate text-3xl noto-sans-tc-700">
+                    {{ etas[i].no }}
+                </span>
+
+            </div>
+            <div class="flex-none w-full truncate noto-sans-tc-400" style="height: 20px;">
+                <span>
+                    {{ etas[i].destination }}
+                </span>
+            </div>
+            <div class="flex-none w-full truncate noto-sans-tc-400" style="height: 20px;">
+                <span>
+                    @{{ etas[i].stop_name }}
+                </span>
+            </div>
+        </div>
+
+        <div class="col-span-6 place-content-center" style="height: 80px;">
+            {% if etas[i].etas.message %}
+            <div class="flex flex-none w-full items-center place-content-center" style="height: 80px;">
+                <span class="text-center text-lg line-clamp-3 text-wrap noto-sans-tc-500">
+                    {{ etas[i].etas.message }}
+                </span>
+            </div>
+            {% else %}
+            {% for eta in etas[i].etas[:1] %}
+            <div class="flex flex-col flex-none w-full items-center">
+                {% if eta.is_arriving and eta.remark not in (None, "") %}
+                <div class="inline-block truncate noto-sans-tc-500">
+                    {{ "即將抵達／已離開" if eta.is_arriving else eta.remark }}
+                </div>
+                {% else %}
+                <div>
+                    <span class="inline-block text-4xl leading-7 sirin-stencil-regular" style="width: 26px">
+                        {{ ((eta.eta - etas[i].timestamp).total_seconds() / 60) | int }}
+                    </span>
+                    <span class="text-3xl leading-7 noto-sans-tc-400">分鐘</span>
+                </div>
+                <div>
+                    <span class="text-4xl leading-7 sirin-stencil-regular">
+                        {{ eta.eta.strftime("%H:%M") }}
+                    </span>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+        {% endif %}
+
+    </div>
+    {% endfor %}
+</div>
+{% endblock canva %}
