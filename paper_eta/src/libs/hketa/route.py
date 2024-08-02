@@ -54,9 +54,12 @@ class Route:
         if (self.entry.stop_id not in self._stop_list.keys()):
             raise StopNotExist(self.entry.stop_id)
 
-    def comanpy(self) -> str:
+    def comanpy(self) -> Company:
+        return self.provider.transport
+
+    def company_name(self) -> str:
         """Get the operating company name of the route"""
-        return self.entry.text(self.entry.locale)
+        return self.provider.transport.text(self.entry.locale)
 
     def name(self) -> str:
         """Get the route name of the `entry`"""
