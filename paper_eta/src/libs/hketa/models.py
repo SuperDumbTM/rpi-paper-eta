@@ -52,7 +52,7 @@ class Eta(pydantic.BaseModel):
     destination: str
     stop_name: str
     locale: enums.Locale
-    logo: Optional[BytesIO] = None
+    company: enums.Company
     etas: Union[list["Time"], "Error"]
     timestamp: datetime = pydantic.Field(
         default=datetime.now().replace(tzinfo=pytz.timezone('Etc/GMT-8')))
