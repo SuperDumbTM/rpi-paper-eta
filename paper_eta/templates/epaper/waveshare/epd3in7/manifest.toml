@@ -1,0 +1,28 @@
+[6_row_3_eta]
+cnt_eta = 3
+col = 1
+colors = []
+row = 6
+[6_row_3_eta.description]
+en = "Display at most 6 routes and up to 3 ETAs"
+tc = "顯示最多六條路線及未來三班班次的到站時間"
+
+[6_row_2_eta]
+cnt_eta = 2
+col = 1
+colors = []
+row = 6
+
+[6_row_2_eta.description]
+en = "Display at most 6 routes and up to 2 ETAs"
+tc = "顯示最多六條路線及未來兩班班次的到站時間"
+
+[6_row_1_eta]
+cnt_eta = 1
+col = 1
+colors = []
+row = 6
+
+[6_row_1_eta.description]
+en = "Display at most 6 routes and only 1 ETA"
+tc = "顯示最多六條路線及未來一班班次的到站時間"

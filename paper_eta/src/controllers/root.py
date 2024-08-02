@@ -43,8 +43,12 @@ def histories():
 
 @bp.route("/hti")
 def test():
+
     from paper_eta.src.libs import hketa
     from paper_eta.src import database, extensions
+    from paper_eta.src.libs import renderer
+
+    print(renderer.layouts("waveshare", "epd3in7"))
 
     bookmarks = [hketa.RouteQuery(**bm.as_dict())
                  for bm in database.Bookmark.query

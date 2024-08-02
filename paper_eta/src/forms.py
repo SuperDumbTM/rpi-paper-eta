@@ -78,8 +78,9 @@ class ScheduleForm(FlaskForm):
 
     eta_format = wtforms.SelectField(lazy_gettext("eta_format"),
                                      [wtforms.validators.DataRequired()],
-                                     choices=[(l.value, lazy_gettext(l.value))
-                                              for l in imgen.enums.EtaFormat
+                                     choices=[("mixed", lazy_gettext("mixeds")),
+                                              ("time", lazy_gettext("time")),
+                                              ("minute", lazy_gettext("minute"))
                                               ],
                                      )
 
