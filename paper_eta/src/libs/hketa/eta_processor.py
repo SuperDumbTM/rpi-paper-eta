@@ -110,7 +110,8 @@ class KmbEta(EtaProcessor):
             etas.append(Eta.Time(
                 destination=stop[f'dest_{locale}'],
                 is_arriving=(eta_dt - timestamp).total_seconds() < 30,
-                is_scheduled=stop.get('rmk_') in ('原定班次', 'Scheduled Bus'),
+                is_scheduled=stop.get(f'rmk_{locale}') in (
+                    '原定班次', 'Scheduled Bus'),
                 eta=_8601str(eta_dt),
                 eta_minute=int((eta_dt - timestamp).total_seconds() / 60),
                 remark=stop[f'rmk_{locale}'],
