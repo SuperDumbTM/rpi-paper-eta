@@ -573,8 +573,8 @@ class CityBus(Transport):
                     continue
 
                 ends = await asyncio.gather(*[
-                    api.bravobus_stop_details(stop_list[0]['stop']),
-                    api.bravobus_stop_details(stop_list[-1]['stop'])
+                    api.bravobus_stop_details(stop_list[0]['stop'], session),
+                    api.bravobus_stop_details(stop_list[-1]['stop'], session)
                 ])
 
                 routes[route['route']][direction] = [{
