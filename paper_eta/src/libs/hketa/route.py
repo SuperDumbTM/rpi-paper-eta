@@ -1,13 +1,13 @@
 from io import BytesIO
 
 try:
-    from .enums import Locale, StopType, Company
-    from .exceptions import StopNotExist
+    from .enums import Company, Locale, StopType
+    from .exceptions import ServiceTypeNotExist, StopNotExist
     from .models import RouteInfo, RouteQuery
     from .transport import MTRTrain, Transport
 except (ImportError, ModuleNotFoundError):
-    from enums import Locale, StopType, Company
-    from exceptions import StopNotExist
+    from enums import Company, Locale, StopType
+    from exceptions import ServiceTypeNotExist, StopNotExist
     from models import RouteInfo, RouteQuery
     from transport import MTRTrain, Transport
 
@@ -47,7 +47,7 @@ class Route:
         self.entry = entry
         self.provider = transport_
         self._stop_list = {
-            stop.stop_id: stop
+            stop["id"]: stop
             for stop in self.provider.stop_list(entry.no, entry.direction, entry.service_type)
         }
 
@@ -68,13 +68,14 @@ class Route:
         return self.entry.no
 
     def id(self) -> str:
-        return self.provider.route_list()[self.entry.no] \
-            .service_lookup(self.entry.direction, self.entry.service_type) \
-            .route_id
+        for service in self.provider.route_list()[self.entry.no][self.entry.direction.value]:
+            if service["service_type"] == self.entry.service_type:
+                return self.provider.route_list()[self.entry.no][self.entry.direction.value]["route_id"]
+        raise ServiceTypeNotExist(self.entry.service_type)
 
     def stop_seq(self) -> int:
         """Get the stop sequence of the route"""
-        return self._stop_list[self.entry.stop_id].seq
+        return self._stop_list[self.entry.stop_id]["seq"]
 
     def stop_details(self, stop_id: str) -> RouteInfo.Stop:
         return self._stop_list[stop_id]
@@ -88,7 +89,7 @@ class Route:
         # NOTE: in/outbound of circular routes are NOT its destination
         # NOTE: 705, 706 return "天水圍循環綫"/'TSW Circular' instead of its destination
         if self.entry.transport == Company.MTRLRT and self.entry.no in ("705", "706"):
-            return RouteInfo.Stop(stop_id=stop.stop_id,
+            return RouteInfo.Stop(stop_id=stop.id,
                                   seq=stop.seq,
                                   name={
                                       Locale.EN: "TSW Circular",
@@ -99,21 +100,21 @@ class Route:
 
     def stop_type(self) -> StopType:
         """Get the stop type of the stop"""
-        if self.origin().stop_id == self.entry.stop_id:
+        if self.origin()["id"] == self.entry.stop_id:
             return StopType.ORIG
-        if self.destination().stop_id == self.entry.stop_id:
+        if self.destination()["id"] == self.entry.stop_id:
             return StopType.DEST
         return StopType.STOP
 
     def stop_name(self) -> str:
         """Get the stop name of the route"""
-        return self._stop_list[self.entry.stop_id].name[self.entry.locale]
+        return self._stop_list[self.entry.stop_id]["name"][self.entry.locale]
 
     def orig_name(self) -> str:
-        return self.origin().name[self.entry.locale]
+        return self.origin()["name"][self.entry.locale]
 
     def dest_name(self) -> str:
-        return self.destination().name[self.entry.locale]
+        return self.destination()["name"][self.entry.locale]
 
     def logo(self) -> BytesIO:
         return self.provider.logo

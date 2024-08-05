@@ -22,7 +22,8 @@ def index():
             try:
                 stop_name = extensions.hketa.create_route(
                     hketa.RouteQuery(**bm.as_dict())).stop_name()
-            except Exception:  # pylint: disable=broad-exception-caught
+            except Exception as e:  # pylint: disable=broad-exception-caught
+                print(e)
                 stop_name = lazy_gettext('error')
             bookmarks.append(bm.as_dict() | {'stop_name': stop_name})
         return Response(

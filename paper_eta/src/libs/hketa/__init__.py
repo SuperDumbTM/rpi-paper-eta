@@ -1,9 +1,10 @@
 
-from . import api, enums, eta_processor, exceptions, factories, models
-from .enums import Direction, Locale, StopType, Company
+from . import (api, enums, eta_processor, exceptions, factories, models,
+               transport)
+from .enums import Company, Direction, Locale, StopType
+from .factories import EtaFactory
 from .models import Eta, RouteInfo, RouteQuery
 from .route import Route
-from .factories import EtaFactory
 
 __all__ = [
     api, api, enums, eta_processor, exceptions, factories, models

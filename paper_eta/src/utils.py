@@ -20,10 +20,10 @@ def direction_choices(transport: str,
     transp = extensions.hketa.create_transport(hketa.Company(transport))
 
     directions = []
-    if transp.route_list()[no].inbound:
+    if transp.route_list()[no]["inbound"]:
         directions.append(
             (hketa.Direction.INBOUND.value, lazy_gettext("inbound")))
-    if transp.route_list()[no].outbound:
+    if transp.route_list()[no]["outbound"]:
         directions.append(
             (hketa.Direction.OUTBOUND.value, lazy_gettext("outbound")))
     return directions
@@ -37,11 +37,11 @@ def type_choices(transport: str,
 
     return [
         (
-            t.service_type,
-            f"{t.service_type} "
-            f"({t.orig.name[hketa.Locale(locale)]} -> {t.dest.name[hketa.Locale(locale)]})"
+            t["service_type"],
+            f"{t['service_type']} "
+            f"({t['orig']['name'][hketa.Locale(locale)]} -> {t['dest']['name'][hketa.Locale(locale)]})"
         )
-        for t in transp.route_list()[no].bound(hketa.Direction(direction))
+        for t in transp.route_list()[no][direction]
     ]
 
 
@@ -51,7 +51,7 @@ def stop_choices(transport: str,
                  service_type: str,
                  locale: Literal['en', 'tc'] = 'en') -> list[tuple[str]]:
     transp = extensions.hketa.create_transport(hketa.Company(transport))
-    return [(stop.stop_id, f"{stop.seq:02}. {stop.name[hketa.Locale(locale)]}")
+    return [(stop["id"], f"{stop['seq']:02}. {stop['name'][hketa.Locale(locale)]}")
             for stop in transp.stop_list(no, hketa.Direction(direction), service_type)]
 
 

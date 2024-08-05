@@ -1,6 +1,6 @@
 from datetime import datetime
 from io import BytesIO
-from typing import Any, Optional, Union
+from typing import Any, TypedDict, Optional, Union
 
 import pydantic
 import pytz
@@ -23,33 +23,23 @@ class RouteQuery(pydantic.BaseModel):
     locale: enums.Locale
 
 
-class RouteInfo(pydantic.BaseModel):
+class RouteInfo(TypedDict):
 
-    transport: enums.Company
-    route_no: str
-    inbound: list["Detail"] = pydantic.Field(default_factory=list)
-    outbound: list["Detail"] = pydantic.Field(default_factory=list)
+    # transport: enums.Company
+    # route_no: str
+    inbound: list["Bound"]
+    outbound: list["Bound"]
 
-    def bound(self, bound: enums.Direction) -> list["Detail"]:
-        return (self.inbound
-                if bound == enums.Direction.INBOUND else self.outbound)
-
-    def service_lookup(self, bound: enums.Direction, service_type: str) -> "Detail":
-        for detail in self.bound(bound):
-            if detail.service_type == service_type:
-                return detail
-        raise KeyError(f"Invalid service type: {service_type}")
-
-    class Detail(pydantic.BaseModel):
+    class Bound(TypedDict):
 
         service_type: str
         route_id: Optional[str] = None
         orig: Optional["RouteInfo.Stop"] = None
         dest: Optional["RouteInfo.Stop"] = None
 
-    class Stop(pydantic.BaseModel):
+    class Stop(TypedDict):
 
-        stop_id: str
+        id: str
         seq: int
         name: dict[enums.Locale, str]
 
