@@ -110,7 +110,7 @@ class Transport(ABC):
                     self._routes = json.load(f)
             except (FileNotFoundError, PermissionError):
                 logging.info("%s's route list cache do not exists, updating...",
-                             str(self.transport))
+                             str(self.transport.value))
 
                 self._routes = _append_timestamp(
                     asyncio.run(self._fetch_route_list()))
@@ -118,7 +118,7 @@ class Transport(ABC):
 
         if self._is_outdated(self._routes):
             logging.info("%s's route list cache is outdated, updating...",
-                         str(self.transport))
+                         str(self.transport.value))
 
             self._routes = _append_timestamp(
                 asyncio.run(self._fetch_route_list()))
