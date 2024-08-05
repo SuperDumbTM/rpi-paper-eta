@@ -24,7 +24,7 @@
             {% endif %}
         </button>
         <button type="button" class="dt-action btn btn-sm btn-outline-warning"
-            hx-get="{{ url_for('schedule.refresh', id_=sch['id'])}}"
+            hx-get="{{ url_for('schedule.refresh', id_=sch['id'])}}" hx-swap="none"
             title="{{ _('refresh_now') }}">
             <i class="bi bi-arrow-clockwise"></i>
         </button>
