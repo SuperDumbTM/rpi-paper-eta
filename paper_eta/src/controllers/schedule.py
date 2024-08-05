@@ -19,6 +19,15 @@ bp = Blueprint('schedule',
 
 @bp.route('/')
 def index():
+    if request.args.get("action") == "export":
+        return Response(
+            json.dumps(
+                tuple(map(lambda s: s.as_dict(exclude=['id', 'enabled']),
+                          database.Schedule.query.all())
+                      ),
+                indent=4),
+            mimetype='application/json',
+            headers={'Content-disposition': 'attachment; filename=schedules.json'})
     if request.headers.get('HX-Request'):
         schedules = []
         for schedule in database.Schedule.query.all():
@@ -40,7 +49,31 @@ def index():
     return render_template("schedule/index.jinja")
 
 
-@ bp.route('/create', methods=["GET", "POST"])
+@bp.route('/', methods=['POST'])
+def import_():
+    fields = ({c.name for c in database.Schedule.__table__.c} -
+              {'id', 'enabled', 'created_at', 'updated_at'})  # accepted fields for table inputs
+    try:
+        for i, schedule in enumerate(json.load(request.files['schedules'].stream)):
+            # reference: https://stackoverflow.com/a/76799290
+            with db.session.begin_nested() as session:
+                try:
+                    db.session.add(
+                        database.Schedule(**{**{k: schedule[k] for k in fields}, 'enabled': False}))
+                    db.session.flush()
+                except (KeyError, TypeError, sqlalchemy.exc.StatementError) as e:
+                    session.rollback()
+
+                    flash(lazy_gettext('Failed to import no. %s schedule.', i),
+                          "error")
+                    logging.exception('During schedule import: %s', str(e))
+        db.session.commit()
+    except (UnicodeDecodeError, json.decoder.JSONDecodeError):
+        flash(lazy_gettext('import_failed'), "error")
+    return redirect(url_for('schedule.index'))
+
+
+@bp.route('/create', methods=["GET", "POST"])
 def create():
     if not site_data.AppConfiguration().configurated():
         flash(lazy_gettext("missing_app_config"), "error")
@@ -238,40 +271,3 @@ def refresh(id_: str):
             "message": gettext("success")
         }
     })})
-
-
-@ bp.route('/export')
-def export():
-    return Response(
-        json.dumps(
-            tuple(map(lambda s: s.as_dict(exclude=['id', 'enabled']),
-                      database.Schedule.query.all())
-                  ),
-            indent=4),
-        mimetype='application/json',
-        headers={'Content-disposition': 'attachment; filename=schedules.json'})
-
-
-@ bp.route('/import', methods=['POST'])
-def import_():
-    fields = ({c.name for c in database.Schedule.__table__.c} -
-              {'id', 'enabled', 'created_at', 'updated_at'})  # accepted fields for table inputs
-    try:
-        for i, schedule in enumerate(json.load(request.files['schedules'].stream)):
-            # reference: https://stackoverflow.com/a/76799290
-            with db.session.begin_nested() as session:
-                try:
-                    db.session.add(
-                        database.Schedule(**{**{k: schedule[k] for k in fields}, 'enabled': False}))
-                    db.session.flush()
-                except (KeyError, TypeError, sqlalchemy.exc.StatementError):
-                    session.rollback()
-
-                    flash(lazy_gettext('Failed to import no. %(entry)s schedule.', entry=i),
-                          "error")
-                    logging.exception('Encountering missing field(s) or invalid '
-                                      'values during refresh schedule import.')
-        db.session.commit()
-    except (UnicodeDecodeError, json.decoder.JSONDecodeError):
-        flash(lazy_gettext('import_failed'), "error")
-    return redirect(url_for('schedule.index'))

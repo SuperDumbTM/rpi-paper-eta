@@ -51,7 +51,7 @@
                 </a>
 
                 <div x-data>
-                    <form method="POST" action="{{ url_for('schedule.import_') }}" enctype="multipart/form-data">
+                    <form method="POST" enctype="multipart/form-data">
                         <input type="file" name="schedules" class="d-none" @upload.window="$el.click()"
                             @change="$event.target.form.submit()">
                         <button type="button" class="btn btn-secondary btn-sm btn-info mx-1"
@@ -60,7 +60,7 @@
                         </button>
                     </form>
                 </div>
-                <a href="{{ url_for('schedule.export') }}" class="btn btn-secondary btn-sm mx-1">
+                <a href="{{ url_for('schedule.index') }}?action=export" class="btn btn-secondary btn-sm mx-1">
                     {{ _('export') }}
                 </a>
             </div>

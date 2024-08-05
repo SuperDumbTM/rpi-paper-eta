@@ -16,6 +16,15 @@ bp = Blueprint('bookmark',
 
 @bp.route('/')
 def index():
+    if request.args.get("action") == "export":
+        return Response(
+            json.dumps(
+                tuple(map(lambda b: b.as_dict(exclude=['id']),
+                          database.Bookmark.query.order_by(database.Bookmark.ordering).all())),
+                indent=4),
+            mimetype='application/json',
+            headers={'Content-disposition': 'attachment; filename=bookmarks.json'})
+
     if request.headers.get('HX-Request'):
         bookmarks = []
         for bm in database.Bookmark.query.order_by(database.Bookmark.ordering).all():
@@ -32,6 +41,31 @@ def index():
             headers={"Cache-Control": "no-cache, no-store, must-revalidate"}
         )
     return render_template("bookmark/index.jinja")
+
+
+@bp.route('/', methods=['POST'])
+def import_():
+    fields = ({c.name for c in database.Bookmark.__table__.c} -
+              {'id', 'created_at', 'updated_at'})  # accepted fields for table inputs
+    try:
+        for i, bookmark in enumerate(json.load(request.files['bookmarks'].stream)):
+            # reference: https://stackoverflow.com/a/76799290
+            with db.session.begin_nested() as session:
+                try:
+                    db.session.add(
+                        database.Bookmark(**{k: bookmark.get(k) for k in fields} | {
+                            "locale": site_data.AppConfiguration().get("eta_locale", "en")
+                        }))
+                    db.session.flush()
+                except (KeyError, TypeError, sqlalchemy.exc.StatementError) as e:
+                    session.rollback()
+
+                    flash(lazy_gettext('Failed to import no. %s bookmark.', i),
+                          "error")
+                    logging.exception('During bookmark import: %s', str(e))
+    except (UnicodeDecodeError, json.decoder.JSONDecodeError):
+        flash(lazy_gettext('import_failed'), "error")
+    return redirect(url_for('bookmark.index'))
 
 
 @bp.route("/<id_>", methods=["DELETE"])
@@ -196,40 +230,3 @@ def options(transport: str):
             "stop_id", form.stop_id.choices[0][0])
 
     return render_template("bookmark/partials/options.jinja", form=form)
-
-
-@bp.route('/export')
-def export():
-    return Response(
-        json.dumps(
-            tuple(map(lambda b: b.as_dict(exclude=['id']),
-                      database.Bookmark.query.order_by(database.Bookmark.ordering).all())),
-            indent=4),
-        mimetype='application/json',
-        headers={'Content-disposition': 'attachment; filename=bookmarks.json'})
-
-
-@bp.route('/import', methods=['POST'])
-def import_():
-    fields = ({c.name for c in database.Bookmark.__table__.c} -
-              {'id', 'created_at', 'updated_at'})  # accepted fields for table inputs
-    try:
-        for i, bookmark in enumerate(json.load(request.files['bookmarks'].stream)):
-            # reference: https://stackoverflow.com/a/76799290
-            with db.session.begin_nested() as session:
-                try:
-                    db.session.add(
-                        database.Bookmark(**{k: bookmark.get(k) for k in fields} | {
-                            "locale": site_data.AppConfiguration().get("eta_locale", "en")
-                        }))
-                    db.session.flush()
-                except (KeyError, TypeError, sqlalchemy.exc.StatementError):
-                    session.rollback()
-
-                    flash(lazy_gettext('Failed to import no. %(entry)s bookmark.', entry=i),
-                          "error")
-                    logging.exception('Encountering missing field(s) or invalid '
-                                      'values during refresh bookmark import.')
-    except (UnicodeDecodeError, json.decoder.JSONDecodeError):
-        flash(lazy_gettext('import_failed'), "error")
-    return redirect(url_for('bookmark.index'))
