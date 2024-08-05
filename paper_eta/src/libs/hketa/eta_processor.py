@@ -158,7 +158,8 @@ class MtrBusEta(EtaProcessor):
                     # eta TimeText has numbers (e.g. 3 分鐘/3 Minutes)
                     eta_sec = int(eta[f'{time_ref}TimeInSecond'])
                     etas.append(Eta.Time(
-                        destination=self.route.destination().name.get(self.route.entry.locale),
+                        destination=self.route.destination()["name"].get(
+                            self.route.entry.locale),
                         is_arriving=False,
                         is_scheduled=eta['busLocation']['longitude'] == 0,
                         eta=_8601str(timestamp + timedelta(seconds=eta_sec)),
@@ -166,7 +167,8 @@ class MtrBusEta(EtaProcessor):
                     ))
                 else:
                     etas.append(Eta.Time(
-                        destination=self.route.destination().name.get(self.route.entry.locale),
+                        destination=self.route.destination()["name"].get(
+                            self.route.entry.locale),
                         is_arriving=True,
                         is_scheduled=eta['busLocation']['longitude'] == 0,
                         eta=_8601str(timestamp),
@@ -207,7 +209,7 @@ class MtrLrtEta(EtaProcessor):
                 if eta.get("stop") == 1:
                     cnt_stopped += 1
                     continue
-                if destination != self.route.destination().name.get(self.route.entry.locale):
+                if destination != self.route.destination()["name"].get(self.route.entry.locale):
                     continue
 
                 # e.g. 3 分鐘 / 即將抵達
@@ -289,8 +291,7 @@ class MtrTrainEta(EtaProcessor):
             eta_dt = datetime.fromisoformat(entry["time"]).astimezone(
                 pytz.timezone('Asia/Hong_kong'))
             etas.append(Eta.Time(
-                destination=(self.route.stop_details(entry['dest'])
-                             .name
+                destination=(self.route.stop_details(entry['dest'])["name"]
                              .get(self.route.entry.locale)),
                 is_arriving=(eta_dt - timestamp).total_seconds() < 90,
                 is_scheduled=False,

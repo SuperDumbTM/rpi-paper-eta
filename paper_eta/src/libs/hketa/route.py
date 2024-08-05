@@ -75,7 +75,7 @@ class Route:
 
     def stop_seq(self) -> int:
         """Get the stop sequence of the route"""
-        return self._stop_list[self.entry.stop_id]["seq"]
+        return int(self._stop_list[self.entry.stop_id]["seq"])
 
     def stop_details(self, stop_id: str) -> RouteInfo.Stop:
         return self._stop_list[stop_id]
@@ -89,12 +89,12 @@ class Route:
         # NOTE: in/outbound of circular routes are NOT its destination
         # NOTE: 705, 706 return "天水圍循環綫"/'TSW Circular' instead of its destination
         if self.entry.transport == Company.MTRLRT and self.entry.no in ("705", "706"):
-            return RouteInfo.Stop(stop_id=stop.id,
-                                  seq=stop.seq,
+            return RouteInfo.Stop(stop_id=stop["id"],
+                                  seq=stop["seq"],
                                   name={
                                       Locale.EN: "TSW Circular",
                                       Locale.TC: "天水圍循環綫"
-                                  })
+            })
         else:
             return stop
 
