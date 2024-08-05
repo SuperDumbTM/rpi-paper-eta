@@ -30,7 +30,6 @@ class Company(str, Enum):
     MTRLRT = "mtr_lrt"
     MTRTRAIN = "mtr_train"
     CTB = "ctb"
-    NWFB = "nwfb"
     NLB = "nlb"
 
     def text(self, language: Locale = Locale.TC) -> str:
