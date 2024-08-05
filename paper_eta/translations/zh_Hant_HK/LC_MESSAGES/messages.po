@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-08-01 10:04+0800\n"
+"POT-Creation-Date: 2024-08-05 13:29+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hant_HK\n"
@@ -23,8 +23,8 @@ msgid "brand"
 msgstr "牌子"
 
 #: paper_eta/src/forms.py:14 paper_eta/src/forms.py:21
-#: paper_eta/src/forms.py:55 paper_eta/src/forms.py:61
-#: paper_eta/src/forms.py:67
+#: paper_eta/src/forms.py:54 paper_eta/src/forms.py:60
+#: paper_eta/src/forms.py:66
 #: paper_eta/templates/configuration/partials/model_options.jinja:8
 msgid "please_select"
 msgstr "請選擇"
@@ -41,55 +41,54 @@ msgstr "顯示語言"
 msgid "dry_run"
 msgstr "測試模式"
 
-#: paper_eta/src/forms.py:31
+#: paper_eta/src/forms.py:30
 msgid "dry_run_help"
-msgstr "在測試模式下，屏幕不會更新。但預報時間影像仍會根據排程產生，"
-"而最新的屏幕影像會顯示在「屏幕影像 」中。"
+msgstr "在測試模式下，屏幕不會更新。但預報時間影像仍會根據排程產生，而最新的屏幕影像會顯示在「屏幕影像 」中。"
 
-#: paper_eta/src/forms.py:33 paper_eta/src/forms.py:71
-#: paper_eta/src/forms.py:94
+#: paper_eta/src/forms.py:32 paper_eta/src/forms.py:70
+#: paper_eta/src/forms.py:93
 msgid "submit"
 msgstr "提交"
 
-#: paper_eta/src/forms.py:45
+#: paper_eta/src/forms.py:44
 msgid "company"
 msgstr "公司"
 
-#: paper_eta/src/forms.py:50 paper_eta/templates/bookmark/index.jinja:73
+#: paper_eta/src/forms.py:49 paper_eta/templates/bookmark/index.jinja:77
 msgid "route"
 msgstr "路線"
 
-#: paper_eta/src/forms.py:53 paper_eta/templates/bookmark/index.jinja:74
+#: paper_eta/src/forms.py:52 paper_eta/templates/bookmark/index.jinja:78
 msgid "direction"
 msgstr "行車方向"
 
-#: paper_eta/src/forms.py:59 paper_eta/templates/bookmark/index.jinja:75
+#: paper_eta/src/forms.py:58 paper_eta/templates/bookmark/index.jinja:79
 msgid "service_type"
 msgstr "班次類別"
 
-#: paper_eta/src/forms.py:65 paper_eta/templates/bookmark/index.jinja:76
+#: paper_eta/src/forms.py:64 paper_eta/templates/bookmark/index.jinja:80
 msgid "stop"
 msgstr "車站"
 
-#: paper_eta/src/forms.py:75 paper_eta/templates/schedule/index.jinja:77
+#: paper_eta/src/forms.py:74 paper_eta/templates/schedule/index.jinja:81
 msgid "schedule"
 msgstr "排程"
 
-#: paper_eta/src/forms.py:80 paper_eta/templates/index.jinja:88
-#: paper_eta/templates/schedule/index.jinja:75
+#: paper_eta/src/forms.py:79 paper_eta/templates/index.jinja:88
+#: paper_eta/templates/schedule/index.jinja:79
 msgid "eta_format"
 msgstr "預報顯示模式"
 
-#: paper_eta/src/forms.py:87 paper_eta/templates/index.jinja:89
-#: paper_eta/templates/schedule/index.jinja:76
+#: paper_eta/src/forms.py:86 paper_eta/templates/index.jinja:89
+#: paper_eta/templates/schedule/index.jinja:80
 msgid "layout"
 msgstr "佈局"
 
-#: paper_eta/src/forms.py:90
+#: paper_eta/src/forms.py:89
 msgid "partial_refresh"
 msgstr "快速更新"
 
-#: paper_eta/src/forms.py:92
+#: paper_eta/src/forms.py:91
 msgid "enable"
 msgstr "啟用"
 
@@ -177,72 +176,55 @@ msgstr "回程"
 msgid "outbound"
 msgstr "去程"
 
-#: paper_eta/src/controllers/bookmark.py:26 paper_eta/templates/error.jinja:2
+#: paper_eta/src/controllers/bookmark.py:27 paper_eta/templates/error.jinja:2
 #: paper_eta/templates/index.jinja:91
 msgid "error"
 msgstr "錯誤"
 
-#: paper_eta/src/controllers/bookmark.py:54
+#: paper_eta/src/controllers/bookmark.py:55
+#: paper_eta/src/controllers/bookmark.py:137
 #: paper_eta/src/controllers/schedule.py:109
 #: paper_eta/src/controllers/schedule.py:132
 msgid "invalid_id"
 msgstr "無效 ID"
 
-#: paper_eta/src/controllers/bookmark.py:205
+#: paper_eta/src/controllers/bookmark.py:229
 #, python-format
 msgid "Failed to import no. %(entry)s bookmark."
 msgstr "未能匯入第%(entry)s個收藏。"
 
-#: paper_eta/src/controllers/bookmark.py:210
+#: paper_eta/src/controllers/bookmark.py:234
 #: paper_eta/src/controllers/configuration.py:74
-#: paper_eta/src/controllers/schedule.py:238
+#: paper_eta/src/controllers/schedule.py:276
 msgid "import_failed"
 msgstr "匯入失敗"
 
-#: paper_eta/src/controllers/display.py:21
-msgid "missing_parameter"
-msgstr "未輸入所有必填參數"
-
-#: paper_eta/src/controllers/display.py:21
-#: paper_eta/src/controllers/display.py:27
-#: paper_eta/src/controllers/display.py:115
-msgid "."
-msgstr "。"
-
-#: paper_eta/src/controllers/display.py:27
-msgid "parameter_not_in_choice"
-msgstr "輸入不在選項中"
-
-#: paper_eta/src/controllers/display.py:33
-#: paper_eta/src/controllers/display.py:104
 #: paper_eta/src/controllers/root.py:14
 #: paper_eta/src/controllers/schedule.py:46
 #: paper_eta/src/controllers/schedule.py:146
 #: paper_eta/src/controllers/schedule.py:182
+#: paper_eta/src/controllers/schedule.py:216
 msgid "missing_app_config"
 msgstr "尚未設定本應用程式。請到「設定」頁面進行設定以確保 Paper ETA 能夠正常運作。"
-
-#: paper_eta/src/controllers/display.py:48
-#: paper_eta/src/controllers/schedule.py:164
-#: paper_eta/src/controllers/schedule.py:196
-msgid "Layout does not exists."
-msgstr "佈局不存在。"
-
-#: paper_eta/src/controllers/display.py:63
-#: paper_eta/src/controllers/display.py:85
-#: paper_eta/src/controllers/display.py:122
-msgid "Failed to refresh the screen."
-msgstr "更新屏幕失敗。"
-
-#: paper_eta/src/controllers/display.py:115
-msgid "success"
-msgstr "成功"
 
 #: paper_eta/src/controllers/schedule.py:33
 msgid "not_enabled"
 msgstr "未啟用"
 
+#: paper_eta/src/controllers/schedule.py:164
+#: paper_eta/src/controllers/schedule.py:199
+msgid "Layout does not exists."
+msgstr "佈局不存在。"
+
 #: paper_eta/src/controllers/schedule.py:232
+msgid "Failed to refresh the screen."
+msgstr "更新屏幕失敗。"
+
+#: paper_eta/src/controllers/schedule.py:238
+msgid "success"
+msgstr "成功"
+
+#: paper_eta/src/controllers/schedule.py:270
 #, python-format
 msgid "Failed to import no. %(entry)s schedule."
 msgstr "未能匯入第%(entry)s個排程。"
@@ -325,7 +307,7 @@ msgid "time"
 msgstr "時間"
 
 #: paper_eta/templates/index.jinja:90
-#: paper_eta/templates/schedule/index.jinja:79
+#: paper_eta/templates/schedule/index.jinja:83
 msgid "is_partial"
 msgstr "快新更新"
 
@@ -347,34 +329,35 @@ msgstr "路線收藏"
 msgid "new_bookmark_help"
 msgstr "加入新的到站時間預報收藏。收藏數量並沒有上限，但跟據使用的佈局，能夠顯示的數目各有不同。上限數量以後的收藏將無法被顯示。"
 
-#: paper_eta/templates/bookmark/index.jinja:43
-#: paper_eta/templates/schedule/index.jinja:46
+#: paper_eta/templates/bookmark/index.jinja:47
+#: paper_eta/templates/schedule/index.jinja:50
 msgid "create"
 msgstr "建立"
 
-#: paper_eta/templates/bookmark/index.jinja:52
+#: paper_eta/templates/bookmark/index.jinja:56
 #: paper_eta/templates/configuration/index.jinja:53
-#: paper_eta/templates/schedule/index.jinja:55
+#: paper_eta/templates/schedule/index.jinja:59
 msgid "import"
 msgstr "匯入"
 
-#: paper_eta/templates/bookmark/index.jinja:57
+#: paper_eta/templates/bookmark/index.jinja:61
 #: paper_eta/templates/configuration/index.jinja:44
-#: paper_eta/templates/schedule/index.jinja:60
+#: paper_eta/templates/log/index.jinja:43
+#: paper_eta/templates/schedule/index.jinja:64
 msgid "export"
 msgstr "匯出"
 
-#: paper_eta/templates/bookmark/index.jinja:71
-#: paper_eta/templates/schedule/index.jinja:74
+#: paper_eta/templates/bookmark/index.jinja:75
+#: paper_eta/templates/schedule/index.jinja:78
 msgid "no."
 msgstr "No."
 
-#: paper_eta/templates/bookmark/index.jinja:72
+#: paper_eta/templates/bookmark/index.jinja:76
 msgid "transport"
 msgstr "交通工具"
 
-#: paper_eta/templates/bookmark/index.jinja:77
-#: paper_eta/templates/schedule/index.jinja:80
+#: paper_eta/templates/bookmark/index.jinja:81
+#: paper_eta/templates/schedule/index.jinja:84
 msgid "action"
 msgstr "指令"
 
@@ -388,8 +371,13 @@ msgstr "刪除"
 msgid "edit"
 msgstr "編輯"
 
-#: paper_eta/templates/bookmark/partials/rows.jinja:24
-#: paper_eta/templates/log/index.jinja:147
+#: paper_eta/templates/bookmark/partials/rows.jinja:19
+#: paper_eta/templates/schedule/partials/rows.jinja:19
+msgid "enable/disable"
+msgstr "啟用／停用"
+
+#: paper_eta/templates/bookmark/partials/rows.jinja:32
+#: paper_eta/templates/log/index.jinja:170
 #: paper_eta/templates/root/partials/histories.jinja:12
 #: paper_eta/templates/schedule/partials/rows.jinja:36
 msgid "no_record"
@@ -419,54 +407,62 @@ msgstr "排程"
 msgid "nav_log"
 msgstr "程式記錄"
 
-#: paper_eta/templates/log/index.jinja:33
-#: paper_eta/templates/log/index.jinja:128
+#: paper_eta/templates/log/index.jinja:39
+msgid "clear"
+msgstr "清除"
+
+#: paper_eta/templates/log/index.jinja:47
+msgid "view_raw_log"
+msgstr "查看原始紀錄"
+
+#: paper_eta/templates/log/index.jinja:56
+#: paper_eta/templates/log/index.jinja:151
 #: paper_eta/templates/log/partials/table.jinja:30
 msgid "log_level"
 msgstr "類別"
 
-#: paper_eta/templates/log/index.jinja:68
+#: paper_eta/templates/log/index.jinja:91
 msgid "log_access_related"
 msgstr "網站連接"
 
-#: paper_eta/templates/log/index.jinja:75
+#: paper_eta/templates/log/index.jinja:98
 msgid "log_access_related_help"
 msgstr "是否顯示與網站連接相關的記錄。"
 
-#: paper_eta/templates/log/index.jinja:80
+#: paper_eta/templates/log/index.jinja:103
 msgid "paginate_per_page"
 msgstr "每頁顯示"
 
-#: paper_eta/templates/log/index.jinja:106
+#: paper_eta/templates/log/index.jinja:129
 #: paper_eta/templates/log/partials/table.jinja:13
 msgid "previous_page"
 msgstr "上一頁"
 
-#: paper_eta/templates/log/index.jinja:114
+#: paper_eta/templates/log/index.jinja:137
 #: paper_eta/templates/log/partials/table.jinja:20
 msgid "next_page"
 msgstr "下一頁"
 
-#: paper_eta/templates/log/index.jinja:127
+#: paper_eta/templates/log/index.jinja:150
 #: paper_eta/templates/log/partials/table.jinja:29
 msgid "log_timestamp"
 msgstr "時間"
 
-#: paper_eta/templates/log/index.jinja:129
+#: paper_eta/templates/log/index.jinja:152
 #: paper_eta/templates/log/partials/table.jinja:31
 msgid "log_module"
 msgstr "位置"
 
-#: paper_eta/templates/log/index.jinja:130
+#: paper_eta/templates/log/index.jinja:153
 #: paper_eta/templates/log/partials/table.jinja:32
 msgid "log_message"
 msgstr "訊息"
 
-#: paper_eta/templates/log/index.jinja:163
+#: paper_eta/templates/log/index.jinja:186
 msgid "jump_to"
 msgstr "跳至"
 
-#: paper_eta/templates/log/index.jinja:201
+#: paper_eta/templates/log/index.jinja:224
 msgid "pagination_info"
 msgstr "第{from}至{to}個項目。共{total_filtered}項（從{total}個項目中過濾）。"
 
@@ -572,7 +568,7 @@ msgstr "佈局預覽"
 msgid "unrecognised"
 msgstr "未能識別"
 
-#: paper_eta/templates/schedule/index.jinja:78
+#: paper_eta/templates/schedule/index.jinja:82
 msgid "next_execution"
 msgstr "下次執行時間"
 
@@ -603,10 +599,6 @@ msgstr "每"
 #: paper_eta/templates/schedule/macros/cron_selector.jinja:71
 msgid "cron_no_repeat"
 msgstr "不重覆"
-
-#: paper_eta/templates/schedule/partials/rows.jinja:19
-msgid "enable/disable"
-msgstr "啟用／停用"
 
 #: paper_eta/templates/schedule/partials/rows.jinja:28
 msgid "refresh_now"
@@ -731,4 +723,10 @@ msgstr "更新屏幕"
 
 #~ msgid "missing_app_config."
 #~ msgstr "尚未設定本應用程式。請到「設定」頁面進行設定以確保 Paper ETA 能夠正常運作。"
+
+#~ msgid "missing_parameter"
+#~ msgstr "未輸入所有必填參數"
+
+#~ msgid "parameter_not_in_choice"
+#~ msgstr "輸入不在選項中"
 

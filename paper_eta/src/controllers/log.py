@@ -3,13 +3,25 @@ import re
 import time
 from typing import Generator
 
-from flask import Blueprint, Response, current_app, render_template, send_file
+from flask import Blueprint, Response, current_app, render_template, request, send_file, url_for
 
 bp = Blueprint('log', __name__, url_prefix="/logs")
 
 
-@bp.route("/")
+@bp.route("/", methods=["GET", "DELETE"])
 def index():
+    if request.method == "DELETE":
+        with open(current_app.config["_PATH_LOG_FILE"], "w", encoding="utf-8"):
+            pass
+        return Response("", headers={"HX-Redirect": url_for("log.index")})
+    if request.args.get("action") == "export":
+        return send_file(current_app.config['_PATH_LOG_FILE'],
+                         mimetype='text/plain',
+                         as_attachment=True)
+    if request.args.get("action") == "raw":
+        return send_file(current_app.config['_PATH_LOG_FILE'],
+                         mimetype='text/plain')
+
     logs = []
     log_pattern = re.compile(
         r"\[(?P<timestamp>.*?)\]\[(?P<level>[A-Z]*?)\]\[(?P<module>.*?)\]:\s(?P<message>.*)")
@@ -22,12 +34,6 @@ def index():
                 continue
             logs.append(match.groupdict())
     return render_template("log/index.jinja", logs=logs[::-1])
-
-
-@bp.route('/file')
-def download():
-    # reference: https://stackoverflow.com/a/55284313/17789727
-    return send_file(current_app.config['_PATH_LOG_FILE'], mimetype='text/plain', as_attachment=True)
 
 
 @bp.route('/stream')

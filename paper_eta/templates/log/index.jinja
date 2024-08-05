@@ -27,6 +27,29 @@
 
 {% block content %}
 <div class="container-xxl" x-data="pagination">
+
+    <div class="row m-2">
+        {% include "includes/flash.jinja" %}
+    </div>
+
+    <div class="row px-2">
+        <div class="col-12">
+            <div class="btn-group flex-wrap">
+                <button hx-delete="" class="btn btn-sm btn-danger mx-1">
+                    {{ _('clear') }}
+                </button>
+
+                <a href="{{ url_for('log.index') }}?action=export" class="btn btn-secondary btn-sm mx-1">
+                    {{ _('export') }}
+                </a>
+
+                <a href="{{ url_for('log.index') }}?action=raw" target="_blank" class="btn btn-secondary btn-sm mx-1">
+                    {{ _('view_raw_log') }}
+                </a>
+            </div>
+        </div>
+    </div>
+
     <div class="row p-2">
         <form id="filter" @change="page = 1">
             <div class="form-group">
@@ -194,7 +217,7 @@
                 return this.filtered.slice((this.page - 1) * this.limit, this.page * this.limit)
             },
             filters: {
-                level: ["WARN", "ERROR", "CRITICAL"],
+                level: ["INFO", "WARN", "ERROR", "CRITICAL"],
                 accessLog: false,
             },
             get info() {
