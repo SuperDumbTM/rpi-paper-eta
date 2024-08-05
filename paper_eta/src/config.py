@@ -90,7 +90,7 @@ LOGGING_CONFIG = {
         'size-rotate': {
             'level': 'DEBUG',
             "class": "logging.handlers.RotatingFileHandler",
-            "maxBytes": 524288,
+            "maxBytes": 1 * (1024**3),
             "backupCount": 1,
             "filename": _PATH_LOG_FILE,
             'encoding': 'utf-8',
