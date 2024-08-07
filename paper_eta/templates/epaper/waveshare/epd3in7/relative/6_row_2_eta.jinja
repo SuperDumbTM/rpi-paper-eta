@@ -18,9 +18,7 @@
         {% if etas | length > i %}
         <div class="col-span-6">
             <div class="flex flex-none w-full items-center" style="height: 35px;">
-                <img class="flex"
-                    src="{{ url_for('static', filename='/images/logos/bw/' ~ etas[i].company.value ~ '.bmp') }}"
-                    height="35" width="35">
+                <img class="flex" src="data:image/bmp;base64, {{ bio2b64(etas[i].logo) }}" height="35" width="35">
                 <span class="flex ml-1 truncate text-3xl noto-sans-tc-700">
                     {{ etas[i].no }}
                 </span>

@@ -4,7 +4,7 @@ import io
 import json
 import logging
 import os
-from abc import ABC, ABCMeta, abstractmethod
+from abc import ABC, abstractmethod
 from datetime import datetime
 from functools import cmp_to_key
 from pathlib import Path
@@ -23,7 +23,7 @@ except (ImportError, ModuleNotFoundError):
     from exceptions import RouteError, RouteNotExist, ServiceTypeNotExist
     from models import RouteInfo
 
-_DIR_IMG = os.path.join(os.path.dirname(__file__), 'images', 'bw_neg')
+_DIR_IMG = os.path.join(os.path.dirname(__file__), 'images', 'bw')
 
 
 def stop_list_fname(no: str,

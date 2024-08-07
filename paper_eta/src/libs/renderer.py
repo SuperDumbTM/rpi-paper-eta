@@ -1,3 +1,4 @@
+import base64
 import json
 import logging
 import tempfile
@@ -66,6 +67,8 @@ class Renderer:
         for color, template in mnf[layout]["colors"].items():
             p = hti.screenshot(
                 render_template("/".join(("epaper", brand, model, display, template)),
+                                bio2b64=lambda b: base64.b64encode(
+                                    b.getvalue()).decode('utf-8'),
                                 etas=etas,
                                 config=mnf["_config"],
                                 manifest=mnf[layout],
