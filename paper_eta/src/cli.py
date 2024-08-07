@@ -9,7 +9,7 @@ db_cli = AppGroup('db', short_help="Database utilities.")
 i18n_cli = AppGroup('i18n', short_help="Translation (Babel) utilities.")
 
 
-@i18n_cli.command('extract')
+@i18n_cli.command('extract', short_help="Scan for new translations")
 def babel_extract():
     subprocess.run(['pybabel',
                     'extract',
@@ -22,7 +22,7 @@ def babel_extract():
                     '.'], check=True)
 
 
-@i18n_cli.command('update')
+@i18n_cli.command('update', short_help="Generate the latest .po file")
 def babel_update():
     subprocess.run([
         'pybabel',
@@ -32,6 +32,12 @@ def babel_update():
         '-d',
         current_app.config.get('BABEL_TRANSLATION_DIRECTORIES')
     ], check=True)
+
+
+@i18n_cli.command('modify', short_help="Extract and update")
+def babel_extract_update():
+    babel_extract()
+    babel_update()
 
 
 @i18n_cli.command('compile')
@@ -45,7 +51,7 @@ def babel_compile():
 
 
 @rm_cli.command('pycache')
-def clean_pyc():
+def remove_pyc():
     for pyf in Path('.').rglob('*.py[co]'):
         pyf.unlink()
     for pyf in Path('.').rglob('__pycache__'):
@@ -53,7 +59,7 @@ def clean_pyc():
 
 
 @rm_cli.command('log')
-def clean_log():
+def remove_log():
     for fname in current_app.config.get('DIR_LOG').glob("*"):
         try:
             Path(fname).unlink()
@@ -62,6 +68,23 @@ def clean_log():
                 continue
 
 
+@rm_cli.command('db')
+def remove_db():
+    print("You are trying to delete the database, all the data will be gone.")
+    while (answer := input("Are you sure? [y/N] ")).lower() not in ("y", "yes", "n", "no", ""):
+        continue
+
+    if answer in ("n", "no", ""):
+        return
+
+    fpath = current_app.config.get('DIR_STORAGE').joinpath("app.db")
+    try:
+        fpath.unlink()
+    except PermissionError:
+        with open(fpath, 'w', encoding='utf-8'):
+            pass
+
+
 @rm_cli.command('config')
-def clean_config():
+def remove_config():
     current_app.config.get('PATH_SITE_CONF').unlink(missing_ok=True)
