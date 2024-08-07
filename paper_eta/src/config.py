@@ -18,7 +18,7 @@ DIR_STORAGE = Path(os.getenv('DIR_STORAGE', __APP_ROOT.joinpath('storage')))
 DIR_SCREEN_DUMP = Path(
     os.getenv('DIR_SCREEN_DUMP', DIR_STORAGE.joinpath('screen_dumps')))
 DIR_LOG = Path(os.getenv('DIR_LOG', DIR_STORAGE.joinpath('logs')))
-_PATH_LOG_FILE = DIR_LOG.joinpath('app.log')
+PATH_LOG_FILE = DIR_LOG.joinpath('app.log')
 PATH_SITE_CONF = Path(
     os.getenv('PATH_SITE_CONF', DIR_STORAGE).joinpath('config.json'))
 
