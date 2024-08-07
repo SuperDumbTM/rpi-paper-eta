@@ -53,7 +53,7 @@ class EtaProcessor(ABC):
                    destination=self.route.dest_name(),
                    stop_name=self.route.stop_name(),
                    locale=self.route.entry.locale,
-                   company=self.route.company(),
+                   logo=self.route.logo(),
                    etas=etas,
                    timestamp=datetime.now().replace(tzinfo=pytz.timezone('Etc/GMT-8')))
 

@@ -54,7 +54,7 @@ class Route:
         if (self.entry.stop_id not in self._stop_list.keys()):
             raise StopNotExist(self.entry.stop_id)
 
-    def company(self) -> Company:
+    def comanpy(self) -> Company:
         return self.provider.transport
 
     def company_name(self) -> str:
