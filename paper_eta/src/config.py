@@ -36,9 +36,9 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 if not SECRET_KEY:
     # presist the newly created secret key
-    SECRET_KEY = ' '.join(random.SystemRandom()
-                          .choice(string.ascii_uppercase + string.digits)
-                          for _ in range(64))
+    SECRET_KEY = ''.join(random.SystemRandom()
+                         .choice(string.ascii_uppercase + string.digits)
+                         for _ in range(64))
     if not __PATH_ENV.exists():
         shutil.copy(f'{__PATH_ENV.name}.sample', __PATH_ENV)
     dotenv.set_key(__PATH_ENV, 'SECRET_KEY', SECRET_KEY)
@@ -92,7 +92,7 @@ LOGGING_CONFIG = {
             "class": "logging.handlers.RotatingFileHandler",
             "maxBytes": 1 * (1024**3),
             "backupCount": 1,
-            "filename": _PATH_LOG_FILE,
+            "filename": PATH_LOG_FILE,
             'encoding': 'utf-8',
             "formatter": "detailed",
         },
