@@ -3,11 +3,10 @@ import os
 import threading
 from pathlib import Path
 
-import requests
 from PIL import Image
 
 from .. import database, extensions
-from ..libs import epd_log, epdcon, hketa, imgen
+from ..libs import epd_log, epdcon, hketa, renderer
 
 _ctrl_mutex = threading.Lock()
 
@@ -17,32 +16,33 @@ def refresh(epd_brand: str,
             eta_format: str,
             layout: str,
             is_partial: bool,
-            is_dry_run: bool,
-            screen_dump_dir: Path):
+            is_dry_run: bool):
     args_snap = locals()
 
-    if eta_format not in (t for t in imgen.EtaFormat):
+    if eta_format not in (t for t in renderer.EtaFormat):
         logging.error(
             "Failed to refresh the screen due to invalid EtaFormat: %s", eta_format)
         return
 
     # ---------- generate ETA images ----------
-    try:
-        generator = imgen.get(epd_brand, epd_model)(imgen.EtaFormat(eta_format),
-                                                    layout)
-    except KeyError:
-        logging.error(
-            "Failed to refresh the screen due to invalid layout: %s", layout)
-        return
 
     # reference: https://stackoverflow.com/a/73618460
     with extensions.scheduler.app.app_context():
-        images = generate_image([hketa.RouteQuery(**bm.as_dict())
-                                 for bm in database.Bookmark.query
-                                 .filter(database.Bookmark.enabled)
-                                 .order_by(database.Bookmark.ordering)
-                                 .all()],
-                                generator)
+        queries = [hketa.RouteQuery(**bm.as_dict())
+                   for bm in database.Bookmark.query
+                   .filter(database.Bookmark.enabled)
+                   .order_by(database.Bookmark.ordering)
+                   .all()]
+        etas = []
+        for query in queries:
+            etap = extensions.hketa.create_eta_processor(query)
+            etas.append(etap.etas())
+        images = extensions.imgen.render(epd_brand,
+                                         epd_model,
+                                         eta_format,
+                                         layout,
+                                         etas
+                                         )
 
     if not is_dry_run:
         # ---------- initialise the e-paper controller ----------
@@ -56,7 +56,7 @@ def refresh(epd_brand: str,
 
         # ---------- refresh the e-paper screen ----------
         try:
-            display_images(cached_images(screen_dump_dir),
+            display_images(extensions.imgen.load(),
                            images,
                            controller,
                            False,
@@ -73,41 +73,8 @@ def refresh(epd_brand: str,
             return
 
     epd_log.epdlog.put(epd_log.Log(**args_snap))
-    generator.write_images(screen_dump_dir, images)
+    extensions.imgen.save(images)
     return
-
-
-def generate_image(
-    bookmarks: list[hketa.RouteQuery],
-    generator: imgen.EtaImageGenerator
-) -> dict[str, Image.Image]:
-    """Generate a ETA image.
-
-    To correctly display the text, call this function with `flask.request` context.
-    """
-    try:
-        etas = []
-        for bm in bookmarks:
-            etap = extensions.hketa.create_eta_processor(bm)
-            etas.append(etap.etas())
-        images = generator.draw(etas)
-    except requests.RequestException as e:
-        logging.warning('Image generation failed with error: %s', str(e))
-        images = generator.draw_error('Network Error')
-    except Exception as e:  # pylint: disable=broad-exception-caught
-        logging.exception('Image generation failed with error: %s', str(e))
-        images = generator.draw_error('Unexpected Error')
-    return images
-
-
-def cached_images(path: os.PathLike) -> dict[str, Image.Image]:
-    images = {}
-    for path in Path(str(path)).glob('**/*'):
-        if path.suffix != '.bmp':
-            continue
-        images.setdefault(path.name.removesuffix(path.suffix),
-                          Image.open(path))
-    return images
 
 
 def display_images(old_images: dict[str, Image.Image],

@@ -2,7 +2,7 @@ from flask import (Blueprint, current_app, flash, make_response, redirect,
                    render_template, request, url_for)
 from flask_babel import lazy_gettext
 
-from paper_eta.src import site_data, utils
+from paper_eta.src import extensions, site_data, utils
 from paper_eta.src.libs import epd_log, refresher
 
 bp = Blueprint('root', __name__, url_prefix="/")
@@ -30,8 +30,7 @@ def screen_dumps():
     return render_template("root/partials/screen_dumps.jinja",
                            images={
                                k: utils.img2b64(v)
-                               for k, v in refresher.cached_images(
-                                   current_app.config['DIR_SCREEN_DUMP']).items()
+                               for k, v in extensions.imgen.load().items()
                            },)
 
 
@@ -48,8 +47,6 @@ def test():
     from paper_eta.src import database, extensions
     from paper_eta.src.libs import renderer
 
-    print(renderer.layouts("waveshare", "epd3in7"))
-
     bookmarks = [hketa.RouteQuery(**bm.as_dict())
                  for bm in database.Bookmark.query
                  .filter(database.Bookmark.enabled)
@@ -60,6 +57,13 @@ def test():
     for bm in bookmarks:
         etap = extensions.hketa.create_eta_processor(bm)
         etas.append(etap.etas())
-    return render_template("epaper/waveshare/epd3in7/6_row_3_eta.jinja",
+
+    try:
+        r = renderer.Renderer(current_app)
+        print(r.render("waveshare", "epd3in7", "mixed", "6_row_2_eta", etas))
+    except Exception as e:
+        print(e)
+
+    return render_template("epaper/waveshare/epd3in7/mixed/6_row_2_eta.jinja",
                            etas=etas,
                            display="mixed")

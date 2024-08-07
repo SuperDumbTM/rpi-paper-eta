@@ -25,6 +25,7 @@ def create_app() -> Flask:
     extensions.scheduler.init_app(app)
     extensions.scheduler.start()
     extensions.db.init_app(app)
+    extensions.imgen.init_app(app)
     extensions.hketa.data_path = app.config['HKETA_PATH_DATA']
     extensions.hketa.threshold = app.config['HKETA_THRESHOLD']
 

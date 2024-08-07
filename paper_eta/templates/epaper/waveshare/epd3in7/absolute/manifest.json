@@ -1,0 +1,43 @@
+{
+  "_config": {
+    "width": 280,
+    "height": 480,
+    "scale": 4
+  },
+  "6_row_3_eta": {
+    "cnt_eta": 3,
+    "cnt_col": 1,
+    "cnt_row": 6,
+    "description": {
+      "en": "Display at most 6 routes and up to 3 ETAs",
+      "zh_Hant_HK": "顯示最多六條路線及未來三班班次的到站時間"
+    },
+    "colors": {
+      "black": "6_row_3_eta.jinja"
+    }
+  },
+  "6_row_2_eta": {
+    "cnt_eta": 2,
+    "cnt_col": 1,
+    "cnt_row": 6,
+    "description": {
+      "en": "Display at most 6 routes and up to 2 ETAs",
+      "zh_Hant_HK": "顯示最多六條路線及未來兩班班次的到站時間"
+    },
+    "colors": {
+      "black": "6_row_2_eta.jinja"
+    }
+  },
+  "6_row_1_eta": {
+    "cnt_eta": 1,
+    "cnt_col": 1,
+    "cnt_row": 6,
+    "description": {
+      "en": "Display at most 6 routes and only 1 ETA",
+      "zh_Hant_HK": "顯示最多六條路線及未來一班班次的到站時間"
+    },
+    "colors": {
+      "black": "6_row_1_eta.jinja"
+    }
+  }
+}

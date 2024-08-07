@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-08-05 13:29+0800\n"
+"POT-Creation-Date: 2024-08-07 10:24+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hant_HK\n"
@@ -18,77 +18,89 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.15.0\n"
 
-#: paper_eta/src/forms.py:9 paper_eta/templates/index.jinja:36
+#: paper_eta/src/forms.py:10 paper_eta/templates/index.jinja:36
 msgid "brand"
 msgstr "牌子"
 
-#: paper_eta/src/forms.py:14 paper_eta/src/forms.py:21
-#: paper_eta/src/forms.py:54 paper_eta/src/forms.py:60
-#: paper_eta/src/forms.py:66
+#: paper_eta/src/forms.py:15 paper_eta/src/forms.py:22
+#: paper_eta/src/forms.py:55 paper_eta/src/forms.py:61
+#: paper_eta/src/forms.py:67
 #: paper_eta/templates/configuration/partials/model_options.jinja:8
 msgid "please_select"
 msgstr "請選擇"
 
-#: paper_eta/src/forms.py:17 paper_eta/templates/index.jinja:42
+#: paper_eta/src/forms.py:18 paper_eta/templates/index.jinja:42
 msgid "model"
 msgstr "型號"
 
-#: paper_eta/src/forms.py:24
+#: paper_eta/src/forms.py:25
 msgid "language"
 msgstr "顯示語言"
 
-#: paper_eta/src/forms.py:29
+#: paper_eta/src/forms.py:30
 msgid "dry_run"
 msgstr "測試模式"
 
-#: paper_eta/src/forms.py:30
+#: paper_eta/src/forms.py:31
 msgid "dry_run_help"
 msgstr "在測試模式下，屏幕不會更新。但預報時間影像仍會根據排程產生，而最新的屏幕影像會顯示在「屏幕影像 」中。"
 
-#: paper_eta/src/forms.py:32 paper_eta/src/forms.py:70
-#: paper_eta/src/forms.py:93
+#: paper_eta/src/forms.py:33 paper_eta/src/forms.py:71
+#: paper_eta/src/forms.py:95
 msgid "submit"
 msgstr "提交"
 
-#: paper_eta/src/forms.py:44
+#: paper_eta/src/forms.py:45
 msgid "company"
 msgstr "公司"
 
-#: paper_eta/src/forms.py:49 paper_eta/templates/bookmark/index.jinja:77
+#: paper_eta/src/forms.py:50 paper_eta/templates/bookmark/index.jinja:78
 msgid "route"
 msgstr "路線"
 
-#: paper_eta/src/forms.py:52 paper_eta/templates/bookmark/index.jinja:78
+#: paper_eta/src/forms.py:53 paper_eta/templates/bookmark/index.jinja:79
 msgid "direction"
 msgstr "行車方向"
 
-#: paper_eta/src/forms.py:58 paper_eta/templates/bookmark/index.jinja:79
+#: paper_eta/src/forms.py:59 paper_eta/templates/bookmark/index.jinja:80
 msgid "service_type"
 msgstr "班次類別"
 
-#: paper_eta/src/forms.py:64 paper_eta/templates/bookmark/index.jinja:80
+#: paper_eta/src/forms.py:65 paper_eta/templates/bookmark/index.jinja:81
 msgid "stop"
 msgstr "車站"
 
-#: paper_eta/src/forms.py:74 paper_eta/templates/schedule/index.jinja:81
+#: paper_eta/src/forms.py:75 paper_eta/templates/schedule/index.jinja:81
 msgid "schedule"
 msgstr "排程"
 
-#: paper_eta/src/forms.py:79 paper_eta/templates/index.jinja:88
+#: paper_eta/src/forms.py:80 paper_eta/templates/index.jinja:88
 #: paper_eta/templates/schedule/index.jinja:79
 msgid "eta_format"
 msgstr "預報顯示模式"
 
-#: paper_eta/src/forms.py:86 paper_eta/templates/index.jinja:89
+#: paper_eta/src/forms.py:82 paper_eta/src/translation.py:28
+msgid "mixed"
+msgstr "混合"
+
+#: paper_eta/src/forms.py:83 paper_eta/src/translation.py:30
+msgid "relative"
+msgstr "相對"
+
+#: paper_eta/src/forms.py:84 paper_eta/src/translation.py:29
+msgid "absolute"
+msgstr "絕對"
+
+#: paper_eta/src/forms.py:88 paper_eta/templates/index.jinja:89
 #: paper_eta/templates/schedule/index.jinja:80
 msgid "layout"
 msgstr "佈局"
 
-#: paper_eta/src/forms.py:89
+#: paper_eta/src/forms.py:91
 msgid "partial_refresh"
 msgstr "快速更新"
 
-#: paper_eta/src/forms.py:91
+#: paper_eta/src/forms.py:93
 msgid "enable"
 msgstr "啟用"
 
@@ -164,10 +176,6 @@ msgstr "繁中"
 msgid "default"
 msgstr "預設"
 
-#: paper_eta/src/translation.py:28
-msgid "mixed"
-msgstr "混合"
-
 #: paper_eta/src/utils.py:25
 msgid "inbound"
 msgstr "回程"
@@ -176,58 +184,58 @@ msgstr "回程"
 msgid "outbound"
 msgstr "去程"
 
-#: paper_eta/src/controllers/bookmark.py:27 paper_eta/templates/error.jinja:2
+#: paper_eta/src/controllers/bookmark.py:36 paper_eta/templates/error.jinja:2
 #: paper_eta/templates/index.jinja:91
 msgid "error"
 msgstr "錯誤"
 
-#: paper_eta/src/controllers/bookmark.py:55
-#: paper_eta/src/controllers/bookmark.py:137
-#: paper_eta/src/controllers/schedule.py:109
-#: paper_eta/src/controllers/schedule.py:132
-msgid "invalid_id"
-msgstr "無效 ID"
-
-#: paper_eta/src/controllers/bookmark.py:229
+#: paper_eta/src/controllers/bookmark.py:63
 #, python-format
 msgid "Failed to import no. %(entry)s bookmark."
 msgstr "未能匯入第%(entry)s個收藏。"
 
-#: paper_eta/src/controllers/bookmark.py:234
-#: paper_eta/src/controllers/configuration.py:74
-#: paper_eta/src/controllers/schedule.py:276
+#: paper_eta/src/controllers/bookmark.py:67
+#: paper_eta/src/controllers/configuration.py:73
+#: paper_eta/src/controllers/schedule.py:72
 msgid "import_failed"
 msgstr "匯入失敗"
 
+#: paper_eta/src/controllers/bookmark.py:89
+#: paper_eta/src/controllers/bookmark.py:171
+#: paper_eta/src/controllers/schedule.py:142
+#: paper_eta/src/controllers/schedule.py:165
+msgid "invalid_id"
+msgstr "無效 ID"
+
 #: paper_eta/src/controllers/root.py:14
-#: paper_eta/src/controllers/schedule.py:46
-#: paper_eta/src/controllers/schedule.py:146
-#: paper_eta/src/controllers/schedule.py:182
-#: paper_eta/src/controllers/schedule.py:216
+#: paper_eta/src/controllers/schedule.py:79
+#: paper_eta/src/controllers/schedule.py:179
+#: paper_eta/src/controllers/schedule.py:213
+#: paper_eta/src/controllers/schedule.py:254
 msgid "missing_app_config"
 msgstr "尚未設定本應用程式。請到「設定」頁面進行設定以確保 Paper ETA 能夠正常運作。"
 
-#: paper_eta/src/controllers/schedule.py:33
+#: paper_eta/src/controllers/schedule.py:42
 msgid "not_enabled"
 msgstr "未啟用"
 
-#: paper_eta/src/controllers/schedule.py:164
-#: paper_eta/src/controllers/schedule.py:199
-msgid "Layout does not exists."
-msgstr "佈局不存在。"
-
-#: paper_eta/src/controllers/schedule.py:232
-msgid "Failed to refresh the screen."
-msgstr "更新屏幕失敗。"
-
-#: paper_eta/src/controllers/schedule.py:238
-msgid "success"
-msgstr "成功"
-
-#: paper_eta/src/controllers/schedule.py:270
+#: paper_eta/src/controllers/schedule.py:67
 #, python-format
 msgid "Failed to import no. %(entry)s schedule."
 msgstr "未能匯入第%(entry)s個排程。"
+
+#: paper_eta/src/controllers/schedule.py:195
+#: paper_eta/src/controllers/schedule.py:237
+msgid "Layout does not exists."
+msgstr "佈局不存在。"
+
+#: paper_eta/src/controllers/schedule.py:269
+msgid "Failed to refresh the screen."
+msgstr "更新屏幕失敗。"
+
+#: paper_eta/src/controllers/schedule.py:275
+msgid "success"
+msgstr "成功"
 
 #: paper_eta/src/libs/hketa/exceptions.py:15
 msgid "Error Occurred"
@@ -340,23 +348,23 @@ msgstr "建立"
 msgid "import"
 msgstr "匯入"
 
-#: paper_eta/templates/bookmark/index.jinja:61
+#: paper_eta/templates/bookmark/index.jinja:62
 #: paper_eta/templates/configuration/index.jinja:44
 #: paper_eta/templates/log/index.jinja:43
 #: paper_eta/templates/schedule/index.jinja:64
 msgid "export"
 msgstr "匯出"
 
-#: paper_eta/templates/bookmark/index.jinja:75
+#: paper_eta/templates/bookmark/index.jinja:76
 #: paper_eta/templates/schedule/index.jinja:78
 msgid "no."
 msgstr "No."
 
-#: paper_eta/templates/bookmark/index.jinja:76
+#: paper_eta/templates/bookmark/index.jinja:77
 msgid "transport"
 msgstr "交通工具"
 
-#: paper_eta/templates/bookmark/index.jinja:81
+#: paper_eta/templates/bookmark/index.jinja:82
 #: paper_eta/templates/schedule/index.jinja:84
 msgid "action"
 msgstr "指令"

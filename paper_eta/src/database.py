@@ -6,12 +6,11 @@ from typing import Iterable
 
 import apscheduler.jobstores.base
 import croniter
-from flask import current_app
 from sqlalchemy import event, func, inspect
 from sqlalchemy.orm import Mapped, mapped_column, validates
 
 from paper_eta.src import extensions, site_data
-from paper_eta.src.libs import hketa, imgen, refresher
+from paper_eta.src.libs import hketa, refresher, renderer
 
 
 class BaseModel(extensions.db.Model):
@@ -69,7 +68,7 @@ class Schedule(BaseModel):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     schedule: Mapped[str]
-    eta_format: Mapped[str]
+    eta_format: Mapped[renderer.EtaFormat]
     layout: Mapped[str]
     is_partial: Mapped[bool] = mapped_column(default=False)
     enabled: Mapped[bool] = mapped_column(default=False)
@@ -90,11 +89,10 @@ class Schedule(BaseModel):
                                      kwargs={
                                          'epd_brand': site_data.AppConfiguration()['epd_brand'],
                                          'epd_model': site_data.AppConfiguration()['epd_model'],
-                                         'eta_format': imgen.enums.EtaFormat(self.eta_format),
+                                         'eta_format': renderer.EtaFormat(self.eta_format),
                                          'layout': self.layout,
                                          'is_partial': self.is_partial,
                                          'is_dry_run': site_data.AppConfiguration()['dry_run'],
-                                         'screen_dump_dir': current_app.config['DIR_SCREEN_DUMP'],
                                      },
                                      trigger='cron',
                                      minute=cron[0],

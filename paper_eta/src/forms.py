@@ -2,7 +2,8 @@ import wtforms
 from flask_babel import lazy_gettext
 from flask_wtf import FlaskForm
 
-from paper_eta.src.libs import hketa, imgen
+from paper_eta.src import extensions
+from paper_eta.src.libs import hketa
 
 
 class EpaperSettingForm(FlaskForm):
@@ -12,7 +13,7 @@ class EpaperSettingForm(FlaskForm):
                                     # "-" for HTMX to request /epd-models/<brand> successfully,
                                     # so that the options can be swapped out to the "empty option".
                                     choices=[("-", lazy_gettext('please_select'))] + [
-                                        (b, b.title()) for b in imgen.brands()])  # pylint: disable=line-too-long
+                                        (b, b.title()) for b in extensions.imgen.brands()])  # pylint: disable=line-too-long
 
     epd_model = wtforms.SelectField(lazy_gettext('model'),
                                     [
@@ -35,7 +36,7 @@ class EpaperSettingForm(FlaskForm):
         if not self.epd_brand.validate(self):
             return
 
-        if field.data not in imgen.models(self.epd_brand.data):
+        if field.data not in extensions.imgen.models(self.epd_brand.data):
             raise wtforms.ValidationError("Not a valid choice.")
 
 
@@ -78,9 +79,9 @@ class ScheduleForm(FlaskForm):
 
     eta_format = wtforms.SelectField(lazy_gettext("eta_format"),
                                      [wtforms.validators.DataRequired()],
-                                     choices=[("mixed", lazy_gettext("mixeds")),
-                                              ("time", lazy_gettext("time")),
-                                              ("minute", lazy_gettext("minute"))
+                                     choices=[("mixed", lazy_gettext("mixed")),
+                                              ("relative", lazy_gettext("relative")),
+                                              ("absolute", lazy_gettext("absolute"))
                                               ],
                                      )
 

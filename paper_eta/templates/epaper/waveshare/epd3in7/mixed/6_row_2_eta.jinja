@@ -17,9 +17,9 @@
 
 
 {% block canva %}
-<div class="border" style="height: 480px; width: 280px">
+<div class="border-t border-black" style="height: 480px; width: 280px">
     {% for i in range(6) %}
-    <div class="grid grid-cols-12 gap-1 border-b" style="height: 80px;">
+    <div class="grid grid-cols-12 gap-1 border-b border-black" style="height: 80px;">
         {% if etas | length > i %}
         <div class="col-span-6">
             <div class="flex flex-none w-full items-center" style="height: 35px;">
@@ -42,31 +42,35 @@
             </div>
         </div>
 
-        <div class="col-span-6 place-content-center" style="height: 80px;">
+        <div class="col-span-6">
             {% if etas[i].etas.message %}
-            <div class="flex flex-none w-full items-center place-content-center" style="height: 80px;">
-                <span class="text-center text-lg line-clamp-3 text-wrap noto-sans-tc-500">
+            <div class="h-full place-content-center">
+                <p class="text-center text-lg leading-6 line-clamp-3 text-wrap noto-sans-tc-500">
                     {{ etas[i].etas.message }}
-                </span>
+                </p>
             </div>
             {% else %}
-            {% for eta in etas[i].etas[:1] %}
-            <div class="flex flex-col flex-none w-full items-center">
-                {% if eta.is_arriving and eta.remark not in (None, "") %}
-                <div class="inline-block truncate noto-sans-tc-500">
-                    {{ "即將抵達／已離開" if eta.is_arriving else eta.remark }}
+            {% for eta in etas[i].etas[:2] %}
+            <div class="grid grid-cols-12 gap-1 items-center" style="height: 40px">
+                {% if eta.is_arriving %}
+                <div class="col-span-12">
+                    <p class="truncate noto-sans-tc-600">
+                        {{ "即將抵達／已離開" if eta.is_arriving else eta.remark }}
+                    </p>
                 </div>
                 {% else %}
-                <div>
-                    <span class="inline-block text-4xl leading-7 sirin-stencil-regular" style="width: 26px">
-                        {{ ((eta.eta - etas[i].timestamp).total_seconds() / 60) | int }}
-                    </span>
-                    <span class="text-3xl leading-7 noto-sans-tc-400">分鐘</span>
+                <div class="col-span-6">
+                    <div class="flex justify-between">
+                        <p class="text-4xl leading-6 sirin-stencil-regular">
+                            {{ ((eta.eta - etas[i].timestamp).total_seconds() / 60) | int }}
+                        </p>
+                        <p class="text-2xl leading-6 noto-sans-tc-500">分</p>
+                    </div>
                 </div>
-                <div>
-                    <span class="text-4xl leading-7 sirin-stencil-regular">
+                <div class="col-span-6">
+                    <p class="text-center text-3xl leading-6 sirin-stencil-regular">
                         {{ eta.eta.strftime("%H:%M") }}
-                    </span>
+                    </p>
                 </div>
                 {% endif %}
             </div>

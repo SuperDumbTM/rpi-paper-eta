@@ -14,11 +14,15 @@
 
     {% block style %}{% endblock style %}
 
+    {{ "
     <style>
         body {
             background-color: white;
+            transform: scale(" ~ (scale or 1) ~");
+            transform-origin: 0 0;
         }
     </style>
+    " }}
 </head>
 
 <html>
