@@ -58,7 +58,10 @@ class Renderer:
 
     def render(self, brand: str, model: str, display: str, layout: str, etas: Iterable[hketa.Eta]):
         mnf = self.load_manifest(brand, model, display)
-        hti = html2image.Html2Image(output_path=self.dir_tmp,
+        hti = html2image.Html2Image(browser="chrome",
+                                    browser_executable=str(Path(
+                                        __file__).parent.joinpath("chrome", "linux64", "chrome.exe")),
+                                    output_path=self.dir_tmp,
                                     size=(mnf["_config"]["width"] * mnf["_config"]["scale"],
                                           mnf["_config"]["height"] * mnf["_config"]["scale"])
                                     )

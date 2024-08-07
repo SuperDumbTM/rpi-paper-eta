@@ -4,13 +4,13 @@ from typing import Generator, Optional
 
 import pydantic
 
-from . import imgen
+from . import renderer
 
 
 class Log(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
 
-    eta_format: imgen.enums.EtaFormat
+    eta_format: renderer.EtaFormat
     layout: str
     is_partial: bool
     timestamp: datetime = pydantic.Field(default_factory=datetime.now)
