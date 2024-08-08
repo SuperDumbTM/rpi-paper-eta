@@ -43,6 +43,7 @@ def histories():
 @bp.route("/hti")
 def test():
 
+    import base64
     from paper_eta.src.libs import hketa
     from paper_eta.src import database, extensions
     from paper_eta.src.libs import renderer
@@ -57,13 +58,8 @@ def test():
     for bm in bookmarks:
         etap = extensions.hketa.create_eta_processor(bm)
         etas.append(etap.etas())
-
-    try:
-        r = renderer.Renderer(current_app)
-        print(r.render("waveshare", "epd3in7", "mixed", "6_row_2_eta", etas))
-    except Exception as e:
-        print(e)
-
-    return render_template("epaper/waveshare/epd3in7/mixed/6_row_2_eta.jinja",
+    return render_template("epaper/waveshare/epd3in7/mixed/6_row_3_eta.jinja",
+                           bio2b64=lambda b: base64.b64encode(
+                               b.getvalue()).decode('utf-8'),
                            etas=etas,
                            display="mixed")

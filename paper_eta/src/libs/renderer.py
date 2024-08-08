@@ -7,8 +7,9 @@ from pathlib import Path
 from typing import Iterable, Literal
 
 import html2image
-from flask import Flask, render_template
+import imgkit
 import PIL.Image
+from flask import Flask, render_template
 
 from paper_eta.src.libs import hketa
 
@@ -58,33 +59,46 @@ class Renderer:
 
     def render(self, brand: str, model: str, display: str, layout: str, etas: Iterable[hketa.Eta]):
         mnf = self.load_manifest(brand, model, display)
-        hti = html2image.Html2Image(browser="chrome",
-                                    browser_executable=str(Path(
-                                        __file__).parent.joinpath("chrome", "linux64", "chrome.exe")),
-                                    output_path=self.dir_tmp,
-                                    size=(mnf["_config"]["width"] * mnf["_config"]["scale"],
-                                          mnf["_config"]["height"] * mnf["_config"]["scale"])
-                                    )
 
-        images = {}
-        for color, template in mnf[layout]["colors"].items():
-            p = hti.screenshot(
-                render_template("/".join(("epaper", brand, model, display, template)),
-                                bio2b64=lambda b: base64.b64encode(
-                                    b.getvalue()).decode('utf-8'),
-                                etas=etas,
-                                config=mnf["_config"],
-                                manifest=mnf[layout],
-                                scale=mnf["_config"]["scale"]), save_as=f"{color}.png")
+        imgkit.from_string(render_template("/".join(("epaper", brand, model, display, "6_row_3_eta.jinja")),
+                                           bio2b64=lambda b: base64.b64encode(
+            b.getvalue()).decode('utf-8'),
+            etas=etas,
+            config=mnf["_config"],
+            manifest=mnf[layout],
+            scale=mnf["_config"]["scale"]),
+            Path(__file__).parent.joinpath("test.png"),
+            options={"javascript-delay": 1000},
+            config=imgkit.config(wkhtmltoimage=Path(__file__).parent.joinpath("wkhtmltox", "bin", "wkhtmltoimage.exe")))
 
-            image = PIL.Image.open(p[0]).convert("L")
-            pixel = image.load()
-            image.putdata([0 if pixel[x, y] != 255 else 255
-                           for y in range(image.size[1])
-                           for x in range(image.size[0])])
-            images[color] = image.convert("1")\
-                .resize((mnf["_config"]["width"], mnf["_config"]["height"]))
-        return images
+        # hti = html2image.Html2Image(browser="chrome",
+        #                             browser_executable=str(Path(
+        #                                 __file__).parent.joinpath("chrome", "linux64", "chrome.exe")),
+        #                             output_path=self.dir_tmp,
+        #                             size=(mnf["_config"]["width"] * mnf["_config"]["scale"],
+        #                                   mnf["_config"]["height"] * mnf["_config"]["scale"])
+        #                             )
+
+        # images = {}
+        # for color, template in mnf[layout]["colors"].items():
+        #     p = hti.screenshot(
+        #         render_template("/".join(("epaper", brand, model, display, template)),
+        #                         bio2b64=lambda b: base64.b64encode(
+        #                             b.getvalue()).decode('utf-8'),
+        #                         etas=etas,
+        #                         config=mnf["_config"],
+        #                         manifest=mnf[layout],
+        #                         scale=mnf["_config"]["scale"]), save_as=f"{color}.png")
+
+        #     image = PIL.Image.open(p[0]).convert("L")
+        #     pixel = image.load()
+        #     image.putdata([0 if pixel[x, y] != 255 else 255
+        #                    for y in range(image.size[1])
+        #                    for x in range(image.size[0])])
+        #     images[color] = image.convert("1")\
+        #         .resize((mnf["_config"]["width"], mnf["_config"]["height"]))
+        # return images
+        return {}
 
     def load_manifest(self,
                       brand: str,
