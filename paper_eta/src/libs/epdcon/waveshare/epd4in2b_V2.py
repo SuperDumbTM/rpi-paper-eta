@@ -11,10 +11,11 @@ except ImportError:
     from epdcon import controller
 
 
-class Epd4in2bV2(controller.Controller):
+class Controller(controller.Controller):
 
     _inited = False
 
+    @property
     def is_poweron(self) -> bool:
         return type(self)._inited
 
@@ -43,8 +44,8 @@ class Epd4in2bV2(controller.Controller):
     def display(self, images: dict[str, Image.Image]):
         if not type(self)._inited:
             raise RuntimeError("The epaper display is not initialized.")
-        self.epdlib.display(self.epdlib.getbuffer(images['black']),
-                            self.epdlib.getbuffer(images['red']))
+        self.epdlib.display(self.epdlib.getbuffer(images['0-0-0']),
+                            self.epdlib.getbuffer(images['255-0-0']))
 
     def close(self):
         if not type(self)._inited:

@@ -17,21 +17,19 @@ def refresh(epd_brand: str,
             layout: str,
             is_partial: bool,
             is_dry_run: bool,
-            screen_dump_dir: Path):
+            screen_dump_dir: Path) -> bool:
     args_snap = locals()
 
     if eta_format not in (t for t in renderer.EtaFormat):
-        logging.error(
-            "Failed to refresh the screen due to invalid EtaFormat: %s", eta_format)
-        return
+        logging.error("Invalid EtaFormat: %s", eta_format)
+        return False
 
     # ---------- generate ETA images ----------
     try:
         renderer_ = renderer.create(epd_brand, epd_model, eta_format, layout)
     except ModuleNotFoundError:
-        logging.error(
-            "Failed to refresh the screen due to invalid layout: %s", layout)
-        return
+        logging.error("Invalid layout: %s", layout)
+        return False
 
     # reference: https://stackoverflow.com/a/73618460
     with extensions.scheduler.app.app_context():
@@ -50,9 +48,13 @@ def refresh(epd_brand: str,
             controller = epdcon.get(
                 epd_brand, epd_model, is_partial=is_partial)
         except (OSError, RuntimeError) as e:
-            logging.exception("Cannot initialise the e-paper controller.")
+            logging.exception("Unable to initialise the e-paper controller.")
             epd_log.epdlog.put(epd_log.Log(**args_snap, error=e))
-            return
+            return False
+        except ModuleNotFoundError as e:
+            logging.exception(str(e))
+            epd_log.epdlog.put(epd_log.Log(**args_snap, error=e))
+            return False
 
         # ---------- refresh the e-paper screen ----------
         try:
@@ -65,16 +67,16 @@ def refresh(epd_brand: str,
             epd_log.epdlog.put(epd_log.Log(**args_snap, error=e))
 
             if isinstance(e, RuntimeError):
-                logging.warning(
-                    "Failed to refresh the screen due to %s.", str(e))
+                logging.error(str(e))
             else:
                 logging.exception(
-                    "An unexpected error occurred during display refreshing.")
-            return
+                    "An unexpected error occurred during screen refreshing.")
+            return False
 
     epd_log.epdlog.put(epd_log.Log(**args_snap))
     for color, image in images.items():
         image.save(screen_dump_dir.joinpath(f"{color}.bmp"), "bmp")
+    return True
 
 
 def load_images(directory: os.PathLike) -> dict[str, Image.Image]:

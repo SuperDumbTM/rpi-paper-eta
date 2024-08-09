@@ -11,10 +11,11 @@ except ImportError:
     from epdcon import controller
 
 
-class Epd1in54V2(controller.Controller, controller.Partialable):
+class Controller(controller.Controller, controller.Partialable):
 
     _inited = False
 
+    @property
     def is_poweron(self) -> bool:
         return type(self)._inited
 
@@ -46,7 +47,7 @@ class Epd1in54V2(controller.Controller, controller.Partialable):
     def display(self, images: dict[str, Image.Image],):
         if not type(self)._inited:
             raise RuntimeError("The epaper display is not initialized.")
-        self.epdlib.display(self.epdlib.getbuffer(images['black']))
+        self.epdlib.display(self.epdlib.getbuffer(images['0-0-0']))
 
     def display_partial(self,
                         old_images: dict[str, Image.Image],
@@ -55,8 +56,8 @@ class Epd1in54V2(controller.Controller, controller.Partialable):
             raise RuntimeError("The epaper display is not initialized.")
         if self.is_partial:
             self.epdlib.displayPartBaseImage(
-                self.epdlib.getbuffer(old_images['black']))
-            self.epdlib.displayPart(self.epdlib.getbuffer(images['black']))
+                self.epdlib.getbuffer(old_images['0-0-0']))
+            self.epdlib.displayPart(self.epdlib.getbuffer(images['0-0-0']))
 
     def close(self):
         if not type(self)._inited:

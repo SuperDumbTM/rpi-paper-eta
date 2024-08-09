@@ -46,7 +46,7 @@ class Controller(ABC):
         """
 
     @abstractmethod
-    def display(self, imgages: dict[str, Image.Image]) -> None:
+    def display(self, images: dict[str, Image.Image]) -> None:
         """Display the `images` to the e-paper display.
         """
 
@@ -56,7 +56,7 @@ class Partialable(ABC):
     @abstractmethod
     def display_partial(self,
                         old_images: dict[str, Image.Image],
-                        imgages: dict[str, Image.Image]) -> None:
+                        images: dict[str, Image.Image]) -> None:
         """Display the `images` to the e-paper display using partial mode.
         """
         pass

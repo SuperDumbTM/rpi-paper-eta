@@ -5,7 +5,7 @@ from typing import Iterable, Optional
 
 import PIL.Image
 
-from . import waveshare
+from . import waveshare  # DO NOT REMOVE
 from .generator import EtaFormat, ImageRenderer, RendererSpec, Eta
 
 _PATH = Path(__file__).parent
@@ -20,8 +20,10 @@ def models(brand: str) -> Iterable[str]:
 
 
 def layouts(brand: str, model: str, format_: str) -> dict[RendererSpec]:
-    if brand not in brands() or model not in models(brand):
+    if brand not in brands():
         raise KeyError(brand)
+    if model not in models(brand):
+        raise KeyError(model)
 
     specs = {}
     for file in _PATH.joinpath(brand, model, format_).glob("[!_]*.py"):

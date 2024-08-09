@@ -69,6 +69,9 @@ def get_locale() -> Optional[str]:
 
 def img2b64(img: PIL.Image.Image) -> str:
     """Convert a PIL image to base64 encoded string."""
+    if img is None:
+        return ""
+
     b = BytesIO()
     img.save(b, 'bmp')
     return base64.b64encode(b.getvalue()).decode('utf-8')

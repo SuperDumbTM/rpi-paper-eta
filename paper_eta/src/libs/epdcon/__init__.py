@@ -1,26 +1,20 @@
-from . import controller, waveshare
+import importlib
+import sys
+from pathlib import Path
+
+from . import controller, waveshare  # DO NOT REMOVE
 from .controller import Controller, Partialable
 
-__all__ = [
-    controller,
-    waveshare,
-]
+
+_PATH = Path(__file__).parent
 
 
 def brands() -> tuple[str]:
-    return ("waveshare",)
+    return (b.stem for b in _PATH.glob("[!_]*/"))
 
 
 def models(brand: str) -> list[type[Controller]]:
-    try:
-        import waveshare
-    except ImportError:
-        from . import waveshare
-
-    match brand:
-        case "waveshare":
-            return waveshare.epapers
-    raise KeyError(f"Unrecognized epaper brand: {brand}")
+    return (m.stem for m in _PATH.joinpath(brand).glob("[!_]*.py"))
 
 
 def get(brand: str,
@@ -28,7 +22,7 @@ def get(brand: str,
         *,
         is_partial: bool
         ) -> Controller:
-    for controller in models(brand):
-        if model == controller.__name__:
-            return controller(is_partial)
-    raise KeyError(f"Unrecognized epaper: {brand}-{model}")
+    module = importlib.import_module(f".{model}",
+                                     sys.modules[__name__].__dict__.get(brand).__package__)
+
+    return module.__dict__.get("Controller")(is_partial=is_partial)

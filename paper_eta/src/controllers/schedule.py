@@ -181,11 +181,9 @@ def layouts(eta_format: str):
                         })})
 
     try:
-        layouts = renderer.layouts(
-            app_conf['epd_brand'], app_conf['epd_model'], eta_format)
-
         return render_template("/schedule/partials/layout_radio.jinja",
-                               layouts=layouts,
+                               layouts=renderer.layouts(
+                                   app_conf['epd_brand'], app_conf['epd_model'], eta_format),
                                eta_format=eta_format)
     except KeyError:
         return Response(render_template("/schedule/partials/layout_radio.jinja",
@@ -253,18 +251,27 @@ def refresh(id_: str):
         })})
 
     try:
-        refresher.refresh(app_conf['epd_brand'],
-                          app_conf['epd_model'],
-                          schedule.eta_format,
-                          schedule.layout,
-                          schedule.is_partial,
-                          app_conf['dry_run'],
-                          current_app.config['DIR_SCREEN_DUMP'])
-    except Exception:  # pylint: disable=broad-exception-caught
+        success = refresher.refresh(app_conf['epd_brand'],
+                                    app_conf['epd_model'],
+                                    schedule.eta_format,
+                                    schedule.layout,
+                                    schedule.is_partial,
+                                    app_conf['dry_run'],
+                                    current_app.config['DIR_SCREEN_DUMP'])
+    except Exception as e:  # pylint: disable=broad-exception-caught
+        logging.critical("Unhandled exception: %s (%s)", str(e), e.__class__)
         return Response("", status=500, headers={"HX-Trigger": json.dumps({
             "toast": {
                 "level": "error",
-                "message": gettext("Failed to refresh the screen.")
+                "message": gettext("error")
+            }
+        })})
+
+    if not success:
+        return Response("", status=500, headers={"HX-Trigger": json.dumps({
+            "toast": {
+                "level": "error",
+                "message": gettext("error")
             }
         })})
     return Response("", status=200, headers={"HX-Trigger": json.dumps({
