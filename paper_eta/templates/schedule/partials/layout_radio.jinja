@@ -20,14 +20,17 @@
             </div>
         </h5>
 
-        <hr>
+        <hr class="my-3">
 
-        <p class="card-text">
-            {{ layout["description"]["en"] }}
+        <p class="card-text mb-2">
+            {{ layout["description"][get_locale()] }}
         </p>
-        <p class="card-text">
-            {{ layout["description"]["zh_Hant_HK"] }}
-        </p>
+
+        <ul class="card-text m-0">
+            {% for graphic in layout["graphics"][get_locale()] %}
+                <li class="text-muted" style="font-size: 0.8rem;">{{ graphic }}</li>
+            {% endfor %}
+        </ul>
     </div>
 </div>
 {% endfor %}

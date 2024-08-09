@@ -3,7 +3,7 @@ from flask import (Blueprint, current_app, flash, make_response, redirect,
 from flask_babel import lazy_gettext
 
 from paper_eta.src import site_data, utils
-from paper_eta.src.libs import epd_log, refresher
+from paper_eta.src.libs import epd_log, refresher, renderer
 
 bp = Blueprint('root', __name__, url_prefix="/")
 
@@ -28,11 +28,9 @@ def change_language(lang: str):
 @bp.route("/screen-dumps")
 def screen_dumps():
     return render_template("root/partials/screen_dumps.jinja",
-                           images={
-                               k: utils.img2b64(v)
-                               for k, v in refresher.cached_images(
-                                   current_app.config['DIR_SCREEN_DUMP']).items()
-                           },)
+                           image=utils.img2b64(renderer.merge(
+                               refresher.load_images(current_app.config['DIR_SCREEN_DUMP']))
+                           ))
 
 
 @bp.route("/histories")

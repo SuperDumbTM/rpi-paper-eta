@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-08-05 13:29+0800\n"
+"POT-Creation-Date: 2024-08-15 18:04+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -57,19 +57,19 @@ msgstr "Submit"
 msgid "company"
 msgstr "Company"
 
-#: paper_eta/src/forms.py:49 paper_eta/templates/bookmark/index.jinja:77
+#: paper_eta/src/forms.py:49 paper_eta/templates/bookmark/index.jinja:78
 msgid "route"
 msgstr "Route"
 
-#: paper_eta/src/forms.py:52 paper_eta/templates/bookmark/index.jinja:78
+#: paper_eta/src/forms.py:52 paper_eta/templates/bookmark/index.jinja:79
 msgid "direction"
 msgstr "Direction"
 
-#: paper_eta/src/forms.py:58 paper_eta/templates/bookmark/index.jinja:79
+#: paper_eta/src/forms.py:58 paper_eta/templates/bookmark/index.jinja:80
 msgid "service_type"
 msgstr "Service Type"
 
-#: paper_eta/src/forms.py:64 paper_eta/templates/bookmark/index.jinja:80
+#: paper_eta/src/forms.py:64 paper_eta/templates/bookmark/index.jinja:81
 msgid "stop"
 msgstr "Stop"
 
@@ -171,6 +171,14 @@ msgstr "Default"
 msgid "mixed"
 msgstr "Mixed"
 
+#: paper_eta/src/translation.py:29
+msgid "absolute"
+msgstr "Absolute Time"
+
+#: paper_eta/src/translation.py:30
+msgid "relative"
+msgstr "Relative Time (Minute)"
+
 #: paper_eta/src/utils.py:25
 msgid "inbound"
 msgstr "Inbound"
@@ -179,60 +187,60 @@ msgstr "Inbound"
 msgid "outbound"
 msgstr "Outbound"
 
-#: paper_eta/src/controllers/bookmark.py:27 paper_eta/templates/error.jinja:2
+#: paper_eta/src/controllers/bookmark.py:36 paper_eta/templates/error.jinja:2
 #: paper_eta/templates/index.jinja:91
 msgid "error"
 msgstr "Error"
 
-#: paper_eta/src/controllers/bookmark.py:55
-#: paper_eta/src/controllers/bookmark.py:137
-#: paper_eta/src/controllers/schedule.py:109
-#: paper_eta/src/controllers/schedule.py:132
-msgid "invalid_id"
-msgstr "Invalid ID"
-
-#: paper_eta/src/controllers/bookmark.py:229
+#: paper_eta/src/controllers/bookmark.py:63
 #, python-format
 msgid "Failed to import no. %(entry)s bookmark."
 msgstr "Failed to import no. %(entry)s bookmark."
 
-#: paper_eta/src/controllers/bookmark.py:234
+#: paper_eta/src/controllers/bookmark.py:67
 #: paper_eta/src/controllers/configuration.py:74
-#: paper_eta/src/controllers/schedule.py:276
+#: paper_eta/src/controllers/schedule.py:72
 msgid "import_failed"
 msgstr "Import Failed"
 
+#: paper_eta/src/controllers/bookmark.py:89
+#: paper_eta/src/controllers/bookmark.py:171
+#: paper_eta/src/controllers/schedule.py:142
+#: paper_eta/src/controllers/schedule.py:165
+msgid "invalid_id"
+msgstr "Invalid ID"
+
 #: paper_eta/src/controllers/root.py:14
-#: paper_eta/src/controllers/schedule.py:46
-#: paper_eta/src/controllers/schedule.py:146
-#: paper_eta/src/controllers/schedule.py:182
-#: paper_eta/src/controllers/schedule.py:216
+#: paper_eta/src/controllers/schedule.py:79
+#: paper_eta/src/controllers/schedule.py:179
+#: paper_eta/src/controllers/schedule.py:215
+#: paper_eta/src/controllers/schedule.py:251
 msgid "missing_app_config"
 msgstr ""
 "This app is not configutated. Please go to the \"setting\" page to do the"
 " configuration."
 
-#: paper_eta/src/controllers/schedule.py:33
+#: paper_eta/src/controllers/schedule.py:42
 msgid "not_enabled"
 msgstr "Not Enabled"
 
-#: paper_eta/src/controllers/schedule.py:164
-#: paper_eta/src/controllers/schedule.py:199
-msgid "Layout does not exists."
-msgstr "Layout Does Not Exists"
-
-#: paper_eta/src/controllers/schedule.py:232
-msgid "Failed to refresh the screen."
-msgstr "Failed to refresh the screen."
-
-#: paper_eta/src/controllers/schedule.py:238
-msgid "success"
-msgstr "Success"
-
-#: paper_eta/src/controllers/schedule.py:270
+#: paper_eta/src/controllers/schedule.py:67
 #, python-format
 msgid "Failed to import no. %(entry)s schedule."
 msgstr "Failed to import no. %(entry)s schedule."
+
+#: paper_eta/src/controllers/schedule.py:197
+#: paper_eta/src/controllers/schedule.py:235
+msgid "Layout does not exists."
+msgstr "Layout Does Not Exists"
+
+#: paper_eta/src/controllers/schedule.py:267
+msgid "Failed to refresh the screen."
+msgstr "Failed to refresh the screen."
+
+#: paper_eta/src/controllers/schedule.py:273
+msgid "success"
+msgstr "Success"
 
 #: paper_eta/src/libs/hketa/exceptions.py:15
 msgid "Error Occurred"
@@ -301,10 +309,7 @@ msgstr "Screen Content"
 
 #: paper_eta/templates/index.jinja:60
 msgid "screen_content_help"
-msgstr ""
-"Current screen content. For layouts that utilised multiple colors, there "
-"will be more than one image and each of them representing contents in a "
-"particular color."
+msgstr "The current screen dump of the E-paper display."
 
 #: paper_eta/templates/index.jinja:79
 msgid "refresh_history"
@@ -352,23 +357,23 @@ msgstr "Create"
 msgid "import"
 msgstr "Import"
 
-#: paper_eta/templates/bookmark/index.jinja:61
+#: paper_eta/templates/bookmark/index.jinja:62
 #: paper_eta/templates/configuration/index.jinja:44
 #: paper_eta/templates/log/index.jinja:43
 #: paper_eta/templates/schedule/index.jinja:64
 msgid "export"
 msgstr "Export"
 
-#: paper_eta/templates/bookmark/index.jinja:75
+#: paper_eta/templates/bookmark/index.jinja:76
 #: paper_eta/templates/schedule/index.jinja:78
 msgid "no."
 msgstr "No."
 
-#: paper_eta/templates/bookmark/index.jinja:76
+#: paper_eta/templates/bookmark/index.jinja:77
 msgid "transport"
 msgstr "Transport"
 
-#: paper_eta/templates/bookmark/index.jinja:81
+#: paper_eta/templates/bookmark/index.jinja:82
 #: paper_eta/templates/schedule/index.jinja:84
 msgid "action"
 msgstr "Action"
@@ -480,16 +485,16 @@ msgstr ""
 "Showing {from} to {to} of {total_filtered} entries (filtered from {total}"
 " entries)."
 
-#: paper_eta/templates/root/partials/screen_dumps.jinja:18
+#: paper_eta/templates/root/partials/screen_dumps.jinja:9
 msgid "no_data"
 msgstr "No Data"
 
-#: paper_eta/templates/root/partials/screen_dumps.jinja:23
+#: paper_eta/templates/root/partials/screen_dumps.jinja:14
 #: paper_eta/templates/schedule/partials/rows.jinja:41
 msgid "last-update"
 msgstr "Last Update"
 
-#: paper_eta/templates/root/partials/screen_dumps.jinja:23
+#: paper_eta/templates/root/partials/screen_dumps.jinja:14
 #: paper_eta/templates/schedule/partials/rows.jinja:41
 msgid ":"
 msgstr ":"

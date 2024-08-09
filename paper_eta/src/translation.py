@@ -26,3 +26,5 @@ lazy_gettext('default')
 
 # ETA Type
 lazy_gettext('mixed')
+lazy_gettext('absolute')
+lazy_gettext('relative')

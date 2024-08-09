@@ -38,46 +38,6 @@ def text_ellipsis(t: str, length: int, font: ImageFont.FreeTypeFont) -> str:
     if font.getlength(t) <= length:
         return t
     return text_ellipsis(f"{t.rstrip('...')[:-1]}...", length, font)
-    # for cnt_char in range(len(text), 0, -1):
-    #     if font.getlength(f"{text[:cnt_char]}...") < length:
-    #         return f"{text[:cnt_char]}..."
-
-    # return text
-
-
-def wrap(draw: ImageDraw.ImageDraw,
-         text: str,
-         wh: tuple[float, float],
-         font: ImageFont.FreeTypeFont) -> str:
-    """Wrap a text to multiple lines with given area,  discard if the area is not
-    enough to display all the text
-    ```
-    """
-    if len(text) <= 0:
-        return text
-
-    len_text = int(font.getlength(text))
-    len_char = len_text / len(text)
-
-    if (wh[0] <= len_text):
-        char_pre_ln = int(wh[0] // len_char)
-
-        for cnt_nl in range(math.ceil(len(text) / char_pre_ln) - 1):
-            # starting position of current "line" to the modified string
-            offset = char_pre_ln * (cnt_nl + 1)
-
-            # insert newline
-            text = text[:offset + cnt_nl] + "\n" + text[offset + cnt_nl:]
-
-            # discard remainings if overheight
-            boxsize = draw.multiline_textbbox((0, 0), text, font=font)
-            if (boxsize[2] - boxsize[0] >= wh[1]):
-                # discard the last line of the modified string
-                # and rejoin them to mulit-line text
-                text = "\n".join(text.split('\n')[:-1])
-                return text_ellipsis(
-                    text, font.getlength(text) - font.getlength("..."), font)
-    return text
 
 
 def offset(
@@ -130,52 +90,90 @@ def offset(
             raise ValueError('Invalid position.')
 
 
-def flex_text(
-        draw: ImageDraw.ImageDraw,
+def wrap(draw: ImageDraw.ImageDraw,
+         text: str,
+         wh: tuple[float, float],
+         font: ImageFont.FreeTypeFont) -> str:
+    """Wrap a text to multiple lines with given area,  discard if the area is not
+    enough to display all the text
+    ```
+    """
+    if len(text) <= 0:
+        return text
+
+    len_text = int(font.getlength(text))
+    len_char = len_text / len(text)
+
+    if (wh[0] <= len_text):
+        char_pre_ln = int(wh[0] // len_char)
+
+        for cnt_nl in range(math.ceil(len(text) / char_pre_ln) - 1):
+            # starting position of current "line" to the modified string
+            offset = char_pre_ln * (cnt_nl + 1)
+
+            # insert newline
+            text = text[:offset + cnt_nl] + "\n" + text[offset + cnt_nl:]
+
+            # discard remainings if overheight
+            boxsize = draw.multiline_textbbox((0, 0), text, font=font)
+            if (boxsize[3] - boxsize[1] >= wh[1]):
+                # discard the last line of the modified string
+                # and rejoin them to mulit-line text
+                text = "\n".join(text.split('\n')[:-1])
+                return text_ellipsis(
+                    text, font.getlength(text) - font.getlength("..."), font)
+    return text
+
+
+class EtaImageDraw(ImageDraw.ImageDraw):
+
+    def rectangle_wh(self,
+                     xy: tuple[float, float],
+                     wh: tuple[float, float],
+                     fill=None,
+                     outline=None,
+                     outline_width=1) -> None:
+        self.rectangle((xy, (xy[0] + wh[0], xy[1] + wh[1])),
+                       fill,
+                       outline,
+                       outline_width)
+
+    def cross(self, xy: tuple[float, float], wh: tuple[float, float], fill=None):
+        self.line((xy[0], xy[1] + wh[1]/2, xy[0] + wh[0], xy[1] + wh[1]/2),
+                  fill=fill)
+        self.line((xy[0] + wh[0]/2, xy[1], xy[0] + wh[0]/2, xy[1] + wh[1]),
+                  fill=fill)
+
+    def text_responsive(
+        self,
         text: str,
         xy: tuple[float, float],
         wh: tuple[float, float],
         font: ImageFont.FreeTypeFont,
-        overflow: Literal["none", "clip", "ellipsis"] = "ellipsis",
+        overflow: Literal["none", "clip", "ellipsis",
+                          "wrap-ellipsis"] = "ellipsis",
         position: T_POS = "w",
         fill=None,
         debug: bool = False
-) -> None:
-    if overflow == "clip":
-        text = text_clip(text, wh[0], font)
-    if overflow == "ellipsis":
-        text = text_ellipsis(text, wh[0], font)
+    ) -> None:
+        if overflow == "clip":
+            text = text_clip(text, wh[0], font)
+        if overflow == "ellipsis":
+            text = text_ellipsis(text, wh[0], font)
+        if overflow == "wrap-ellipsis":
+            text = wrap(self, text, wh, font)
 
-    mltb = draw.multiline_textbbox((0, 0), text, font)
-    offset_x, offset_y = offset(
-        (mltb[2] - mltb[0], mltb[3] - mltb[1]), wh, position)
+        mltb = self.multiline_textbbox((0, 0), text, font)
+        offset_x, offset_y = offset(
+            (mltb[2] - mltb[0], mltb[3] - mltb[1]), wh, position)
 
-    # reset the pixel shift due to font size variation
-    offset_x += xy[0] - mltb[0]
-    offset_y += xy[1] - mltb[1]
-    draw.text((offset_x, offset_y), text, fill, font)
+        # reset the pixel shift due to font size variation
+        offset_x += xy[0] - mltb[0]
+        offset_y += xy[1] - mltb[1]
+        self.text((offset_x, offset_y), text, fill, font)
 
-    if debug:
-        draw.rectangle((mltb[0] + offset_x, mltb[1] + offset_y,
-                        mltb[2] + offset_x, mltb[3] + offset_y))
-        rectangle_wh(draw, xy, wh)
-        cross(draw, xy, wh)
-
-
-def rectangle_wh(draw: ImageDraw.ImageDraw,
-                 xy: tuple[float, float],
-                 wh: tuple[float, float],
-                 fill=None,
-                 outline=None,
-                 outline_width=1) -> None:
-    draw.rectangle((xy, (xy[0] + wh[0], xy[1] + wh[1])),
-                   fill,
-                   outline,
-                   outline_width)
-
-
-def cross(draw: ImageDraw.ImageDraw, xy: tuple[float, float], wh: tuple[float, float], fill=None):
-    draw.line((xy[0], xy[1] + wh[1]/2, xy[0] + wh[0], xy[1] + wh[1]/2),
-              fill=fill)
-    draw.line((xy[0] + wh[0]/2, xy[1], xy[0] + wh[0]/2, xy[1] + wh[1]),
-              fill=fill)
+        if debug:
+            self.rectangle((mltb[0] + offset_x, mltb[1] + offset_y,
+                            mltb[2] + offset_x, mltb[3] + offset_y))
+            self.rectangle_wh(xy, wh)
+            self.cross(xy, wh)

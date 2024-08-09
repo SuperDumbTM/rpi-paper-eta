@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from enum import Enum
 from pathlib import Path
-from typing import Iterable, NamedTuple, TypedDict, Union
+from typing import Iterable, TypedDict, Union
 
 import PIL.Image
 

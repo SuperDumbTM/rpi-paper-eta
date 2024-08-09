@@ -1,13 +1,3 @@
-{% for color, image in images.items() %}
 <div class="card my-1" style="width: 18rem; margin: auto;">
     <img class="m-2" src="data:image/bmp;base64, {{ image }}">
-
-    <hr>
-
-    <div class="card-body">
-        <span class="card-text">
-            {{ color }}
-        </span>
-    </div>
 </div>
-{% endfor %}

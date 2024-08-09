@@ -60,7 +60,7 @@ def import_():
                 except (KeyError, TypeError, sqlalchemy.exc.StatementError) as e:
                     session.rollback()
 
-                    flash(lazy_gettext('Failed to import no. %s bookmark.', i),
+                    flash(lazy_gettext('Failed to import no. %(entry)s bookmark.', entry=i),
                           "error")
                     logging.exception('During bookmark import: %s', str(e))
     except (UnicodeDecodeError, json.decoder.JSONDecodeError):

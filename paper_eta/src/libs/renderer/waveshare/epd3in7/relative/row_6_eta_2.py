@@ -31,12 +31,8 @@ class Renderer(Epd3in8RenderBase):
                 "zh_Hant_HK": "顯示最多六條路線及最多兩班班次的到站時間"
             },
             graphics={
-                "en": ("Black Background White Text means the destination of the "
-                       "schedule is differ from its original.",
-                       "Black Background White Text means the routing is "
-                       "differ from its original"),
-                "zh_Hant_HK": ("黑底白字代表該班次的終點站與原定的終點站不同。"
-                               "黑底白字代表該班次的走線與原定的走線不同。")
+                "en": tuple(),
+                "zh_Hant_HK": tuple()
             }
         )
 
@@ -45,55 +41,41 @@ class Renderer(Epd3in8RenderBase):
 
         for row, route in enumerate(etas):
             if isinstance(route.etas, Eta.Error):
-                errmsg = _utils.wrap(
-                    draw, route.etas.message, (130, row_h), FONT_ERR)
-                _utils.flex_text(
-                    draw, errmsg, (150, row*row_h), (130, row_h), FONT_ERR, position="c")
+                draw.text_responsive(
+                    route.etas.message, (150, row*row_h), (130, row_h), FONT_ERR, "wrap-ellipsis", "c")
                 continue
 
             for ieta, eta in enumerate(route.etas[:2]):
                 xy = (150, row*row_h + row_h/2 * ieta)
 
                 if eta.is_arriving:
-                    _utils.flex_text(
-                        draw, self.text_arr(route.locale), xy, (130, row_h/2), FONT_ERMK, position="c")
+                    draw.text_responsive(
+                        self.text_arr(route.locale), xy, (130, row_h/2), FONT_ERMK, position="c")
                     continue
                 if eta.eta is None:
-                    _utils.flex_text(
-                        draw, eta.remark, xy, (130, row_h/2), FONT_ERMK)
+                    draw.text_responsive(
+                        eta.remark, xy, (130, row_h/2), FONT_ERMK)
                     continue
 
-                fill_eta = self.black
-                if route.destination != eta.destination or "route_variant" in eta.extras:
-                    fill_eta = self.white
-                    _utils.rectangle_wh(
-                        draw, xy, (130, row_h/2), fill=self.black)
+                draw.text_responsive(str(int(
+                    (eta.eta - route.timestamp).total_seconds() / 60)),
+                    xy,
+                    (30, row_h/2),
+                    FONT_ETA,
+                    overflow="none")
+                draw.text_responsive(self.text_min(route.locale),
+                                     (xy[0] + 30, xy[1]),
+                                     (25, row_h/2 - 9),
+                                     FONT_ERMK,
+                                     overflow="none",
+                                     position="s")
 
-                _utils.flex_text(draw,
-                                 str(int(
-                                     (eta.eta - route.timestamp).total_seconds() / 60)),
-                                 xy,
-                                 (30, row_h/2),
-                                 FONT_ETA,
-                                 fill=fill_eta,
-                                 overflow="none")
-                _utils.flex_text(draw,
-                                 self.text_min(route.locale),
-                                 (xy[0] + 30, xy[1]),
-                                 (25, row_h/2 - 9),
-                                 FONT_ERMK,
-                                 fill=fill_eta,
-                                 overflow="none",
-                                 position="s")
+                draw.text_responsive((eta.remark
+                                      or eta.extras.get("route_variant", "")),
+                                     (xy[0] + 55, xy[1]),
+                                     (75, row_h/2 - 9),
+                                     FONT_ERMK,
+                                     overflow="none",
+                                     position="sw")
 
-                _utils.flex_text(draw,
-                                 (eta.remark
-                                  or eta.extras.get("route_variant", "")),
-                                 (xy[0] + 55, xy[1]),
-                                 (75, row_h/2 - 9),
-                                 FONT_ERMK,
-                                 fill=fill_eta,
-                                 overflow="none",
-                                 position="sw")
-
-        return {"black": canvas}
+        return {"0-0-0": canvas.rotate(degree)}
