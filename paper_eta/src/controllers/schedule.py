@@ -8,8 +8,8 @@ from flask import (Blueprint, Response, current_app, flash, redirect, render_tem
                    request, url_for)
 from flask_babel import gettext, lazy_gettext
 
-from paper_eta.src import database, db, forms, site_data, utils
-from paper_eta.src.libs import hketa, imgen, refresher
+from paper_eta.src import database, db, extensions, forms, site_data, utils
+from paper_eta.src.libs import hketa, renderer
 
 bp = Blueprint('schedule',
                __name__,
@@ -181,8 +181,8 @@ def layouts(eta_format: str):
                         })})
 
     try:
-        layouts = imgen.get(app_conf['epd_brand'], app_conf['epd_model'])\
-            .layouts()[eta_format]
+        layouts = renderer.layouts(
+            app_conf['epd_brand'], app_conf['epd_model'], eta_format)
 
         return render_template("/schedule/partials/layout_radio.jinja",
                                layouts=layouts,
@@ -201,7 +201,7 @@ def layouts(eta_format: str):
 
 @bp.route("/preview/<eta_format>/<layout>")
 def preview(eta_format: str, layout: str):
-    if eta_format not in (t for t in imgen.EtaFormat):
+    if eta_format not in (t for t in renderer.EtaFormat):
         return Response("", status=422, headers={"HX-Trigger": json.dumps({
             "toast": {
                 "level": "error",
@@ -216,15 +216,21 @@ def preview(eta_format: str, layout: str):
             }
         })})
 
-    bookmarks = [hketa.RouteQuery(**bm.as_dict())
-                 for bm in database.Bookmark.query
-                 .filter(database.Bookmark.enabled)
-                 .order_by(database.Bookmark.ordering)
-                 .all()]
     try:
-        generator = imgen.get(app_conf["epd_brand"], app_conf["epd_model"]
-                              )(imgen.EtaFormat(eta_format), layout)
-        images = refresher.generate_image(bookmarks, generator)
+        queries = [hketa.RouteQuery(**bm.as_dict())
+                   for bm in database.Bookmark.query
+                   .filter(database.Bookmark.enabled)
+                   .order_by(database.Bookmark.ordering)
+                   .all()]
+        etas = []
+        for query in queries:
+            etap = extensions.hketa.create_eta_processor(query)
+            etas.append(etap.etas())
+        images = renderer.render(app_conf["epd_brand"],
+                                 app_conf["epd_model"],
+                                 eta_format,
+                                 layout,
+                                 etas)
     except KeyError:
         return Response("", status=422, headers={"HX-Trigger": json.dumps({
             "toast": {
