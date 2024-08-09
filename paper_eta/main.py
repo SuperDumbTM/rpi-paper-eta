@@ -67,4 +67,5 @@ def create_app() -> Flask:
                 # app configuration not exists
                 s.enabled = False
         extensions.db.session.commit()
+
     return app

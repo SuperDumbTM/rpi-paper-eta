@@ -65,9 +65,9 @@ class Eta(pydantic.BaseModel):
         is_scheduled: bool
         """Indicate whether the ETA is based on realtime information or based on schedule.
         """
-        eta: datetime
+        eta: Optional[datetime] = None
         remark: Optional[str] = None
-        extras: Optional[dict[str, Any]] = None
+        extras: dict[str, Any] = pydantic.Field(default_factory=dict)
 
     class Error(pydantic.BaseModel):
         message: str

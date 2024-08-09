@@ -1,0 +1,13 @@
+[
+    {
+        "no": "1",
+        "origin": "尖沙咀碼頭",
+        "destination": "竹園邨總站",
+        "stop_name": "尖沙咀碼頭",
+        "locale": "tc",
+        "etas": [
+            {
+                "destination": "竹園邨",
+                "is_arriving": true,
+                "is_scheduled": true,
+                "eta": 
