@@ -8,12 +8,12 @@ from .._base import FONT_NOTOSANS, Epd3in8RenderBase
 
 FONT_NOTOSANS = ImageFont.FreeTypeFont(
     str(FONT_BASE_PATH.joinpath("NotoSansTC-Variable.ttf")))
-FONT_SIRIN = ImageFont.FreeTypeFont(
-    str(FONT_BASE_PATH.joinpath("SirinStencil-Regular.ttf")))
+FONT_AERST = ImageFont.FreeTypeFont(
+    str(FONT_BASE_PATH.joinpath("Aerstriko.ttf")))
 
 FONT_ERR = _utils.get_variant(FONT_NOTOSANS, 16, "Medium")
 FONT_ERMK = _utils.get_variant(FONT_NOTOSANS, 16, "Regular")
-FONT_ETA = _utils.get_variant(FONT_SIRIN, 32)
+FONT_ETA = _utils.get_variant(FONT_AERST, 34)
 
 
 class Renderer(Epd3in8RenderBase):
