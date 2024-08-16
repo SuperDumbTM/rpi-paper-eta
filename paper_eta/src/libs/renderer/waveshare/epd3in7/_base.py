@@ -6,7 +6,7 @@ from ... import _utils
 from ...generator import FONT_BASE_PATH, Eta, ImageRenderer, Locale
 
 FONT_NOTOSANS = ImageFont.FreeTypeFont(
-    str(FONT_BASE_PATH.joinpath("NotoSansTC-VariableFont_wght.ttf")))
+    str(FONT_BASE_PATH.joinpath("NotoSansTC-Variable.ttf")))
 
 FONT_ERR_L = _utils.get_variant(FONT_NOTOSANS, 26, "Bold")
 FONT_NAME = _utils.get_variant(FONT_NOTOSANS, 28, "Bold")

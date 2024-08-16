@@ -7,7 +7,7 @@ from ....generator import FONT_BASE_PATH, Eta, RendererSpec
 from .._base import FONT_NOTOSANS, Epd3in8RenderBase
 
 FONT_NOTOSANS = ImageFont.FreeTypeFont(
-    str(FONT_BASE_PATH.joinpath("NotoSansTC-VariableFont_wght.ttf")))
+    str(FONT_BASE_PATH.joinpath("NotoSansTC-Variable.ttf")))
 FONT_SIRIN = ImageFont.FreeTypeFont(
     str(FONT_BASE_PATH.joinpath("SirinStencil-Regular.ttf")))
 
