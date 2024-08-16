@@ -256,6 +256,7 @@ def refresh(id_: str):
                                     schedule.eta_format,
                                     schedule.layout,
                                     schedule.is_partial,
+                                    app_conf['degree'],
                                     app_conf['dry_run'],
                                     current_app.config['DIR_SCREEN_DUMP'])
     except Exception as e:  # pylint: disable=broad-exception-caught

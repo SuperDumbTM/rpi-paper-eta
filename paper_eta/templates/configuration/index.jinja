@@ -89,6 +89,8 @@
                 </div>
             </div>
 
+            <hr class="my-4">
+
             <div class="form-group">
                 {{ form.eta_locale.label(class="form-label") }}
                 {{ form.eta_locale(class="form-select" + form_valid_class(form.eta_locale)) }}
@@ -98,6 +100,24 @@
                 </div>
                 <div class="invalid-feedback">
                     {% for error in form.eta_locale.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form.degree.label(class="form-label") }}
+                {{ form.degree(class="form-control" + form_valid_class(form.degree)) }}
+
+                <div class="form-text">
+                    {{ form.degree.description }}
+                </div>
+
+                <div>
+                    {{ form.degree.errors.__class__ }}
+                </div>
+                <div class="invalid-feedback">
+                    {% for error in form.degree.errors %}
                     <span>{{ error }}</span>
                     {% endfor %}
                 </div>

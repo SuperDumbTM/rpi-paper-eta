@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-08-15 18:04+0800\n"
+"POT-Creation-Date: 2024-08-16 10:37+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hant_HK\n"
@@ -23,8 +23,8 @@ msgid "brand"
 msgstr "牌子"
 
 #: paper_eta/src/forms.py:14 paper_eta/src/forms.py:21
-#: paper_eta/src/forms.py:54 paper_eta/src/forms.py:60
-#: paper_eta/src/forms.py:66
+#: paper_eta/src/forms.py:58 paper_eta/src/forms.py:64
+#: paper_eta/src/forms.py:70
 #: paper_eta/templates/configuration/partials/model_options.jinja:8
 msgid "please_select"
 msgstr "請選擇"
@@ -45,50 +45,58 @@ msgstr "測試模式"
 msgid "dry_run_help"
 msgstr "在測試模式下，屏幕不會更新。但預報時間影像仍會根據排程產生，而最新的屏幕影像會顯示在「屏幕影像 」中。"
 
-#: paper_eta/src/forms.py:32 paper_eta/src/forms.py:70
-#: paper_eta/src/forms.py:93
+#: paper_eta/src/forms.py:32
+msgid "rotate_degree"
+msgstr "角度調整"
+
+#: paper_eta/src/forms.py:34
+msgid "rotate_degree_help"
+msgstr "設定屏幕影像顯示的旋轉角度。"
+
+#: paper_eta/src/forms.py:36 paper_eta/src/forms.py:74
+#: paper_eta/src/forms.py:97
 msgid "submit"
 msgstr "提交"
 
-#: paper_eta/src/forms.py:44
+#: paper_eta/src/forms.py:48
 msgid "company"
 msgstr "公司"
 
-#: paper_eta/src/forms.py:49 paper_eta/templates/bookmark/index.jinja:78
+#: paper_eta/src/forms.py:53 paper_eta/templates/bookmark/index.jinja:78
 msgid "route"
 msgstr "路線"
 
-#: paper_eta/src/forms.py:52 paper_eta/templates/bookmark/index.jinja:79
+#: paper_eta/src/forms.py:56 paper_eta/templates/bookmark/index.jinja:79
 msgid "direction"
 msgstr "行車方向"
 
-#: paper_eta/src/forms.py:58 paper_eta/templates/bookmark/index.jinja:80
+#: paper_eta/src/forms.py:62 paper_eta/templates/bookmark/index.jinja:80
 msgid "service_type"
 msgstr "班次類別"
 
-#: paper_eta/src/forms.py:64 paper_eta/templates/bookmark/index.jinja:81
+#: paper_eta/src/forms.py:68 paper_eta/templates/bookmark/index.jinja:81
 msgid "stop"
 msgstr "車站"
 
-#: paper_eta/src/forms.py:74 paper_eta/templates/schedule/index.jinja:81
+#: paper_eta/src/forms.py:78 paper_eta/templates/schedule/index.jinja:81
 msgid "schedule"
 msgstr "排程"
 
-#: paper_eta/src/forms.py:79 paper_eta/templates/index.jinja:88
+#: paper_eta/src/forms.py:83 paper_eta/templates/index.jinja:88
 #: paper_eta/templates/schedule/index.jinja:79
 msgid "eta_format"
 msgstr "預報顯示模式"
 
-#: paper_eta/src/forms.py:86 paper_eta/templates/index.jinja:89
+#: paper_eta/src/forms.py:90 paper_eta/templates/index.jinja:89
 #: paper_eta/templates/schedule/index.jinja:80
 msgid "layout"
 msgstr "佈局"
 
-#: paper_eta/src/forms.py:89
+#: paper_eta/src/forms.py:93
 msgid "partial_refresh"
 msgstr "快速更新"
 
-#: paper_eta/src/forms.py:91
+#: paper_eta/src/forms.py:95
 msgid "enable"
 msgstr "啟用"
 
@@ -184,7 +192,9 @@ msgstr "回程"
 msgid "outbound"
 msgstr "去程"
 
-#: paper_eta/src/controllers/bookmark.py:36 paper_eta/templates/error.jinja:2
+#: paper_eta/src/controllers/bookmark.py:36
+#: paper_eta/src/controllers/schedule.py:266
+#: paper_eta/src/controllers/schedule.py:274 paper_eta/templates/error.jinja:2
 #: paper_eta/templates/index.jinja:91
 msgid "error"
 msgstr "錯誤"
@@ -210,8 +220,8 @@ msgstr "無效 ID"
 #: paper_eta/src/controllers/root.py:14
 #: paper_eta/src/controllers/schedule.py:79
 #: paper_eta/src/controllers/schedule.py:179
-#: paper_eta/src/controllers/schedule.py:215
-#: paper_eta/src/controllers/schedule.py:251
+#: paper_eta/src/controllers/schedule.py:213
+#: paper_eta/src/controllers/schedule.py:249
 msgid "missing_app_config"
 msgstr "尚未設定本應用程式。請到「設定」頁面進行設定以確保 Paper ETA 能夠正常運作。"
 
@@ -224,16 +234,12 @@ msgstr "未啟用"
 msgid "Failed to import no. %(entry)s schedule."
 msgstr "未能匯入第%(entry)s個排程。"
 
-#: paper_eta/src/controllers/schedule.py:197
-#: paper_eta/src/controllers/schedule.py:235
+#: paper_eta/src/controllers/schedule.py:195
+#: paper_eta/src/controllers/schedule.py:233
 msgid "Layout does not exists."
 msgstr "佈局不存在。"
 
-#: paper_eta/src/controllers/schedule.py:267
-msgid "Failed to refresh the screen."
-msgstr "更新屏幕失敗。"
-
-#: paper_eta/src/controllers/schedule.py:273
+#: paper_eta/src/controllers/schedule.py:280
 msgid "success"
 msgstr "成功"
 

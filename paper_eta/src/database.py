@@ -93,6 +93,7 @@ class Schedule(BaseModel):
                                          'eta_format': renderer.EtaFormat(self.eta_format),
                                          'layout': self.layout,
                                          'is_partial': self.is_partial,
+                                         'degree': site_data.AppConfiguration()['degree'],
                                          'is_dry_run': site_data.AppConfiguration()['dry_run'],
                                          'screen_dump_dir': current_app.config['DIR_SCREEN_DUMP'],
                                      },

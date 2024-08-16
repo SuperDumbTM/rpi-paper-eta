@@ -16,6 +16,7 @@ def refresh(epd_brand: str,
             eta_format: str,
             layout: str,
             is_partial: bool,
+            degree: int,
             is_dry_run: bool,
             screen_dump_dir: Path) -> bool:
     args_snap = locals()
@@ -38,9 +39,9 @@ def refresh(epd_brand: str,
                    .filter(database.Bookmark.enabled)
                    .order_by(database.Bookmark.ordering)
                    .all()]
-        images = renderer_.draw([
-            extensions.hketa.create_eta_processor(query).etas() for query in queries
-        ])
+        images = renderer_.draw([extensions.hketa.create_eta_processor(query).etas()
+                                 for query in queries],
+                                degree)
 
     if not is_dry_run:
         # ---------- initialise the e-paper controller ----------

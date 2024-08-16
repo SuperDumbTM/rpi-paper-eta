@@ -29,6 +29,10 @@ class EpaperSettingForm(FlaskForm):
     dry_run = wtforms.BooleanField(lazy_gettext('dry_run'),
                                    description=lazy_gettext('dry_run_help'))
 
+    degree = wtforms.IntegerField(lazy_gettext('rotate_degree'),
+                                  default=0,
+                                  description=lazy_gettext('rotate_degree_help'))
+
     submit = wtforms.SubmitField(lazy_gettext('submit'))
 
     def validate_epd_model(self, field: wtforms.Field):

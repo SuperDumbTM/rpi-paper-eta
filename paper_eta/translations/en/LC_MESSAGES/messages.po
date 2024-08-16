@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-08-15 18:04+0800\n"
+"POT-Creation-Date: 2024-08-16 10:37+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -23,8 +23,8 @@ msgid "brand"
 msgstr "Brand"
 
 #: paper_eta/src/forms.py:14 paper_eta/src/forms.py:21
-#: paper_eta/src/forms.py:54 paper_eta/src/forms.py:60
-#: paper_eta/src/forms.py:66
+#: paper_eta/src/forms.py:58 paper_eta/src/forms.py:64
+#: paper_eta/src/forms.py:70
 #: paper_eta/templates/configuration/partials/model_options.jinja:8
 msgid "please_select"
 msgstr "Please select"
@@ -48,50 +48,58 @@ msgstr ""
 "will still be generated according to the refresh schedule and the latest "
 "screen dump will be displayed in the \"Screen Dump\" section."
 
-#: paper_eta/src/forms.py:32 paper_eta/src/forms.py:70
-#: paper_eta/src/forms.py:93
+#: paper_eta/src/forms.py:32
+msgid "rotate_degree"
+msgstr "Rotation"
+
+#: paper_eta/src/forms.py:34
+msgid "rotate_degree_help"
+msgstr "Adjust the rotation (in degree) of the output image."
+
+#: paper_eta/src/forms.py:36 paper_eta/src/forms.py:74
+#: paper_eta/src/forms.py:97
 msgid "submit"
 msgstr "Submit"
 
-#: paper_eta/src/forms.py:44
+#: paper_eta/src/forms.py:48
 msgid "company"
 msgstr "Company"
 
-#: paper_eta/src/forms.py:49 paper_eta/templates/bookmark/index.jinja:78
+#: paper_eta/src/forms.py:53 paper_eta/templates/bookmark/index.jinja:78
 msgid "route"
 msgstr "Route"
 
-#: paper_eta/src/forms.py:52 paper_eta/templates/bookmark/index.jinja:79
+#: paper_eta/src/forms.py:56 paper_eta/templates/bookmark/index.jinja:79
 msgid "direction"
 msgstr "Direction"
 
-#: paper_eta/src/forms.py:58 paper_eta/templates/bookmark/index.jinja:80
+#: paper_eta/src/forms.py:62 paper_eta/templates/bookmark/index.jinja:80
 msgid "service_type"
 msgstr "Service Type"
 
-#: paper_eta/src/forms.py:64 paper_eta/templates/bookmark/index.jinja:81
+#: paper_eta/src/forms.py:68 paper_eta/templates/bookmark/index.jinja:81
 msgid "stop"
 msgstr "Stop"
 
-#: paper_eta/src/forms.py:74 paper_eta/templates/schedule/index.jinja:81
+#: paper_eta/src/forms.py:78 paper_eta/templates/schedule/index.jinja:81
 msgid "schedule"
 msgstr "Schedule"
 
-#: paper_eta/src/forms.py:79 paper_eta/templates/index.jinja:88
+#: paper_eta/src/forms.py:83 paper_eta/templates/index.jinja:88
 #: paper_eta/templates/schedule/index.jinja:79
 msgid "eta_format"
 msgstr "ETA Format"
 
-#: paper_eta/src/forms.py:86 paper_eta/templates/index.jinja:89
+#: paper_eta/src/forms.py:90 paper_eta/templates/index.jinja:89
 #: paper_eta/templates/schedule/index.jinja:80
 msgid "layout"
 msgstr "Layout"
 
-#: paper_eta/src/forms.py:89
+#: paper_eta/src/forms.py:93
 msgid "partial_refresh"
 msgstr "Partial Refresh"
 
-#: paper_eta/src/forms.py:91
+#: paper_eta/src/forms.py:95
 msgid "enable"
 msgstr "Enable"
 
@@ -187,7 +195,9 @@ msgstr "Inbound"
 msgid "outbound"
 msgstr "Outbound"
 
-#: paper_eta/src/controllers/bookmark.py:36 paper_eta/templates/error.jinja:2
+#: paper_eta/src/controllers/bookmark.py:36
+#: paper_eta/src/controllers/schedule.py:266
+#: paper_eta/src/controllers/schedule.py:274 paper_eta/templates/error.jinja:2
 #: paper_eta/templates/index.jinja:91
 msgid "error"
 msgstr "Error"
@@ -213,8 +223,8 @@ msgstr "Invalid ID"
 #: paper_eta/src/controllers/root.py:14
 #: paper_eta/src/controllers/schedule.py:79
 #: paper_eta/src/controllers/schedule.py:179
-#: paper_eta/src/controllers/schedule.py:215
-#: paper_eta/src/controllers/schedule.py:251
+#: paper_eta/src/controllers/schedule.py:213
+#: paper_eta/src/controllers/schedule.py:249
 msgid "missing_app_config"
 msgstr ""
 "This app is not configutated. Please go to the \"setting\" page to do the"
@@ -229,16 +239,12 @@ msgstr "Not Enabled"
 msgid "Failed to import no. %(entry)s schedule."
 msgstr "Failed to import no. %(entry)s schedule."
 
-#: paper_eta/src/controllers/schedule.py:197
-#: paper_eta/src/controllers/schedule.py:235
+#: paper_eta/src/controllers/schedule.py:195
+#: paper_eta/src/controllers/schedule.py:233
 msgid "Layout does not exists."
 msgstr "Layout Does Not Exists"
 
-#: paper_eta/src/controllers/schedule.py:267
-msgid "Failed to refresh the screen."
-msgstr "Failed to refresh the screen."
-
-#: paper_eta/src/controllers/schedule.py:273
+#: paper_eta/src/controllers/schedule.py:280
 msgid "success"
 msgstr "Success"
 
