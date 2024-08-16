@@ -35,7 +35,7 @@
 {% block content %}
 
 <div class="row align-items-center" style="height: 100vh;">
-    <div class="mx-auto col-10 col-md-8 col-lg-6">
+    <div class="mx-auto py-4 col-10 col-md-8 col-lg-6">
         <form action="{{ form_action }}" method="{{ 'POST' if editing else 'POST' }}" autocomplete="off">
             {{ form.csrf_token }}
 

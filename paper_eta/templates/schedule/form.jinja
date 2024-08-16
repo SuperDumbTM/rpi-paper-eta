@@ -33,7 +33,7 @@
 
 {% block content %}
 <div class="row align-items-center" style="height: 100vh;">
-    <div class="mx-auto col-10 col-md-8 col-lg-6">
+    <div class="mx-auto py-4 col-10 col-md-8 col-lg-6">
         <form method="POST" autocomplete="off" x-data="form"
             x-init="$data.layout.{{ form.eta_format.data }} = '{{ form.layout.data }}'">
             {{ form.csrf_token }}
