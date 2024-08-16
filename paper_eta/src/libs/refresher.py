@@ -29,7 +29,7 @@ def refresh(epd_brand: str,
     try:
         renderer_ = renderer.create(epd_brand, epd_model, eta_format, layout)
     except ModuleNotFoundError:
-        logging.error("Invalid layout: %s", layout)
+        logging.exception(str(e))
         return False
 
     # reference: https://stackoverflow.com/a/73618460

@@ -84,13 +84,12 @@ class Schedule(BaseModel):
         if extensions.scheduler.get_job(job_id) is not None:
             extensions.scheduler.remove_job(job_id)
 
-        # BUG: hardcoded URL
         extensions.scheduler.add_job(job_id,  # invoking str() here makes the formatter unhappy
                                      refresher.refresh,
                                      kwargs={
                                          'epd_brand': site_data.AppConfiguration()['epd_brand'],
                                          'epd_model': site_data.AppConfiguration()['epd_model'],
-                                         'eta_format': renderer.EtaFormat(self.eta_format),
+                                         'eta_format': self.eta_format,
                                          'layout': self.layout,
                                          'is_partial': self.is_partial,
                                          'degree': site_data.AppConfiguration()['degree'],
