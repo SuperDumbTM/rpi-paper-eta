@@ -34,12 +34,6 @@ def babel_update():
     ], check=True)
 
 
-@i18n_cli.command('modify', short_help="Extract and update")
-def babel_extract_update():
-    babel_extract()
-    babel_update()
-
-
 @i18n_cli.command('compile')
 def babel_compile():
     subprocess.run([
