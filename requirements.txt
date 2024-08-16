@@ -7,6 +7,7 @@ attrs==24.2.0
 babel==2.16.0
 blinker==1.8.2
 click==8.1.7
+colorzero==2.0
 croniter==3.0.3
 Flask==3.0.3
 Flask-APScheduler==1.13.1
@@ -14,6 +15,7 @@ flask-babel==4.0.0
 Flask-SQLAlchemy==3.1.1
 Flask-WTF==1.2.1
 frozenlist==1.4.1
+gpiozero==2.0.1
 greenlet==3.0.3
 gunicorn==23.0.0
 idna==3.7
@@ -28,7 +30,6 @@ pydantic_core==2.20.1
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 pytz==2024.1
-RPi.GPIO==0.7.1
 six==1.16.0
 spidev==3.6
 SQLAlchemy==2.0.32
