@@ -40,20 +40,20 @@
                 </small>
             </div>
             <div class="col-12 col-xl-4 my-3 my-xl-auto text-end">
-                <a href="{{ url_for('configuration.export') }}" class="btn btn-sm btn-info mx-1">
-                    {{ _('export') }}
-                </a>
-
                 <div style="display: inline-block;" x-data>
                     <form method="POST" action="{{ url_for('configuration.import_') }}" enctype="multipart/form-data"
                         x-ref="importForm">
                         <input type="file" name="file" class="d-none" @upload.window="$el.click()"
                             @change="$event.target.form.submit()">
-                        <button type="button" class="btn btn-sm btn-secondary mx-1" @click="$dispatch('upload')">
+                        <button type="button" class="btn btn-sm btn-info mx-1" @click="$dispatch('upload')">
                             {{ _('import') }}
                         </button>
                     </form>
                 </div>
+
+                <a href="{{ url_for('configuration.export') }}" class="btn btn-sm btn-secondary mx-1">
+                    {{ _('export') }}
+                </a>
             </div>
         </div>
 
