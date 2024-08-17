@@ -6,18 +6,18 @@ import PIL.Image
 from flask import request
 from flask_babel import lazy_gettext
 
-from paper_eta.src import extensions
+from paper_eta.src import exts
 from paper_eta.src.libs import hketa
 
 
 def route_choices(transport: str) -> list[tuple[str]]:
-    transp = extensions.hketa.create_transport(hketa.Company(transport))
+    transp = exts.hketa.create_transport(hketa.Company(transport))
     return [(no, no) for no in transp.route_list().keys()]
 
 
 def direction_choices(transport: str,
                       no: str) -> list[tuple[str]]:
-    transp = extensions.hketa.create_transport(hketa.Company(transport))
+    transp = exts.hketa.create_transport(hketa.Company(transport))
 
     directions = []
     if transp.route_list()[no]["inbound"]:
@@ -33,7 +33,7 @@ def type_choices(transport: str,
                  no: str,
                  direction: str,
                  locale: Literal['en', 'tc'] = 'en') -> list[tuple[str]]:
-    transp = extensions.hketa.create_transport(hketa.Company(transport))
+    transp = exts.hketa.create_transport(hketa.Company(transport))
 
     return [
         (
@@ -50,7 +50,7 @@ def stop_choices(transport: str,
                  direction: str,
                  service_type: str,
                  locale: Literal['en', 'tc'] = 'en') -> list[tuple[str]]:
-    transp = extensions.hketa.create_transport(hketa.Company(transport))
+    transp = exts.hketa.create_transport(hketa.Company(transport))
     return [(stop["id"], f"{stop['seq']:02}. {stop['name'][hketa.Locale(locale)]}")
             for stop in transp.stop_list(no, hketa.Direction(direction), service_type)]
 
@@ -59,7 +59,7 @@ def get_locale() -> Optional[str]:
     crrt_locale = (request.cookies.get('locale')
                    or request.headers.get("X-Locale"))
     translations = [str(translation)
-                    for translation in extensions.babel.list_translations()]
+                    for translation in exts.babel.list_translations()]
 
     if crrt_locale in translations:
         return crrt_locale

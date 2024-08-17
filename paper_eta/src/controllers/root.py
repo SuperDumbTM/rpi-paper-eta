@@ -2,8 +2,8 @@ from flask import (Blueprint, current_app, flash, make_response, redirect,
                    render_template, request, url_for)
 from flask_babel import lazy_gettext
 
-from paper_eta.src import site_data, utils
-from paper_eta.src.libs import epd_log, refresher, renderer
+from paper_eta.src import database, site_data, utils
+from paper_eta.src.libs import refresher, renderer
 
 bp = Blueprint('root', __name__, url_prefix="/")
 
@@ -12,9 +12,7 @@ bp = Blueprint('root', __name__, url_prefix="/")
 def index():
     if not (app_conf := site_data.AppConfiguration()).configurated():
         flash(lazy_gettext("missing_app_config"), "info")
-    return render_template("index.jinja",
-                           refresh_logs=tuple(epd_log.epdlog.get()),
-                           app_conf=app_conf)
+    return render_template("index.jinja", app_conf=app_conf)
 
 
 @bp.route('language/<lang>')
@@ -36,4 +34,7 @@ def screen_dumps():
 @bp.route("/histories")
 def histories():
     return render_template("root/partials/histories.jinja",
-                           refresh_logs=tuple(epd_log.epdlog.get()),)
+                           refresh_logs=(database.RefreshLog.query
+                                         .order_by(database.RefreshLog.created_at.desc())
+                                         .all())
+                           )

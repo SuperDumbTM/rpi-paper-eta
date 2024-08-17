@@ -5,10 +5,22 @@ from pathlib import Path
 
 from PIL import Image
 
-from .. import database, extensions
-from ..libs import epd_log, epdcon, hketa, renderer
+from .. import database, exts
+from ..libs import epdcon, hketa, renderer
 
 _ctrl_mutex = threading.Lock()
+
+
+def _write_log(**kwargs):
+    with exts.scheduler.app.app_context():
+        exts.db.session.add(
+            database.RefreshLog(
+                eta_format=kwargs["eta_format"],
+                layout=kwargs["layout"],
+                is_partial=kwargs["is_partial"],
+                error_message=kwargs.get("error_message")
+            ))
+        exts.db.session.commit()
 
 
 def refresh(epd_brand: str,
@@ -19,29 +31,31 @@ def refresh(epd_brand: str,
             degree: int,
             is_dry_run: bool,
             screen_dump_dir: Path) -> bool:
-    args_snap = locals()
-
     if eta_format not in (t for t in renderer.EtaFormat):
         logging.error("Invalid EtaFormat: %s", eta_format)
+        _write_log(**locals(), error_message=str(e))
         return False
 
     # ---------- generate ETA images ----------
     try:
-        renderer_ = renderer.create(epd_brand, epd_model, eta_format, layout)
-    except ModuleNotFoundError:
+        renderer_ = renderer.create(
+            epd_brand, epd_model, eta_format, layout)
+    except ModuleNotFoundError as e:
         logging.exception(str(e))
+        _write_log(**locals(), error_message=str(e))
         return False
 
     # reference: https://stackoverflow.com/a/73618460
-    with extensions.scheduler.app.app_context():
+    with exts.scheduler.app.app_context():
         queries = [hketa.RouteQuery(**bm.as_dict())
                    for bm in database.Bookmark.query
                    .filter(database.Bookmark.enabled)
                    .order_by(database.Bookmark.ordering)
                    .all()]
-        images = renderer_.draw([extensions.hketa.create_eta_processor(query).etas()
-                                 for query in queries],
-                                degree)
+
+    images = renderer_.draw([exts.hketa.create_eta_processor(query).etas()
+                             for query in queries],
+                            degree)
 
     if not is_dry_run:
         # ---------- initialise the e-paper controller ----------
@@ -50,11 +64,11 @@ def refresh(epd_brand: str,
                 epd_brand, epd_model, is_partial=is_partial)
         except (OSError, RuntimeError) as e:
             logging.exception("Unable to initialise the e-paper controller.")
-            epd_log.epdlog.put(epd_log.Log(**args_snap, error=e))
+            _write_log(**locals(), error_message=str(e))
             return False
         except ModuleNotFoundError as e:
             logging.exception(str(e))
-            epd_log.epdlog.put(epd_log.Log(**args_snap, error=e))
+            _write_log(**locals(), error_message=str(e))
             return False
 
         # ---------- refresh the e-paper screen ----------
@@ -65,8 +79,7 @@ def refresh(epd_brand: str,
                            False,
                            True)
         except Exception as e:  # pylint: disable=broad-exception-caught
-            epd_log.epdlog.put(epd_log.Log(**args_snap, error=e))
-
+            _write_log(**locals(), error_message=str(e))
             if isinstance(e, RuntimeError):
                 logging.error(str(e))
             else:
@@ -74,7 +87,7 @@ def refresh(epd_brand: str,
                     "An unexpected error occurred during screen refreshing.")
             return False
 
-    epd_log.epdlog.put(epd_log.Log(**args_snap))
+    _write_log(**locals())
     for color, image in images.items():
         image.save(screen_dump_dir.joinpath(f"{color}.bmp"), "bmp")
     return True

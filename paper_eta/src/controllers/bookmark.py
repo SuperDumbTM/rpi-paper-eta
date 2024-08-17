@@ -6,7 +6,7 @@ from flask import (Blueprint, Response, flash, redirect, render_template,
                    request, url_for)
 from flask_babel import gettext, lazy_gettext
 
-from paper_eta.src import database, db, extensions, forms, site_data, utils
+from paper_eta.src import database, db, exts, forms, site_data, utils
 from paper_eta.src.libs import hketa
 
 bp = Blueprint('bookmark',
@@ -29,7 +29,7 @@ def index():
         bookmarks = []
         for bm in database.Bookmark.query.order_by(database.Bookmark.ordering).all():
             try:
-                stop_name = extensions.hketa.create_route(
+                stop_name = exts.hketa.create_route(
                     hketa.RouteQuery(**bm.as_dict())).stop_name()
             except Exception as e:  # pylint: disable=broad-exception-caught
                 print(e)

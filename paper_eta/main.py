@@ -6,7 +6,7 @@ from pathlib import Path
 
 from flask import Flask
 
-from paper_eta.src import cli, controllers, database, extensions, handles, utils
+from paper_eta.src import cli, controllers, database, exts, handles, utils
 
 
 def create_app() -> Flask:
@@ -21,12 +21,12 @@ def create_app() -> Flask:
     dictConfig(app.config['LOGGING_CONFIG'])
 
     # extensions initisation
-    extensions.babel.init_app(app, locale_selector=utils.get_locale)
-    extensions.scheduler.init_app(app)
-    extensions.scheduler.start()
-    extensions.db.init_app(app)
-    extensions.hketa.data_path = app.config['HKETA_PATH_DATA']
-    extensions.hketa.threshold = app.config['HKETA_THRESHOLD']
+    exts.babel.init_app(app, locale_selector=utils.get_locale)
+    exts.scheduler.init_app(app)
+    exts.scheduler.start()
+    exts.db.init_app(app)
+    exts.hketa.data_path = app.config['HKETA_PATH_DATA']
+    exts.hketa.threshold = app.config['HKETA_THRESHOLD']
 
     # blueprints registration
     app.register_blueprint(controllers.bookmark.bp)
@@ -58,14 +58,14 @@ def create_app() -> Flask:
     })
 
     with app.app_context():
-        extensions.db.create_all()
-        for s in extensions.db.session.query(database.Schedule).all():
+        exts.db.create_all()
+        for s in exts.db.session.query(database.Schedule).all():
             try:
                 if s.enabled:
                     s.add_job()
             except KeyError:
                 # app configuration not exists
                 s.enabled = False
-        extensions.db.session.commit()
+        exts.db.session.commit()
 
     return app

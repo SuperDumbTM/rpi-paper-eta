@@ -8,7 +8,7 @@ from flask import (Blueprint, Response, current_app, flash, redirect, render_tem
                    request, url_for)
 from flask_babel import gettext, lazy_gettext
 
-from paper_eta.src import database, db, extensions, forms, site_data, utils
+from paper_eta.src import database, db, exts, forms, site_data, utils
 from paper_eta.src.libs import hketa, renderer, refresher
 
 bp = Blueprint('schedule',
@@ -221,7 +221,7 @@ def preview(eta_format: str, layout: str):
                    .order_by(database.Bookmark.ordering)
                    .all()]
         etas = [
-            extensions.hketa.create_eta_processor(query).etas() for query in queries
+            exts.hketa.create_eta_processor(query).etas() for query in queries
         ]
 
         render = renderer.create(
@@ -253,7 +253,7 @@ def refresh(id_: str):
     try:
         success = refresher.refresh(app_conf['epd_brand'],
                                     app_conf['epd_model'],
-                                    schedule.eta_format,
+                                    schedule.eta_format.value,
                                     schedule.layout,
                                     schedule.is_partial,
                                     app_conf['degree'],
