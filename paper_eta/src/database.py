@@ -137,13 +137,10 @@ def remove_refresh_job(mapper, connection, target: Schedule):
 
 @event.listens_for(Schedule, 'after_update')
 def update_refresh_job_after(mapper, connection, target: Schedule):
-    old_values: dict = inspect(target).committed_state
+    if inspect(target).committed_state.get('enabled'):
+        target.remove_job()
 
-    if old_values.get('enabled') is True and not target.enabled:
-        # is disabling
-        target.remove_job()
     if target.enabled:
-        target.remove_job()
         target.add_job()
 
 
