@@ -74,7 +74,7 @@
         });
 
         // navbar current location indicator
-        document.querySelector(`a[href$="/${location.pathname.split('/')[1]}"]`)
+        document.querySelector(`a[href^="/${location.pathname.split('/')[1]}"]`)
             .classList
             .add("active");
     })
