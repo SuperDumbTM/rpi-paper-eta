@@ -35,7 +35,7 @@
 <div class="row align-items-center" style="height: 100vh;">
     <div class="mx-auto py-4 col-10 col-md-8 col-lg-6">
         <form method="POST" autocomplete="off" x-data="form"
-            x-init="$data.layout.{{ form.eta_format.data }} = '{{ form.layout.data }}'">
+            x-init="$data.layout.{{ form.eta_format.data.value }} = '{{ form.layout.data }}'">
             {{ form.csrf_token }}
 
             <h1>{{ _('new_schedule') }}</h1>
@@ -241,7 +241,7 @@
                 return this.cronDescr != "{{ _('unrecognised') }}";
             },
             schedule: '',
-            layout: {{ formats }}.map((v) => ({ v: "" })),
+            layout: {{ formats }}.reduce((a, v) => ({ ...a, [v]: ""}), {}),
         }));
     });
 
