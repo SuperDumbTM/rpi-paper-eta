@@ -75,9 +75,6 @@ class Schedule(BaseModel):
     is_partial: Mapped[bool] = mapped_column(default=False)
     enabled: Mapped[bool] = mapped_column(default=False)
 
-    def __repr__(self) -> str:
-        return f"Schedule({self.id}, {self.schedule})"
-
     def add_job(self) -> None:
         job_id = str(self.id)
         cron = self.schedule.split(' ')
@@ -118,10 +115,6 @@ class Schedule(BaseModel):
             raise SyntaxError('Invalid cron expression')
         return schedule
 
-
-# ------------------------------------------------------------
-#                       Event Listeners
-# ------------------------------------------------------------
 
 @event.listens_for(Schedule, 'after_insert')
 def add_refresh_job(mapper, connection, target: Schedule):
