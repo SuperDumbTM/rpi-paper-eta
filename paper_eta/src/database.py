@@ -9,7 +9,7 @@ import apscheduler.jobstores.base
 import croniter
 from flask import current_app
 from sqlalchemy import event, func, inspect
-from sqlalchemy.orm import Mapped, mapped_column, validates
+from sqlalchemy.orm import Mapped, mapped_column, validates, Session
 
 from paper_eta.src import exts, site_data
 from paper_eta.src.libs import hketa, renderer, refresher
@@ -156,8 +156,14 @@ class RefreshLog(BaseModel):
 
 @event.listens_for(RefreshLog, 'before_insert')
 def purge_logs(mapper, connection, target: RefreshLog):
-    while (exts.db.session.query(func.count(RefreshLog.id)).scalar() > 60):
-        exts.db.session.delete(exts.db.session
-                               .query(RefreshLog)
-                               .order_by(RefreshLog.created_at)
-                               .first())
+    if exts.db.session.query(func.count(RefreshLog.id)).scalar() < 120:
+        return
+
+    @event.listens_for(exts.db.session, "after_flush", once=True)
+    def receive_after_flush(session: Session, context):
+        logs = session.query(RefreshLog)\
+            .order_by(RefreshLog.created_at)\
+            .limit(60)\
+            .all()
+        for log in logs:
+            session.delete(log)
