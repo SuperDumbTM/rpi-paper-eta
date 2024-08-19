@@ -6,7 +6,7 @@ from pathlib import Path
 
 from flask import Flask
 
-from paper_eta.src import cli, controllers, database, exts, handles, utils
+from paper_eta.src import cli, controllers, database, exts, handles, site_data, utils
 
 
 def create_app() -> Flask:
@@ -51,6 +51,7 @@ def create_app() -> Flask:
         today=lambda: datetime.now().date(),
         time=lambda: datetime.now().strftime("%H:%M:%S"),
         now=lambda: datetime.now().isoformat(sep=" ", timespec="seconds"),
+        is_dry_run=lambda: site_data.AppConfiguration().get("dry_run", False)
     )
     app.jinja_env.filters.update({
         'unquote': urllib.parse.unquote,
