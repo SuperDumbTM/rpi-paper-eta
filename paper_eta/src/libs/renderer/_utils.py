@@ -1,11 +1,16 @@
 # pylint: disable=redefined-outer-name
 
+from datetime import datetime
 import math
 from typing import Literal
 
 from PIL import ImageDraw, ImageFont
 
 T_POS = Literal["n", "ne", "e", "se", "s", "sw", "w", "nw", "c"]
+
+
+def dt2min(ts: datetime, eta: datetime) -> str:
+    return str(round((eta - ts).total_seconds() / 60))
 
 
 def get_variant(font: ImageFont.FreeTypeFont,

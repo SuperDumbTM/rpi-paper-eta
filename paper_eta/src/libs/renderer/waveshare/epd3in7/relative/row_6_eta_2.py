@@ -57,12 +57,11 @@ class Renderer(Epd3in8RenderBase):
                         eta.remark, xy, (130, row_h/2), FONT_ERMK)
                     continue
 
-                draw.text_responsive(str(int(
-                    (eta.eta - route.timestamp).total_seconds() / 60)),
-                    xy,
-                    (30, row_h/2),
-                    FONT_ETA,
-                    overflow="none")
+                draw.text_responsive(_utils.dt2min(route.timestamp, eta.eta),
+                                     xy,
+                                     (30, row_h/2),
+                                     FONT_ETA,
+                                     overflow="none")
                 draw.text_responsive(self.text_min(route.locale),
                                      (xy[0] + 30, xy[1]),
                                      (25, row_h/2 - 9),

@@ -63,13 +63,12 @@ class Renderer(Epd3in8RenderBase):
                     fill_eta = self.white
                     draw.rectangle_wh(xy, (130, row_h/3), fill=self.black)
 
-                draw.text_responsive(str(int(
-                    (eta.eta - route.timestamp).total_seconds() / 60)),
-                    xy,
-                    (30, row_h/3),
-                    FONT_ETA,
-                    fill=fill_eta,
-                    overflow="none")
+                draw.text_responsive(_utils.dt2min(route.timestamp, eta.eta),
+                                     xy,
+                                     (30, row_h/3),
+                                     FONT_ETA,
+                                     fill=fill_eta,
+                                     overflow="none")
                 draw.text_responsive(self.text_min(route.locale),
                                      (xy[0] + 30, xy[1]),
                                      (25, row_h/3 - 3),
