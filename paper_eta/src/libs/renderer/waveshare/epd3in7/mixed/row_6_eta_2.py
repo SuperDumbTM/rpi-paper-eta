@@ -21,8 +21,8 @@ class Renderer(Epd3in8RenderBase):
     @classmethod
     def spec(cls):
         return RendererSpec(
-            width=cls.height,
-            height=cls.width,
+            width=cls.HEIGHT,
+            height=cls.WIDTH,
             color={
                 "black": (0, 0, 0)
             },
@@ -58,10 +58,10 @@ class Renderer(Epd3in8RenderBase):
                         eta.remark, xy, (130, row_h/2), FONT_ERMK)
                     continue
 
-                fill_eta = self.black
+                fill_eta = self.BLACK
                 if "route_variant" in eta.extras:
-                    fill_eta = self.white
-                    draw.rectangle_wh(xy, (130, row_h/2), fill=self.black)
+                    fill_eta = self.WHITE
+                    draw.rectangle_wh(xy, (130, row_h/2), fill=self.BLACK)
 
                 draw.text_responsive(_utils.dt2min(route.timestamp, eta.eta),
                                      xy,

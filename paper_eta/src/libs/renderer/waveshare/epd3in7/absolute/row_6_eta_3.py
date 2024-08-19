@@ -21,8 +21,8 @@ class Renderer(Epd3in8RenderBase):
     @classmethod
     def spec(cls):
         return RendererSpec(
-            width=cls.height,
-            height=cls.width,
+            width=cls.HEIGHT,
+            height=cls.WIDTH,
             color={
                 "black": (0, 0, 0)
             },
