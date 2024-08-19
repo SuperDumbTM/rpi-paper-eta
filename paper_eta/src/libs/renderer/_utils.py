@@ -10,24 +10,51 @@ T_POS = Literal["n", "ne", "e", "se", "s", "sw", "w", "nw", "c"]
 
 
 def dt2min(ts: datetime, eta: datetime) -> str:
+    """Calculate the difference in minutes between two datetime objects.
+
+    Args:
+        ts (datetime): The starting datetime object.
+        eta (datetime): The ending datetime object.
+
+    Returns:
+        str: A string representation of the difference in minutes between the two datetime objects.
+    """
     return str(round((eta - ts).total_seconds() / 60))
 
 
 def get_variant(font: ImageFont.FreeTypeFont,
                 size: int = None,
                 name: str = None) -> ImageFont.FreeTypeFont:
+    """Generate a variant of the input font with optional size and variation.
+
+    Args:
+        font (ImageFont.FreeTypeFont): The original font object.
+        size (int, optional): The size of the new font variant. Defaults to None.
+        name (str, optional): The variation name for the new font variant. Defaults to None.
+
+    Returns:
+        ImageFont.FreeTypeFont: A new font variant based on the input font with optional size and variation.
+
+    Raises:
+        ValueError: If the provided variation name is not valid.
+    """
     new = font.font_variant(size=(size or font.size))
     if name:
-        try:
-            new.set_variation_by_name(name)
-        except ValueError:
-            print("Available variation name: " +
-                  ", ".join(map(str, new.get_variation_names())))
-            raise
+        new.set_variation_by_name(name)
     return new
 
 
 def text_clip(t: str, length: int, font: ImageFont.FreeTypeFont) -> str:
+    """Clips the input text to fit within the specified length based on the provided font.
+
+    Args:
+        t (str): The input text to be clipped.
+        length (int): The maximum length to clip the text to.
+        font (ImageFont.FreeTypeFont): The font used to measure the text length.
+
+    Returns:
+        str: The clipped text that fits within the specified length.
+    """
     if not t:
         return ""
     if font.getlength(t) <= length:
@@ -36,6 +63,19 @@ def text_clip(t: str, length: int, font: ImageFont.FreeTypeFont) -> str:
 
 
 def text_ellipsis(t: str, length: int, font: ImageFont.FreeTypeFont) -> str:
+    """Generate a text string with ellipsis if the length exceeds the specified limit.
+
+    Args:
+        t (str): The input text string.
+        length (int): The maximum length allowed for the text.
+        font (ImageFont.FreeTypeFont): The font used to measure text length.
+
+    Returns:
+        str: The modified text string with ellipsis if the length exceeds the limit.
+
+    Raises:
+        ValueError: If the specified length is too small.
+    """
     if font.getlength("...") > length:
         raise ValueError("length too small")
     if not t:
@@ -50,21 +90,18 @@ def offset(
     wh: tuple[float, float],
     position: T_POS = "c"
 ) -> tuple[float, float]:
-    """calulate the x, y offset with given alignment
+    """Calculate the offset based on the position relative to the bounding box.
 
     Args:
-        text (str): input text
-        width (float): maximum display length in pixel
-        height (float): maximum display height in pixel
-        font (ImageFont.FreeTypeFont): font used to display the text
-        position (str, optional): desire positioning. Defaults to "c".
-
-    Raises:
-        ValueError: the given `position` is not a valid
+        wh_box (tuple[float, float]): The width and height of the bounding box.
+        wh (tuple[float, float]): The width and height of the object.
+        position (T_POS, optional): The align position relative to the bounding box. Defaults to "c".
 
     Returns:
-        tuple[float, float]: start position of x, y (in pixel)
-            relative to the given area
+        tuple[float, float]: The offset coordinates based on the specified position.
+
+    Raises:
+        ValueError: If an invalid position is provided.
     """
     over_width = max(0, wh[0] - wh_box[0])
     over_height = max(0, wh[1] - wh_box[1])
@@ -99,9 +136,16 @@ def wrap(draw: ImageDraw.ImageDraw,
          text: str,
          wh: tuple[float, float],
          font: ImageFont.FreeTypeFont) -> str:
-    """Wrap a text to multiple lines with given area,  discard if the area is not
-    enough to display all the text
-    ```
+    """Wrap text to fit within a specified width and height.
+
+    Args:
+        draw (ImageDraw.ImageDraw): The ImageDraw object to draw text.
+        text (str): The input text to be wrapped.
+        wh (tuple[float, float]): The width and height constraints for the wrapped text.
+        font (ImageFont.FreeTypeFont): The font used for drawing the text.
+
+    Returns:
+        str: The wrapped text that fits within the specified width and height.
     """
     if len(text) <= 0:
         return text
@@ -138,12 +182,28 @@ class EtaImageDraw(ImageDraw.ImageDraw):
                      fill=None,
                      outline=None,
                      outline_width=1) -> None:
+        """Draw a rectangle with specified width and height.
+
+        Args:
+            xy (tuple[float, float]): The coordinates of the top-left corner of the rectangle.
+            wh (tuple[float, float]): The width and height of the rectangle.
+            fill: The fill color of the rectangle.
+            outline: The outline color of the rectangle.
+            outline_width (int): The width of the outline.
+        """
         self.rectangle((xy, (xy[0] + wh[0], xy[1] + wh[1])),
                        fill,
                        outline,
                        outline_width)
 
     def cross(self, xy: tuple[float, float], wh: tuple[float, float], fill=None):
+        """Draw a cross shape.
+
+        Args:
+            xy (tuple[float, float]): The coordinates of the top-left corner of the cross.
+            wh (tuple[float, float]): The width and height of the cross.
+            fill: The color of the cross.
+        """
         self.line((xy[0], xy[1] + wh[1]/2, xy[0] + wh[0], xy[1] + wh[1]/2),
                   fill=fill)
         self.line((xy[0] + wh[0]/2, xy[1], xy[0] + wh[0]/2, xy[1] + wh[1]),
@@ -161,6 +221,18 @@ class EtaImageDraw(ImageDraw.ImageDraw):
         fill=None,
         debug: bool = False
     ) -> None:
+        """Draw responsive text.
+
+        Args:
+            text (str): The text to be drawn.
+            xy (tuple[float, float]): The coordinates of the top-left corner of the text.
+            wh (tuple[float, float]): The width and height of the text bounding box.
+            font (ImageFont.FreeTypeFont): The font to be used for the text.
+            overflow (Literal["none", "clip", "ellipsis", "wrap-ellipsis"]): The overflow behavior for the text.
+            position (T_POS): The position of the text within the bounding box.
+            fill: The color of the text.
+            debug (bool): Whether to draw debug rectangles.
+        """
         if overflow == "clip":
             text = text_clip(text, wh[0], font)
         if overflow == "ellipsis":
