@@ -12,23 +12,47 @@
 
 {% block style %}
 <style>
-    tr>*:nth-child(1),
-    tr>*:nth-child(2),
-    tr>*:nth-child(7) {
-        display: none;
-    }
-
-    @media (min-width: 576px) {
-
-        tr>*:nth-child(1),
-        tr>*:nth-child(2),
-        tr>*:nth-child(7) {
-            display: table-cell;
+    @media (max-width: 576px) {
+        .rpc .collapse-sm {
+            display: none;
         }
     }
 
-    .table tr.disabled td {
-        color: var(--bs-gray-500);
+    .rpc tbody tr.has-child td:nth-child(2)::before {
+        content: "";
+        margin-right: 0.5em;
+        display: inline-block;
+        box-sizing: border-box;
+        content: "";
+        border-top: 5px solid transparent;
+        border-left: 10px solid rgba(0, 0, 0, 0.5);
+        border-bottom: 5px solid transparent;
+        border-right: 0px solid transparent;
+    }
+
+    .rpc tbody tr.rpc-expanded td:nth-child(2)::before {
+        border-top: 10px solid rgba(0, 0, 0, 0.5);
+        border-left: 5px solid transparent;
+        border-bottom: 0px solid transparent;
+        border-right: 5px solid transparent;
+    }
+
+    .rpc tbody tr.child ul {
+        display: inline-block;
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .rpc tbody tr.child ul li {
+        border-bottom: 1px solid #efefef;
+        padding: 0.5em 0;
+    }
+
+    .rpc tbody tr.child span.rpc-child-title {
+        display: inline-block;
+        min-width: 75px;
+        font-weight: bold;
     }
 </style>
 {% endblock style %}
@@ -70,9 +94,12 @@
             <form>
                 <div class="table-responsive">
                     <table class="table table-striped" hx-get="" hx-trigger="load delay:1ms" hx-target="tbody"
-                        hx-on::before-request="showLoading(150)" hx-on::after-request="makeSortable(); hideLoading();" style="min-width: 400px;">
+                        hx-on::before-request="showLoading(150)"
+                        hx-on::after-request="makeSortable(); new RpcTable('table'); hideLoading();"
+                        style="min-width: 400px;">
                         <thead>
                             <tr>
+                                <th class="collapse-sm">{{ _('no.') }}</th>
                                 <th>{{ _('transport') }}</th>
                                 <th>{{ _('route') }}</th>
                                 <th>{{ _('direction') }}</th>
@@ -95,6 +122,7 @@
 {% block script %}
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 
+<script src="{{ url_for('static', filename='scripts/rpc-table.js') }}"></script>
 <script>
     function makeSortable() {
         if (document.querySelectorAll("tbody input").length <= 1)
