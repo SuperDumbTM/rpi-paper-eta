@@ -32,8 +32,8 @@ def refresh(epd_brand: str,
             is_dry_run: bool,
             screen_dump_dir: Path) -> bool:
     if eta_format not in (t for t in renderer.EtaFormat):
-        logging.error("Invalid EtaFormat: %s", eta_format)
-        _write_log(**locals(), error_message=str(e))
+        logging.error("Invalid Eta Format: %s", eta_format)
+        _write_log(**locals(), error_message="Invalid Eta Formate.")
         return False
 
     # ---------- generate ETA images ----------
