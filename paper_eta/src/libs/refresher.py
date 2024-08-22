@@ -1,28 +1,83 @@
+from enum import Enum
+from functools import wraps
 import logging
 import os
 import threading
 from pathlib import Path
 
 from PIL import Image
+from flask import current_app
+
+from paper_eta.src import site_data
 
 from .. import database, exts
 from ..libs import epdcon, hketa, renderer
 
 _ctrl_mutex = threading.Lock()
 
+_refresh_rotate = {
+    "id": None,
+    "count": 0
+}
+
+
+def _with_app_context(func):
+    """Decorator function that wraps the input function with an Flask application context.
+    """
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        # reference: https://stackoverflow.com/a/73618460
+        with exts.scheduler.app.app_context():
+            return func(*args, **kwargs)
+    return wrapper
+
 
 def _write_log(**kwargs):
-    with exts.scheduler.app.app_context():
-        exts.db.session.add(
-            database.RefreshLog(
-                eta_format=kwargs["eta_format"],
-                layout=kwargs["layout"],
-                is_partial=kwargs["is_partial"],
-                error_message=kwargs.get("error_message")
-            ))
-        exts.db.session.commit()
+    exts.db.session.add(
+        database.RefreshLog(
+            eta_format=kwargs["eta_format"],
+            layout=kwargs["layout"],
+            is_partial=kwargs["is_partial"],
+            error_message=kwargs.get("error_message")
+        ))
+    exts.db.session.commit()
 
 
+@_with_app_context
+def scheduled_refresh(schedule: "database.Schedule"):
+    """Function that handles scheduled refresh based on the input schedule.
+
+    Args:
+        schedule: The schedule object containing information about the data refresh.
+    """
+    if not schedule.is_partial:
+        is_partial = False
+    elif schedule.partial_cycle <= 0:
+        is_partial = True
+    elif _refresh_rotate["id"] != schedule.id:
+        _refresh_rotate["id"] = schedule.id
+        _refresh_rotate["count"] = 1
+        is_partial = False
+    else:
+        _refresh_rotate["count"] += 1
+        is_partial = True
+        if _refresh_rotate["count"] > schedule.partial_cycle:
+            _refresh_rotate["count"] = 0
+            is_partial = False
+
+    refresh(epd_brand=site_data.AppConfiguration()['epd_brand'],
+            epd_model=site_data.AppConfiguration()['epd_model'],
+            eta_format=(schedule.eta_format.value
+                        if isinstance(schedule.eta_format, Enum)
+                        else schedule.eta_format),
+            layout=schedule.layout,
+            is_partial=is_partial,
+            degree=site_data.AppConfiguration()['degree'],
+            is_dry_run=site_data.AppConfiguration()['dry_run'],
+            screen_dump_dir=current_app.config['DIR_SCREEN_DUMP'])
+
+
+@_with_app_context
 def refresh(epd_brand: str,
             epd_model: str,
             eta_format: str,
@@ -45,13 +100,11 @@ def refresh(epd_brand: str,
         _write_log(**locals(), error_message=str(e))
         return False
 
-    # reference: https://stackoverflow.com/a/73618460
-    with exts.scheduler.app.app_context():
-        queries = [hketa.RouteQuery(**bm.as_dict())
-                   for bm in database.Bookmark.query
-                   .filter(database.Bookmark.enabled)
-                   .order_by(database.Bookmark.ordering)
-                   .all()]
+    queries = [hketa.RouteQuery(**bm.as_dict())
+               for bm in database.Bookmark.query
+               .filter(database.Bookmark.enabled)
+               .order_by(database.Bookmark.ordering)
+               .all()]
 
     images = renderer_.draw([exts.hketa.create_eta_processor(query).etas()
                              for query in queries],

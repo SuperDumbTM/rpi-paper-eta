@@ -98,7 +98,7 @@ def create():
 @bp.route('/edit/<id_>', methods=["GET", "POST"])
 def edit(id_: str):
     form = forms.ScheduleForm()
-    sch = database.Schedule.query.get_or_404(id_)
+    sch: database.Schedule = database.Schedule.query.get_or_404(id_)
 
     if form.validate_on_submit():
         for k, v in form.data.items():
@@ -111,6 +111,7 @@ def edit(id_: str):
     form.eta_format.data = sch.eta_format
     form.layout.data = sch.layout
     form.is_partial.data = sch.is_partial
+    form.partial_cycle.data = sch.partial_cycle
     form.enabled.data = sch.enabled
 
     return render_template("schedule/form.jinja",

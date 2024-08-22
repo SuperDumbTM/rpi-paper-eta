@@ -34,8 +34,12 @@
 {% block content %}
 <div class="row align-items-center" style="height: 100vh;">
     <div class="mx-auto py-4 col-10 col-md-8 col-lg-6">
+        {# x-init instead of alpine:init just to avoid incorrect syntax highligt only #}
         <form method="POST" autocomplete="off" x-data="form"
-            x-init="$data.layout.{{ form.eta_format.data.value }} = '{{ form.layout.data }}'">
+            x-init="
+                $data.layout.{{ form.eta_format.data.value or  form.eta_format.data }} = '{{ form.layout.data }}';
+                $data.is_partial = {{ 'true' if form.is_partial.data else 'false' }}
+            ">
             {{ form.csrf_token }}
 
             <h1>{{ _('new_schedule') }}</h1>
@@ -85,22 +89,42 @@
                 {{ form.layout.label(class="form-label") }}
                 <div class="overflow-auto" id="select-box"></div>
             </div>
-
-            <div class="form-check form-switch">
-                {{ form.is_partial.label(class="form-label") }}
-                {{ form.is_partial(class="form-check-input") }}
-
-                <div class="form-text">
-                    {{ _('partial_refresh_help') }}
-                </div>
-                <div class="form-text text-warning">
-                    {{ _('partial_refresh_limit_help') }}
+            
+            <div class="form-group">
+                <div class="form-check form-switch">
+                    {{ form.enabled.label(class="form-label") }}
+                    {{ form.enabled(class="form-check-input") }}
                 </div>
             </div>
 
-            <div class="form-check form-switch">
-                {{ form.enabled.label(class="form-label") }}
-                {{ form.enabled(class="form-check-input") }}
+            <hr class="my-3">
+
+            <div class="form-group">
+                <div class="form-check form-switch">
+                    {{ form.is_partial.label(class="form-label") }}
+                    {{ form.is_partial(class="form-check-input", **{"x-model": "is_partial"}) }}
+
+                    <div class="form-text">
+                        {{ _('partial_refresh_help') }}
+                    </div>
+                    <div class="form-text text-warning">
+                        {{ _('partial_refresh_limit_help') }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form.partial_cycle.label(class="form-label") }}
+                {{ form.partial_cycle(class="form-control" + form_valid_class(form.partial_cycle), **{":disabled": "!is_partial"}) }}
+
+                <div class="form-text">
+                    {{ form.partial_cycle.description }}
+                </div>
+                <div class="invalid-feedback">
+                    {% for error in form.partial_cycle.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
             </div>
 
             <div class="form-group text-end pt-3">

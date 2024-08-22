@@ -92,6 +92,19 @@ class ScheduleForm(FlaskForm):
 
     is_partial = wtforms.BooleanField(lazy_gettext("partial_refresh"))
 
+    partial_cycle = wtforms.IntegerField(lazy_gettext("auto_full_refresh"),
+                                         default=0,
+                                         validators=[
+                                             wtforms.validators.NumberRange(min=0)],
+                                         description=lazy_gettext("auto_full_refresh_help"))
+
     enabled = wtforms.BooleanField(lazy_gettext("enable"))
 
     submit = wtforms.SubmitField(lazy_gettext('submit'))
+
+    def validate_epd_model(self, field: wtforms.Field):
+        if not self.is_partial.data:
+            return
+
+        if field.data < 0:
+            raise wtforms.ValidationError("Not a valid input.")

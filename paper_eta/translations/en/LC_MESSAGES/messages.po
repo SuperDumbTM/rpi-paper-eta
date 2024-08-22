@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-08-16 10:37+0800\n"
+"POT-Creation-Date: 2024-08-22 10:05+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -16,9 +16,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.15.0\n"
+"Generated-By: Babel 2.16.0\n"
 
-#: paper_eta/src/forms.py:9 paper_eta/templates/index.jinja:36
+#: paper_eta/src/forms.py:9 paper_eta/templates/index.jinja:87
 msgid "brand"
 msgstr "Brand"
 
@@ -29,7 +29,7 @@ msgstr "Brand"
 msgid "please_select"
 msgstr "Please select"
 
-#: paper_eta/src/forms.py:17 paper_eta/templates/index.jinja:42
+#: paper_eta/src/forms.py:17 paper_eta/templates/index.jinja:93
 msgid "model"
 msgstr "Model"
 
@@ -37,7 +37,7 @@ msgstr "Model"
 msgid "language"
 msgstr "Language"
 
-#: paper_eta/src/forms.py:29
+#: paper_eta/src/forms.py:29 paper_eta/templates/includes/navbar.jinja:10
 msgid "dry_run"
 msgstr "Dry Run"
 
@@ -57,7 +57,7 @@ msgid "rotate_degree_help"
 msgstr "Adjust the rotation (in degree) of the output image."
 
 #: paper_eta/src/forms.py:36 paper_eta/src/forms.py:74
-#: paper_eta/src/forms.py:97
+#: paper_eta/src/forms.py:100
 msgid "submit"
 msgstr "Submit"
 
@@ -85,12 +85,12 @@ msgstr "Stop"
 msgid "schedule"
 msgstr "Schedule"
 
-#: paper_eta/src/forms.py:83 paper_eta/templates/index.jinja:88
+#: paper_eta/src/forms.py:83 paper_eta/templates/index.jinja:41
 #: paper_eta/templates/schedule/index.jinja:79
 msgid "eta_format"
 msgstr "ETA Format"
 
-#: paper_eta/src/forms.py:90 paper_eta/templates/index.jinja:89
+#: paper_eta/src/forms.py:90 paper_eta/templates/index.jinja:42
 #: paper_eta/templates/schedule/index.jinja:80
 msgid "layout"
 msgstr "Layout"
@@ -100,6 +100,16 @@ msgid "partial_refresh"
 msgstr "Partial Refresh"
 
 #: paper_eta/src/forms.py:95
+msgid "auto_full_refresh"
+msgstr "Auto Full Refresh"
+
+#: paper_eta/src/forms.py:96
+msgid "auto_full_refresh_help"
+msgstr "Partial Refresh Cycle. A full refresh will be conducted "
+"when the count of partial refresh exceeded the specificed number. "
+"Enter 0 to disable auto full refresh."
+
+#: paper_eta/src/forms.py:98
 msgid "enable"
 msgstr "Enable"
 
@@ -188,17 +198,16 @@ msgid "relative"
 msgstr "Relative Time (Minute)"
 
 #: paper_eta/src/utils.py:25
-msgid "inbound"
-msgstr "Inbound"
-
-#: paper_eta/src/utils.py:28
 msgid "outbound"
 msgstr "Outbound"
 
+#: paper_eta/src/utils.py:28
+msgid "inbound"
+msgstr "Inbound"
+
 #: paper_eta/src/controllers/bookmark.py:36
-#: paper_eta/src/controllers/schedule.py:266
-#: paper_eta/src/controllers/schedule.py:274 paper_eta/templates/error.jinja:2
-#: paper_eta/templates/index.jinja:91
+#: paper_eta/src/controllers/schedule.py:268
+#: paper_eta/src/controllers/schedule.py:276 paper_eta/templates/index.jinja:44
 msgid "error"
 msgstr "Error"
 
@@ -215,16 +224,16 @@ msgstr "Import Failed"
 
 #: paper_eta/src/controllers/bookmark.py:89
 #: paper_eta/src/controllers/bookmark.py:171
-#: paper_eta/src/controllers/schedule.py:142
-#: paper_eta/src/controllers/schedule.py:165
+#: paper_eta/src/controllers/schedule.py:143
+#: paper_eta/src/controllers/schedule.py:166
 msgid "invalid_id"
 msgstr "Invalid ID"
 
 #: paper_eta/src/controllers/root.py:14
 #: paper_eta/src/controllers/schedule.py:79
-#: paper_eta/src/controllers/schedule.py:179
-#: paper_eta/src/controllers/schedule.py:213
-#: paper_eta/src/controllers/schedule.py:249
+#: paper_eta/src/controllers/schedule.py:180
+#: paper_eta/src/controllers/schedule.py:214
+#: paper_eta/src/controllers/schedule.py:250
 msgid "missing_app_config"
 msgstr ""
 "This app is not configutated. Please go to the \"setting\" page to do the"
@@ -239,12 +248,12 @@ msgstr "Not Enabled"
 msgid "Failed to import no. %(entry)s schedule."
 msgstr "Failed to import no. %(entry)s schedule."
 
-#: paper_eta/src/controllers/schedule.py:195
-#: paper_eta/src/controllers/schedule.py:233
+#: paper_eta/src/controllers/schedule.py:196
+#: paper_eta/src/controllers/schedule.py:234
 msgid "Layout does not exists."
 msgstr "Layout Does Not Exists"
 
-#: paper_eta/src/controllers/schedule.py:280
+#: paper_eta/src/controllers/schedule.py:282
 msgid "success"
 msgstr "Success"
 
@@ -288,55 +297,55 @@ msgstr "Invalid Stop"
 msgid "Invalid Service Type"
 msgstr "Service Service Type"
 
-#: paper_eta/templates/error.jinja:9
+#: paper_eta/templates/error.jinja:35
 msgid "!"
 msgstr "!"
 
-#: paper_eta/templates/error.jinja:13
+#: paper_eta/templates/error.jinja:40
 msgid "go_home"
 msgstr "Go Home"
 
-#: paper_eta/templates/includes/navbar.jinja:15
+#: paper_eta/templates/includes/navbar.jinja:24
 #: paper_eta/templates/index.jinja:2
 msgid "nav_home"
 msgstr "Home"
 
 #: paper_eta/templates/index.jinja:32
-msgid "E-Paper"
-msgstr "E-Paper"
-
-#: paper_eta/templates/index.jinja:32
-msgid "setting"
-msgstr "Setting"
-
-#: paper_eta/templates/index.jinja:56
-msgid "screen_content"
-msgstr "Screen Content"
-
-#: paper_eta/templates/index.jinja:60
-msgid "screen_content_help"
-msgstr "The current screen dump of the E-paper display."
-
-#: paper_eta/templates/index.jinja:79
 msgid "refresh_history"
 msgstr "Refresh History"
 
-#: paper_eta/templates/index.jinja:87
+#: paper_eta/templates/index.jinja:40
 msgid "time"
 msgstr "Time"
 
-#: paper_eta/templates/index.jinja:90
+#: paper_eta/templates/index.jinja:43
 #: paper_eta/templates/schedule/index.jinja:83
 msgid "is_partial"
 msgstr "Is Partial"
 
-#: paper_eta/templates/layout.jinja:52
+#: paper_eta/templates/index.jinja:60
+msgid "screen_content"
+msgstr "Screen Content"
+
+#: paper_eta/templates/index.jinja:64
+msgid "screen_content_help"
+msgstr "The current screen dump of the E-paper display."
+
+#: paper_eta/templates/index.jinja:83
+msgid "E-Paper"
+msgstr "E-Paper"
+
+#: paper_eta/templates/index.jinja:83
+msgid "setting"
+msgstr "Setting"
+
+#: paper_eta/templates/layout.jinja:60
 msgid "loading"
 msgstr "Loading"
 
 #: paper_eta/templates/bookmark/edit.jinja:5
 #: paper_eta/templates/bookmark/index.jinja:5
-#: paper_eta/templates/includes/navbar.jinja:45
+#: paper_eta/templates/includes/navbar.jinja:54
 msgid "nav_bookmark"
 msgstr "Bookmark"
 
@@ -358,13 +367,13 @@ msgid "create"
 msgstr "Create"
 
 #: paper_eta/templates/bookmark/index.jinja:56
-#: paper_eta/templates/configuration/index.jinja:53
+#: paper_eta/templates/configuration/index.jinja:49
 #: paper_eta/templates/schedule/index.jinja:59
 msgid "import"
 msgstr "Import"
 
 #: paper_eta/templates/bookmark/index.jinja:62
-#: paper_eta/templates/configuration/index.jinja:44
+#: paper_eta/templates/configuration/index.jinja:55
 #: paper_eta/templates/log/index.jinja:43
 #: paper_eta/templates/schedule/index.jinja:64
 msgid "export"
@@ -407,7 +416,7 @@ msgid "no_record"
 msgstr "No Record"
 
 #: paper_eta/templates/configuration/index.jinja:5
-#: paper_eta/templates/includes/navbar.jinja:21
+#: paper_eta/templates/includes/navbar.jinja:30
 msgid "nav_configuration"
 msgstr "Configuration"
 
@@ -419,13 +428,13 @@ msgstr "Display Setting"
 msgid "display_setting_help"
 msgstr "Select the installed e-paper display's detailes."
 
-#: paper_eta/templates/includes/navbar.jinja:51
+#: paper_eta/templates/includes/navbar.jinja:60
 #: paper_eta/templates/schedule/form.jinja:6
 #: paper_eta/templates/schedule/index.jinja:5
 msgid "nav_schedule"
 msgstr "Schedule"
 
-#: paper_eta/templates/includes/navbar.jinja:57
+#: paper_eta/templates/includes/navbar.jinja:66
 #: paper_eta/templates/log/index.jinja:2
 msgid "nav_log"
 msgstr "Log"
@@ -505,11 +514,11 @@ msgstr "Last Update"
 msgid ":"
 msgstr ":"
 
-#: paper_eta/templates/schedule/form.jinja:41
+#: paper_eta/templates/schedule/form.jinja:44
 msgid "new_schedule"
 msgstr "New Schedule"
 
-#: paper_eta/templates/schedule/form.jinja:43
+#: paper_eta/templates/schedule/form.jinja:46
 msgid "new_schedule_help"
 msgstr ""
 "Create a new screen refresh schedule. The system utilsed <a "
@@ -517,85 +526,85 @@ msgstr ""
 "expression for scheduling. You can use the selector or enter directly if "
 "you know about cron for the desired schedule ."
 
-#: paper_eta/templates/schedule/form.jinja:94
+#: paper_eta/templates/schedule/form.jinja:97
 msgid "partial_refresh_help"
 msgstr ""
 "Refresh the e-paper screen partially for a faster refresh time and "
 "flickerless refreshing."
 
-#: paper_eta/templates/schedule/form.jinja:97
+#: paper_eta/templates/schedule/form.jinja:100
 msgid "partial_refresh_limit_help"
 msgstr ""
-"Periodically performing a full refresh is required to avoid damages to "
+"Periodically performing a full refresh is recommended to avoid damages to "
 "the e-paper and improve sharpness of the content"
 
-#: paper_eta/templates/schedule/form.jinja:122
+#: paper_eta/templates/schedule/form.jinja:139
 msgid "execute_time"
 msgstr "Execute Time"
 
-#: paper_eta/templates/schedule/form.jinja:130
+#: paper_eta/templates/schedule/form.jinja:147
 msgid "minute"
 msgstr "Minute"
 
-#: paper_eta/templates/schedule/form.jinja:135
+#: paper_eta/templates/schedule/form.jinja:152
 msgid "hour"
 msgstr "Hour"
 
-#: paper_eta/templates/schedule/form.jinja:140
+#: paper_eta/templates/schedule/form.jinja:157
 msgid "date"
 msgstr "Date"
 
-#: paper_eta/templates/schedule/form.jinja:145
+#: paper_eta/templates/schedule/form.jinja:162
 msgid "month"
 msgstr "Month"
 
-#: paper_eta/templates/schedule/form.jinja:150
+#: paper_eta/templates/schedule/form.jinja:167
 msgid "day_of_week"
 msgstr "Day of Week"
 
-#: paper_eta/templates/schedule/form.jinja:163
+#: paper_eta/templates/schedule/form.jinja:180
 msgid "monday"
 msgstr "Monday"
 
-#: paper_eta/templates/schedule/form.jinja:164
+#: paper_eta/templates/schedule/form.jinja:181
 msgid "tuesday"
 msgstr "Tuesday"
 
-#: paper_eta/templates/schedule/form.jinja:165
+#: paper_eta/templates/schedule/form.jinja:182
 msgid "wednesday"
 msgstr "Wednesday"
 
-#: paper_eta/templates/schedule/form.jinja:166
+#: paper_eta/templates/schedule/form.jinja:183
 msgid "thursday"
 msgstr "Thursday"
 
-#: paper_eta/templates/schedule/form.jinja:167
+#: paper_eta/templates/schedule/form.jinja:184
 msgid "friday"
 msgstr "Friday"
 
-#: paper_eta/templates/schedule/form.jinja:168
+#: paper_eta/templates/schedule/form.jinja:185
 msgid "saturday"
 msgstr "Saturday"
 
-#: paper_eta/templates/schedule/form.jinja:169
+#: paper_eta/templates/schedule/form.jinja:186
 msgid "sunday"
 msgstr "Sunday"
 
-#: paper_eta/templates/schedule/form.jinja:177
+#: paper_eta/templates/schedule/form.jinja:194
 msgid "cancel"
 msgstr "Cancel"
 
-#: paper_eta/templates/schedule/form.jinja:179
+#: paper_eta/templates/schedule/form.jinja:196
 msgid "complete"
 msgstr "Complete"
 
-#: paper_eta/templates/schedule/form.jinja:189
+#: paper_eta/templates/schedule/form.jinja:206
 #: paper_eta/templates/schedule/partials/layout_radio.jinja:17
 msgid "layout_preview"
 msgstr "Layout Preview"
 
-#: paper_eta/templates/schedule/form.jinja:237
-#: paper_eta/templates/schedule/form.jinja:241
+#: paper_eta/templates/schedule/form.jinja:254
+#: paper_eta/templates/schedule/form.jinja:258
 msgid "unrecognised"
 msgstr "Unrecongnised"
 
@@ -634,3 +643,4 @@ msgstr "No Repeat"
 #: paper_eta/templates/schedule/partials/rows.jinja:28
 msgid "refresh_now"
 msgstr "Refresh Now"
+

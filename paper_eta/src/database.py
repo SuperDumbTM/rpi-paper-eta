@@ -3,7 +3,7 @@
 from enum import Enum
 import logging
 from datetime import datetime
-from typing import Iterable
+from typing import Iterable, Optional
 
 import apscheduler.jobstores.base
 import croniter
@@ -73,6 +73,7 @@ class Schedule(BaseModel):
     eta_format: Mapped[renderer.EtaFormat]
     layout: Mapped[str]
     is_partial: Mapped[bool] = mapped_column(default=False)
+    partial_cycle: Mapped[Optional[int]] = mapped_column(default=0)
     enabled: Mapped[bool] = mapped_column(default=False)
 
     def add_job(self) -> None:
@@ -82,20 +83,9 @@ class Schedule(BaseModel):
         if exts.scheduler.get_job(job_id) is not None:
             exts.scheduler.remove_job(job_id)
 
-        exts.scheduler.add_job(job_id,  # invoking str() here makes the formatter unhappy
-                               refresher.refresh,
-                               kwargs={
-                                   'epd_brand': site_data.AppConfiguration()['epd_brand'],
-                                   'epd_model': site_data.AppConfiguration()['epd_model'],
-                                   'eta_format': (self.eta_format.value
-                                                  if isinstance(self.eta_format, Enum)
-                                                  else self.eta_format),
-                                   'layout': self.layout,
-                                   'is_partial': self.is_partial,
-                                   'degree': site_data.AppConfiguration()['degree'],
-                                   'is_dry_run': site_data.AppConfiguration()['dry_run'],
-                                   'screen_dump_dir': current_app.config['DIR_SCREEN_DUMP'],
-                               },
+        exts.scheduler.add_job(job_id,
+                               refresher.scheduled_refresh,
+                               kwargs={'schedule': self},
                                trigger='cron',
                                minute=cron[0],
                                hour=cron[1],
@@ -149,6 +139,7 @@ class RefreshLog(BaseModel):
 
 @event.listens_for(RefreshLog, 'before_insert')
 def purge_logs(mapper, connection, target: RefreshLog):
+    # pylint: disable=not-callable
     if exts.db.session.query(func.count(RefreshLog.id)).scalar() < 120:
         return
 
