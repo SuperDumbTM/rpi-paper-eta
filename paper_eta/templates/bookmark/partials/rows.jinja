@@ -1,6 +1,5 @@
 {% for bm in bookmarks %}
 <tr class="{{ '' if bm['enabled'] else 'disabled'}}">
-    <td>{{ loop.index }}</td>
     <td>{{ _(bm["transport"]) }}</td>
     <td>{{ bm["no"] }}</td>
     <td>{{ _(bm["direction"]) }}</td>
