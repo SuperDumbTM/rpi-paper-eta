@@ -1,94 +1,217 @@
 class RpcTable {
-    static get classes() {
-        return [
-            [576, ".collapse-xs"], [768, ".collapse-sm"], [992, ".collapse-md"], [1200, ".collapse-lg"]
-        ];
+    /** @type {HTMLTableElement} */
+    table;
+
+    /** @type {Array<HTMLTableRowElement>} */
+    #children;
+
+    /** @type {Object<string, number>} */
+    #breakpoints;
+
+    /**
+     * @returns {Array<string>}
+     */
+    get tableHeaders() {
+        return [...this.table.querySelectorAll("tr:nth-child(1) th")]
+            .map((node) => node.innerHTML);
+    }
+
+    /** @type {number} */
+    #resizeTimeout;
+
+    /**
+     * 
+     * @param {string} selector CSS selector
+     * @param {Object} options 
+     */
+    constructor(selector, options = {}) {
+        this.table = document.querySelector(selector);
+        this.table.classList.add("rpc");
+
+        this.#children = [];
+        this.#breakpoints = options.breakpoints || {
+            "collapse-xs": 576,
+            "collapse-sm": 768,
+            "collapse-md": 992,
+            "collapse-lg": 1200,
+            "collapse": Number.MAX_SAFE_INTEGER,
+        }
+
+        this.process();
+
+        this.table.addEventListener("click", (event) => {
+            if (![...event.target.classList].includes("rpc-toggler"))
+                return
+
+            let tr = event.target.closest("tr");
+            if (tr.classList.contains("rpc-expanded")) {
+                tr.nextSibling.remove()
+            } else {
+                tr.after(this.#children[tr.dataset.childIndex])
+            }
+
+            tr.classList.toggle("rpc-expanded")
+        })
+        window.addEventListener("resize", this.#handleResize.bind(this))
+    }
+
+    process() {
+        this.#children = [];
+
+        this.table.querySelectorAll("tbody tr:not(.child)").forEach((tr) => {
+            let child = Object.assign(document.createElement("tr"), {
+                classList: ["child"],
+                colspan: "100%",
+                innerHTML: `<td colspan=\"100%\"><ul data-row=\"${tr.rowIndex}\"></ul></td>`,
+            });
+
+
+            tr.querySelectorAll("td").forEach((td, i) => {
+                if (![...td.classList].includes("rpc-hidden"))
+                    return
+                child.querySelector("td > ul").appendChild(this.#createChildLi(td))
+            });
+
+            tr.dataset.childIndex = this.#children.length;
+            tr.dataset.row = tr.rowIndex;
+
+            this.#children.push(child);
+        })
+        this.render();
+    }
+
+    render() {
+        this.#toggleResponsiveClass();
+
+        this.table.querySelectorAll("tbody tr:not(.child)").forEach((tr) => {
+            let child = this.#children[tr.dataset.childIndex];
+
+            /** @type {HTMLLIElement} */
+            let childContainer = child.querySelector("tr > td > ul");
+
+            for (let td of tr.cells) {
+                if ([...td.classList].includes("rpc-hidden")
+                    && !this.#inChild(child, tr.dataset.row, td.cellIndex)
+                ) {
+                    let index = childContainer.children.length;
+                    while (true) {
+                        if (index == 0) {
+                            childContainer.prepend(this.#createChildLi(td));
+                            break;
+                        }
+
+                        index--;
+                        if (td.cellIndex > childContainer.children[index].dataset.column) {
+                            childContainer.children[index].after(this.#createChildLi(td));
+                            break;
+                        }
+                    }
+                    continue;
+                }
+
+                if (![...td.classList].includes("rpc-hidden")
+                    && this.#inChild(child, tr.dataset.row, td.cellIndex)
+                ) {
+                    for (let li of childContainer.getElementsByTagName("li")) {
+                        if (li.dataset.column != td.cellIndex) {
+                            continue;
+                        }
+                        // let rowIndex = parseInt(tr.dataset.row) + this.table.querySelectorAll(`tbody tr.rpc-expanded:nth-of-type(-n+${tr.rowIndex})`).length
+                        // let span = li.querySelector("span.rpc-child-value");
+
+                        // if (span.children.length > 0) {
+                        //     this.table.rows[rowIndex].cells[li.dataset.column].append(...span.children);
+                        // } else {
+                        //     this.table.rows[rowIndex].cells[li.dataset.column].innerHTML = span.innerHTML;
+                        // }
+                        li.remove();
+                    }
+                    continue;
+                }
+            }
+
+            tr.querySelector('td.rpc-toggler')?.classList.remove("rpc-toggler");
+            if (childContainer.children.length > 0) {
+                tr.classList.add("has-child")
+                tr.querySelector('td:not(.rpc-hidden)').classList.add("rpc-toggler");
+            } else {
+                tr.classList.remove("has-child")
+            }
+        });
     }
 
     /**
      * @returns {Array<string>}
      */
-    static hiddenClasses() {
-        return RpcTable.classes.filter((v) => v[0] >= window.screen.width).map((v) => v[1]);
+    hiddenClasses() {
+        return Object.keys(this.#breakpoints)
+            .filter((k) => this.#breakpoints[k] >= window.innerWidth)
     }
 
-    constructor(selector) {
-        this.table = document.querySelector(selector);
-        this.table.classList.add("rpc");
-        let cls = this;
+    #toggleResponsiveClass() {
+        this.table.querySelectorAll("thead > tr > th").forEach((th, i) => {
+            let responsive = [...th.classList].filter(c => Object.keys(this.#breakpoints).includes)[0]
 
-        this.table.querySelectorAll(`tbody tr td:not(${RpcTable.classes.map((c) => c[1]).join(", ")})`).forEach((el) => {
-            el.addEventListener("click", function (event) {
-                let tr = el.closest("tr");
-                if (tr.classList.contains("rpc-expanded")) {
-                    el.closest("tbody").removeChild(tr.nextSibling)
+            this.table.querySelectorAll(`tbody tr:not(.child) td:nth-child(${i + 1})`).forEach((td) => {
+                if (responsive)
+                    td.classList.add(responsive)
+
+                if (responsive && this.hiddenClasses().includes(responsive)) {
+                    th.classList.add("rpc-hidden")
+                    td.classList.add("rpc-hidden")
                 } else {
-                    let newTr = document.createElement("tr");
-                    newTr.innerHTML = `
-                        <td colspan=${tr.querySelectorAll(`td:not(${RpcTable.hiddenClasses().join(",")})`).length}>123</td>
-                    `;
-                    tr.after(cls.generateChild(tr));
+                    th.classList.remove("rpc-hidden")
+                    td.classList.remove("rpc-hidden")
                 }
-
-                tr.classList.toggle("rpc-expanded")
-            });
-
-            return;
-        })
-
-        this.table.querySelectorAll("thead th").forEach((el, i) => {
-            if (!el.classList.contains("collapse-sm"))
-                return
-
-            this.table.querySelectorAll(`tbody tr td:nth-child(${i + 1})`).forEach((el, i) => {
-                el.classList.add("collapse-sm")
             });
         });
-
-        window.addEventListener("resize", function (event) {
-            cls.table.querySelectorAll("tbody tr").forEach((el) => {
-                cls.generateChild(el)
-            })
-        })
     }
 
     /**
-     * @param {HTMLElement} tr 
-     * @returns {HTMLElement}
+     * 
+     * @param {HTMLTableRowElement} child
+     * @param {number} row 
+     * @param {number} column
+     * @returns {boolean}
      */
-    generateChild(tr) {
-        const headers = [];
-        document
-            .querySelectorAll("table.rpc tr:nth-child(1) th")
-            .forEach((el) => { headers.push(el.innerHTML) });
-
-        const lis = [];
-        tr.querySelectorAll("td")
-            .forEach((td, i) => {
-                if ([...td.classList].some((c) => "."+RpcTable.hiddenClasses().includes(c))) {
-                    lis.push(`
-                        <li>
-                            <span class="rpc-child-title">${headers[i]}</span>
-                            <span class="rpc-child-value">${td.innerHTML}</span>
-                        </li>
-                    `);
-                }
-            });
-        
-        if (!lis) {
-            tr.classList.remove("has-child")
+    #inChild(child, row, column) {
+        let ul = child.querySelector("ul");
+        for (let li of ul.getElementsByTagName("li")) {
+            if (ul.dataset.row == row && li.dataset.column == column) {
+                return true
+            }
         }
-        tr.classList.add("has-child")
+        return false
+    }
 
-        let newTr = document.createElement("tr");
-        newTr.classList.add("child");
-        newTr.innerHTML = `
-            <td colspan=${headers.length - lis.length}>
-                <ul>
-                    ${lis.join("\n")}
-                </ul>
-            </td>
-        `;
-        return newTr;
+    /**
+     * @param {HTMLTableCellElement} td
+     * @returns {HTMLLIElement}
+     */
+    #createChildLi(td) {
+        let li = document.createElement("li");
+        li.dataset.column = td.cellIndex;
+
+        li.appendChild(Object.assign(document.createElement("span"), {
+            classList: ["rpc-child-title"],
+            innerHTML: this.tableHeaders[td.cellIndex],
+        }));
+
+        li.appendChild(Object.assign(document.createElement("span"), {
+            classList: ["rpc-child-value"],
+        }));
+
+        if (td.children.length > 0) {
+            li.children[1].append(...td.children)
+        } else {
+            li.children[1].innerHTML = td.innerText
+        }
+
+        return li
+    }
+
+    #handleResize(window) {
+        clearTimeout(this.#resizeTimeout);
+        this.#resizeTimeout = setTimeout(this.render.bind(this), 0)
     }
 }
