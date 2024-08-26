@@ -11,7 +11,7 @@
 
 
 {% block link %}
-<link href="{{ url_for('static', filename='stylesheets/rpc-table.css') }}" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/superdumbtm/rpc-table@0.0.1/dist/rpc-table.min.css" rel="stylesheet">
 {% endblock link %}
 
 
@@ -52,16 +52,15 @@
                 <div class="table-responsive">
                     <table class="table table-striped" hx-get="" hx-trigger="load delay:1ms" hx-target="tbody"
                         hx-on::before-request="showLoading(0)"
-                        hx-on::after-settle="rpc.process(); makeSortable(); hideLoading(200)"
-                        style="min-width: 400px;">
+                        hx-on::after-settle="rpc.process(); makeSortable(); hideLoading(200)" style="min-width: 400px;">
                         <thead>
                             <tr>
-                                <th class="collapse-sm">{{ _('transport') }}</th>
+                                <th>{{ _('transport') }}</th>
                                 <th>{{ _('route') }}</th>
-                                <th class="collapse-md">{{ _('direction') }}</th>
-                                <th class="collapse-lg">{{ _('service_type') }}</th>
+                                <th class="collapse-xs">{{ _('direction') }}</th>
+                                <th class="collapse-md">{{ _('service_type') }}</th>
                                 <th>{{ _('stop') }}</th>
-                                <th class="collapse" style="min-width: 90px;">{{ _('action') }}</th>
+                                <th class="collapse-sm" style="min-width: 90px;">{{ _('action') }}</th>
                             </tr>
                         </thead>
                         <tbody hx-put="{{ url_for('bookmark.reorder') }}" hx-trigger="moved" hx-include="closest form">
@@ -77,28 +76,30 @@
 
 {% block script %}
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/superdumbtm/rpc-table@0.0.1/dist/rpc-table.min.js"></script>
 
-<script src="{{ url_for('static', filename='scripts/rpc-table.js') }}"></script>
 <script>
-    var rpc = new RpcTable('table');
-
+    const rpc = new RpcTable('table');
     var sortable = null;
+
     function makeSortable() {
-        if (document.querySelectorAll("tbody input").length <= 1)
-            return
+        if (window.screen.width >= 768) {
+            if (document.querySelectorAll("tbody input").length <= 1)
+                return
 
-        if (sortable)
-            sortable.destroy()
+            if (sortable)
+                sortable.destroy()
 
-        sortable = Sortable.create(document.getElementsByTagName("tbody")[0],
-            {
-                draggable: 'tr:not(.child)',
-                onEnd: (event) => {
-                    if (event.newIndex == event.oldIndex)
-                        return
-                    document.querySelector("tbody").dispatchEvent(new Event("moved"))
-                }
-            });
+            sortable = Sortable.create(document.getElementsByTagName("tbody")[0],
+                {
+                    draggable: 'tr:not(.child)',
+                    onEnd: (event) => {
+                        if (event.newIndex == event.oldIndex)
+                            return
+                        document.querySelector("tbody").dispatchEvent(new Event("moved"))
+                    }
+                });
+        }
     }
 </script>
 {% endblock script %}

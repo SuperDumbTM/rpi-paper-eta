@@ -6,26 +6,18 @@
 
 
 {% block link %}
+<link href="https://cdn.jsdelivr.net/gh/superdumbtm/rpc-table@0.0.1/dist/rpc-table.min.css" rel="stylesheet">
 {% endblock link %}
 
 
 {% block style %}
 <style>
-    tr>*:nth-child(1),
-    tr>*:nth-child(5) {
-        display: none;
-    }
-
-    @media (min-width: 576px) {
-
-        tr>*:nth-child(1),
-        tr>*:nth-child(5) {
-            display: table-cell;
-        }
-    }
-
     .table tr.disabled td {
         color: var(--bs-gray-500);
+    }
+
+    .rpc tbody > tr.child span.rpc-child-title {
+        min-width: 100px;
     }
 </style>
 {% endblock style %}
@@ -71,16 +63,16 @@
         <div class="col">
             <div class="table-responsive">
                 <table class="table table-striped" hx-get="" hx-trigger="load delay:1ms, every 1m" hx-target="tbody"
-                    hx-on::before-request="showLoading(150)" hx-on::after-request="hideLoading()"
+                    hx-on::before-request="showLoading(150)" hx-on::after-settle="rpc.process(); hideLoading()"
                     style="min-width: 400px;">
                     <thead>
                         <tr>
                             <th>{{ _('layout') }}</th>
-                            <th style="min-width: 48px;">{{ _('eta_format') }}</th>
-                            <th style="min-width: 80px;">{{ _('schedule') }}</th>
-                            <th style="min-width: 177px;">{{ _('next_execution') }}</th>
-                            <th style="min-width: 48px;">{{ _('is_partial') }}</th>
-                            <th style="min-width: 190px;">{{ _('action') }}</th>
+                            <th>{{ _('eta_format') }}</th>
+                            <th class="collapse-sm">{{ _('schedule') }}</th>
+                            <th class="collapse-sm">{{ _('next_execution') }}</th>
+                            <th class="collapse-sm">{{ _('is_partial') }}</th>
+                            <th class="collapse-md">{{ _('action') }}</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -98,3 +90,12 @@
     </div>
 </div>
 {% endblock content %}
+
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/gh/superdumbtm/rpc-table@0.0.1/dist/rpc-table.min.js"></script>
+
+<script>
+    const rpc = new RpcTable('table');
+</script>
+{% endblock script %}
