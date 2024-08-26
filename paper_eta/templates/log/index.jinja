@@ -2,22 +2,9 @@
 {% block title %}{{ _('nav_log') }}{% endblock title %}
 
 
-{% block style %}
-<style>
-    tr>*:nth-child(1),
-    tr>*:nth-child(3) {
-        display: none;
-    }
-
-    @media (min-width: 768px) {
-
-        tr>*:nth-child(1),
-        tr>*:nth-child(3) {
-            display: table-cell;
-        }
-    }
-</style>
-{% endblock style %}
+{% block link %}
+<link href="https://cdn.jsdelivr.net/gh/superdumbtm/rpc-table@0.0.1/dist/rpc-table.min.css" rel="stylesheet">
+{% endblock link %}
 
 
 {% block nav %}
@@ -26,7 +13,7 @@
 
 
 {% block content %}
-<div class="container-xxl" x-data="pagination">
+<div class="container-xxl" x-data="pagination" x-init="$watch('logs', v => rpc.process())">
 
     <div class="row m-2">
         {% include "includes/flash.jinja" %}
@@ -118,10 +105,10 @@
     <div class="row p-2">
         <div class="col-12">
             <div class="row align-items-center">
-                <div class="col-12 col-sm-7">
+                <div class="col-12 col-sm-6 col-md-7">
                     <span class="text-muted" x-text="info"></span>
                 </div>
-                <div class="col-12 col-sm-5">
+                <div class="col-12 col-sm-6 col-md-5">
                     <nav class="mt-3 mx-1">
                         <ul class="pagination justify-content-center justify-content-sm-end">
                             <li class="page-item" :class="(page == 1 || lastPage <= 1) ? 'disabled' : ''">
@@ -147,9 +134,9 @@
                 <table class="table table-sm table-striped" style="width: 100%;">
                     <thead>
                         <tr>
-                            <th style="min-width: 11rem;">{{ _('log_timestamp') }}</th>
+                            <th class="collapse-sm" style="min-width: 11rem;">{{ _('log_timestamp') }}</th>
                             <th>{{ _('log_level') }}</th>
-                            <th>{{ _('log_module') }}</th>
+                            <th class="collapse-md">{{ _('log_module') }}</th>
                             <th>{{ _('log_message') }}</th>
                         </tr>
                     </thead>
@@ -157,8 +144,8 @@
                         <template x-for="log in logs">
                             <tr>
                                 <td x-text="log.timestamp"></td>
-                                <td class="text-center">
-                                    <span :class="getBadgeClasses(log.level)" x-text="log.level"></span>
+                                <td>
+                                    <span class="user-select-none" :class="getBadgeClasses(log.level)" x-text="log.level"></span>
                                 </td>
                                 <td x-text="log.module"></td>
                                 <td x-text="log.message"></td>
@@ -192,9 +179,16 @@
 
 
 {% block script %}
+<script src="https://cdn.jsdelivr.net/gh/superdumbtm/rpc-table@0.0.1/dist/rpc-table.min.js"></script>
+
 <script>
-    const allLogs = {{ logs }}
-    const accessKW = ['werkzeug', 'gunicorn', 'uwsgi', 'gevent', 'waitress', 'eventlet']
+    var rpc;
+    const allLogs = {{ logs }};
+    const accessKW = ['werkzeug', 'gunicorn', 'uwsgi', 'gevent', 'waitress', 'eventlet'];
+
+    document.addEventListener("DOMContentLoaded", function(event) {
+        rpc = new RpcTable("table");
+    })
 
     document.addEventListener('alpine:init', () => {
         Alpine.data('pagination', () => ({
