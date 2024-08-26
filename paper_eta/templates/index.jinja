@@ -2,10 +2,19 @@
 {% block title %}{{ _('nav_home') }}{% endblock title %}
 
 
+{% block link %}
+<link href="https://cdn.jsdelivr.net/gh/superdumbtm/rpc-table@0.0.1/dist/rpc-table.min.css" rel="stylesheet">
+{% endblock link %}
+
+
 {% block style %}
 <style>
     .card-header {
         background-color: var(--theme-4-color);
+    }
+
+    .rpc tbody > tr.child span.rpc-child-title {
+        min-width: 100px;
     }
 </style>
 {% endblock style %}
@@ -34,14 +43,14 @@
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table" hx-get="{{ url_for('root.histories') }}" hx-trigger="load, every 60s"
-                            hx-target="tbody" hx-swap="innerHTML">
+                            hx-target="tbody" hx-swap="innerHTML" hx-on::after-settle="rpc.process(); hideLoading()">
                             <thead>
                                 <tr>
                                     <th scope="col">{{ _('time') }}</th>
-                                    <th scope="col">{{ _('eta_format') }}</th>
+                                    <th scope="col" class="collapse-sm">{{ _('eta_format') }}</th>
                                     <th scope="col">{{ _('layout') }}</th>
                                     <th scope="col">{{ _('is_partial') }}</th>
-                                    <th scope="col">{{ _('error') }}</th>
+                                    <th scope="col" class="collapse-md">{{ _('error') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -100,3 +109,12 @@
     </div>
 </div>
 {% endblock content %}
+
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/gh/superdumbtm/rpc-table@0.0.1/dist/rpc-table.min.js"></script>
+
+<script>
+    const rpc = new RpcTable('table');
+</script>
+{% endblock script %}

@@ -8,26 +8,28 @@
         {{ bool_to_icon(sch["is_partial"]) }} {{ "(" ~ sch['partial_cycle'] ~ ")" if sch['partial_cycle'] > 0 }}
     </td>
     <td>
-        <button type="button" class="dt-action btn btn-danger btn-sm"
-            hx-delete="{{ url_for('schedule.delete', id_=sch['id']) }}" title="{{ _('delete') }}">
-            <i class="bi bi-trash"></i>
-        </button>
-        <a type="button" class="dt-action btn btn-success btn-sm" href="{{ url_for('schedule.edit', id_=sch['id']) }}"
-            title="{{ _('edit') }}">
-            <i class="bi bi-pencil-square"></i>
-        </a>
-        <button type="button" class="dt-action btn btn-sm btn-light" hx-put="{{
-            url_for('schedule.toggle_status', id_=sch['id'] ) }}" title="{{ _('enable/disable') }}">
-            {% if sch["enabled"] %}
-            <i class="bi bi-pause"></i>
-            {% else %}
-            <i class="bi bi-play-fill"></i>
-            {% endif %}
-        </button>
-        <button type="button" class="dt-action btn btn-sm btn-outline-warning"
-            hx-get="{{ url_for('schedule.refresh', id_=sch['id'])}}" hx-swap="none" title="{{ _('refresh_now') }}">
-            <i class="bi bi-arrow-clockwise"></i>
-        </button>
+        <div class="d-inline-flex" style="gap: 2px;">
+            <button type="button" class="dt-action btn btn-danger btn-sm"
+                hx-delete="{{ url_for('schedule.delete', id_=sch['id']) }}" title="{{ _('delete') }}">
+                <i class="bi bi-trash"></i>
+            </button>
+            <a type="button" class="dt-action btn btn-success btn-sm"
+                href="{{ url_for('schedule.edit', id_=sch['id']) }}" title="{{ _('edit') }}">
+                <i class="bi bi-pencil-square"></i>
+            </a>
+            <button type="button" class="dt-action btn btn-sm btn-light" hx-put="{{
+                url_for('schedule.toggle_status', id_=sch['id'] ) }}" title="{{ _('enable/disable') }}">
+                {% if sch["enabled"] %}
+                <i class="bi bi-pause"></i>
+                {% else %}
+                <i class="bi bi-play-fill"></i>
+                {% endif %}
+            </button>
+            <button type="button" class="dt-action btn btn-sm btn-outline-warning"
+                hx-get="{{ url_for('schedule.refresh', id_=sch['id'])}}" hx-swap="none" title="{{ _('refresh_now') }}">
+                <i class="bi bi-arrow-clockwise"></i>
+            </button>
+        </div>
     </td>
 </tr>
 {% endfor %}
