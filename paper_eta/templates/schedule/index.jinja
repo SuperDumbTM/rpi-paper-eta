@@ -50,8 +50,7 @@
         <div class="col">
             <div class="table-responsive">
                 <table class="table table-striped" hx-get="" hx-trigger="load delay:1ms, every 1m" hx-target="tbody"
-                    hx-on::before-request="showLoading(150)" hx-on::after-settle="rpc.process(); hideLoading()"
-                    style="min-width: 400px;">
+                    hx-on::before-request="showLoading(150)" hx-on::after-settle="handleAfterSettle(event)" style="min-width: 400px;">
                     <thead>
                         <tr>
                             <th>{{ _('layout') }}</th>
@@ -84,5 +83,12 @@
 
 <script>
     const rpc = new RpcTable('table');
+
+    function handleAfterSettle(event) {
+        if (!event.detail.requestConfig.path.includes("refresh")) {
+            rpc.process();
+        }
+        hideLoading();
+    }
 </script>
 {% endblock script %}
