@@ -131,10 +131,10 @@
 
         <div class="col-12">
             <div class="table-responsive">
-                <table class="table table-sm table-striped" style="width: 100%;">
+                <table class="table table-sm table-striped" style="min-width: 300px;">
                     <thead>
                         <tr>
-                            <th class="collapse-sm" style="min-width: 11rem;">{{ _('log_timestamp') }}</th>
+                            <th class="collapse-sm">{{ _('log_timestamp') }}</th>
                             <th>{{ _('log_level') }}</th>
                             <th class="collapse-md">{{ _('log_module') }}</th>
                             <th>{{ _('log_message') }}</th>
@@ -143,8 +143,8 @@
                     <tbody>
                         <template x-for="log in logs">
                             <tr>
-                                <td x-text="log.timestamp"></td>
-                                <td>
+                                <td x-text="log.timestamp" style="min-width: 12.3rem;"></td>
+                                <td style="min-width: 6rem;">
                                     <span class="user-select-none" :class="getBadgeClasses(log.level)" x-text="log.level"></span>
                                 </td>
                                 <td x-text="log.module"></td>

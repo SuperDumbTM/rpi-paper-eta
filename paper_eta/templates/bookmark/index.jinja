@@ -52,7 +52,7 @@
                 <div class="table-responsive">
                     <table class="table table-striped" hx-get="" hx-trigger="load delay:1ms" hx-target="tbody"
                         hx-on::before-request="showLoading(0)"
-                        hx-on::after-settle="rpc.process(); makeSortable(); hideLoading(200)" style="min-width: 400px;">
+                        hx-on::after-settle="rpc.process(); makeSortable(); hideLoading(200)" style="min-width: 300px;">
                         <thead>
                             <tr>
                                 <th>{{ _('transport') }}</th>
