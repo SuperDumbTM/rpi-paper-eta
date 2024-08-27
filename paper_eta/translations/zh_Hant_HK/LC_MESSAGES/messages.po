@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-08-22 10:05+0800\n"
+"POT-Creation-Date: 2024-08-27 16:50+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hant_HK\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.16.0\n"
 
-#: paper_eta/src/forms.py:9 paper_eta/templates/index.jinja:87
+#: paper_eta/src/forms.py:9 paper_eta/templates/index.jinja:96
 msgid "brand"
 msgstr "牌子"
 
@@ -29,7 +29,7 @@ msgstr "牌子"
 msgid "please_select"
 msgstr "請選擇"
 
-#: paper_eta/src/forms.py:17 paper_eta/templates/index.jinja:93
+#: paper_eta/src/forms.py:17 paper_eta/templates/index.jinja:102
 msgid "model"
 msgstr "型號"
 
@@ -54,7 +54,7 @@ msgid "rotate_degree_help"
 msgstr "設定屏幕影像顯示的旋轉角度。"
 
 #: paper_eta/src/forms.py:36 paper_eta/src/forms.py:74
-#: paper_eta/src/forms.py:100
+#: paper_eta/src/forms.py:103
 msgid "submit"
 msgstr "提交"
 
@@ -62,33 +62,33 @@ msgstr "提交"
 msgid "company"
 msgstr "公司"
 
-#: paper_eta/src/forms.py:53 paper_eta/templates/bookmark/index.jinja:78
+#: paper_eta/src/forms.py:53 paper_eta/templates/bookmark/index.jinja:59
 msgid "route"
 msgstr "路線"
 
-#: paper_eta/src/forms.py:56 paper_eta/templates/bookmark/index.jinja:79
+#: paper_eta/src/forms.py:56 paper_eta/templates/bookmark/index.jinja:60
 msgid "direction"
 msgstr "行車方向"
 
-#: paper_eta/src/forms.py:62 paper_eta/templates/bookmark/index.jinja:80
+#: paper_eta/src/forms.py:62 paper_eta/templates/bookmark/index.jinja:61
 msgid "service_type"
 msgstr "班次類別"
 
-#: paper_eta/src/forms.py:68 paper_eta/templates/bookmark/index.jinja:81
+#: paper_eta/src/forms.py:68 paper_eta/templates/bookmark/index.jinja:62
 msgid "stop"
 msgstr "車站"
 
-#: paper_eta/src/forms.py:78 paper_eta/templates/schedule/index.jinja:81
+#: paper_eta/src/forms.py:78 paper_eta/templates/schedule/index.jinja:58
 msgid "schedule"
 msgstr "排程"
 
-#: paper_eta/src/forms.py:83 paper_eta/templates/index.jinja:41
-#: paper_eta/templates/schedule/index.jinja:79
+#: paper_eta/src/forms.py:83 paper_eta/templates/index.jinja:50
+#: paper_eta/templates/schedule/index.jinja:57
 msgid "eta_format"
 msgstr "預報顯示模式"
 
-#: paper_eta/src/forms.py:90 paper_eta/templates/index.jinja:42
-#: paper_eta/templates/schedule/index.jinja:80
+#: paper_eta/src/forms.py:90 paper_eta/templates/index.jinja:51
+#: paper_eta/templates/schedule/index.jinja:56
 msgid "layout"
 msgstr "佈局"
 
@@ -100,12 +100,11 @@ msgstr "快速更新"
 msgid "auto_full_refresh"
 msgstr "自動完整更新"
 
-#: paper_eta/src/forms.py:96
+#: paper_eta/src/forms.py:99
 msgid "auto_full_refresh_help"
-msgstr "快速更新週期。當屏幕進行快速更新的次數超過所輸入的數值時，系統將會進行一次完整更新。"
-"輸入0代表毋須進行自動完整更新。"
+msgstr "快速更新週期。當屏幕進行快速更新的次數超過所輸入的數值時，系統將會進行一次完整更新。輸入0代表毋須進行自動完整更新。"
 
-#: paper_eta/src/forms.py:98
+#: paper_eta/src/forms.py:101
 msgid "enable"
 msgstr "啟用"
 
@@ -203,7 +202,7 @@ msgstr "回程"
 
 #: paper_eta/src/controllers/bookmark.py:36
 #: paper_eta/src/controllers/schedule.py:268
-#: paper_eta/src/controllers/schedule.py:276 paper_eta/templates/index.jinja:44
+#: paper_eta/src/controllers/schedule.py:276 paper_eta/templates/index.jinja:53
 msgid "error"
 msgstr "錯誤"
 
@@ -304,32 +303,32 @@ msgstr "回到主頁"
 msgid "nav_home"
 msgstr "主頁"
 
-#: paper_eta/templates/index.jinja:32
+#: paper_eta/templates/index.jinja:41
 msgid "refresh_history"
 msgstr "屏幕更新紀錄"
 
-#: paper_eta/templates/index.jinja:40
+#: paper_eta/templates/index.jinja:49
 msgid "time"
 msgstr "時間"
 
-#: paper_eta/templates/index.jinja:43
-#: paper_eta/templates/schedule/index.jinja:83
+#: paper_eta/templates/index.jinja:52
+#: paper_eta/templates/schedule/index.jinja:60
 msgid "is_partial"
 msgstr "快新更新"
 
-#: paper_eta/templates/index.jinja:60
+#: paper_eta/templates/index.jinja:69
 msgid "screen_content"
 msgstr "屏幕影像"
 
-#: paper_eta/templates/index.jinja:64
+#: paper_eta/templates/index.jinja:73
 msgid "screen_content_help"
 msgstr "電子紙屏幕上目前顯示的影像。"
 
-#: paper_eta/templates/index.jinja:83
+#: paper_eta/templates/index.jinja:92
 msgid "E-Paper"
 msgstr "電子紙屏幕"
 
-#: paper_eta/templates/index.jinja:83
+#: paper_eta/templates/index.jinja:92
 msgid "setting"
 msgstr "設定"
 
@@ -351,72 +350,72 @@ msgstr "路線收藏"
 msgid "new_bookmark_help"
 msgstr "加入新的到站時間預報收藏。收藏數量並沒有上限，但跟據使用的佈局，能夠顯示的數目各有不同。上限數量以後的收藏將無法被顯示。"
 
-#: paper_eta/templates/bookmark/index.jinja:47
-#: paper_eta/templates/schedule/index.jinja:50
+#: paper_eta/templates/bookmark/index.jinja:28
+#: paper_eta/templates/schedule/index.jinja:29
 msgid "create"
 msgstr "建立"
 
-#: paper_eta/templates/bookmark/index.jinja:56
-#: paper_eta/templates/configuration/index.jinja:49
-#: paper_eta/templates/schedule/index.jinja:59
+#: paper_eta/templates/bookmark/index.jinja:37
+#: paper_eta/templates/configuration/index.jinja:46
+#: paper_eta/templates/schedule/index.jinja:38
 msgid "import"
 msgstr "匯入"
 
-#: paper_eta/templates/bookmark/index.jinja:62
-#: paper_eta/templates/configuration/index.jinja:55
-#: paper_eta/templates/log/index.jinja:43
-#: paper_eta/templates/schedule/index.jinja:64
+#: paper_eta/templates/bookmark/index.jinja:43
+#: paper_eta/templates/configuration/index.jinja:52
+#: paper_eta/templates/log/index.jinja:30
+#: paper_eta/templates/schedule/index.jinja:43
 msgid "export"
 msgstr "匯出"
 
-#: paper_eta/templates/bookmark/index.jinja:76
-#: paper_eta/templates/schedule/index.jinja:78
-msgid "no."
-msgstr "No."
-
-#: paper_eta/templates/bookmark/index.jinja:77
+#: paper_eta/templates/bookmark/index.jinja:58
 msgid "transport"
 msgstr "交通工具"
 
-#: paper_eta/templates/bookmark/index.jinja:82
-#: paper_eta/templates/schedule/index.jinja:84
+#: paper_eta/templates/bookmark/index.jinja:63
+#: paper_eta/templates/schedule/index.jinja:61
 msgid "action"
 msgstr "指令"
 
 #: paper_eta/templates/bookmark/partials/rows.jinja:11
-#: paper_eta/templates/schedule/partials/rows.jinja:11
+#: paper_eta/templates/schedule/partials/rows.jinja:13
 msgid "delete"
 msgstr "刪除"
 
 #: paper_eta/templates/bookmark/partials/rows.jinja:15
-#: paper_eta/templates/schedule/partials/rows.jinja:15
+#: paper_eta/templates/schedule/partials/rows.jinja:17
 msgid "edit"
 msgstr "編輯"
 
 #: paper_eta/templates/bookmark/partials/rows.jinja:19
-#: paper_eta/templates/schedule/partials/rows.jinja:19
+#: paper_eta/templates/schedule/partials/rows.jinja:21
 msgid "enable/disable"
 msgstr "啟用／停用"
 
-#: paper_eta/templates/bookmark/partials/rows.jinja:32
-#: paper_eta/templates/log/index.jinja:170
+#: paper_eta/templates/bookmark/partials/rows.jinja:33
+#: paper_eta/templates/log/index.jinja:157
 #: paper_eta/templates/root/partials/histories.jinja:12
-#: paper_eta/templates/schedule/partials/rows.jinja:36
+#: paper_eta/templates/schedule/partials/rows.jinja:38
 msgid "no_record"
 msgstr "沒有紀錄"
 
 #: paper_eta/templates/configuration/index.jinja:5
+#: paper_eta/templates/configuration/index.jinja:37
 #: paper_eta/templates/includes/navbar.jinja:30
 msgid "nav_configuration"
 msgstr "設定"
 
-#: paper_eta/templates/configuration/index.jinja:37
-msgid "display_setting"
+#: paper_eta/templates/configuration/index.jinja:62
+msgid "epaper_setting"
 msgstr "屏幕設定"
 
-#: paper_eta/templates/configuration/index.jinja:39
+#: paper_eta/templates/configuration/index.jinja:64
 msgid "display_setting_help"
 msgstr "選擇正在使用的電子紙屏幕。"
+
+#: paper_eta/templates/configuration/index.jinja:103
+msgid "display_setting"
+msgstr "顯示設定"
 
 #: paper_eta/templates/includes/navbar.jinja:60
 #: paper_eta/templates/schedule/form.jinja:6
@@ -429,62 +428,62 @@ msgstr "排程"
 msgid "nav_log"
 msgstr "程式記錄"
 
-#: paper_eta/templates/log/index.jinja:39
+#: paper_eta/templates/log/index.jinja:26
 msgid "clear"
 msgstr "清除"
 
-#: paper_eta/templates/log/index.jinja:47
+#: paper_eta/templates/log/index.jinja:34
 msgid "view_raw_log"
 msgstr "查看原始紀錄"
 
-#: paper_eta/templates/log/index.jinja:56
-#: paper_eta/templates/log/index.jinja:151
+#: paper_eta/templates/log/index.jinja:43
+#: paper_eta/templates/log/index.jinja:138
 #: paper_eta/templates/log/partials/table.jinja:30
 msgid "log_level"
 msgstr "類別"
 
-#: paper_eta/templates/log/index.jinja:91
+#: paper_eta/templates/log/index.jinja:78
 msgid "log_access_related"
 msgstr "網站連接"
 
-#: paper_eta/templates/log/index.jinja:98
+#: paper_eta/templates/log/index.jinja:85
 msgid "log_access_related_help"
 msgstr "是否顯示與網站連接相關的記錄。"
 
-#: paper_eta/templates/log/index.jinja:103
+#: paper_eta/templates/log/index.jinja:90
 msgid "paginate_per_page"
 msgstr "每頁顯示"
 
-#: paper_eta/templates/log/index.jinja:129
+#: paper_eta/templates/log/index.jinja:116
 #: paper_eta/templates/log/partials/table.jinja:13
 msgid "previous_page"
 msgstr "上一頁"
 
-#: paper_eta/templates/log/index.jinja:137
+#: paper_eta/templates/log/index.jinja:124
 #: paper_eta/templates/log/partials/table.jinja:20
 msgid "next_page"
 msgstr "下一頁"
 
-#: paper_eta/templates/log/index.jinja:150
+#: paper_eta/templates/log/index.jinja:137
 #: paper_eta/templates/log/partials/table.jinja:29
 msgid "log_timestamp"
 msgstr "時間"
 
-#: paper_eta/templates/log/index.jinja:152
+#: paper_eta/templates/log/index.jinja:139
 #: paper_eta/templates/log/partials/table.jinja:31
 msgid "log_module"
 msgstr "位置"
 
-#: paper_eta/templates/log/index.jinja:153
+#: paper_eta/templates/log/index.jinja:140
 #: paper_eta/templates/log/partials/table.jinja:32
 msgid "log_message"
 msgstr "訊息"
 
-#: paper_eta/templates/log/index.jinja:186
+#: paper_eta/templates/log/index.jinja:173
 msgid "jump_to"
 msgstr "跳至"
 
-#: paper_eta/templates/log/index.jinja:224
+#: paper_eta/templates/log/index.jinja:218
 msgid "pagination_info"
 msgstr "第{from}至{to}個項目。共{total_filtered}項（從{total}個項目中過濾）。"
 
@@ -493,104 +492,104 @@ msgid "no_data"
 msgstr "沒有數據"
 
 #: paper_eta/templates/root/partials/screen_dumps.jinja:14
-#: paper_eta/templates/schedule/partials/rows.jinja:41
+#: paper_eta/templates/schedule/partials/rows.jinja:43
 msgid "last-update"
 msgstr "更新時間"
 
 #: paper_eta/templates/root/partials/screen_dumps.jinja:14
-#: paper_eta/templates/schedule/partials/rows.jinja:41
+#: paper_eta/templates/schedule/partials/rows.jinja:43
 msgid ":"
 msgstr "："
 
-#: paper_eta/templates/schedule/form.jinja:44
+#: paper_eta/templates/schedule/form.jinja:45
 msgid "new_schedule"
 msgstr "建立排程"
 
-#: paper_eta/templates/schedule/form.jinja:46
+#: paper_eta/templates/schedule/form.jinja:47
 msgid "new_schedule_help"
 msgstr ""
 "建立屏幕更新排程。排程系統參考了 <a href=\"https://en.wikipedia.org/wiki/Cron\" "
 "target=\"_blank\">cron</a> 的格式來進行排程。 如果你熟悉 cron ，可以直接輸入排程或使用選擇器建立排程。"
 
-#: paper_eta/templates/schedule/form.jinja:97
+#: paper_eta/templates/schedule/form.jinja:108
 msgid "partial_refresh_help"
 msgstr "局部更新電子紙屏幕顯示內容，以提升屏幕影像更新速度及避免完整更新的屏幕閃爍。"
 
-#: paper_eta/templates/schedule/form.jinja:100
+#: paper_eta/templates/schedule/form.jinja:111
 msgid "partial_refresh_limit_help"
 msgstr "需定期執行一次完整更新以避免影像變得不清晰及對屏幕造成損害。"
 
-#: paper_eta/templates/schedule/form.jinja:139
+#: paper_eta/templates/schedule/form.jinja:146
 msgid "execute_time"
 msgstr "執行時間"
 
-#: paper_eta/templates/schedule/form.jinja:147
+#: paper_eta/templates/schedule/form.jinja:154
 msgid "minute"
 msgstr "分鐘"
 
-#: paper_eta/templates/schedule/form.jinja:152
+#: paper_eta/templates/schedule/form.jinja:159
 msgid "hour"
 msgstr "小時"
 
-#: paper_eta/templates/schedule/form.jinja:157
+#: paper_eta/templates/schedule/form.jinja:164
 msgid "date"
 msgstr "日期"
 
-#: paper_eta/templates/schedule/form.jinja:162
+#: paper_eta/templates/schedule/form.jinja:169
 msgid "month"
 msgstr "月份"
 
-#: paper_eta/templates/schedule/form.jinja:167
+#: paper_eta/templates/schedule/form.jinja:174
 msgid "day_of_week"
 msgstr "星期"
 
-#: paper_eta/templates/schedule/form.jinja:180
+#: paper_eta/templates/schedule/form.jinja:187
 msgid "monday"
 msgstr "星期一"
 
-#: paper_eta/templates/schedule/form.jinja:181
+#: paper_eta/templates/schedule/form.jinja:188
 msgid "tuesday"
 msgstr "星期二"
 
-#: paper_eta/templates/schedule/form.jinja:182
+#: paper_eta/templates/schedule/form.jinja:189
 msgid "wednesday"
 msgstr "星期三"
 
-#: paper_eta/templates/schedule/form.jinja:183
+#: paper_eta/templates/schedule/form.jinja:190
 msgid "thursday"
 msgstr "星期四"
 
-#: paper_eta/templates/schedule/form.jinja:184
+#: paper_eta/templates/schedule/form.jinja:191
 msgid "friday"
 msgstr "星期五"
 
-#: paper_eta/templates/schedule/form.jinja:185
+#: paper_eta/templates/schedule/form.jinja:192
 msgid "saturday"
 msgstr "星期六"
 
-#: paper_eta/templates/schedule/form.jinja:186
+#: paper_eta/templates/schedule/form.jinja:193
 msgid "sunday"
 msgstr "星期日"
 
-#: paper_eta/templates/schedule/form.jinja:194
+#: paper_eta/templates/schedule/form.jinja:201
 msgid "cancel"
 msgstr "取消"
 
-#: paper_eta/templates/schedule/form.jinja:196
+#: paper_eta/templates/schedule/form.jinja:203
 msgid "complete"
 msgstr "完成"
 
-#: paper_eta/templates/schedule/form.jinja:206
+#: paper_eta/templates/schedule/form.jinja:213
 #: paper_eta/templates/schedule/partials/layout_radio.jinja:17
 msgid "layout_preview"
 msgstr "佈局預覽"
 
-#: paper_eta/templates/schedule/form.jinja:254
-#: paper_eta/templates/schedule/form.jinja:258
+#: paper_eta/templates/schedule/form.jinja:261
+#: paper_eta/templates/schedule/form.jinja:265
 msgid "unrecognised"
 msgstr "未能識別"
 
-#: paper_eta/templates/schedule/index.jinja:82
+#: paper_eta/templates/schedule/index.jinja:59
 msgid "next_execution"
 msgstr "下次執行時間"
 
@@ -622,7 +621,10 @@ msgstr "每"
 msgid "cron_no_repeat"
 msgstr "不重覆"
 
-#: paper_eta/templates/schedule/partials/rows.jinja:28
+#: paper_eta/templates/schedule/partials/rows.jinja:29
 msgid "refresh_now"
 msgstr "更新屏幕"
+
+#~ msgid "no."
+#~ msgstr "No."
 
