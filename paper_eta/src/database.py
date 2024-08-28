@@ -1,18 +1,17 @@
 # pylint: disable=too-few-public-methods
 
-from enum import Enum
 import logging
 from datetime import datetime
 from typing import Iterable, Optional
 
 import apscheduler.jobstores.base
 import croniter
-from flask import current_app
-from sqlalchemy import event, func, inspect
-from sqlalchemy.orm import Mapped, mapped_column, validates, Session
+from sqlalchemy import ForeignKey, event, func, inspect
+from sqlalchemy.orm import (Mapped, Session, mapped_column, relationship,
+                            validates)
 
-from paper_eta.src import exts, site_data
-from paper_eta.src.libs import hketa, renderer, refresher
+from paper_eta.src import exts
+from paper_eta.src.libs import hketa, refresher, renderer
 
 
 class BaseModel(exts.db.Model):
@@ -39,8 +38,9 @@ class Bookmark(BaseModel):
     __tablename__ = 'bookmarks'
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    # autoincrement by `generate_ordering`
-    ordering: Mapped[int]  # = mapped_column(unique=True)
+    bookmark_group_id: Mapped[Optional[int]] = mapped_column(
+        ForeignKey("bookmark_groups.id"), nullable=True)
+    ordering: Mapped[int]  # autoincrement by `generate_ordering`
     transport: Mapped[hketa.Company]
     no: Mapped[str]
     direction: Mapped[hketa.Direction]
@@ -50,13 +50,32 @@ class Bookmark(BaseModel):
     enabled: Mapped[bool] = mapped_column(default=True)
 
 
+class BookmarkGroup(BaseModel):
+    __tablename__ = 'bookmark_groups'
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(unique=True)
+
+    bookmarks: Mapped[list["Bookmark"]] = relationship("Bookmark",
+                                                       backref="bookmark_group",
+                                                       cascade="all, delete-orphan")
+    schedules: Mapped[list["Schedule"]] = relationship("Schedule",
+                                                       backref="bookmark_group")
+
+
 @event.listens_for(Bookmark, 'before_insert')
 def generate_ordering(mapper, connection, target: Bookmark):
     if target.ordering is not None:
         return target
 
-    crrt_max = exts.db.session.query(
-        func.max(Bookmark.ordering)).scalar()
+    if (target.bookmark_group_id is not None):
+        crrt_max = exts.db.session\
+            .query(func.max(Bookmark.ordering))\
+            .filter(Bookmark.bookmark_group_id == target.bookmark_group_id)\
+            .scalar()
+    else:
+        crrt_max = exts.db.session.query(func.max(Bookmark.ordering)).scalar()
+
     if crrt_max is None:
         crrt_max = -1
 
@@ -70,6 +89,8 @@ class Schedule(BaseModel):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     schedule: Mapped[str]
+    bookmark_group_id: Mapped[Optional[int]] = mapped_column(
+        ForeignKey("bookmark_groups.id"), nullable=True)
     eta_format: Mapped[renderer.EtaFormat]
     layout: Mapped[str]
     is_partial: Mapped[bool] = mapped_column(default=False)

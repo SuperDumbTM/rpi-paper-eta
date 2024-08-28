@@ -22,9 +22,10 @@
     </div>
 
     <div class="row">
-        <div class="col-12">
+        <div class="col-8">
             <div class="btn-group flex-wrap">
-                <a href="{{ url_for('bookmark.create') }}" class="btn btn-secondary btn-sm btn-success mx-1">
+                <a href="{{ url_for('bookmark.create', bgid=request.args.get('bgid')) }}"
+                    class="btn btn-secondary btn-sm btn-success mx-1">
                     {{ _('create') }}
                 </a>
 
@@ -39,10 +40,20 @@
                     </form>
                 </div>
 
-                <a href="{{ url_for('bookmark.index') }}?action=export" class="btn btn-secondary btn-sm mx-1">
+                <a href="{{ url_for('bookmark.index', bgid=request.args.get('bgid'), action='export') }}"
+                    class="btn btn-secondary btn-sm mx-1">
                     {{ _('export') }}
                 </a>
             </div>
+        </div>
+
+        <div class="col-4 text-end">
+            {% if group_name %}
+            <span class="badge bg-primary text-truncate align-middle" style="max-width: 100%; font-size: 0.9rem;">
+                {{ group_name }}
+            </span>
+            {% endif %}
+
         </div>
     </div>
 
@@ -63,7 +74,7 @@
                                 <th class="collapse-sm" style="min-width: 90px;">{{ _('action') }}</th>
                             </tr>
                         </thead>
-                        <tbody hx-put="{{ url_for('bookmark.reorder') }}" hx-trigger="moved" hx-include="closest form">
+                        <tbody hx-put="{{ url_for('bookmark.reorder', bgid=request.args.get('bgid')) }}" hx-trigger="moved" hx-include="closest form">
                         </tbody>
                     </table>
                 </div>

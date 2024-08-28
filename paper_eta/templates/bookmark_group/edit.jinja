@@ -1,0 +1,40 @@
+{% extends "layout.jinja" %}
+{% block title %}{{ _('nav_bookmark_group') }}{% endblock title %}
+
+
+{% block nav %}
+{% include "includes/navbar.jinja" %}
+{% endblock nav %}
+
+
+{% block content %}
+
+<div class="row align-items-center" style="height: 100vh;">
+    <div class="mx-auto py-4 col-10 col-md-8 col-lg-6">
+        <form action="{{ form_action }}" method="{{ 'POST' if editing else 'POST' }}" autocomplete="off">
+            {{ form.csrf_token }}
+
+            <h1>{{ _('new_bookmark_group') }}</h1>
+            <small class="form-text text-mute">
+                {{ _('new_bookmark_group_help') | safe }}
+            </small>
+
+
+            <div class="form-group">
+                {{ form.name.label(class="form-label") }}
+                {{ form.name(class="form-control" + form_valid_class(form.name)) }}
+                <div class="invalid-feedback">
+                    {% for error in form.name.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="form-group text-end pt-3">
+                {{ form.submit(class="btn btn-primary btn-customized") }}
+            </div>
+
+        </form>
+    </div>
+</div>
+{% endblock content %}

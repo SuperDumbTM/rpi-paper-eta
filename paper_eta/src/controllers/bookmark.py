@@ -9,9 +9,26 @@ from flask_babel import gettext, lazy_gettext
 from paper_eta.src import database, db, exts, forms, site_data, utils
 from paper_eta.src.libs import hketa
 
-bp = Blueprint('bookmark',
-               __name__,
-               url_prefix="/bookmarks")
+
+# --------------------------------------------------
+# Endpoints that require "bgid" in query param:
+#   1. GET /
+#   2. POST /
+#   3. PUT /
+#   4. GET /create
+# --------------------------------------------------
+
+bp = Blueprint('bookmark', __name__, url_prefix="/bookmarks")
+
+
+def _get_bm_q():
+    if request.args.get("bgid"):
+        return exts.db.session\
+            .query(database.Bookmark)\
+            .filter(database.Bookmark.bookmark_group_id == request.args["bgid"])
+    return exts.db.session\
+        .query(database.Bookmark)\
+        .filter(database.Bookmark.bookmark_group_id.is_(None))
 
 
 @bp.route('/')
@@ -20,27 +37,29 @@ def index():
         return Response(
             json.dumps(
                 tuple(map(lambda b: b.as_dict(exclude=['id']),
-                          database.Bookmark.query.order_by(database.Bookmark.ordering).all())),
+                          _get_bm_q().order_by(database.Bookmark.ordering).all())),
                 indent=4),
             mimetype='application/json',
             headers={'Content-disposition': 'attachment; filename=bookmarks.json'})
 
     if request.headers.get('HX-Request'):
         bookmarks = []
-        for bm in database.Bookmark.query.order_by(database.Bookmark.ordering).all():
+        for bm in _get_bm_q().order_by(database.Bookmark.ordering).all():
             try:
-                stop_name = exts.hketa.create_route(
+                bm.stop_name = exts.hketa.create_route(
                     hketa.RouteQuery(**bm.as_dict())).stop_name()
-            except Exception as e:  # pylint: disable=broad-exception-caught
-                print(e)
-                stop_name = lazy_gettext('error')
-            bookmarks.append(bm.as_dict() | {'stop_name': stop_name})
+            except Exception:  # pylint: disable=broad-exception-caught
+                bm.stop_name = lazy_gettext('error')
+            bookmarks.append(bm)
         return Response(
             render_template("bookmark/partials/rows.jinja",
                             bookmarks=bookmarks),
             headers={"Cache-Control": "no-cache, no-store, must-revalidate"}
         )
-    return render_template("bookmark/index.jinja")
+
+    if request.args.get("bgid"):
+        return render_template("bookmark/index.jinja", group_name=database.BookmarkGroup.query.get(request.args["bgid"]).name)
+    return render_template("bookmark/index.jinja", group_name="")
 
 
 @bp.route('/', methods=['POST'])
@@ -65,30 +84,7 @@ def import_():
                     logging.exception('During bookmark import: %s', str(e))
     except (UnicodeDecodeError, json.decoder.JSONDecodeError):
         flash(lazy_gettext('import_failed'), "error")
-    return redirect(url_for('bookmark.index'))
-
-
-@bp.route("/<id_>", methods=["DELETE"])
-def delete(id_: str):
-    try:
-        bookmark = database.Bookmark.query.get(id_)
-        db.session.delete(bookmark)
-        db.session.commit()
-        return Response(
-            headers={
-                "HX-Location": json.dumps({
-                    "path": url_for("bookmark.index"),
-                    "target": "tbody",
-                    "swap": "innerHTML"
-                })}
-        )
-    except sqlalchemy.exc.SQLAlchemyError:
-        return Response("", status=422, headers={"HX-Trigger": json.dumps({
-            "toast": {
-                "level": "error",
-                "message": gettext("invalid_id")
-            }
-        })})
+    return redirect(url_for('bookmark.index', bgid=request.args.get("bgid")))
 
 
 @bp.route('/create', methods=["GET", "POST"])
@@ -102,9 +98,9 @@ def create():
                                                 "locale": app_conf["eta_locale"]}
                                          ))
         db.session.commit()
+        return redirect(url_for("bookmark.index", bgid=form.bookmark_group_id.data))
 
-        return redirect(url_for("bookmark.index"))
-
+    form.bookmark_group_id.data = request.args.get("bgid")
     return render_template("bookmark/edit.jinja",
                            form=form,
                            form_action=url_for("bookmark.create"),
@@ -121,7 +117,9 @@ def edit(id_: str):
             setattr(bm, k, v)
         db.session.merge(bm)
         db.session.commit()
-        return redirect(url_for("bookmark.index"))
+        return redirect(url_for("bookmark.index", bgid=form.bookmark_group_id))
+
+    form.bookmark_group_id.data = bm.bookmark_group_id
 
     form.transport.data = bm.transport.value
 
@@ -153,13 +151,13 @@ def edit(id_: str):
 @bp.route('/status/<id_>', methods=["PUT"])
 def toggle_status(id_: str):
     try:
-        bookmark = database.Bookmark.query.get(id_)
+        bookmark = database.Bookmark.query.get_or_404(id_)
         setattr(bookmark, "enabled", not bookmark.enabled)
         db.session.commit()
         return Response(
             headers={
                 "HX-Location": json.dumps({
-                    "path": url_for("bookmark.index"),
+                    "path": url_for("bookmark.index", bgid=bookmark.bookmark_group_id),
                     "target": "tbody",
                     "swap": "innerHTML"
                 })}
@@ -175,7 +173,7 @@ def toggle_status(id_: str):
 
 @bp.route('/', methods=["PUT"])
 def reorder():
-    bms = database.Bookmark.query.all()
+    bms = _get_bm_q().all()
     for bm in bms:
         bm.ordering = request.form.getlist("ids[]").index(str(bm.id))
     db.session.add_all(bms)
@@ -184,11 +182,39 @@ def reorder():
     return Response(
         headers={
             "HX-Location": json.dumps({
-                "path": url_for("bookmark.index"),
+                "path": url_for("bookmark.index", bgid=request.args.get("bgid")),
                 "target": "tbody",
                 "swap": "innerHTML"
             })}
     )
+
+
+@bp.route("/<id_>", methods=["DELETE"])
+def delete(id_: str):
+    try:
+        bookmark = database.Bookmark.query.get_or_404(id_)
+        db.session.delete(bookmark)
+        db.session.commit()
+        return Response(
+            headers={
+                "HX-Location": json.dumps({
+                    "path": url_for("bookmark.index", bgid=bookmark.bookmark_group_id),
+                    "target": "tbody",
+                    "swap": "innerHTML"
+                })}
+        )
+    except sqlalchemy.exc.SQLAlchemyError:
+        return Response("", status=422, headers={"HX-Trigger": json.dumps({
+            "toast": {
+                "level": "error",
+                "message": gettext("invalid_id")
+            }
+        })})
+
+
+# --------------------------------------------------
+#               Form HTMX Handlers
+# --------------------------------------------------
 
 
 @bp.route('/<transport>/routes')
