@@ -59,7 +59,7 @@ class EtaFactory:
                 return MtrLrtEta(route)
             case Company.MTRTRAIN:
                 return MtrTrainEta(route)
-            case Company.CTB | Company.NWFB:
+            case Company.CTB:
                 return BravoBusEta(route)
             case Company.NLB:
                 return NlbEta(route)
