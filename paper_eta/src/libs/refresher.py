@@ -4,6 +4,7 @@ import logging
 import os
 import threading
 from pathlib import Path
+from typing import Iterable
 
 from PIL import Image
 from flask import current_app
@@ -65,7 +66,10 @@ def scheduled_refresh(schedule: "database.Schedule"):
             _refresh_rotate["count"] = 0
             is_partial = False
 
-    refresh(epd_brand=site_data.AppConfiguration()['epd_brand'],
+    refresh(bookmarks=(database.Bookmark.query
+                       .filter(database.Bookmark.bookmark_group_id == schedule.bookmark_group_id)
+                       .all()),
+            epd_brand=site_data.AppConfiguration()['epd_brand'],
             epd_model=site_data.AppConfiguration()['epd_model'],
             eta_format=(schedule.eta_format.value
                         if isinstance(schedule.eta_format, Enum)
@@ -78,7 +82,8 @@ def scheduled_refresh(schedule: "database.Schedule"):
 
 
 @_with_app_context
-def refresh(epd_brand: str,
+def refresh(bookmarks: Iterable["database.Bookmark"],
+            epd_brand: str,
             epd_model: str,
             eta_format: str,
             layout: str,
@@ -100,14 +105,8 @@ def refresh(epd_brand: str,
         _write_log(**locals(), error_message=str(e))
         return False
 
-    queries = [hketa.RouteQuery(**bm.as_dict())
-               for bm in database.Bookmark.query
-               .filter(database.Bookmark.enabled)
-               .order_by(database.Bookmark.ordering)
-               .all()]
-
     images = renderer_.draw([exts.hketa.create_eta_processor(query).etas()
-                             for query in queries],
+                             for query in (hketa.RouteQuery(**bm.as_dict()) for bm in bookmarks)],
                             degree)
 
     if not is_dry_run:

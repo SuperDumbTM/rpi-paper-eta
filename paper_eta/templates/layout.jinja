@@ -75,8 +75,14 @@
 
         // navbar current location indicator
         document.querySelector(`a[href^="/${location.pathname.split('/')[1]}"]`)
-            .classList
+            ?.classList
             .add("active");
+        
+        document.querySelector(`a[href^="/${location.pathname.split('/')[1]}"]`)
+            .closest("li.dropdown")
+            .querySelector("a.dropdown-toggle")
+            ?.classList
+            .add("active")
     })
 </script>
 

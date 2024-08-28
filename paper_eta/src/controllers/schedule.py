@@ -31,18 +31,15 @@ def index():
     if request.headers.get('HX-Request'):
         schedules = []
         for schedule in database.Schedule.query.all():
-            schedule: database.Schedule
-
-            cron = croniter.croniter(
-                schedule.schedule, start_time=datetime.now())
-
-            # TODO: i18n for eta_mode
-            schedules.append({
-                **dict(schedule.as_dict()),
-                'next_execution': (lazy_gettext("not_enabled")
-                                   if not schedule.enabled
-                                   else cron.get_next(datetime).isoformat())
-            })
+            cron = croniter.croniter(schedule.schedule,
+                                     start_time=datetime.now())
+            if schedule.enabled:
+                schedule.next_execution = croniter.croniter(schedule.schedule, start_time=datetime.now())\
+                    .get_next(datetime)\
+                    .isoformat()
+            else:
+                schedule.next_execution = lazy_gettext("not_enabled")
+            schedules.append(schedule)
         return Response(render_template("schedule/partials/rows.jinja", schedules=schedules),
                         headers={"Cache-Control": "no-cache, no-store, must-revalidate"})
 
@@ -108,6 +105,7 @@ def edit(id_: str):
         return redirect(url_for("schedule.index"))
 
     form.schedule.data = sch.schedule
+    form.bookmark_group_id.data = str(sch.bookmark_group_id)
     form.eta_format.data = sch.eta_format
     form.layout.data = sch.layout
     form.is_partial.data = sch.is_partial
@@ -219,8 +217,10 @@ def preview(eta_format: str, layout: str):
         queries = [hketa.RouteQuery(**bm.as_dict())
                    for bm in database.Bookmark.query
                    .filter(database.Bookmark.enabled)
+                   .filter(database.Bookmark.bookmark_group_id == (request.args.get("bookmark_group_id") or None))
                    .order_by(database.Bookmark.ordering)
                    .all()]
+
         etas = [
             exts.hketa.create_eta_processor(query).etas() for query in queries
         ]
@@ -252,7 +252,10 @@ def refresh(id_: str):
         })})
 
     try:
-        success = refresher.refresh(app_conf['epd_brand'],
+        success = refresher.refresh((database.Bookmark.query
+                                    .filter(database.Bookmark.bookmark_group_id == schedule.bookmark_group_id)
+                                    .all()),
+                                    app_conf['epd_brand'],
                                     app_conf['epd_model'],
                                     schedule.eta_format.value,
                                     schedule.layout,

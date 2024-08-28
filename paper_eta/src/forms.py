@@ -2,6 +2,7 @@ import wtforms
 from flask_babel import lazy_gettext
 from flask_wtf import FlaskForm
 
+from paper_eta.src import database
 from paper_eta.src.libs import hketa, renderer
 
 
@@ -71,6 +72,16 @@ class BookmarkForm(FlaskForm):
                                   validate_choice=False
                                   )
 
+    bookmark_group_id = wtforms.HiddenField(filters=[lambda v: v or None])
+
+    submit = wtforms.SubmitField(lazy_gettext('submit'))
+
+
+class BookmarkGroupForm(FlaskForm):
+
+    name = wtforms.StringField(lazy_gettext("bookmark_group_name"),
+                               validators=[wtforms.validators.DataRequired()])
+
     submit = wtforms.SubmitField(lazy_gettext('submit'))
 
 
@@ -79,6 +90,13 @@ class ScheduleForm(FlaskForm):
                                    render_kw={
                                        "placeholder": "Cron Expression"},
                                    validators=[wtforms.validators.DataRequired()])
+
+    bookmark_group_id = wtforms.SelectField(lazy_gettext("bookmark_group"),
+                                            choices=lambda: [
+                                                ("", ""), *[(g.id, g.name) for g in database.BookmarkGroup.query.all()]],
+                                            validators=[
+                                                wtforms.validators.Optional()],
+                                            filters=[lambda v: v or None])
 
     eta_format = wtforms.SelectField(lazy_gettext("eta_format"),
                                      [wtforms.validators.DataRequired()],

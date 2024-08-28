@@ -13,7 +13,9 @@
                     <button type="button" class="btn btn-sm btn-outline-success preview-btn" data-bs-toggle="modal"
                         data-bs-target="#preview-md"
                         hx-get="{{ url_for('schedule.preview', eta_format=eta_format, layout=name) }}"
-                        hx-target="#preview-md #outter-preview" hx-indicator=".hx-indicator" hx-on::before-request="document.getElementById('outter-preview').innerHTML = ''">
+                        hx-include="select[name=bookmark_group_id]" hx-target="#preview-md #outter-preview"
+                        hx-indicator=".hx-indicator"
+                        hx-on::before-request="document.getElementById('outter-preview').innerHTML = ''">
                         {{ _('layout_preview') }}
                     </button>
                 </div>
@@ -28,7 +30,7 @@
 
         <ul class="card-text m-0">
             {% for graphic in layout["graphics"][get_locale()] %}
-                <li class="text-muted" style="font-size: 0.8rem;">{{ graphic }}</li>
+            <li class="text-muted" style="font-size: 0.8rem;">{{ graphic }}</li>
             {% endfor %}
         </ul>
     </div>

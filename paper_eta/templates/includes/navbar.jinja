@@ -31,29 +31,29 @@
                     </a>
                 </li>
 
-                {# <li class="nav-item dropdown">
+                <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="/configuration" data-bs-toggle="dropdown">
-                        {{ _('nav_configuration') }}
+                        {{ _('nav_route') }}
                     </a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item" href="{{ url_for('configuration.epaper_setting') }}">
-                                {{ _('nav_e-paper') }}
+                            <a class="dropdown-item" href="{{ url_for('bookmark.index') }}">
+                                {{ _('nav_bookmark') }}
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="{{ url_for('configuration.api_server_setting') }}">
-                                {{ _('nav_api_server') }}
+                            <a class="dropdown-item" href="{{ url_for('bookmark_group.index') }}">
+                                {{ _('nav_bookmark_group') }}
                             </a>
                         </li>
                     </ul>
-                </li> #}
+                </li>
 
-                <li class="nav-item">
+                {# <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('bookmark.index') }}">
                         {{ _('nav_bookmark') }}
                     </a>
-                </li>
+                </li> #}
 
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('schedule.index') }}">

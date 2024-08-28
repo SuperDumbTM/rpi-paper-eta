@@ -38,6 +38,7 @@
     <div class="mx-auto py-4 col-10 col-md-8 col-lg-6">
         <form action="{{ form_action }}" method="{{ 'POST' if editing else 'POST' }}" autocomplete="off">
             {{ form.csrf_token }}
+            {{ form.bookmark_group_id() }}
 
             <h1>{{ _('new_bookmark') }}</h1>
             <small class="form-text text-mute">

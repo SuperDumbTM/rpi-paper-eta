@@ -71,6 +71,16 @@
             </div>
 
             <div class="form-group">
+                {{ form.bookmark_group_id.label(class="form-label") }}
+                {{ form.bookmark_group_id(class="form-select" + form_valid_class(form.bookmark_group_id)) }}
+                <div class="invalid-feedback">
+                    {% for error in form.bookmark_group_id.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="form-group">
                 {{ form.eta_format.label(class="form-label") }}
                 {{ form.eta_format(class="form-select" + form_valid_class(form.eta_format), **{
                 "hx-ext": "path-params",
