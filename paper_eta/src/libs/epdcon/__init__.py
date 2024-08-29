@@ -1,6 +1,7 @@
 import importlib
 import sys
 from pathlib import Path
+from typing import Iterable
 
 from . import controller, waveshare  # DO NOT REMOVE
 from .controller import Controller, Partialable
@@ -13,7 +14,7 @@ def brands() -> tuple[str]:
     return (b.stem for b in _PATH.glob("[!_]*/"))
 
 
-def models(brand: str) -> list[type[Controller]]:
+def models(brand: str) -> Iterable[str]:
     return (m.stem for m in _PATH.joinpath(brand).glob("[!_]*.py"))
 
 
