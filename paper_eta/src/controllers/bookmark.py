@@ -58,8 +58,8 @@ def index():
         )
 
     if request.args.get("bgid"):
-        return render_template("bookmark/index.jinja", group_name=database.BookmarkGroup.query.get(request.args["bgid"]).name)
-    return render_template("bookmark/index.jinja", group_name="")
+        return render_template("bookmark/index.jinja", group=database.BookmarkGroup.query.get_or_404(request.args["bgid"]))
+    return render_template("bookmark/index.jinja", group=None)
 
 
 @bp.route('/', methods=['POST'])

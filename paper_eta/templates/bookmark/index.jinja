@@ -1,8 +1,7 @@
-{% from "macros/render_field.jinja" import render_field %}
-
-
 {% extends "layout.jinja" %}
-{% block title %}{{ _('nav_bookmark') }}{% endblock title %}
+{% block title %}
+{{ _('nav_bookmark') ~ " (" ~ group.name ~ ")" if group else _('nav_bookmark') }}
+{% endblock title %}
 
 
 {% block nav %}
@@ -24,7 +23,7 @@
     <div class="row">
         <div class="col-8">
             <div class="btn-group flex-wrap">
-                <a href="{{ url_for('bookmark.create', bgid=request.args.get('bgid')) }}"
+                <a href="{{ url_for('bookmark.create', bgid=group.id) }}"
                     class="btn btn-secondary btn-sm btn-success mx-1">
                     {{ _('create') }}
                 </a>
@@ -40,7 +39,7 @@
                     </form>
                 </div>
 
-                <a href="{{ url_for('bookmark.index', bgid=request.args.get('bgid'), action='export') }}"
+                <a href="{{ url_for('bookmark.index', bgid=group.id, action='export') }}"
                     class="btn btn-secondary btn-sm mx-1">
                     {{ _('export') }}
                 </a>
@@ -48,9 +47,9 @@
         </div>
 
         <div class="col-4 text-end">
-            {% if group_name %}
+            {% if group %}
             <span class="badge bg-primary text-truncate align-middle" style="max-width: 100%; font-size: 0.9rem;">
-                {{ group_name }}
+                {{ group.name }}
             </span>
             {% endif %}
 
@@ -74,7 +73,8 @@
                                 <th class="collapse-sm" style="min-width: 90px;">{{ _('action') }}</th>
                             </tr>
                         </thead>
-                        <tbody hx-put="{{ url_for('bookmark.reorder', bgid=request.args.get('bgid')) }}" hx-trigger="moved" hx-include="closest form">
+                        <tbody hx-put="{{ url_for('bookmark.reorder', bgid=request.args.get('bgid')) }}"
+                            hx-trigger="moved" hx-include="closest form">
                         </tbody>
                     </table>
                 </div>
