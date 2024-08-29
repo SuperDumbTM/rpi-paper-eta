@@ -479,6 +479,11 @@ class CityBus(Transport):
         return Company.CTB
 
     async def _fetch_route_list(self):
+        # Stop ID of the same stop from different route will have the same ID,
+        # caching the stop details to reduce the number of requests (around 600 - 700).
+        # Execution time is not guaranteed to be reduced.
+        stop_cache = {}
+
         async def fetch(session: aiohttp.ClientSession, route: dict):
             directions = {
                 'inbound': (await api.bravobus_route_stop_list(
@@ -492,10 +497,13 @@ class CityBus(Transport):
                 if len(stop_list) == 0:
                     continue
 
-                ends = await asyncio.gather(*[
-                    api.bravobus_stop_details(stop_list[0]['stop'], session),
-                    api.bravobus_stop_details(stop_list[-1]['stop'], session)
-                ])
+                stop_orig = (stop_cache.get(stop_list[0]['stop'])
+                             or (await api.bravobus_stop_details(stop_list[0]['stop'], session))['data'])
+                stop_cache.setdefault(stop_list[0]['stop'], stop_orig)
+
+                stop_dest = (stop_cache.get(stop_list[-1]['stop'])
+                             or (await api.bravobus_stop_details(stop_list[0]['stop'], session))['data'])
+                stop_cache.setdefault(stop_list[-1]['stop'], stop_dest)
 
                 info[direction] = [RouteInfo.Bound(
                     route_id=f"{route['route']}_{direction}_default",
@@ -504,16 +512,16 @@ class CityBus(Transport):
                         'id': stop_list[0]['stop'],
                         'seq': stop_list[0]['seq'],
                         'name': {
-                            Locale.EN.value: ends[0]['data'].get('name_en', "N/A"),
-                            Locale.TC.value:  ends[0]['data'].get('name_tc', "未有資料"),
+                            Locale.EN.value: stop_orig.get('name_en', "N/A"),
+                            Locale.TC.value:  stop_orig.get('name_tc', "未有資料"),
                         }
                     },
                     dest={
                         'id': stop_list[-1]['stop'],
                         'seq': stop_list[-1]['seq'],
                         'name': {
-                            Locale.EN.value: ends[-1]['data'].get('name_en', "N/A"),
-                            Locale.TC.value:  ends[-1]['data'].get('name_tc', "未有資料"),
+                            Locale.EN.value: stop_dest.get('name_en', "N/A"),
+                            Locale.TC.value:  stop_dest.get('name_tc', "未有資料"),
                         }
                     }
                 )]
