@@ -22,7 +22,7 @@ def index():
     if request.args.get("action") == "export":
         return Response(
             json.dumps(
-                tuple(map(lambda s: s.as_dict(exclude=['id', 'enabled']),
+                tuple(map(lambda s: s.as_dict(exclude=["id", "enabled", "bookmark_group_id"]),
                           database.Schedule.query.all())
                       ),
                 indent=4),
@@ -31,8 +31,6 @@ def index():
     if request.headers.get('HX-Request'):
         schedules = []
         for schedule in database.Schedule.query.all():
-            cron = croniter.croniter(schedule.schedule,
-                                     start_time=datetime.now())
             if schedule.enabled:
                 schedule.next_execution = croniter.croniter(schedule.schedule, start_time=datetime.now())\
                     .get_next(datetime)\
