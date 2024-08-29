@@ -1,4 +1,4 @@
-# pylint: disable=too-few-public-methods
+# pylint: disable=too-few-public-methods, unsubscriptable-object
 
 import logging
 from datetime import datetime
@@ -17,10 +17,6 @@ from paper_eta.src.libs import hketa, refresher, renderer
 class BaseModel(exts.db.Model):
     __abstract__ = True
 
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
-    updated_at: Mapped[datetime] = mapped_column(default=datetime.now,
-                                                 onupdate=datetime.now)
-
     def as_dict(self, exclude: Iterable[str] = None, timestamps: bool = False):
         exclude = [] if exclude is None else exclude
 
@@ -34,7 +30,20 @@ class BaseModel(exts.db.Model):
         }
 
 
-class Bookmark(BaseModel):
+class StampedCreate(exts.db.Model):
+    __abstract__ = True
+
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
+
+
+class StampedUpdate(exts.db.Model):
+    __abstract__ = True
+
+    updated_at: Mapped[datetime] = mapped_column(default=datetime.now,
+                                                 onupdate=datetime.now)
+
+
+class Bookmark(BaseModel, StampedCreate, StampedUpdate):
     __tablename__ = 'bookmarks'
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -50,23 +59,10 @@ class Bookmark(BaseModel):
     enabled: Mapped[bool] = mapped_column(default=True)
 
 
-class BookmarkGroup(BaseModel):
-    __tablename__ = 'bookmark_groups'
-
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    name: Mapped[str] = mapped_column(unique=True)
-
-    bookmarks: Mapped[list["Bookmark"]] = relationship("Bookmark",
-                                                       backref="bookmark_group",
-                                                       cascade="all, delete-orphan")
-    schedules: Mapped[list["Schedule"]] = relationship("Schedule",
-                                                       backref="bookmark_group")
-
-
 @event.listens_for(Bookmark, 'before_insert')
 def generate_ordering(mapper, connection, target: Bookmark):
     if target.ordering is not None:
-        return target
+        return
 
     if (target.bookmark_group_id is not None):
         crrt_max = exts.db.session\
@@ -81,10 +77,22 @@ def generate_ordering(mapper, connection, target: Bookmark):
 
     # BUG: possible inconsistent with high traffic
     target.ordering = crrt_max + 1
-    return target
 
 
-class Schedule(BaseModel):
+class BookmarkGroup(BaseModel):
+    __tablename__ = 'bookmark_groups'
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(unique=True)
+
+    bookmarks: Mapped[list["Bookmark"]] = relationship("Bookmark",
+                                                       backref="bookmark_group",
+                                                       cascade="all, delete-orphan")
+    schedules: Mapped[list["Schedule"]] = relationship("Schedule",
+                                                       backref="bookmark_group")
+
+
+class Schedule(BaseModel, StampedCreate, StampedUpdate):
     __tablename__ = 'schedules'
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -121,9 +129,9 @@ class Schedule(BaseModel):
             logging.exception('Removing non-exist job.')
 
     @validates("schedule")
-    def validate_schedule(self, key, schedule: "Schedule"):
+    def validate_schedule(self, key, schedule: str):
         if not croniter.croniter.is_valid(schedule):
-            raise SyntaxError('Invalid cron expression')
+            raise SyntaxError(f"{schedule} is not a valid cron expression")
         return schedule
 
 
@@ -148,7 +156,7 @@ def update_refresh_job_after(mapper, connection, target: Schedule):
         target.add_job()
 
 
-class RefreshLog(BaseModel):
+class RefreshLog(BaseModel, StampedCreate, StampedUpdate):
     __tablename__ = 'refresh_logs'
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -160,6 +168,8 @@ class RefreshLog(BaseModel):
 
 @event.listens_for(RefreshLog, 'before_insert')
 def purge_logs(mapper, connection, target: RefreshLog):
+    """Limit the entry size under 120. If exceeded, purge half.
+    """
     # pylint: disable=not-callable
     if exts.db.session.query(func.count(RefreshLog.id)).scalar() < 120:
         return
