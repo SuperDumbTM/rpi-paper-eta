@@ -47,7 +47,7 @@ def index():
 @bp.route('/', methods=['POST'])
 def import_():
     fields = ({c.name for c in database.Schedule.__table__.c} -
-              {'id', 'enabled', 'created_at', 'updated_at'})  # accepted fields for table inputs
+              {'id', 'enabled', 'bookmark_group_id', 'created_at', 'updated_at'})  # accepted fields for table inputs
     try:
         for i, schedule in enumerate(json.load(request.files['schedules'].stream)):
             # reference: https://stackoverflow.com/a/76799290
