@@ -5,10 +5,8 @@ from datetime import datetime
 from typing import Iterable, Optional
 
 import apscheduler.jobstores.base
-import croniter
 from sqlalchemy import ForeignKey, event, func, inspect
-from sqlalchemy.orm import (Mapped, Session, mapped_column, relationship,
-                            validates)
+from sqlalchemy.orm import Mapped, Session, mapped_column, relationship
 
 from paper_eta.src import exts
 from paper_eta.src.libs import hketa, refresher, renderer
@@ -127,12 +125,6 @@ class Schedule(BaseModel, StampedCreate, StampedUpdate):
             exts.scheduler.remove_job(str(self.id))
         except apscheduler.jobstores.base.JobLookupError:
             logging.exception('Removing non-exist job.')
-
-    @validates("schedule")
-    def validate_schedule(self, key, schedule: str):
-        if not croniter.croniter.is_valid(schedule):
-            raise SyntaxError(f"{schedule} is not a valid cron expression")
-        return schedule
 
 
 @event.listens_for(Schedule, 'after_insert')

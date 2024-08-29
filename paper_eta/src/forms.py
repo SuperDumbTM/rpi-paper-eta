@@ -120,9 +120,6 @@ class ScheduleForm(FlaskForm):
 
     submit = wtforms.SubmitField(lazy_gettext('submit'))
 
-    def validate_epd_model(self, field: wtforms.Field):
-        if not self.is_partial.data:
-            return
-
-        if field.data < 0:
-            raise wtforms.ValidationError("Not a valid input.")
+    def validate_schedule(self, field: wtforms.Field):
+        if not croniter.croniter.is_valid(field.data):
+            raise wtforms.ValidationError(gettext("invalid_cron_expression"))
