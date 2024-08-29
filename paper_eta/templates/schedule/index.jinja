@@ -10,6 +10,15 @@
 {% endblock link %}
 
 
+{% block style %}
+<style>
+    .table tr.disabled td {
+        color: var(--bs-gray-500);
+    }
+</style>
+{% endblock style %}
+
+
 {% block nav %}
 {% include "includes/navbar.jinja" %}
 {% endblock nav %}
@@ -50,7 +59,8 @@
         <div class="col">
             <div class="table-responsive">
                 <table class="table table-striped" hx-get="" hx-trigger="load delay:1ms, every 1m" hx-target="tbody"
-                    hx-on::before-request="showLoading(150)" hx-on::after-settle="handleAfterSettle(event)" style="min-width: 300px;">
+                    hx-on::before-request="showLoading(150)" hx-on::after-settle="handleAfterSettle(event)"
+                    style="min-width: 300px;">
                     <thead>
                         <tr>
                             <th>{{ _('layout') }}</th>
