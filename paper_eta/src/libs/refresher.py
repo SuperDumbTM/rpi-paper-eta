@@ -173,8 +173,6 @@ def display_images(old_images: dict[str, Image.Image],
     Raises:
         RuntimeError: when not `wait_if_locked` and the
     """
-
-    # BUG: the implementation is not thread-safe
     if _ctrl_mutex.locked() and not wait_if_locked:
         raise RuntimeError('Lock was aquired.')
 
@@ -197,3 +195,6 @@ def clear_screen(controller: epdcon.Controller) -> None:
             controller.clear()
         finally:
             controller.close()
+
+    for filename in current_app.config['DIR_SCREEN_DUMP'].glob("*.*"):
+        filename.unlink(True)

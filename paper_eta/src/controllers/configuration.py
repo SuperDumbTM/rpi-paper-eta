@@ -2,14 +2,12 @@ import json
 
 from flask import (Blueprint, Response, flash, redirect, render_template,
                    request, url_for)
-from flask_babel import lazy_gettext
+from flask_babel import gettext, lazy_gettext
 
 from paper_eta.src import database, db, forms, site_data
-from paper_eta.src.libs import renderer, epdcon
+from paper_eta.src.libs import epdcon, refresher
 
-bp = Blueprint('configuration',
-               __name__,
-               url_prefix="/configuration")
+bp = Blueprint('configuration', __name__, url_prefix="/configuration")
 
 
 @bp.route('/', methods=["GET", "POST"])

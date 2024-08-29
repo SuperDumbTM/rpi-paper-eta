@@ -1,0 +1,38 @@
+{% from "macros/render_field.jinja" import render_field %}
+
+
+{% extends "layout.jinja" %}
+{% block title %}{{ _('nav_control') }}{% endblock title %}
+
+
+{% block nav %}
+{% include "includes/navbar.jinja" %}
+{% endblock nav %}
+
+
+{% block content %}
+<div class="row align-items-center" style="height: 100vh;">
+    <div class="mx-auto py-4 col-10 col-md-8 col-lg-6">
+        <section class="d-grid gap-3">
+            <div class="row">
+                <div class="col-12">
+                    <h1>{{ _('nav_control') }}</h1>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-8">
+                    {{ _('action_clear_screen') }}
+                </div>
+                <div class="col-4 text-end">
+                    <button type="button" class="btn btn-sm btn-danger"
+                        hx-post="{{ url_for('control.do_action', action='clear-screen') }}" hx-swap="none">
+                        {{ _('action_execute') }}
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+{% endblock content %}

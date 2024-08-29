@@ -25,150 +25,152 @@
 {% block content %}
 <div class="row align-items-center" style="height: 100vh;">
     <div class="mx-auto py-4 col-10 col-md-8 col-lg-6">
-
-        <div class="row">
-            <div class="col-12">
-                {% include "includes/flash.jinja" %}
-            </div>
-        </div>
-
-        <div class="row my-3">
-            <div class="col-12 col-sm-6">
-                <h1>{{ _('nav_configuration') }}</h1>
-            </div>
-            <div class="col-12 col-sm-6 my-auto text-end">
-                <div style="display: inline-block;" x-data>
-                    <form method="POST" action="{{ url_for('configuration.import_') }}" enctype="multipart/form-data"
-                        x-ref="importForm">
-                        <input type="file" name="file" class="d-none" @upload.window="$el.click()"
-                            @change="$event.target.form.submit()">
-                        <button type="button" class="btn btn-sm btn-info mx-1" @click="$dispatch('upload')">
-                            {{ _('import') }}
-                        </button>
-                    </form>
-                </div>
-
-                <a href="{{ url_for('configuration.export') }}" class="btn btn-sm btn-secondary mx-1">
-                    {{ _('export') }}
-                </a>
-            </div>
-        </div>
-
-        <form method="post" autocomplete="off">
-            {{ form.csrf_token }}
-
-            <div class="row my-3">
+        <section class="d-grid gap-3">
+            <div class="row">
                 <div class="col-12">
-                    <h3 class="text-theme fw-bold mb-0">{{ _('epaper_setting') }}</h3>
-                    <small class="form-text text-mute">
-                        {{ _('display_setting_help') | safe }}
-                    </small>
-                </div>
-                <div class="col-12">
-                    <div class="form-group">
-                        {{ form.epd_brand.label(class="form-label") }}
-                        {{ form.epd_brand(class="form-select" + form_valid_class(form.epd_brand), **{
-                        "hx-ext": "path-params",
-                        "hx-get": url_for('configuration.epd_models', brand='{epd_brand}') | unquote,
-                        "hx-target": "select[name=epd_model]",
-                        "hx-trigger": "load, change"
-                        }) }}
-                        <div class="invalid-feedback">
-                            {% for error in form.epd_brand.errors %}
-                            <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        {{ form.epd_model.label(class="form-label") }}
-                        {{ form.epd_model(class="form-select" + form_valid_class(form.epd_model)) }}
-
-                        <div>
-                            {{ form.epd_model.errors.__class__ }}
-                        </div>
-                        <div class="invalid-feedback">
-                            {% for error in form.epd_model.errors %}
-                            <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <hr class="my-4">
-
-            <div class="row my-3">
-                <div class="col-12">
-                    <h3 class="text-theme fw-bold mb-0">{{ _('display_setting') }}</h3>
-                    <small class="form-text text-mute"></small>
-                </div>
-
-                <div class="col-12">
-                    <div class="form-group">
-                        {{ form.eta_locale.label(class="form-label") }}
-                        {{ form.eta_locale(class="form-select" + form_valid_class(form.eta_locale)) }}
-
-                        <div>
-                            {{ form.eta_locale.errors.__class__ }}
-                        </div>
-                        <div class="invalid-feedback">
-                            {% for error in form.eta_locale.errors %}
-                            <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        {{ form.degree.label(class="form-label") }}
-                        {{ form.degree(class="form-control" + form_valid_class(form.degree)) }}
-
-                        <div class="form-text">
-                            {{ form.degree.description }}
-                        </div>
-
-                        <div>
-                            {{ form.degree.errors.__class__ }}
-                        </div>
-                        <div class="invalid-feedback">
-                            {% for error in form.degree.errors %}
-                            <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="form-check form-switch">
-                            {{ form.dry_run.label(class="form-check-label") }}
-                            {{ form.dry_run(class="form-check-input" + form_valid_class(form.dry_run)) }}
-
-                        </div>
-
-                        <div class="form-text">
-                            {{ form.dry_run.description }}
-                        </div>
-
-                        <div>
-                            {{ form.dry_run.errors.__class__ }}
-                        </div>
-                        <div class="invalid-feedback">
-                            {% for error in form.dry_run.errors %}
-                            <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
+                    {% include "includes/flash.jinja" %}
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-12">
-                    <div class="form-group text-end pt-3">
-                        {{ form.submit(class="btn btn-primary btn-customized") }}
+                <div class="col-12 col-sm-6">
+                    <h1>{{ _('nav_configuration') }}</h1>
+                </div>
+                <div class="col-12 col-sm-6 my-auto text-end">
+                    <div style="display: inline-block;" x-data>
+                        <form method="POST" action="{{ url_for('configuration.import_') }}"
+                            enctype="multipart/form-data" x-ref="importForm">
+                            <input type="file" name="file" class="d-none" @upload.window="$el.click()"
+                                @change="$event.target.form.submit()">
+
+                            <button type="button" class="btn btn-sm btn-info mx-1" @click="$dispatch('upload')">
+                                {{ _('import') }}
+                            </button>
+                        </form>
                     </div>
+
+                    <a href="{{ url_for('configuration.export') }}" class="btn btn-sm btn-secondary mx-1">
+                        {{ _('export') }}
+                    </a>
                 </div>
             </div>
 
-        </form>
+            <form method="post" autocomplete="off">
+                {{ form.csrf_token }}
+
+                <div class="row">
+                    <div class="col-12">
+                        <h3 class="text-theme fw-bold mb-0">{{ _('epaper_setting') }}</h3>
+                        <small class="form-text text-mute">
+                            {{ _('display_setting_help') | safe }}
+                        </small>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            {{ form.epd_brand.label(class="form-label") }}
+                            {{ form.epd_brand(class="form-select" + form_valid_class(form.epd_brand), **{
+                            "hx-ext": "path-params",
+                            "hx-get": url_for('configuration.epd_models', brand='{epd_brand}') | unquote,
+                            "hx-target": "select[name=epd_model]",
+                            "hx-trigger": "load, change"
+                            }) }}
+                            <div class="invalid-feedback">
+                                {% for error in form.epd_brand.errors %}
+                                <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.epd_model.label(class="form-label") }}
+                            {{ form.epd_model(class="form-select" + form_valid_class(form.epd_model)) }}
+
+                            <div>
+                                {{ form.epd_model.errors.__class__ }}
+                            </div>
+                            <div class="invalid-feedback">
+                                {% for error in form.epd_model.errors %}
+                                <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                <div class="row">
+                    <div class="col-12">
+                        <h3 class="text-theme fw-bold mb-0">{{ _('display_setting') }}</h3>
+                        <small class="form-text text-mute"></small>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group">
+                            {{ form.eta_locale.label(class="form-label") }}
+                            {{ form.eta_locale(class="form-select" + form_valid_class(form.eta_locale)) }}
+
+                            <div>
+                                {{ form.eta_locale.errors.__class__ }}
+                            </div>
+                            <div class="invalid-feedback">
+                                {% for error in form.eta_locale.errors %}
+                                <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.degree.label(class="form-label") }}
+                            {{ form.degree(class="form-control" + form_valid_class(form.degree)) }}
+
+                            <div class="form-text">
+                                {{ form.degree.description }}
+                            </div>
+
+                            <div>
+                                {{ form.degree.errors.__class__ }}
+                            </div>
+                            <div class="invalid-feedback">
+                                {% for error in form.degree.errors %}
+                                <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-check form-switch">
+                                {{ form.dry_run.label(class="form-check-label") }}
+                                {{ form.dry_run(class="form-check-input" + form_valid_class(form.dry_run)) }}
+
+                            </div>
+
+                            <div class="form-text">
+                                {{ form.dry_run.description }}
+                            </div>
+
+                            <div>
+                                {{ form.dry_run.errors.__class__ }}
+                            </div>
+                            <div class="invalid-feedback">
+                                {% for error in form.dry_run.errors %}
+                                <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group text-end pt-3">
+                            {{ form.submit(class="btn btn-primary btn-customized") }}
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </section>
     </div>
 </div>
 

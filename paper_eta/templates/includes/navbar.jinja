@@ -31,6 +31,12 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('control.index') }}">
+                        {{ _('nav_control') }}
+                    </a>
+                </li>
+
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="/configuration" data-bs-toggle="dropdown">
                         {{ _('nav_route') }}
@@ -48,12 +54,6 @@
                         </li>
                     </ul>
                 </li>
-
-                {# <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('bookmark.index') }}">
-                        {{ _('nav_bookmark') }}
-                    </a>
-                </li> #}
 
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('schedule.index') }}">
