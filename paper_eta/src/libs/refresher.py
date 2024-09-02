@@ -98,8 +98,7 @@ def refresh(bookmarks: Iterable["database.Bookmark"],
 
     # ---------- generate ETA images ----------
     try:
-        renderer_ = renderer.create(
-            epd_brand, epd_model, eta_format, layout)
+        renderer_ = renderer.create(epd_brand, epd_model, eta_format, layout)
     except ModuleNotFoundError as e:
         logging.exception(str(e))
         _write_log(**locals(), error_message=str(e))
@@ -147,9 +146,7 @@ def refresh(bookmarks: Iterable["database.Bookmark"],
 
 def load_images(directory: os.PathLike) -> dict[str, Image.Image]:
     images = {}
-    for fpath in Path(str(directory)).glob('**/*'):
-        if fpath.suffix != '.bmp':
-            continue
+    for fpath in Path(str(directory)).glob('*.bmp'):
         images.setdefault(fpath.name.removesuffix(fpath.suffix),
                           Image.open(fpath))
     return images
