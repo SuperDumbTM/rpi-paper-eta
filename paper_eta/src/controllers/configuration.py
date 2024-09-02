@@ -5,7 +5,7 @@ from flask import (Blueprint, Response, flash, redirect, render_template,
 from flask_babel import gettext, lazy_gettext
 
 from paper_eta.src import database, db, forms, site_data
-from paper_eta.src.libs import epdcon, refresher
+from paper_eta.src.libs import epdcon
 
 bp = Blueprint('configuration', __name__, url_prefix="/configuration")
 
@@ -20,6 +20,7 @@ def index():
                 or app_conf.get('epd_model') != form.epd_model.data):
             # changing brand or model will invalidate the schedule
             database.Schedule.query.update({database.Schedule.enabled: False})
+            flash(gettext("schedule_disabled_message"), "info")
         database.Bookmark.query.update({"locale": form.eta_locale.data})
         db.session.commit()
 

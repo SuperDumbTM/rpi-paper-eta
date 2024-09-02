@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-08-29 15:00+0800\n"
+"POT-Creation-Date: 2024-08-29 17:59+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -18,109 +18,117 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.16.0\n"
 
-#: paper_eta/src/forms.py:10 paper_eta/templates/index.jinja:96
+#: paper_eta/src/forms.py:11 paper_eta/templates/index.jinja:96
 msgid "brand"
 msgstr "Brand"
 
-#: paper_eta/src/forms.py:15 paper_eta/src/forms.py:22
-#: paper_eta/src/forms.py:59 paper_eta/src/forms.py:65
-#: paper_eta/src/forms.py:71
+#: paper_eta/src/forms.py:16 paper_eta/src/forms.py:23
+#: paper_eta/src/forms.py:60 paper_eta/src/forms.py:66
+#: paper_eta/src/forms.py:72
 #: paper_eta/templates/configuration/partials/model_options.jinja:8
 msgid "please_select"
 msgstr "Please select"
 
-#: paper_eta/src/forms.py:18 paper_eta/templates/index.jinja:102
+#: paper_eta/src/forms.py:19 paper_eta/templates/index.jinja:102
 msgid "model"
 msgstr "Model"
 
-#: paper_eta/src/forms.py:25
+#: paper_eta/src/forms.py:26
 msgid "language"
 msgstr "Language"
 
-#: paper_eta/src/forms.py:30 paper_eta/templates/includes/navbar.jinja:10
+#: paper_eta/src/forms.py:31 paper_eta/templates/includes/navbar.jinja:10
 msgid "dry_run"
 msgstr "Dry Run"
 
-#: paper_eta/src/forms.py:31
+#: paper_eta/src/forms.py:32
 msgid "dry_run_help"
 msgstr ""
 "In dry run mode, the screen will not be refreshed but the screen image "
 "will still be generated according to the refresh schedule and the latest "
 "screen dump will be displayed in the \"Screen Dump\" section."
 
-#: paper_eta/src/forms.py:33
+#: paper_eta/src/forms.py:34
 msgid "rotate_degree"
 msgstr "Rotation"
 
-#: paper_eta/src/forms.py:35
+#: paper_eta/src/forms.py:36
 msgid "rotate_degree_help"
 msgstr "Adjust the rotation (in degree) of the output image."
 
-#: paper_eta/src/forms.py:37 paper_eta/src/forms.py:77
-#: paper_eta/src/forms.py:85 paper_eta/src/forms.py:121
+#: paper_eta/src/forms.py:38 paper_eta/src/forms.py:78
+#: paper_eta/src/forms.py:86 paper_eta/src/forms.py:122
 msgid "submit"
 msgstr "Submit"
 
-#: paper_eta/src/forms.py:49
+#: paper_eta/src/forms.py:45
+msgid "Not a valid choice."
+msgstr "Not a valid choice."
+
+#: paper_eta/src/forms.py:50
 msgid "company"
 msgstr "Company"
 
-#: paper_eta/src/forms.py:54 paper_eta/templates/bookmark/index.jinja:69
+#: paper_eta/src/forms.py:55 paper_eta/templates/bookmark/index.jinja:69
 msgid "route"
 msgstr "Route"
 
-#: paper_eta/src/forms.py:57 paper_eta/templates/bookmark/index.jinja:70
+#: paper_eta/src/forms.py:58 paper_eta/templates/bookmark/index.jinja:70
 msgid "direction"
 msgstr "Direction"
 
-#: paper_eta/src/forms.py:63 paper_eta/templates/bookmark/index.jinja:71
+#: paper_eta/src/forms.py:64 paper_eta/templates/bookmark/index.jinja:71
 msgid "service_type"
 msgstr "Service Type"
 
-#: paper_eta/src/forms.py:69 paper_eta/templates/bookmark/index.jinja:72
+#: paper_eta/src/forms.py:70 paper_eta/templates/bookmark/index.jinja:72
 msgid "stop"
 msgstr "Stop"
 
-#: paper_eta/src/forms.py:82 paper_eta/templates/bookmark_group/index.jinja:56
+#: paper_eta/src/forms.py:83 paper_eta/templates/bookmark_group/index.jinja:56
 msgid "bookmark_group_name"
 msgstr "Group Name"
 
-#: paper_eta/src/forms.py:89 paper_eta/templates/schedule/index.jinja:69
+#: paper_eta/src/forms.py:90 paper_eta/templates/schedule/index.jinja:69
 msgid "schedule"
 msgstr "Schedule"
 
-#: paper_eta/src/forms.py:94 paper_eta/templates/schedule/index.jinja:68
+#: paper_eta/src/forms.py:95 paper_eta/templates/schedule/index.jinja:68
 msgid "bookmark_group"
 msgstr "Bookmark Group"
 
-#: paper_eta/src/forms.py:101 paper_eta/templates/index.jinja:50
+#: paper_eta/src/forms.py:102 paper_eta/templates/index.jinja:50
 #: paper_eta/templates/schedule/index.jinja:67
 msgid "eta_format"
 msgstr "ETA Format"
 
-#: paper_eta/src/forms.py:108 paper_eta/templates/index.jinja:51
+#: paper_eta/src/forms.py:109 paper_eta/templates/index.jinja:51
 #: paper_eta/templates/schedule/index.jinja:66
 msgid "layout"
 msgstr "Layout"
 
-#: paper_eta/src/forms.py:111
+#: paper_eta/src/forms.py:112
 msgid "partial_refresh"
 msgstr "Partial Refresh"
 
-#: paper_eta/src/forms.py:113
+#: paper_eta/src/forms.py:114
 msgid "auto_full_refresh"
 msgstr "Auto Full Refresh"
 
-#: paper_eta/src/forms.py:117
+#: paper_eta/src/forms.py:118
 msgid "auto_full_refresh_help"
 msgstr ""
 "Partial Refresh Cycle. A full refresh will be conducted when the count of"
 " partial refresh exceeded the specificed number. Enter 0 to disable auto "
 "full refresh."
 
-#: paper_eta/src/forms.py:119
+#: paper_eta/src/forms.py:120
 msgid "enable"
 msgstr "Enable"
+
+#: paper_eta/src/forms.py:126
+msgid "invalid_cron_expression"
+msgstr "Invalid CRON Expression"
 
 #: paper_eta/src/handles.py:15
 msgid "The requested URL was not found on the server."
@@ -136,7 +144,7 @@ msgstr "API Error"
 
 #: paper_eta/src/translation.py:6
 msgid "eta-api-error"
-msgstr ""
+msgstr "API Error"
 
 #: paper_eta/src/translation.py:7
 msgid "eta-no-entry"
@@ -226,7 +234,7 @@ msgid "Failed to import no. %(entry)s bookmark."
 msgstr "Failed to import no. %(entry)s bookmark."
 
 #: paper_eta/src/controllers/bookmark.py:86
-#: paper_eta/src/controllers/configuration.py:72
+#: paper_eta/src/controllers/configuration.py:73
 #: paper_eta/src/controllers/schedule.py:67
 msgid "import_failed"
 msgstr "Import Failed"
@@ -238,6 +246,11 @@ msgstr "Import Failed"
 #: paper_eta/src/controllers/schedule.py:162
 msgid "invalid_id"
 msgstr "Invalid ID"
+
+#: paper_eta/src/controllers/configuration.py:23
+msgid "schedule_disabled_message"
+msgstr "Due to E-paper screen settings update, all the refresh schedule has been "
+"disabled. Please check or update the display layout before re-enable schedules."
 
 #: paper_eta/src/controllers/control.py:15 paper_eta/src/controllers/root.py:14
 #: paper_eta/src/controllers/schedule.py:74
@@ -264,6 +277,10 @@ msgid "Failed to import no. %(entry)s schedule."
 msgstr "Failed to import no. %(entry)s schedule."
 
 #: paper_eta/src/controllers/schedule.py:192
+#, python-format
+msgid "No available layout for %(layout)s."
+msgstr "No available layout for %(layout)s."
+
 #: paper_eta/src/controllers/schedule.py:232
 msgid "Layout does not exists."
 msgstr "Layout Does Not Exists"
@@ -552,9 +569,8 @@ msgstr "Jump To"
 
 #: paper_eta/templates/log/index.jinja:218
 msgid "pagination_info"
-msgstr ""
-"Showing {from} to {to} of {total_filtered} entries (filtered from {total}"
-" entries)."
+msgstr "Showing {from} to {to} of {total_filtered} entries (filtered from {total} "
+"entries)."
 
 #: paper_eta/templates/root/partials/screen_dumps.jinja:9
 msgid "no_data"
@@ -576,22 +592,19 @@ msgstr "New Schedule"
 
 #: paper_eta/templates/schedule/form.jinja:47
 msgid "new_schedule_help"
-msgstr ""
-"Create a new screen refresh schedule. The system utilsed <a "
+msgstr "Create a new screen refresh schedule. The system utilsed <a "
 "href=\"https://en.wikipedia.org/wiki/Cron\" target=\"_blank\">cron</a> "
 "expression for scheduling. You can use the selector or enter directly if "
 "you know about cron for the desired schedule ."
 
 #: paper_eta/templates/schedule/form.jinja:118
 msgid "partial_refresh_help"
-msgstr ""
-"Refresh the e-paper screen partially for a faster refresh time and "
+msgstr "Refresh the e-paper screen partially for a faster refresh time and "
 "flickerless refreshing."
 
 #: paper_eta/templates/schedule/form.jinja:121
 msgid "partial_refresh_limit_help"
-msgstr ""
-"Periodically performing a full refresh is recommended to avoid damages to"
+msgstr "Periodically performing a full refresh is recommended to avoid damages to"
 " the e-paper and improve sharpness of the content"
 
 #: paper_eta/templates/schedule/form.jinja:156
@@ -699,7 +712,3 @@ msgstr "No Repeat"
 #: paper_eta/templates/schedule/partials/rows.jinja:30
 msgid "refresh_now"
 msgstr "Refresh Now"
-
-#~ msgid "no."
-#~ msgstr "No."
-

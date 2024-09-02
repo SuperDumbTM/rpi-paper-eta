@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-08-29 15:00+0800\n"
+"POT-Creation-Date: 2024-08-29 17:59+0800\n"
 "PO-Revision-Date: 2023-10-14 18:15+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hant_HK\n"
@@ -18,103 +18,111 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.16.0\n"
 
-#: paper_eta/src/forms.py:10 paper_eta/templates/index.jinja:96
+#: paper_eta/src/forms.py:11 paper_eta/templates/index.jinja:96
 msgid "brand"
 msgstr "牌子"
 
-#: paper_eta/src/forms.py:15 paper_eta/src/forms.py:22
-#: paper_eta/src/forms.py:59 paper_eta/src/forms.py:65
-#: paper_eta/src/forms.py:71
+#: paper_eta/src/forms.py:16 paper_eta/src/forms.py:23
+#: paper_eta/src/forms.py:60 paper_eta/src/forms.py:66
+#: paper_eta/src/forms.py:72
 #: paper_eta/templates/configuration/partials/model_options.jinja:8
 msgid "please_select"
 msgstr "請選擇"
 
-#: paper_eta/src/forms.py:18 paper_eta/templates/index.jinja:102
+#: paper_eta/src/forms.py:19 paper_eta/templates/index.jinja:102
 msgid "model"
 msgstr "型號"
 
-#: paper_eta/src/forms.py:25
+#: paper_eta/src/forms.py:26
 msgid "language"
 msgstr "顯示語言"
 
-#: paper_eta/src/forms.py:30 paper_eta/templates/includes/navbar.jinja:10
+#: paper_eta/src/forms.py:31 paper_eta/templates/includes/navbar.jinja:10
 msgid "dry_run"
 msgstr "測試模式"
 
-#: paper_eta/src/forms.py:31
+#: paper_eta/src/forms.py:32
 msgid "dry_run_help"
 msgstr "在測試模式下，屏幕不會更新。但預報時間影像仍會根據排程產生，而最新的屏幕影像會顯示在「屏幕影像 」中。"
 
-#: paper_eta/src/forms.py:33
+#: paper_eta/src/forms.py:34
 msgid "rotate_degree"
 msgstr "角度調整"
 
-#: paper_eta/src/forms.py:35
+#: paper_eta/src/forms.py:36
 msgid "rotate_degree_help"
 msgstr "設定屏幕影像顯示的旋轉角度。"
 
-#: paper_eta/src/forms.py:37 paper_eta/src/forms.py:77
-#: paper_eta/src/forms.py:85 paper_eta/src/forms.py:121
+#: paper_eta/src/forms.py:38 paper_eta/src/forms.py:78
+#: paper_eta/src/forms.py:86 paper_eta/src/forms.py:122
 msgid "submit"
 msgstr "提交"
 
-#: paper_eta/src/forms.py:49
+#: paper_eta/src/forms.py:45
+msgid "Not a valid choice."
+msgstr "非有效選擇。"
+
+#: paper_eta/src/forms.py:50
 msgid "company"
 msgstr "公司"
 
-#: paper_eta/src/forms.py:54 paper_eta/templates/bookmark/index.jinja:69
+#: paper_eta/src/forms.py:55 paper_eta/templates/bookmark/index.jinja:69
 msgid "route"
 msgstr "路線"
 
-#: paper_eta/src/forms.py:57 paper_eta/templates/bookmark/index.jinja:70
+#: paper_eta/src/forms.py:58 paper_eta/templates/bookmark/index.jinja:70
 msgid "direction"
 msgstr "行車方向"
 
-#: paper_eta/src/forms.py:63 paper_eta/templates/bookmark/index.jinja:71
+#: paper_eta/src/forms.py:64 paper_eta/templates/bookmark/index.jinja:71
 msgid "service_type"
 msgstr "班次類別"
 
-#: paper_eta/src/forms.py:69 paper_eta/templates/bookmark/index.jinja:72
+#: paper_eta/src/forms.py:70 paper_eta/templates/bookmark/index.jinja:72
 msgid "stop"
 msgstr "車站"
 
-#: paper_eta/src/forms.py:82 paper_eta/templates/bookmark_group/index.jinja:56
+#: paper_eta/src/forms.py:83 paper_eta/templates/bookmark_group/index.jinja:56
 msgid "bookmark_group_name"
 msgstr "群組名稱"
 
-#: paper_eta/src/forms.py:89 paper_eta/templates/schedule/index.jinja:69
+#: paper_eta/src/forms.py:90 paper_eta/templates/schedule/index.jinja:69
 msgid "schedule"
 msgstr "排程"
 
-#: paper_eta/src/forms.py:94 paper_eta/templates/schedule/index.jinja:68
+#: paper_eta/src/forms.py:95 paper_eta/templates/schedule/index.jinja:68
 msgid "bookmark_group"
 msgstr "路線群組"
 
-#: paper_eta/src/forms.py:101 paper_eta/templates/index.jinja:50
+#: paper_eta/src/forms.py:102 paper_eta/templates/index.jinja:50
 #: paper_eta/templates/schedule/index.jinja:67
 msgid "eta_format"
 msgstr "預報顯示模式"
 
-#: paper_eta/src/forms.py:108 paper_eta/templates/index.jinja:51
+#: paper_eta/src/forms.py:109 paper_eta/templates/index.jinja:51
 #: paper_eta/templates/schedule/index.jinja:66
 msgid "layout"
 msgstr "佈局"
 
-#: paper_eta/src/forms.py:111
+#: paper_eta/src/forms.py:112
 msgid "partial_refresh"
 msgstr "快速更新"
 
-#: paper_eta/src/forms.py:113
+#: paper_eta/src/forms.py:114
 msgid "auto_full_refresh"
 msgstr "自動完整更新"
 
-#: paper_eta/src/forms.py:117
+#: paper_eta/src/forms.py:118
 msgid "auto_full_refresh_help"
 msgstr "快速更新週期。當屏幕進行快速更新的次數超過所輸入的數值時，系統將會進行一次完整更新。輸入0代表毋須進行自動完整更新。"
 
-#: paper_eta/src/forms.py:119
+#: paper_eta/src/forms.py:120
 msgid "enable"
 msgstr "啟用"
+
+#: paper_eta/src/forms.py:126
+msgid "invalid_cron_expression"
+msgstr "非有效排程"
 
 #: paper_eta/src/handles.py:15
 msgid "The requested URL was not found on the server."
@@ -218,9 +226,8 @@ msgstr "錯誤"
 #, python-format
 msgid "Failed to import no. %(entry)s bookmark."
 msgstr "未能匯入第%(entry)s個收藏。"
-
 #: paper_eta/src/controllers/bookmark.py:86
-#: paper_eta/src/controllers/configuration.py:72
+#: paper_eta/src/controllers/configuration.py:73
 #: paper_eta/src/controllers/schedule.py:67
 msgid "import_failed"
 msgstr "匯入失敗"
@@ -232,6 +239,10 @@ msgstr "匯入失敗"
 #: paper_eta/src/controllers/schedule.py:162
 msgid "invalid_id"
 msgstr "無效 ID"
+
+#: paper_eta/src/controllers/configuration.py:23
+msgid "schedule_disabled_message"
+msgstr "因為你更改了電子紙屏的設定，所有排程已被停用。請檢查或重新選擇顯示佈局後再啟用排程。"
 
 #: paper_eta/src/controllers/control.py:15 paper_eta/src/controllers/root.py:14
 #: paper_eta/src/controllers/schedule.py:74
@@ -256,6 +267,10 @@ msgid "Failed to import no. %(entry)s schedule."
 msgstr "未能匯入第%(entry)s個排程。"
 
 #: paper_eta/src/controllers/schedule.py:192
+#, python-format
+msgid "No available layout for %(layout)s."
+msgstr "沒有可用於「 %(layout)s」的佈局。"
+
 #: paper_eta/src/controllers/schedule.py:232
 msgid "Layout does not exists."
 msgstr "佈局不存在。"
@@ -562,8 +577,7 @@ msgstr "建立排程"
 
 #: paper_eta/templates/schedule/form.jinja:47
 msgid "new_schedule_help"
-msgstr ""
-"建立屏幕更新排程。排程系統參考了 <a href=\"https://en.wikipedia.org/wiki/Cron\" "
+msgstr "建立屏幕更新排程。排程系統參考了 <a href=\"https://en.wikipedia.org/wiki/Cron\" "
 "target=\"_blank\">cron</a> 的格式來進行排程。 如果你熟悉 cron ，可以直接輸入排程或使用選擇器建立排程。"
 
 #: paper_eta/templates/schedule/form.jinja:118
@@ -679,7 +693,3 @@ msgstr "不重覆"
 #: paper_eta/templates/schedule/partials/rows.jinja:30
 msgid "refresh_now"
 msgstr "更新屏幕"
-
-#~ msgid "no."
-#~ msgstr "No."
-

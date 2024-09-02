@@ -1,9 +1,10 @@
+import croniter
 import wtforms
-from flask_babel import lazy_gettext
+from flask_babel import lazy_gettext, gettext
 from flask_wtf import FlaskForm
 
 from paper_eta.src import database
-from paper_eta.src.libs import hketa, renderer
+from paper_eta.src.libs import epdcon, hketa, renderer
 
 
 class EpaperSettingForm(FlaskForm):
@@ -40,8 +41,8 @@ class EpaperSettingForm(FlaskForm):
         if not self.epd_brand.validate(self):
             return
 
-        if field.data not in renderer.models(self.epd_brand.data):
-            raise wtforms.ValidationError("Not a valid choice.")
+        if field.data not in epdcon.models(self.epd_brand.data):
+            raise wtforms.ValidationError(gettext("Not a valid choice."))
 
 
 class BookmarkForm(FlaskForm):

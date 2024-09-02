@@ -184,12 +184,12 @@ def layouts(eta_format: str):
                                eta_format=eta_format)
     except KeyError:
         return Response(render_template("/schedule/partials/layout_radio.jinja",
-                                        layouts=[],
+                                        layouts={},
                                         eta_format=eta_format),
                         headers={"HX-Trigger": json.dumps({
                             "toast": {
-                                "level": "error",
-                                "message": gettext("Layout does not exists.")
+                                "level": "warning",
+                                "message": gettext("No available layout for %(layout)s.", layout=gettext(eta_format))
                             }
                         })})
 
