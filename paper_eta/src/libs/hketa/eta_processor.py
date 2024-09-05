@@ -104,7 +104,7 @@ class KmbEta(EtaProcessor):
                     return self._g_eta(Eta.Error(message=self._em("eos")))
                 elif stop[f'rmk_en'] == "":
                     return self._g_eta(Eta.Error(message=self._em("empty")))
-                return self._g_eta(Eta.Error(stop[f'rmk_{locale}']))
+                return self._g_eta(Eta.Error(message=stop[f'rmk_{locale}']))
 
             eta_dt = datetime.fromisoformat(stop["eta"])
             etas.append(Eta.Time(
