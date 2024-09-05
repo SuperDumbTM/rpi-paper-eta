@@ -117,7 +117,7 @@ def edit(id_: str):
             setattr(bm, k, v)
         db.session.merge(bm)
         db.session.commit()
-        return redirect(url_for("bookmark.index", bgid=form.bookmark_group_id))
+        return redirect(url_for("bookmark.index", bgid=form.bookmark_group_id.data))
 
     form.bookmark_group_id.data = bm.bookmark_group_id
 

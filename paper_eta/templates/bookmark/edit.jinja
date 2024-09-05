@@ -49,7 +49,6 @@
             <div class="form-group">
                 {{ form.transport.label(class="form-label") }}
                 {{ form.transport(class="form-select" + form_valid_class(form.transport), **{
-                "x-init": "$nextTick(() => {$el.dispatchEvent(new Event('change'))})",
                 "hx-ext": "path-params",
                 "hx-get": url_for("bookmark.routes", transport="{transport}") | unquote,
                 "hx-trigger": "change",
@@ -114,6 +113,12 @@
 <script>
 
     var choices;
+
+    document.addEventListener("DOMContentLoaded", function(event) {
+        choices = new Choices('select[name=no]', {
+            allowHTML: false, // suppress warn msg
+        });
+    })
 
     document.addEventListener("htmx:afterOnLoad", function (event) {
         if (event.target.id == "transport") {
