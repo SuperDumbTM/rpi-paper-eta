@@ -51,7 +51,7 @@
                 {{ form.transport(class="form-select" + form_valid_class(form.transport), **{
                 "hx-ext": "path-params",
                 "hx-get": url_for("bookmark.routes", transport="{transport}") | unquote,
-                "hx-trigger": "change",
+                "hx-trigger": "change" if editing else "load, change",
                 "hx-target": "#nos .hx-swap-target",
                 "hx-indicator": "#nos.hx-load-outer, #options.hx-load-outer"
                 }) }}
