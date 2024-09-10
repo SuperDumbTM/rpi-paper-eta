@@ -4,7 +4,7 @@ import logging
 import os
 import threading
 from pathlib import Path
-from typing import Iterable
+from typing import Callable, Iterable
 
 from PIL import Image
 from flask import current_app
@@ -16,13 +16,33 @@ from ..libs import epdcon, hketa, renderer
 
 _ctrl_mutex = threading.Lock()
 
-_refresh_rotate = {
-    "id": None,
-    "count": 0
-}
+
+def partial_tracker():
+    log = {"id": None, "count": 0}
+
+    def wrap(schedule: "database.Schedule"):
+        if not schedule.is_partial:
+            return False
+        if schedule.partial_cycle <= 0:
+            return True
+        if log["id"] != schedule.id:
+            log["id"] = schedule.id
+            log["count"] = 1
+            return False
+
+        log["count"] += 1
+        if log["count"] > schedule.partial_cycle:
+            log["count"] = 0
+            return False
+        return True
+
+    return wrap
 
 
-def _with_app_context(func):
+_is_partial = partial_tracker()
+
+
+def _with_app_context(func: Callable):
     """Decorator function that wraps the input function with an Flask application context.
     """
     @wraps(func)
@@ -51,21 +71,6 @@ def scheduled_refresh(schedule: "database.Schedule"):
     Args:
         schedule: The schedule object containing information about the data refresh.
     """
-    if not schedule.is_partial:
-        is_partial = False
-    elif schedule.partial_cycle <= 0:
-        is_partial = True
-    elif _refresh_rotate["id"] != schedule.id:
-        _refresh_rotate["id"] = schedule.id
-        _refresh_rotate["count"] = 1
-        is_partial = False
-    else:
-        _refresh_rotate["count"] += 1
-        is_partial = True
-        if _refresh_rotate["count"] > schedule.partial_cycle:
-            _refresh_rotate["count"] = 0
-            is_partial = False
-
     refresh(bookmarks=(database.Bookmark.query
                        .filter(database.Bookmark.bookmark_group_id == schedule.bookmark_group_id)
                        .all()),
@@ -75,13 +80,12 @@ def scheduled_refresh(schedule: "database.Schedule"):
                         if isinstance(schedule.eta_format, Enum)
                         else schedule.eta_format),
             layout=schedule.layout,
-            is_partial=is_partial,
+            is_partial=_is_partial(schedule),
             degree=site_data.AppConfiguration()['degree'],
             is_dry_run=site_data.AppConfiguration()['dry_run'],
             screen_dump_dir=current_app.config['DIR_SCREEN_DUMP'])
 
 
-@_with_app_context
 def refresh(bookmarks: Iterable["database.Bookmark"],
             epd_brand: str,
             epd_model: str,
@@ -108,35 +112,30 @@ def refresh(bookmarks: Iterable["database.Bookmark"],
                              for query in (hketa.RouteQuery(**bm.as_dict()) for bm in bookmarks)],
                             degree)
 
-    if not is_dry_run:
-        # ---------- initialise the e-paper controller ----------
-        try:
-            controller = epdcon.get(
-                epd_brand, epd_model, is_partial=is_partial)
-        except (OSError, RuntimeError) as e:
-            logging.exception("Unable to initialise the e-paper controller.")
-            _write_log(**locals(), error_message=str(e))
-            return False
-        except ModuleNotFoundError as e:
-            logging.exception(str(e))
-            _write_log(**locals(), error_message=str(e))
-            return False
-
-        # ---------- refresh the e-paper screen ----------
-        try:
-            display_images(load_images(screen_dump_dir),
-                           images,
-                           controller,
-                           False,
-                           True)
-        except Exception as e:  # pylint: disable=broad-exception-caught
-            _write_log(**locals(), error_message=str(e))
-            if isinstance(e, RuntimeError):
-                logging.error(str(e))
-            else:
-                logging.exception(
-                    "An unexpected error occurred during screen refreshing.")
-            return False
+    try:
+        old_screens = load_images(screen_dump_dir)
+        is_partial = False if len(old_screens) == 0 else is_partial
+        if not is_dry_run:
+            controller = epdcon.get(epd_brand,
+                                    epd_model,
+                                    is_partial=is_partial)
+            display_images(old_screens, images, controller, False, True)
+    except (OSError, RuntimeError) as e:
+        logging.exception("Unable to initialise the e-paper controller.")
+        _write_log(**locals(), error_message=str(e))
+        return False
+    except ModuleNotFoundError as e:
+        logging.exception("Controller %s-%s not found", epd_brand, epd_model)
+        _write_log(**locals(), error_message=str(e))
+        return False
+    except Exception as e:  # pylint: disable=broad-exception-caught
+        _write_log(**locals(), error_message=str(e))
+        if isinstance(e, RuntimeError):
+            logging.error(str(e))
+        else:
+            logging.exception(
+                "An unexpected error occurred during screen refreshing.")
+        return False
 
     _write_log(**locals())
     for color, image in images.items():
