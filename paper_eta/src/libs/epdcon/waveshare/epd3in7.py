@@ -42,9 +42,9 @@ class Controller(controller.Controller, controller.Partialable):
 
     def clear(self):
         if self.is_partial:
-            self.epdlib.Clear(0xFF, 0)
-        else:
             self.epdlib.Clear(0xFF, 1)
+        else:
+            self.epdlib.Clear(0xFF, 0)
 
     def display(self, images: dict[str, Image.Image]):
         if not type(self)._inited:
