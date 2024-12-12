@@ -84,10 +84,10 @@ The data source of ETAs are [DATA.GOV.HK](https://data.gov.hk/en/).
 
 ### Built With
 
-* [<img src="https://img.shields.io/badge/Alpine.js-77c1d2?style=for-the-badge&logo=Alpine.js&logoColor=white">](https://alpinejs.dev/)
-* [<img src="https://img.shields.io/badge/bootstrap-7532fa?style=for-the-badge&logo=bootstrap&logoColor=white">](https://getbootstrap.com/)
-* [<img src="https://img.shields.io/badge/flask-1b6d74?style=for-the-badge&logo=flask&logoColor=white">](https://flask.palletsprojects.com/)
-* [<img src="https://img.shields.io/badge/htmx-3d72d7?style=for-the-badge&logo=htmx&logoColor=white">](https://htmx.org/)
+[<img src="https://img.shields.io/badge/Alpine.js-77c1d2?style=for-the-badge&logo=Alpine.js&logoColor=white">](https://alpinejs.dev/)
+[<img src="https://img.shields.io/badge/bootstrap-7532fa?style=for-the-badge&logo=bootstrap&logoColor=white">](https://getbootstrap.com/)
+[<img src="https://img.shields.io/badge/flask-1b6d74?style=for-the-badge&logo=flask&logoColor=white">](https://flask.palletsprojects.com/)
+[<img src="https://img.shields.io/badge/htmx-3d72d7?style=for-the-badge&logo=htmx&logoColor=white">](https://htmx.org/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
